@@ -1,0 +1,5 @@
+#!/bin/sh -l
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+#lt_archive
+#interp_ORCA2_1X1_gridT2C3S.sh

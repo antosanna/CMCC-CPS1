@@ -1,0 +1,34 @@
+#!/bin/sh -l
+# STILL TO DO
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/descr_ensemble.sh
+set -euvx
+#if [[ $typeofrun == "forecast" ]]
+#then
+#  exit
+#fi
+{{ batchdirectives }}
+CASEROOT={{ caseroot }} 
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2`
+lg_continue=`./xmlquery CONTINUE_RUN|cut -d '=' -f2`
+month=$(($nmonfore - $resubmit - 1))
+
+# TABLE FORMAT
+#CASO,JOBID,mese1,mese2,mese3,mese4,mese5,mese6,mese7,archivio
+#${SPSsystem}_199301_001,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy
+# Assign proper list file according to $typeofrun (hindcast/forecast)
+listfiletocheck="${CPSSystem}_${typeofrun}_list.csv"
+# calc position of the ith-month inside csv table
+table_month_id=$(($month + 2))
+# find line number
+LN="$(grep -n "$caso" ${DIR_CHECK}/$listfiletocheck | head -n 1 | cut -d: -f1)"
+LNp1=$(($LN + 1))
+LNm1=$(($LN - 1))
+if [ $resubmit == "True" ] ; then
+ table_month_id=10
+fi
+# TO BE CONITNUE

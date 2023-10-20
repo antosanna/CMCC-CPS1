@@ -1,0 +1,13 @@
+       Conventions =CF-1.6 C3S-0.1
+       title =CMCC seasonal forecast model output prepared for C3S
+       references =The new CMCC Seasonal Prediction System, CMCC report RP0253, http://www.cmcc.it/publications/rp0253-the-new-cmcc-seasonal-prediction-system
+       source =CMCC-CM2-v20191201:  atmos: CAM(ne60np4 L46); ocean: NEMOv3.4 (ORCA0.25_z50, 0.25x0.25L50); land: CLM(ne60np4 L15); seaice: CICE(same spatial configuration of NEMO)
+       institute_id =cmcc
+       institution =CMCC, Centro Euro-Mediterraneo sui Cambiamenti Climatici, Bologna, Italy
+       contact =http://copernicus-support.ecmwf.int
+       project =C3S Seasonal Forecast
+       commit =2017-10-01T9:35:32Z https://www.cmcc.it/it/publications/rp0285-cmcc-sps3-the-cmcc-seasonal-prediction-system-3
+       history =
+       comment =Run by CMCC at CMCC Supercomputing Center, University of Salento
+       summary =Seasonal Forecast data produced by CMCC as its contribution to the seasonal forecast activity of the Copernicus Climate Change Service (C3S). The data has global coverage with a 1-degree horizontal resolution and spans for around 6 months since the start date
+       keywords =Seasonal Forecasts, C3S, ECMWF, Copernicus, Climate Change, Climate Services, Earth Science Services, Environmental Advisories, Climate Advisories

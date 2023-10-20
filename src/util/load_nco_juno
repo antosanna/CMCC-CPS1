@@ -1,0 +1,2 @@
+#!/bin/sh -l
+module load intel-2021.6.0/nco/5.0.6-jp6y4

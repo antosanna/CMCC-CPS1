@@ -1,0 +1,16 @@
+#!/usr/bin/sh -l
+{{ batchdirectives }}
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euvx
+CASEROOT={{ caseroot }}
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+
+pp=`echo $caso|cut -d '.' -f1|rev|cut -c 1-2|rev`
+yyyyIC=`echo $caso|cut -d '.' -f2|cut -c 1-4`
+stIC=`echo $caso|cut -d '.' -f2|cut -c 5-6`
+st=`date -d ' '$yyyyIC${stIC}15' + 1 month' +%m` 
+yyyy=`date -d ' '$yyyyIC${stIC}15' + 1 month' +%Y` 
+mv $WORK_CPS/$caso/archive/atm/hist/*.cam.i* $IC_CAM_SPS_DIR/$st/${CPSSYS}.EDAcam.i.$pp.$yyyy$st.nc 

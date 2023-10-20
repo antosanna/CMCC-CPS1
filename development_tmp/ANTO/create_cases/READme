@@ -1,0 +1,4 @@
+controllare
+history_waccm=.false.
+ice_runoff=.false.
+interp_init=.true.
