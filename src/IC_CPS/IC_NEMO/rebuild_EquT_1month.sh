@@ -42,23 +42,18 @@ then
 else
    export meshmaskfile="/data/inputs/CESM/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_domain_cfg.nc"  # $REPOSITORY/mesh_mask_from2000.nc"
 fi
-#jpni=`ncdump -h $FILES4SPS3/mesh_mask.nc |grep 'x ='|cut -d '=' -f2|cut -d ';' -f1`
-#jpnj=`ncdump -h $FILES4SPS3/mesh_mask.nc |grep 'y ='|cut -d '=' -f2|cut -d ';' -f1`
-#klev=`ncdump -h $FILES4SPS3/mesh_mask.nc |grep 'z ='|cut -d '=' -f2|cut -d ';' -f1`
 jpni=`ncdump -h $meshmaskfile |grep 'x ='|cut -d '=' -f2|cut -d ';' -f1`
 jpnj=`ncdump -h $meshmaskfile |grep 'y ='|cut -d '=' -f2|cut -d ';' -f1`
 klev=`ncdump -h $meshmaskfile |grep 'nav_lev ='|cut -d '=' -f2|cut -d ';' -f1`
 # Andrea -
 
 cat > $outdir/mergedomain$year$mm.ncl << EOF2
-load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
-load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
-load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 begin
 
 vout=new((/$nday,$klev,$jpnj,$jpni/),"float")
 vout@_FillValue=0.
 EOF2
+
 for ll in $list 
 do
   file=$ll
@@ -118,8 +113,8 @@ ncdf->toce=vout(:,:,348:655,:)
 
 end
 EOF3
+
 echo "launching mergedomain$year$mm.ncl "`date`
-#EquTfile=${caso}_1d_${year}${mm}01_${year}${mm}${nday}_grid_T_EquT.nc
 EquTfile=${caso}_1d_${yyyy}${st}01_${year}${mm}${ndayfin}_grid_EquT_T.nc
 export votest=$outdir/${EquTfile}
 ncl $outdir/mergedomain$year$mm.ncl
@@ -137,7 +132,6 @@ then
    then
       rm $EquTfile
       rm $outdir/mergedomain$year$mm.ncl
-      #rm $outdir/${caso}_1d_${year}${mm}01_${year}${mm}${nday}_grid_T_EquT_0*.nc
       rm $outdir/${caso}_1d_${yyyy}${st}01_${year}${mm}${ndayfin}_grid_EquT_T_0*.nc
    fi
 fi
