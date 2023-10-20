@@ -2,7 +2,6 @@
 . $HOME/.bashrc
 # load variables from descriptor
 . $DIR_UTIL/descr_CPS.sh
-. $DIR_UTIL/descr_ensemble.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
 
@@ -105,6 +104,7 @@ export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
 export real="r"${ens}"i00p00"
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
 export lsmfile="$REPOGRID/lsm_${CPSSystem}_cam_h1_reg1x1_0.5_359.5.nc"

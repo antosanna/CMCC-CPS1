@@ -1,7 +1,6 @@
 #!/bin/sh -l
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. $DIR_UTIL/descr_ensemble.sh
 
 set -euvx
 LOG_FILE=$DIR_LOG/tests/launch_rebuild_nemo.`date +%Y%m%d%H%M`
@@ -15,6 +14,7 @@ npoce=1
 # END TEMPORARY
 for yyyy in `seq $iniy $endy`
 do
+   . $DIR_UTIL/descr_ensemble.sh $yyyy
 #TEMPORARY
 #   for st in {01..12}
 #   do

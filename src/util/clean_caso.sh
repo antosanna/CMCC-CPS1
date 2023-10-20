@@ -2,7 +2,6 @@
 
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. $DIR_UTIL/descr_ensemble.sh
 
 set -euvx
 
@@ -21,6 +20,7 @@ caso=$1
 echo "$caso ***************************************** "
 st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 startdate=${yyyy}${st}
 

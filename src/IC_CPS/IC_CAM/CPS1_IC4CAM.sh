@@ -6,7 +6,6 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco
-. ${DIR_UTIL}/descr_ensemble.sh
 
 set -euvx
 #----------------------------------------------------------
@@ -26,6 +25,7 @@ refcase_rest=${11}
 yyyy=${12}
 st=${13}
 
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 refdate_rest=$yyin-$mmin-01 
 startdate=$yyyy${st}01
 #if [ $bk -eq 1 ]
