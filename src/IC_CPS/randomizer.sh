@@ -6,7 +6,6 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. $DIR_UTIL/descr_ensemble.sh
 
 set -evxu
 #-------------------------------------------------
@@ -18,6 +17,7 @@ st=$2
 it=$3
 checkfileok=$4
 
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 #-- USEFUL FUNCTIONS -----------------------------
 ifExistRemove() {
    local fname=$1

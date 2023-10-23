@@ -3,7 +3,6 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/descr_ensemble.sh
 
 set -euvx
 #----------------------------------------------------------
@@ -20,6 +19,7 @@ flag_test=${7:-0}  # if set this flag disables the "true" run and activates
                    # ${CPSSystem}_202110_054)
                    # 1=tests from lt_archive_C3S.sh
 
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${CPSSystem}_${yyyy}${st}_${nrun}
 if [[ `whoami` == "$operational_user" ]]
 then

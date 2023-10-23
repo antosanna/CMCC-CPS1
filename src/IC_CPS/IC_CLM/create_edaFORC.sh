@@ -69,7 +69,7 @@ else
 fi
 
 set +euvx
-. ${DIR_UTIL}/descr_ensemble.sh
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 
 if [[ $backup -eq 0 ]]  #operational

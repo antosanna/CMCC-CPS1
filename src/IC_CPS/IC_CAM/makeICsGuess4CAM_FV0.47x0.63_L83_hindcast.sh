@@ -12,7 +12,6 @@ set +euvx
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
 . $DIR_UTIL/load_ncl
-. ${DIR_UTIL}/descr_ensemble.sh
 set -euvx
 
 debug=0
@@ -22,6 +21,7 @@ checkfile=$1
 yyyy=$2
 st=$3
 
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 # export vars needed by ncl script
 export yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
 export mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month; this is not a number (2 digits)

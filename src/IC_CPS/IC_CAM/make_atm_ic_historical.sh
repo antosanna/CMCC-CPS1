@@ -11,7 +11,6 @@ set +euvx
 . ${DIR_UTIL}/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
-. ${DIR_UTIL}/descr_ensemble.sh
 set -euvx
 
 debug=1
@@ -34,6 +33,7 @@ else
   :
 fi
 
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 mkdir -p $IC_CAM_CPS_DIR/$st/
 startdate=$yyyy${st}01
 #

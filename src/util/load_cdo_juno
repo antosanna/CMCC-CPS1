@@ -1,2 +1,0 @@
-#!/bin/sh -l
-module load intel-2021.6.0/cdo-threadsafe/2.1.1-lyjsw
