@@ -1,9 +1,0 @@
- (esm_time_mod.F90:esm_time_clockInit): driver time interval is :       1800
- (esm_time_mod.F90:esm_time_clockInit): driver start_ymd:      10101
- (esm_time_mod.F90:esm_time_clockInit): driver start_tod:          0
- (esm_time_mod.F90:esm_time_clockInit): driver curr_ymd:      10101
- (esm_time_mod.F90:esm_time_clockInit): driver curr_tod:          0
- (esm_time_mod.F90:esm_time_clockInit): driver stop_ymd:   99990101
- (esm_time_mod.F90:esm_time_clockInit): driver stop_tod:          0
- 8 MB memory   alloc in MB is             8.00\n8 MB memory dealloc in MB is    
-          0.00\nMemory block size conversion in bytes is           963.32
