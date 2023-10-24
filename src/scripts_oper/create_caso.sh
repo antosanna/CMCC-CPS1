@@ -16,18 +16,18 @@ poce=`printf '%.2d' $5`
 nrun=`printf '%.3d' $6`
 flag_test=${7:-0}  # if set this flag disables the "true" run and activates 
                    # the test suites (just work for the specific test case 
-                   # ${CPSSystem}_202110_054)
+                   # ${SPSSystem}_202110_054)
                    # 1=tests from lt_archive_C3S.sh
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-caso=${CPSSystem}_${yyyy}${st}_${nrun}
+caso=${SPSSystem}_${yyyy}${st}_${nrun}
 if [[ `whoami` == "$operational_user" ]]
 then
    flag_test=0
 fi
 
 ###refcaseSPS,execesmSPS,exeocnSPS and refcaseSCEN,execesmSCEN,exeocnSCEN defined in $DIR_SPS35/descr_SPS3.5.sh
-if [ $yyyy -ge 2015 ]; then
+if [ $yyyy -ge $yyyySCEN ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
@@ -66,19 +66,8 @@ cd $DIR_CASES/$caso
 # this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
 #----------------------------------------------------------
 ./xmlchange BUILD_COMPLETE=TRUE
-./xmlchange BUILD_STATUS=0
 
-# TEMPORARY COMMENT!!!
-#rsync -av $DIR_TEMPL/env_workflow_6months.xml $DIR_CASES/$caso/env_workflow.xml
-#-----------
-sed -i "s:cesm.std:$DIR_CASES/$caso/logs/$caso.std:g" $DIR_CASES/$caso/.case.run
-sed -i "s:cesm.std:$DIR_CASES/$caso/logs/st_archive_${caso}.std:g" $DIR_CASES/$caso/case.st_archive
-sed -i "s:cesm.std:$DIR_CASES/$caso/logs/nemo_rebuild_${caso}.std:g" $DIR_CASES/$caso/.case.nemo_rebuild
-ncpl=48
-echo "timestep = $((86400 / $ncpl))"
-echo "vertical levels 46"
-#----------------------------------------------------------
-# define the first month run as hybrid
+rsync -av $DIR_TEMPL/env_workflow_6months.xml_${machine} $DIR_CASES/$caso/env_workflow.xml
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 # IC_NEMO_CPS_DIR and IC_CICE_CPS_DIR will contain physical fields
@@ -93,9 +82,11 @@ echo "${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.lnd
 ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc
 echo "${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.rof
 
+#-----------
+ncpl=48
+echo "timestep = $((86400 / $ncpl))"
+echo "vertical levels 46"
 stop_op=nmonths
-stop_n=1
-./xmlchange RUN_TYPE=hybrid
 # here we can test if branch....
 ./xmlchange RUN_STARTDATE=$yyyy-$st-01
 ./xmlchange RUN_REFDATE=$yyyy-$st-01
@@ -103,14 +94,10 @@ stop_n=1
 ./xmlchange RUN_REFDIR=${refdirIC}
 ./xmlchange GET_REFCASE=TRUE
 ./xmlchange STOP_OPTION=$stop_op
-./xmlchange STOP_N=$stop_n
 ./xmlchange REST_OPTION=$stop_op
-./xmlchange REST_N=$stop_n
 ./xmlchange CONTINUE_RUN=FALSE
 ./xmlchange RESUBMIT=$(($nmonfore - 1))
 ./xmlchange ATM_NCPL=$ncpl
-./xmlchange OCN_NCPL=24
-./xmlchange ROF_NCPL=8
 ./xmlchange INFO_DBUG=0
 ./xmlchange NEMO_REBUILD=TRUE
 

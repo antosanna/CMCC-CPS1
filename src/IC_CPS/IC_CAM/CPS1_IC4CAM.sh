@@ -43,7 +43,12 @@ startdate=$yyyy${st}01
 diff=`${DIR_UTIL}/datediff.sh $startdate $yyin$mmin$ddin`
 #
 
-refcase=SPS4_HIST_hyb_refcase
+if [[ $yyyy -ge $yyyySCEN ]]
+then
+   refcase=$refcaseSCEN
+else
+   refcase=$refcaseHIST
+fi
 # WILL BE A MODULE
 cesmexe=$DIR_EXE/cesm.exe.CPS1
 #
@@ -68,35 +73,37 @@ $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$
 mkdir -p $DIR_CASES/$caso/logs
 cd $DIR_CASES/$caso
 #----------------------------------------------------------
+# Copy env_workflow_IC_cam.xml_juno from DIR_TEMPL in $caso
+# and set the proper SLA to the file.xml
+#!!!!!! NON ANCORA IMPLEMENTATA
+#----------------------------------------------------------
+#----------------------------------------------------------
+# DA FARE
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
 #cp ${DIR_TEMPL}/log_checker_launcher.sh $DIR_CASES/$caso/log_checker_launcher.sh
 #cp ${DIR_TEMPL}/log_checker.sh $DIR_CASES/$caso/log_checker.sh
 #sed -i "s:ICTOBECHANGEDBYSED:$ncdata:g" $DIR_CASES/$caso/log_checker.sh
-sed "s:CASO:$caso:g" $DIR_TEMPL/change_timestep.sh > $DIR_CASES/$caso/change_timestep.sh
-chmod u+x $DIR_CASES/$caso/change_timestep.sh
+#sed "s:CASO:$caso:g" $DIR_TEMPL/change_timestep.sh > $DIR_CASES/$caso/change_timestep.sh
+#chmod u+x $DIR_CASES/$caso/change_timestep.sh
 #----------------------------------------------
-# copy rhe env_workflow.xml for cam IC
-#----------------------------------------------
-# TEMPORARY COMMENT!!!
-#----------------------------------------------------------
 # set-up the case
 #----------------------------------------------------------
-./case.setup
 #----------------------------------------------------------
 # this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
 #----------------------------------------------------------
-#./xmlchange BUILD_STATUS=0
-
-cd $DIR_CASES/$caso
+rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${machine} env_workflow.xml
+./case.setup --reset
+./case.setup
+./xmlchange BUILD_COMPLETE=TRUE
 
 #----------------------------------------------------------
 # CAM  IC $IC_CPS_guess/CAM
 #----------------------------------------------------------
-cp $DIR_TEMPL/user_nl_ICcam $DIR_CASES/$caso/user_nl_cam
+rsync -av $DIR_TEMPL/user_nl_ICcam_test $DIR_CASES/$caso/user_nl_cam
 sed -i '/ncdata/d' user_nl_cam
 echo "ncdata='$ncdata'">>user_nl_cam
-echo "inithist = 'ENDOFRUN'" >>user_nl_cam
+#echo "inithist = 'ENDOFRUN'" >>user_nl_cam
 
 #
 echo "timestep = $((86400 / $ncpl))"
@@ -108,24 +115,16 @@ echo "vertical levels 86"
 ./xmlchange RUN_REFCASE=$refcase_rest
 ./xmlchange RUN_REFDIR=$refdir_refcase_rest
 ./xmlchange RUN_REFDATE=$yyin-$mmin-$ddin
-./xmlchange GET_REFCASE=TRUE
-./xmlchange STOP_OPTION=ndays
 ./xmlchange STOP_DATE=$startdate
 ./xmlchange STOP_N=$diff
 ./xmlchange ATM_NCPL=$ncpl
-#./xmlchange PIO_NUMTASKS=4   NON VA
-#./xmlchange PIO_STRIDE=18
-#./xmlchange PIO_NUMTASKS=16   NON VA
-#./xmlchange PIO_STRIDE=18
 
 # AL MOMENTO NON CI SONO
 cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe
-sed -i "s:cesm.std:$DIR_LOG/$typeofrun/$st/IC_CAM/$caso.std:g" $DIR_CASES/$caso/.case.run
+#QUESTO NON FUNZIONA: spostato in env_workflow
+#sed -i "s:cesm.std:$DIR_LOG/$typeofrun/$st/IC_CAM/$caso.std:g" $DIR_CASES/$caso/.case.run
+# al momento del submit lo riscrive
 
-cd $DIR_CASES/$caso
-rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml $DIR_CASES/$caso/env_workflow.xml
-./case.setup --reset
-./xmlchange BUILD_COMPLETE=TRUE
 #----------------------------------------------------------
 # submit first month
 #----------------------------------------------------------

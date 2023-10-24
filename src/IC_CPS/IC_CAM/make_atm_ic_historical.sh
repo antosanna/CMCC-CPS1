@@ -23,11 +23,11 @@ then
    tstamp=00
    st=11
    yyyy=1993
-   oceic=/work/csp/as34319/restart_cps_test/restart.nc
+   oceic=/work/csp/cp1/restart_cps_test/MB0_00925632_restart_noglobatt.nc
 # in running will be always control
-   iceic=/work/csp/as34319/restart_cps_test/cm3_cam122_cpl2000-bgc_t01.clm2.r.0020-01-01-00000.nc
-   clmic=/work/csp/as34319/restart_cps_test/cm3_cam122_cpl2000-bgc_t01.cice.r.0020-01-01-00000.nc
-   rtmic=/work/csp/as34319/restart_cps_test/cm3_cam122_cpl2000-bgc_t01.hydros.r.0020-01-01-00000.nc
+   iceic=/work/csp/aspect/CESM2/rea_archive/MB0/MONTHLY_RESTARTS/199209/19920930_MB0.cice.r.1992-10-01-00000.nc
+   clmic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.clm2.r.0020-01-01-00000.nc
+   rofic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.hydros.r.0020-01-01-00000.nc
 else
 # bisogna decomprimere 
   :
@@ -48,31 +48,32 @@ fi
 
 for ppeda in {0..0}
 do
+#   pp=`printf '%.2d' $(($ppeda + 1))`
+# TEST!!
    pp=`printf '%.2d' $(($ppeda + 1))`
    ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$pp.$yyyy$st.nc
    
+   pp=`printf '%.2d' $(($ppeda + 2))`
    output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
    ncdataSPS=$IC_CPS_guess/CAM/$st/$output
-#   caso=${CPSSystem}_EDACAM_IC${pp}.${yyIC}${mmIC}${dd}
-#ONLY FORE TEST
-   caso=test_EDACAM_IC$(($pp + 3)).${yyIC}${mmIC}${dd}
+   caso=${SPSSystem}_EDACAM_IC${pp}.${yyIC}${mmIC}${dd}
    refdir_refcase_rest=/work/$DIVISION/$USER/restart_cps_IC_CAM/$caso
    mkdir -p $refdir_refcase_rest
-# COMPULSORY!!!! restart file of Nemo must be named simply restart.nc
-   actual_oceic=restart.nc
-   ln -sf $oceic $refdir_refcase_rest/$actual_oceic
-# CICE
-   actual_iceic=$refcase_rest.cice.r.$yyIC-$mmIC-${dd}-00000.nc
-   ln -sf $iceic $refdir_refcase_rest/$actual_iceic
-   echo $actual_iceic > $refdir_refcase_rest/rpointer.cice
+#NEMO
+   link_oceic=${refcase_rest}_00000001_restart.nc
+   ln -sf $oceic $refdir_refcase_rest/$link_oceic
+#CICE
+   link_iceic=$refcase_rest.cice.r.$yyIC-$mmIC-${dd}-00000.nc
+   ln -sf $iceic $refdir_refcase_rest/$link_iceic
+   echo $link_iceic > $refdir_refcase_rest/rpointer.cice
 #CLM
-   actual_clmic=$refcase_rest.clm2.r.$yyIC-$mmIC-${dd}-00000.nc 
-   ln -sf $clmic $refdir_refcase_rest/$actual_clmic
-   echo $actual_clmic >$refdir_refcase_rest/rpointer.lnd
+   link_clmic=$refcase_rest.clm2.r.$yyIC-$mmIC-${dd}-00000.nc 
+   ln -sf $clmic $refdir_refcase_rest/$link_clmic
+   echo $link_clmic >$refdir_refcase_rest/rpointer.lnd
 #HYDROS
-   actual_rtmic=$refcase_rest.hydros.r.$yyIC-$mmIC-${dd}-00000.nc
-   ln -sf $rtmic $refdir_refcase_rest/$actual_rtmic
-   echo $actual_rtmic >$refdir_refcase_rest/rpointer.hydros
+   link_rofic=$refcase_rest.hydros.r.$yyIC-$mmIC-${dd}-00000.nc
+   ln -sf $rofic $refdir_refcase_rest/$link_rofic
+   echo $link_rofic >$refdir_refcase_rest/rpointer.hydros
 #SET TIMESTEP
    ncpl=192
    input="$yyIC $mmIC $dd $pp $caso $ncpl $bk $ncdataSPS $ICfile $refdir_refcase_rest $refcase_rest $yyyy $st"

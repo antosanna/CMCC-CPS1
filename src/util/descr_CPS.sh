@@ -23,10 +23,12 @@ else
    echo "MACHINE UNKNOWN!! EXITING NOW!!"
    exit -1
 fi
-CPSSystem=sps4
+SPSSystem=sps4
 DPSsystem=dps3
 CPSSYS=CPS1
+yyyySCEN=2015
 refcaseHIST=SPS4_HIST_hyb_refcase
+refcaseSCEN=SPS4_SCEN_hyb_refcase
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -107,7 +107,7 @@ export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
-export lsmfile="$REPOGRID/lsm_${CPSSystem}_cam_h1_reg1x1_0.5_359.5.nc"
+export lsmfile="$REPOGRID/lsm_${SPSSystem}_cam_h1_reg1x1_0.5_359.5.nc"
 export meshmaskfile="$REPOSITORY/mesh_mask_from2000.nc"
 export srcGridName="$REPOSITORY/ORCA_SCRIP_gridT.nc"
 export dstGridName="$REPOSITORY/World1deg_SCRIP_gridT.nc"

@@ -22,7 +22,7 @@ month=$(($nmonfore - $resubmit - 1))
 #CASO,JOBID,mese1,mese2,mese3,mese4,mese5,mese6,mese7,archivio
 #${SPSsystem}_199301_001,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy
 # Assign proper list file according to $typeofrun (hindcast/forecast)
-listfiletocheck="${CPSSystem}_${typeofrun}_list.csv"
+listfiletocheck="${SPSSystem}_${typeofrun}_list.csv"
 # calc position of the ith-month inside csv table
 table_month_id=$(($month + 2))
 # find line number
