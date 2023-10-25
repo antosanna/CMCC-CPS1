@@ -4,12 +4,13 @@
 #BSUB -e logs/test_%J.err
 #BSUB -o logs/test_%J.out
 # this script can be run in debug mode but always with submitcommand
+# THIS IHAS TO BE REVIEWED!!!!!!
 . ~/.bashrc
-. $DIR_UTIL/descr_SPS4.sh
+. $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
+. $DIR_UTIL/load_ncl
 set -euvx
-. $DIR_UTIL/descr_forecast.sh
 here=$PWD
 #debug=${7:-0}    #new argument to allow test in debug mode
 debug=1
@@ -57,6 +58,7 @@ else
 set -euvx
 fi
 
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 export ndaysreq=$fixsimdays
 startdate=$yyyy$st
 # These variables are required by ncl script regrid from SE to reg1x1

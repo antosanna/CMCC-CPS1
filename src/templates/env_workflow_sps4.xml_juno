@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q p_short -P 0566 -W 01:00 -x -sla SC_CM3_1 -app CM3_1">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{parallelq_s} -P $ENV{pID} -W 01:00 -x -app c3s2">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -80,7 +80,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_m} -P $ENV{pID} -M 1000 -W 00:20 -e logs/st_archive_IC_%J.err -o logs/st_archive_IC_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -111,6 +111,9 @@
     <entry id="dependency" value="case.st_archive">
       <type>char</type>
     </entry>
+    <entry id="prereq" value="$NEMO_REBUILD">
+      <type>char</type>
+    </entry>
     <entry id="task_count" value="1">
       <type>char</type>
     </entry>
@@ -133,7 +136,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_s} -P $ENV{pID} -W 00:20 -M 1000 -W 00:20 -e logs/nemo_rebuild_IC_%J.err -o logs/nemo_rebuild_IC_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -189,7 +192,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_s} -P $ENV{pID} -W 00:20">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -245,7 +248,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_s} -P $ENV{pID} -W 00:20">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

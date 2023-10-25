@@ -39,7 +39,13 @@ then
    WORK=/work/$DIVISION/$operational_user/
    MYCESMDATAROOT=/data/$DIVISION/$USER/inputs/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
-   pID=0490 #Juno
+   if [[ $machine == "juno" ]]
+   then
+      pID=0490 #Juno
+   elif [[ $machine == "zeus" ]]
+   then
+      pID=0574 #zeus
+   fi
 #   apprun=??? #sps35 Zeus
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
@@ -69,6 +75,10 @@ then
 # DIRECTORIES Juno
    WORK=/work/$DIVISION/$USER
    WORK1=/work/$DIVISION/$operational_user
+   if [[ $machine == "zeus" ]]
+   then
+      WORK1=$WORK
+   fi
 #   BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup
 #   pushdirapec=/data/products/C3S/$(whoami)/push_APEC
 #   pushdir=$WORK/push/
@@ -135,7 +145,13 @@ then
       IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
    fi
 # TEMPORARY
-   DATA_ECACCESS=/work/csp/cp1/scratch/DATA_ECACCESS
+   if [[ $machine == "juno" ]]
+   then
+      DATA_ECACCESS=/work/csp/cp1/scratch/DATA_ECACCESS
+   elif [[ $machine == "zeus" ]]
+   then
+      DATA_ECACCESS=/data/delivery/csp/ecaccess/
+   fi
 #   WORK_C3S1=/work/csp/$operational_user/CESM/archive/C3S/
 #   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
@@ -242,7 +258,7 @@ fixsimdays=185  # total number of simulation days
 # nfieldsC3S=53    # number of required fields for C3S with ocean  monthly + new pwr var
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
-# header="ensemble3.5"
+header="ensemble4"
 # jobIDdummy=1234
 versionSPS=dummy
 endy_hind=2022
@@ -280,7 +296,13 @@ freq_forcings=8
 # #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DIR_CHECK_IC_NEMO=$SCRATCHDIR/check_newICs_nemo/
 #DIR_CESM=/users_home/$DIVISION/$operational_user/CESM2/CMCC-CM_anto/
-DIR_CESM=/users_home/$DIVISION/dp16116/CMCC-CM_dev/
+if [[ $machine == "juno" ]]
+then
+   DIR_CESM=/users_home/$DIVISION/dp16116/CMCC-CM_dev/
+elif [[ $machine == "zeus" ]]
+then
+   DIR_CESM=/users_home/$DIVISION/as34319/CMCC_CM-dev122/
+fi
 # DIR_STAT=$DIR_ROOT/static
 DIR_SRC=$DIR_ROOT/src
 DIR_CHECK=$DIR_ROOT/checklist_run
@@ -315,9 +337,9 @@ DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
 DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_SUBM_SCRIPTS=$WORK/CMCC-${CPSSYS}/SUBM_SCRIPTS
 # DIR_SCRA=$DIR_SUBM_SCRIPTS
-# DIR_ARCHIVE=$WORK_CPS/archive
+DIR_ARCHIVE=$WORK_CPS/archive
 # ######## WORK DIRS FOR C3S 
-# DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
+DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
 # WORK_C3S=$DIR_ARCHIVE_C3S
 # ####### WORK DIRS FOR ICs
 # ATM_IC=$WORK_CPS/CMCC-${CPSSYS}/WORK_ATM_IC

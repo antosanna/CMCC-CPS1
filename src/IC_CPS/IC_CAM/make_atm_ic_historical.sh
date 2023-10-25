@@ -1,7 +1,7 @@
 #!/bin/sh -l
 #BSUB -J IC_CAM
-#BSUB -e /users_home/csp/cp1/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.err
-#BSUB -o /users_home/csp/cp1/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.out
+#BSUB -e /users_home/csp/as34319/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.err
+#BSUB -o /users_home/csp/as34319/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.out
 #BSUB -P 0490
 #BSUB -M 100
 
@@ -21,13 +21,22 @@ mkdir -p $IC_CAM_CPS_DIR
 if [[ $debug -eq 1 ]]
 then
    tstamp=00
-   st=11
+   st=07
    yyyy=1993
-   oceic=/work/csp/cp1/restart_cps_test/MB0_00925632_restart_noglobatt.nc
-# in running will be always control
-   iceic=/work/csp/aspect/CESM2/rea_archive/MB0/MONTHLY_RESTARTS/199209/19920930_MB0.cice.r.1992-10-01-00000.nc
-   clmic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.clm2.r.0020-01-01-00000.nc
-   rofic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.hydros.r.0020-01-01-00000.nc
+   if [[ $machine == "zeus" ]]
+   then
+# in running always check the absence of the global attribute DELAY_fwb
+      oceic=/work/csp/$USER/restart_cps_test/MB0_00925632_restart_noglobatt.nc
+      iceic=/work/csp/$USER/restart_cps_test/MB0.cice.r.1992-11-07-00000.nc
+      clmic=/work/csp/$USER/restart_cps_test/cm3_cam122_cpl2000-bgc_t01.clm2.r.0020-01-01-00000.nc
+      rofic=/work/csp/$USER/restart_cps_test/cm3_cam122_cpl2000-bgc_t01.hydros.r.0020-01-01-00000.nc
+   elif [[ $machine == "juno" ]]
+   then
+      oceic=/work/csp/$USER/restart_cps_test/MB0_00925632_restart_noglobatt.nc
+      iceic=/work/csp/aspect/CESM2/rea_archive/MB0/MONTHLY_RESTARTS/199209/19920930_MB0.cice.r.1992-10-01-00000.nc
+      clmic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.clm2.r.0020-01-01-00000.nc
+      rofic=/work/csp/dp16116/CMCC-CM/archive/cm3_cam122_cpl2000-bgc_t01/rest/0020-01-01-00000/cm3_cam122_cpl2000-bgc_t01.hydros.r.0020-01-01-00000.nc
+   fi
 else
 # bisogna decomprimere 
   :
@@ -53,7 +62,6 @@ do
    pp=`printf '%.2d' $(($ppeda + 1))`
    ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$pp.$yyyy$st.nc
    
-   pp=`printf '%.2d' $(($ppeda + 2))`
    output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
    ncdataSPS=$IC_CPS_guess/CAM/$st/$output
    caso=${SPSSystem}_EDACAM_IC${pp}.${yyIC}${mmIC}${dd}

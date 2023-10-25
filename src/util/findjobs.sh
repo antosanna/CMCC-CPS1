@@ -1,11 +1,10 @@
 #!/bin/sh -l
 . ~/.bashrc
-. ${DIR_UTIL}/descr_SPS4.sh
+. ${DIR_CPS}/descr_CPS.sh
 
 set -eu
 usage() { echo "Usage: $0 [-m <machine string >] [-W <format string(yes)>] [-Y <year-date integer(jobID)>] [-q <queue string>] [-n <name_to_grep string >] [-N <name_to_grep2 string >] [-a <status_run string>] [-i <id_job string>] [-c <wc string>] [-r <reservation string>] [-J <name_complete string output>] [-p <id_job string>]" 1>&2; exit 1; }
 
-machine="None"
 queue="None"
 scriptname="None"
 scriptname2="None"
@@ -71,7 +70,7 @@ then
 fi
 # Condizione troppo stringente per lt_archive e postrun.tpl
 
-if [  "$machine" == "zeus" ]
+if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]]
 then
 
    command="bjobs -w "
@@ -98,7 +97,6 @@ then
    fi
    if [[ "$stat" != "None" ]]
    then
-#      command+=" | awk '{print \$3}' "
       command+=" | grep $stat "
    fi
    if [[ "$id" != "None" ]]

@@ -17,6 +17,12 @@ begin
 
 ;--remove old checkfile
     checkfile=getenv("fileok")
+    dst_grid_file=getenv("dst_grid_file")
+    src_grid_file=getenv("src_grid_file")
+    dst_grid_file1=getenv("dst_grid_file1")
+    src_grid_file1=getenv("src_grid_file1")
+    dst_grid_file2=getenv("dst_grid_file2")
+    src_grid_file2=getenv("src_grid_file2")
     ; 28/12/2020 - 12:00
     ; isfilepresent raise an hdf5 error with complex path as /work/csp/sp1/CMCC-SPS3.5/WORK_IC4CAM/ECOPER_20201227_00_ok
     ; (it expect a supported file as netcdf,hdf5 etc. and return a misleading error message)
@@ -167,6 +173,9 @@ begin
     Opt@DstGridLon = dst_lon
     Opt@DstInputFileName = dst_file
 
+    Opt@DstFileName = dst_grid_file
+    Opt@SrcFileName = src_grid_file
+
 ;---Set up regridding options
     Opt1                = True
 
@@ -185,6 +194,8 @@ begin
     Opt1@Debug            = True
     Opt1@PrintTimings     = True
 
+    Opt1@DstFileName = dst_grid_file1
+    Opt1@SrcFileName = src_grid_file1
 ;---Set up regridding options
     Opt2                = True
 
@@ -202,6 +213,9 @@ begin
     Opt2@ForceOverwrite   = True
     Opt2@Debug            = True
     Opt2@PrintTimings     = True
+
+    Opt2@DstFileName = dst_grid_file2
+    Opt2@SrcFileName = src_grid_file2
 ;
 
 ;---Get variable to regrid   t

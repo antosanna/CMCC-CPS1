@@ -5,6 +5,7 @@
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco
 . ${DIR_UTIL}/load_cdo
+. ${DIR_UTIL}/load_ncl
 
 set -evx
 # set -evx non funziona

@@ -74,7 +74,7 @@ do
             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
          else
             body="Nemo IC for perturbation $poce not available" 
-            title="[NEMOIC] ${SPSSYS} forecast warning"
+            title="[NEMOIC] ${CPSSYS} forecast warning"
             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
          fi 
       elif [[ ! -f $iceic ]]
@@ -93,7 +93,7 @@ do
             icsoce+=" $poce"
          else
             body="Nemo IC for perturbation $poce not available" 
-            title="[NEMOIC] ${SPSSYS} forecast warning"
+            title="[NEMOIC] ${CPSSYS} forecast warning"
             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
          fi 
       else
@@ -208,25 +208,25 @@ done
 cd $IC_CAM_SPS_DIR/$st/
 for atmic in `seq 1 $n_ic_cam`
 do
-   if [ ! -f ${SPSSYS}.cam.i.${yyyy}${st}.$atmic.nc ]
+   if [ ! -f ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.nc ]
    then
-      if [[ -f $IC_CAM_SPS_DIR/$st/${SPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ]]
+      if [[ -f $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ]]
       then
-         ln -sf $IC_CAM_SPS_DIR/$st/${SPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ${SPSSYS}.cam.i.${yyyy}${st}.$atmic.nc
-         body="Using ${SPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc as IC for perturbation $atmic" 
-         title="[CAMIC] ${SPSSYS} forecast notification"
+         ln -sf $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.nc
+         body="Using ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc as IC for perturbation $atmic" 
+         title="[CAMIC] ${CPSSYS} forecast notification"
          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
          icsatm+=" $atmic" 
       else
          body="Not available IC for perturbation $atmic" 
-         title="[CAMIC] ${SPSSYS} forecast warning"
+         title="[CAMIC] ${CPSSYS} forecast warning"
          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
       fi
    else
       if [[ `whoami` == $operational_user ]] ; then 
-         if [[ -f $IC_CAM_SPS_DIR/$st/${SPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ]]
+         if [[ -f $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ]]
          then
-            rm $IC_CAM_SPS_DIR/$st/${SPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc 
+            rm $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc 
          fi
       fi
       icsatm+=" $atmic"
@@ -246,23 +246,23 @@ then
    if [ $it -gt 5 ]   # meaning more than 2 hours passed from run_ICs_production.sh launched: 
                       #START SENDING WARNING
    then
-      body="Available ICs for ${SPSSYS} start-date $yyyy$st NOT SUFFICIENT \n
+      body="Available ICs for ${CPSSYS} start-date $yyyy$st NOT SUFFICIENT \n
          CAM: $icsatm \n
          NEMO: $icsoce \n
          CLM: $icslnd
          total number $totpert.\n
          EXITING $IC_SPS35/randomizer.sh"
-      title="[${SPSSYS}IC] ${SPSSYS} forecast warning"
+      title="[${CPSSYS}IC] ${CPSSYS} forecast warning"
       $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" # -r yes -s $yyyy$st
       exit 1
    fi
    exit 0
 else
-   body="Available ICs for ${SPSSYS} start-date $yyyy$st \n
+   body="Available ICs for ${CPSSYS} start-date $yyyy$st \n
       CAM: $icsatm \n
       NEMO: $icsoce \n
       CLM: $icslnd"
-   title="[${SPSSYS}IC] ${SPSSYS} forecast notification"
+   title="[${CPSSYS}IC] ${CPSSYS} forecast notification"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" # -r yes -s $yyyy$st
 # if enough IC to generate triplette_done.txt create $checkfileok
    touch $checkfileok
@@ -323,16 +323,15 @@ set -evx
       ppland=${plnd[$i]}
       poce=${poce[$i]}
 
-      caso=${SPSsystem}_${yyyy}${st}_${nrun3}
+      caso=${SPSSystem}_${yyyy}${st}_${nrun3}
       echo "#!/bin/sh -l "                               > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
       echo ". ~/.bashrc"                                 >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
-      echo ". \${DIR_UTIL}/descr_${SPSSYS}.sh"             >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
-      echo ". \${DIR_UTIL}/descr_forecast.sh"             >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
+      echo ". \${DIR_UTIL}/descr_CPS.sh"             >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
       echo "set -euvx"                                   >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
-      echo "mkdir -p \$DIR_LOG/forecast/$yyyy$st"           >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
+      echo "mkdir -p \$DIR_LOG/$typeofrun/$yyyy$st"           >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
 
       input="$yyyy $st $pp $ppland $poce $nrun"
-      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -q \$serialq_m -j crea_${SPSSYS}_$yyyy${st}_${nrun3} -l \${DIR_LOG}/forecast/$yyyy$st -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
+      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -q \$serialq_m -j crea_${SPSSYS}_$yyyy${st}_${nrun3} -l \${DIR_LOG}/$typeofrun/$yyyy$st -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
 
       chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
 
@@ -340,16 +339,16 @@ set -evx
 
       echo "#!/bin/sh -l"                      > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       echo ". \$HOME/.bashrc"              >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
-      echo ". \$DIR_UTIL/descr_${SPSSYS}.sh" >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+      echo ". \$DIR_UTIL/descr_CPS.sh" >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       # ATTENZIONE! I LOG SU CINECA VENGONO PRODOTTI RUN_TIME QUINDI NON POSSONO ESSERE SCRITTI SU UNA DIRECTORY NON ANCORA ESISTENTE, LA DIR LOGS DEL CASO VA CREATA prima
       echo "set -euvx "                >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       echo "cd \$DIR_LOG"                >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
-      echo "mkdir -p $yyyy${st}"             >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+      echo "mkdir -p $typeofrun/$yyyy${st}"             >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       echo "cd \$DIR_CASES"                   >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       echo "mkdir -p $caso/logs"           >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       
       # +ANTONIO 31/03/21 - added reservation and qos for MARCONI
-      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -S qos_resv -q \$serialq_l -r \$sla_serialID -j crea_${SPSsystem}_$yyyy${st}_${nrun3} -l \$DIR_LOG/forecast/$yyyy${st} -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -S qos_resv -q \$serialq_l -r \$sla_serialID -j crea_${SPSSystem}_$yyyy${st}_${nrun3} -l \$DIR_LOG/forecast/$yyyy${st} -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
 #crea analogo per CINECA -
       nrun=`expr $nrun + 1`
@@ -365,7 +364,7 @@ if [ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]; then
 fi
 tar -cvf $yyyy${st}_scripts_CINECA.tar *
 body="Starting scripts dispach to CINECA" 
-title="${SPSSYS} forecast notification"
+title="${CPSSYS} forecast notification"
 $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" # -r yes -s $yyyy$st
  
 # FILE SYSTEM DEPENDENT

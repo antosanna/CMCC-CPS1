@@ -3,12 +3,14 @@
 .  $DIR_UTIL/descr_CPS.sh
 
 set -euvx
+iniy=1993
+endy=2022
 for st in 07 08 09 11 05 02 08 12 01 03 04 06 07 09 10
 do
    for yyyy in `seq $iniy $endy`
    do
        .  $DIR_UTIL/descr_ensemble.sh $yyyy
-       checkfile=$IC_SPS_guess/CAM/$st/$yyyy${st}_done
+       checkfile=$IC_CPS_guess/CAM/$st/$yyyy${st}_done
        if [[ -f $checkfile ]]
        then
           continue

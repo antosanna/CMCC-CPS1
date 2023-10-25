@@ -26,12 +26,12 @@ then
    flag_test=0
 fi
 
-###refcaseSPS,execesmSPS,exeocnSPS and refcaseSCEN,execesmSCEN,exeocnSCEN defined in $DIR_SPS35/descr_SPS3.5.sh
 if [ $yyyy -ge $yyyySCEN ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
+# this should become a module on Juno
 cesmexe=$DIR_EXE/cesm.exe.CPS1
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -58,23 +58,22 @@ cd $DIR_CASES/$caso
 #----------------------------------------------------------
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
-# TO DO
-# set-up the case
-#----------------------------------------------------------
-./case.setup
-#----------------------------------------------------------
-# this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
-#----------------------------------------------------------
-./xmlchange BUILD_COMPLETE=TRUE
 
-rsync -av $DIR_TEMPL/env_workflow_6months.xml_${machine} $DIR_CASES/$caso/env_workflow.xml
+rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${machine} $DIR_CASES/$caso/env_workflow.xml
+#----------------------------------------------------------
+# TO DO
+# set-up the case after modfication env_workflow
+#----------------------------------------------------------
+./case.setup --reset
+./case.setup
+./xmlchange BUILD_COMPLETE=TRUE
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 # IC_NEMO_CPS_DIR and IC_CICE_CPS_DIR will contain physical fields
 refdirIC=$SCRATCHDIR/IC_${yyyy}${st}/$nrun
 mkdir -p $refdirIC
 refcaseIC=ic_for_$caso
-ln -sf $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.$yyyy-${st}-01-00000.$poce.nc $refdirIC/restart.nc
+ln -sf $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}_00000001_restart.nc
 ln -sf $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}.cice.r.$yyyy-${st}-01-00000.nc
 echo "$refcaseIC.cice.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.ice
 ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc
@@ -92,19 +91,28 @@ stop_op=nmonths
 ./xmlchange RUN_REFDATE=$yyyy-$st-01
 ./xmlchange RUN_REFCASE=${refcaseIC}
 ./xmlchange RUN_REFDIR=${refdirIC}
-./xmlchange GET_REFCASE=TRUE
 ./xmlchange STOP_OPTION=$stop_op
 ./xmlchange REST_OPTION=$stop_op
-./xmlchange CONTINUE_RUN=FALSE
 ./xmlchange RESUBMIT=$(($nmonfore - 1))
 ./xmlchange ATM_NCPL=$ncpl
 ./xmlchange INFO_DBUG=0
-./xmlchange NEMO_REBUILD=TRUE
+./xmlchange NEMO_REBUILD=TRUE  
 
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow
-#cp $DIR_UTIL/interp_ORCA2_1X1_gridT2C3S.sh $DIR_CASES/$caso/
-#chmod u+x $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S.sh
+sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/ST/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
+chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
+outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+chmod u+x $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
+chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
+sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_monthly.sh > $DIR_CASES/$caso/postproc_monthly_${caso}.sh
+chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
+sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_final.sh > $DIR_CASES/$caso/postproc_final_${caso}.sh
+chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
+
+mkdir -p $DIR_CASES/$caso/logs
 
 # cp and change lt_archive
 #sed 's/ic="dummy"/ic="'$ic'"/g;s/EXPNAME/'$caso'/g' $DIR_TEMPL/lt_archive_C3S.sh > $DIR_CASES/$caso/lt_archive_C3S.sh

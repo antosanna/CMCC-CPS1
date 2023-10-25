@@ -29,17 +29,17 @@ export dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
 #TEMPLATE FILE 2 CAM
 export ftemplate=${CESMDATAROOT}/inputdata/atm/cam/inic/fv/cami_0000-01-01_0.47x0.63_L83_c230109.nc
 
-mkdir -p $IC_CAM_SPS_DIR/$st/
+mkdir -p $IC_CAM_CPS_DIR/$st/
 startdate=$yyyy${st}01
 tstamp="00"
-iniICfile=$IC_CAM_SPS_DIR/$st/${CPSSYS}.EDAcam.i.$yyyy$st
+iniICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$yyyy$st
 data=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/
 echo 'starting preprocessing for raw date '$yyIC $mmIC $dd $tstamp `date`
 echo ''
 
 #INPUT FILES DOWNLOADED FROM ECMWF
 #lev_ml=ECEDA_${yyIC}${mmIC}${dd}_${tstamp}lev.grib  #level fields
-for ppeda in {0..9}
+for ppeda in {0..0}
 do
    pp=`printf '%.2d' $(($ppeda + 1))`
    
@@ -49,7 +49,7 @@ do
    inp=`echo $inputECEDA|rev |cut -d '.' -f1 --complement|rev`
    
    export output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc
-   ncdataSPS=$IC_SPS_guess/CAM/$st/$output
+   ncdataSPS=$IC_CPS_guess/CAM/$st/$output
    if [[ -f $ncdataSPS ]]
    then
       continue
@@ -88,6 +88,12 @@ do
    export wgt_file=$REPOGRID/EDA2FV0.47x0.63_L83.nc
    export wgt_file_slon=$REPOGRID/EDA2FV0.47x0.63_L83_slon.nc
    export wgt_file_slat=$REPOGRID/EDA2FV0.47x0.63_L83_slat.nc
+   export src_grid_file=$REPOGRID/src_grid_file.nc
+   export dst_grid_file=$REPOGRID/dst_grid_file.nc
+   export src_grid_file1=$REPOGRID/src_grid_file_slon.nc
+   export dst_grid_file1=$REPOGRID/dst_grid_file_slon.nc
+   export src_grid_file2=$REPOGRID/src_grid_file_slat.nc
+   export dst_grid_file2=$REPOGRID/dst_grid_file_slat.nc
    cd $DIR_ATM_IC/ncl
    scriptregrid=regrid_ERA5_to_FV0.47x0.63_L83.ncl
    echo "submit $scriptregrid "`date`
@@ -114,8 +120,8 @@ do
    rm -f ${output_check}
    
    echo 'ended compression check level fields and begin compression IC CAM ' `date`echo ''
-   # put results in $IC_SPS_guess/CAM ready for SPS3_guess
-   mkdir -p $IC_SPS_guess/CAM/$st
+   # put results in $IC_CPS_guess/CAM 
+   mkdir -p $IC_CPS_guess/CAM/$st
    mv ${output} $ncdataSPS
    echo 'ended compression IC CAM 00 '`date`
    echo ''

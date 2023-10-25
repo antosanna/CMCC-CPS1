@@ -1,5 +1,53 @@
 #!/bin/sh -l
+{{ batchdirectives }}
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-#lt_archive
+set -euvx
+CASEROOT={{ caseroot }}
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
+
+./postproc_monthly_${caso}.sh 
+
+if [[ $resubmit -ne 0 ]]
+then
+   exit 0
+fi
+
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+if [[ $stop_op == "nmonths" ]]
+then
+   ./check_6months_output_in_archive_${caso}.sh 
 #interp_ORCA2_1X1_gridT2C3S.sh
+   outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+   mkdir -p $outdirC3S
+# check if already done (for recovery)
+   if [ ! -f $outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_r${ens}i00p00_ok ]
+   then
+# set if running or post
+      input="$running"
+
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
+
+   fi
+   ./interp_cice2C3S_${caso}.sh 
+# now modify the environment to run the extra $nmoredays days to get $fixsimdays
+   ./xmlchange STOP_OPTION="ndays" 
+   dif=`${DIR_UTIL}/days_in_forecast.sh -y $yyyy -m $st -l true | tail -1`
+   nmoredays=$(( $fixsimdays - $dif ))
+   ./xmlchange STOP_N=$nmoredays
+# from now on the postproc of NEMO is not required anymore
+   ./xmlchange NEMO_REBUILD=FALSE
+fi
+if [[ $stop_op == "ndays" ]]
+then
+   checkfile=logs/postproc_final_${caso}_DONE
+   if [[ ! -f $checkfile ]]
+   then
+      ./postproc_final_${caso}.sh $checkfile
+   fi
+fi

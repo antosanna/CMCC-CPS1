@@ -5,9 +5,7 @@
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
 
-caso=$1
-export ic=$2
-export outdirC3S=$3
+export outdirC3S=OUTDIRC3S
 INPUT=$4
 running=$5    # 0 if running; 1 if off-line
 
@@ -44,9 +42,9 @@ done < "${archive_size_stats_file}"
 # check that all mandatory dir are in the csvdir
 arr1=`echo ${mandatory_dirs} ${csvdir} ${csvdir} | tr ' ' '\n' | sort | uniq -u `
 if [[ ! -z $arr1 ]];then
-   body="Stop $DIR_UTIL/mv_case2_archive.sh for case $caso mandatory_dirs in $DIR_ARCHIVE/$caso are more than csvdir defined in ${archive_size_stats_file}"
+   body="Stop $DIR_UTIL/mv_case2_archive.sh for case CASO mandatory_dirs in $DIR_ARCHIVE/CASO are more than csvdir defined in ${archive_size_stats_file}"
    echo $body
-   title="${CPSSYS} ERROR - mv_case2archive.sh $caso "
+   title="${CPSSYS} ERROR - mv_case2archive.sh CASO "
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit 1
 fi
@@ -55,15 +53,15 @@ listdir=" "
 for dir in $dir2examine
 do
  # first check if mandatory dir exist
-   if [ ! -d $DIR_ARCHIVE/$caso/${dir} ]; then
-      echo "ERROR CHECK $DIR_ARCHIVE/$caso/${dir} ${dir} not exist!!!! "
+   if [ ! -d $DIR_ARCHIVE/CASO/${dir} ]; then
+      echo "ERROR CHECK $DIR_ARCHIVE/CASO/${dir} ${dir} not exist!!!! "
       listdir+=" $dir NOT EXISTENT "
       size_error+=$(( $size_error + 1 ))
       continue
    fi
 
    size=0
-   size=`du -h --block-size=1K --max-depth=0 $DIR_ARCHIVE/$caso/${dir}/ | awk '{ print $1}'`
+   size=`du -h --block-size=1K --max-depth=0 $DIR_ARCHIVE/CASO/${dir}/ | awk '{ print $1}'`
    FLAGERROR=0
    FLAGERROR=$(checkifoutofintervals ${lower2s[$dir]}  ${upper2s[$dir]} $size)
 done
@@ -98,12 +96,12 @@ EOF
 }
 
 
-archive_oce_ok=$DIR_CASES/$caso/logs/archive_${caso}_oce_DONE
-ens=`echo $caso|cut -d '_' -f3|cut -c 2,3`
+archive_oce_ok=$DIR_CASES/CASO/logs/archive_CASO_oce_DONE
+ens=`echo CASO|cut -d '_' -f3|cut -c 2,3`
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
 export real="r"${ens}"i00p00"
-export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+export st=`echo CASO|cut -d '_' -f 2|cut -c 5-6`
+export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
@@ -119,15 +117,15 @@ export ddtoday=`date +%d`
 export Htoday=`date +%H`
 export Mtoday=`date +%M`
 export Stoday=`date +%S`
-cd $INPUT
+INPUT=$DIR_ARCHIVE/CASO/ocn/hist/
 #TAKES 3'
 if [ $running -eq 0 ]
 then
-   inputlist=`ls ${caso}*_1m_*grid_T.nc`
+   inputlist=`ls CASO*_1m_*grid_T.nc`
 else    # from archive
-   inputlist=`ls ${caso}*_1m_*grid_T.zip.nc`
+   inputlist=`ls CASO*_1m_*grid_T.zip.nc`
 fi
-input=${caso}_1m_grid_T.nc
+input=CASO_1m_grid_T.nc
 #echo 'inizio ncrcat ' `date`
 if [ ! -f $input ]
 then
@@ -146,7 +144,6 @@ export ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
 
 export inputfile=$INPUT/$input
 
-#cp ${DIR_POST}/nemo/$scriptname $INPUT
 echo "---------------------------------------------"
 echo "launching $scriptname "`date`
 echo "---------------------------------------------"
@@ -157,7 +154,7 @@ echo "---------------------------------------------"
 if [ ! -f $outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_${real}_ok ]
 then
     title="[C3S] ${CPSSYS} forecast ERROR"
-    body="ERROR in standardization of ocean files for case $caso. 
+    body="ERROR in standardization of ocean files for case CASO. 
             Script is ${DIR_POST}/nemo/$scriptname"
     exit 1
 else
@@ -180,7 +177,7 @@ do
    if [ ! -f $C3Sfile ]
    then
       title="${CPSSYS} forecast ERROR"
-      body="C3S ocean file $C3Sfile for variable not produced for case $caso. 
+      body="C3S ocean file $C3Sfile for variable not produced for case CASO. 
             Script is ${DIR_POST}/nemo/$scriptname"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
       exit 1
@@ -194,7 +191,7 @@ then
    do
       rootname=`basename $input |rev |cut -d '.' -f1 --complement|rev`
       $compress $input ${rootname}.zip.nc
-      ncatted -O -a ic,global,a,c,"$ic" ${rootname}.zip.nc
+      ncatted -O -a ic,global,a,c,"IC" ${rootname}.zip.nc
 # TEMPORARY
       rm -f $input 
    done
@@ -203,7 +200,7 @@ then
    do
       rootname=`basename $input |rev |cut -d '.' -f1 --complement|rev`
       $compress $input ${rootname}.zip.nc
-      ncatted -O -a ic,global,a,c,"$ic" ${rootname}.zip.nc
+      ncatted -O -a ic,global,a,c,"IC" ${rootname}.zip.nc
       rm -f $input 
    done
    inputlist=`ls *1d_*grid_Tglobal.nc`
@@ -211,31 +208,31 @@ then
    do
       rootname=`basename $input |rev |cut -d '.' -f1 --complement|rev`
       $compress $input ${rootname}.zip.nc
-      ncatted -O -a ic,global,a,c,"$ic" ${rootname}.zip.nc
+      ncatted -O -a ic,global,a,c,"IC" ${rootname}.zip.nc
       rm -f $input 
    done
    
-   if [ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}*zip.nc|wc -l` -ne 0 ] 
+   if [ `ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc|wc -l` -ne 0 ] 
    then
-#      chmod -R u+rw $ARCHIVE/$caso
-#      rsync -auv --remove-source-files $DIR_ARCHIVE/$caso/ocn/hist/${caso}*zip.nc $ARCHIVE/$caso/ocn/hist/
-      chmod -R u+rw $FINALARCHIVE/$caso
-      mkdir -p $FINALARCHIVE/$caso/ocn/hist
+#      chmod -R u+rw $ARCHIVE/CASO
+#      rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $ARCHIVE/CASO/ocn/hist/
+      chmod -R u+rw $FINALARCHIVE/CASO
+      mkdir -p $FINALARCHIVE/CASO/ocn/hist
       func_error_dims "ocn"
       if [[ $FLAGERROR -ne 0 ]]
       then
          title="${CPSSYS} forecast ERROR"
-         body="ERROR in archiving ocean files for case $caso. Dimensions are not the expected ones"
+         body="ERROR in archiving ocean files for case CASO. Dimensions are not the expected ones"
          exit 1
       fi     
-      rsync -auv --remove-source-files $DIR_ARCHIVE/$caso/ocn/hist/${caso}*zip.nc $FINALARCHIVE/$caso/ocn/hist/
+      rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $FINALARCHIVE/CASO/ocn/hist/
       touch  $archive_oce_ok
    fi  
 elif [ $running -eq 1 ]  # 0 if running; 1 if off-line
 then
-   mkdir -p $FINALARCHIVE/$caso/ocn/hist/
-   rsync -auv --remove-source-files $DIR_ARCHIVE/$caso/ocn/hist/${caso}*zip.nc $FINALARCHIVE/$caso/ocn/hist/
+   mkdir -p $FINALARCHIVE/CASO/ocn/hist/
+   rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $FINALARCHIVE/CASO/ocn/hist/
    touch  $archive_oce_ok
-   rm -f $INPUT/${caso}_*grid_T*
+   rm -f $INPUT/CASO_*grid_T*
 fi
 exit 0

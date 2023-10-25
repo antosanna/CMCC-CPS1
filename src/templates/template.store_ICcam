@@ -13,4 +13,4 @@ yyyyIC=`echo $caso|cut -d '.' -f2|cut -c 1-4`
 stIC=`echo $caso|cut -d '.' -f2|cut -c 5-6`
 st=`date -d ' '$yyyyIC${stIC}15' + 1 month' +%m` 
 yyyy=`date -d ' '$yyyyIC${stIC}15' + 1 month' +%Y` 
-mv $WORK_CPS/archive/$caso/atm/hist/*.cam.i* $IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$yyyy-$st-01-00000.$pp.nc 
+mv $WORK_CPS/archive/$caso/atm/hist/*.cam.i* $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$pp.nc 

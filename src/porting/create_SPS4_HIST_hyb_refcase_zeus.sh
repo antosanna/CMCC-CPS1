@@ -1,42 +1,41 @@
 #!/bin/sh -l
 
-refCESM=CMCC-CM_dev
-refUSER=dp16116
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+
 caso=SPS4_HIST_hyb_refcase
-DIR_CASES=/work/csp/$USER/CPS/CMCC-CPS1/cases
 
 if [[ -d $DIR_CASES/$caso ]]
 then
    rm -rf $DIR_CASES/$caso
 fi
 
-/users_home/$DIVISION/$refUSER/$refCESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach juno --run-unsupported
+$DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach zeus --run-unsupported
 
 cd $DIR_CASES/$caso
 
-./xmlchange NTASKS_ATM=-4
-./xmlchange NTASKS_CPL=-4
-./xmlchange NTASKS_OCN=279
-./xmlchange NTASKS_ICE=-4
-./xmlchange NTASKS_ROF=-4
-./xmlchange NTASKS_LND=-4
+./xmlchange STOP_OPTION=ndays
+./xmlchange NTASKS_ATM=-20
+./xmlchange NTASKS_CPL=-20
+./xmlchange NTASKS_OCN=330
+./xmlchange NTASKS_ICE=-20
+./xmlchange NTASKS_ROF=-20
+./xmlchange NTASKS_LND=-20
 ./xmlchange NTASKS_WAV=1
 ./xmlchange NTASKS_GLC=1
 ./xmlchange NTASKS_ESP=1
 ./xmlchange ROOTPE_ROF=0
 ./xmlchange ROOTPE_ICE=0
 ./xmlchange ROOTPE_OCN=0
-./xmlchange PIO_STRIDE=18
 ./xmlchange CAM_CONFIG_OPTS="-phys cam_dev -chem waccm_sc_mam4 -nlev 83"
 ./xmlchange RESUBMIT=1
 ./xmlchange CLM_FORCE_COLDSTART=off
 ./xmlchange ROF_NCPL=8
 ./xmlchange CHARGE_ACCOUNT=0490
 ./xmlchange PROJECT=0490
-./xmlchange STOP_OPTION=ndays
 ./xmlchange STOP_N=1
 ./xmlchange RUN_TYPE=hybrid
-./xmlchange RUN_REFDIR=/work/csp/cp1/restart_cps_test/
+./xmlchange RUN_REFDIR=/work/$DIVISION/as34319/restart_cps_test/
 ./xmlchange RUN_REFCASE=cm3_cam122_cpl2000-bgc_t01
 ./xmlchange RUN_REFDATE=0020-01-01
 ./xmlchange GET_REFCASE=TRUE
@@ -118,7 +117,6 @@ EOF1
 cat > user_nl_clm << EOF2
 flanduse_timeseries = '\$DIN_LOC_ROOT/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_hist_16pfts_Irrig_CMIP6_simyr1850-2015_c171025.nc'
 fsurdat = '\$DIN_LOC_ROOT/lnd/clm2/surfdata_map/surfdata_0.47x0.63_16pfts_Irrig_CMIP6_simyr1850_c170919.nc'
-!finidat = '/work/csp/mb16318/restart/1981-01-01-00000_2e/cm3_lndHIST_t02e.clm2.r.1981-01-01-00000.nc'
 hist_empty_htapes=.true.
 hist_mfilt = 1,365,
 hist_nhtfrq = 0, -24,
