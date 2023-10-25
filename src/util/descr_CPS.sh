@@ -34,18 +34,21 @@ refcaseSCEN=SPS4_SCEN_hyb_refcase
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
-   operational_user=cp1
-   WORK=/work/$DIVISION/$USER/
-   WORK=/work/$DIVISION/$operational_user/
    MYCESMDATAROOT=/data/$DIVISION/$USER/inputs/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
    if [[ $machine == "juno" ]]
    then
+      operational_user=cp1
       pID=0490 #Juno
+      maxnumbertosubmit=20
    elif [[ $machine == "zeus" ]]
    then
       pID=0574 #zeus
+      operational_user=sps-dev
+      maxnumbertosubmit=10
    fi
+   WORK=/work/$DIVISION/$USER/
+   WORK1=/work/$DIVISION/$operational_user/
 #   apprun=??? #sps35 Zeus
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
@@ -314,7 +317,7 @@ DIR_UTIL=$DIR_SRC/util
 DIR_TEMPL=$DIR_SRC/templates
 DIR_LOG=$DIR_ROOT/logs
 # DIR_PORT=$DIR_SRC/porting
-# TRIP_DIR=$DIR_ROOT/triplette_done
+TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
 DIR_ATM_IC=$IC_CPS/IC_CAM
 DIR_OCE_IC=$IC_CPS/IC_NEMO
@@ -336,7 +339,6 @@ DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
 DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_SUBM_SCRIPTS=$WORK/CMCC-${CPSSYS}/SUBM_SCRIPTS
-# DIR_SCRA=$DIR_SUBM_SCRIPTS
 DIR_ARCHIVE=$WORK_CPS/archive
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
