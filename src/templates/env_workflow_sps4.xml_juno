@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{parallelq_s} -P $ENV{pID} -W 01:00 -x -app c3s2">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{parallelq_l} -P $ENV{pID} -W 01:00 -x -app c3s2">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
