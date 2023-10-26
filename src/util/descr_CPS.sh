@@ -44,7 +44,7 @@ then
    elif [[ $machine == "zeus" ]]
    then
       pID=0574 #zeus
-      operational_user=sps-dev
+      operational_user=sara_sps-dev
       maxnumbertosubmit=10
    fi
    WORK=/work/$DIVISION/$USER/
