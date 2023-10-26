@@ -59,7 +59,7 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
 
-rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${machine} $DIR_CASES/$caso/env_workflow.xml
+rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 #----------------------------------------------------------
 # TO DO
 # set-up the case after modfication env_workflow
@@ -76,9 +76,9 @@ refcaseIC=ic_for_$caso
 ln -sf $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}_00000001_restart.nc
 ln -sf $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}.cice.r.$yyyy-${st}-01-00000.nc
 echo "$refcaseIC.cice.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.ice
-ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc
+ln -sf $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc
 echo "${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.lnd
-ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc
+ln -sf $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc
 echo "${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.rof
 
 #-----------
@@ -114,22 +114,6 @@ chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
 
 mkdir -p $DIR_CASES/$caso/logs
 
-# cp and change lt_archive
-#sed 's/ic="dummy"/ic="'$ic'"/g;s/EXPNAME/'$caso'/g' $DIR_TEMPL/lt_archive_C3S.sh > $DIR_CASES/$caso/lt_archive_C3S.sh
-#chmod u+x $DIR_CASES/$caso/lt_archive_C3S.sh
-
-#DIR_TEMPL/template.hindcast_checklist submitted by env_workflow.xml
-# TO DO chmod u+x $DIR_CASES/$caso/Tools/checklist_run.sh
-
-#----------------------------------------------------------
-# $caso.l_archive
-#----------------------------------------------------------
-#env_workflow.xml
-#----------------------------------------------------------
-# modify the default Nemo postprocessing
-#----------------------------------------------------------
-#$DIR_TEMPL/template.nemo_rebuild4cmcc-cm in env_workflow.xml
-#----------------------------------------------------------
 
 #----------------------------------------------------------
 # CAM  TEMPLATE
@@ -151,7 +135,7 @@ cd $DIR_CASES/$caso
 # submit first month
 #----------------------------------------------------------
 
-exit
+#exit
 if [[ $flag_test -ne 0 ]]
 then
 #   if [[ $flag_test -eq 1 ]]
@@ -163,6 +147,7 @@ then
 #   fi
    echo "not implemented yet"
 else
+    conda activate $envcondacm3
     $DIR_CASES/$caso/case.submit
 fi
 checktime=`date`

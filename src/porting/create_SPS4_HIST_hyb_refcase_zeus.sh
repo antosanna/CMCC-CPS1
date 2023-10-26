@@ -133,7 +133,7 @@ h2osno_max = 10000.0
 lotmp_snowdensity_method = 'TruncatedAnderson1976'
 wind_dependent_snow_density = .false.
 
-use_init_interp = .true.
+!use_init_interp = .true.
 EOF2
 
 echo "ice_runoff = .false." >> user_nl_hydros

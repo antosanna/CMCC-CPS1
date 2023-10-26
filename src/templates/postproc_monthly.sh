@@ -1,3 +1,4 @@
+#!/bin/sh -l
 #-----------------------------------------------------------------------
 # Determine necessary environment variables
 #-----------------------------------------------------------------------
@@ -100,6 +101,10 @@ done
 if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
    rm -rf $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000
 fi
+# now rebuild EquT from NEMO
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+$DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
 
 exit 0

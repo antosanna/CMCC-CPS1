@@ -40,12 +40,16 @@ then
    then
       operational_user=cp1
       pID=0490 #Juno
+      envcondacm3=da_definire
       maxnumbertosubmit=20
+      env_workflow_tag=cmcc
    elif [[ $machine == "zeus" ]]
    then
       pID=0574 #zeus
       operational_user=sara_sps-dev
       maxnumbertosubmit=10
+      envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
+      env_workflow_tag=cmcc
    fi
    WORK=/work/$DIVISION/$USER/
    WORK1=/work/$DIVISION/$operational_user/
@@ -89,7 +93,7 @@ then
    then
      	pushdir=/data/products/C3S/$(whoami)/push/
    fi
-#   SCRATCHDIR1=/work/csp/${operational_user}/scratch
+   SCRATCHDIR1=/work/csp/${operational_user}/scratch
    SCRATCHDIR=$WORK/scratch
 #   FINALARCHIVE1=/data/csp/${operational_user}/archive/CESM/${CPSSYS}/
 #   FINALARCHIVE=/data/csp/`whoami`/archive/CESM/${CPSSYS}/
@@ -100,6 +104,7 @@ then
 #      FINALARCHC3S=$SCRATCHDIR/Seasonal/${CPSSYS}/daily_postpc
 #   fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
+   DATA_ARCHIVE=/data/csp/$USER/archive
    DATA_ARCHIVE1=/data/csp/${operational_user}/archive
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
@@ -117,8 +122,8 @@ then
 #   if [ $(whoami) == ${operational_user} ]; then
 #      IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
 #   fi
-   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}_test/
-   IC_CLM_CPS_DIR1=$SCRATCHDIR/IC/CLM_${CPSSYS}_test/
+   IC_CLM_CPS_DIR=${DATA_ARCHIVE}/IC/CLM_${CPSSYS}/
+   IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
 #   WOIS=/work/csp/${operational_user}/SPS/CMCC-OIS/
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
