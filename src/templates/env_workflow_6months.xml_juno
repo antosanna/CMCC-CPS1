@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q p_short -P 0490 -W 01:00 -x -app c3s2">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q p_short -P 0490 -W 01:00 -x -app c3s2" -e logs/forecast_month.run_%J.err -o logs/forecast_month.run_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -80,7 +80,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0490 -M 1000 -W 00:20 -e st_archive_IC_%J.err -o st_archive_IC_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0490 -M 1000 -W 00:20 -e logs/st_archive_%J.err -o logs/st_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -133,7 +133,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0490 -W 00:20 -M 1000 -W 00:20 -e nemo_rebuild_IC_%J.err -o nemo_rebuild_IC_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0490 -W 00:20 -M 1000 -W 00:20 -e logs/nemo_rebuild_%J.err -o logs/nemo_rebuild_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -189,7 +189,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20" -e logs/checklist_%J.err -o logs/checklist_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -245,7 +245,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q s_short -P 0566 -W 00:20" -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
