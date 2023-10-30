@@ -6,8 +6,7 @@
 . $DIR_UTIL/load_nco
 
 export outdirC3S=OUTDIRC3S
-INPUT=$4
-running=$5    # 0 if running; 1 if off-line
+running=${1:-0}    # 0 if running; 1 if off-line
 
 set -exuv
 func_error_dims () {
@@ -105,8 +104,8 @@ export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
-export lsmfile="$REPOGRID/lsm_${SPSSystem}_cam_h1_reg1x1_0.5_359.5.nc"
-export meshmaskfile="$REPOSITORY/mesh_mask_from2000.nc"
+export lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
+export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
 export srcGridName="$REPOSITORY/ORCA_SCRIP_gridT.nc"
 export dstGridName="$REPOSITORY/World1deg_SCRIP_gridT.nc"
 export wgtFile="$REPOSITORY/ORCA_2_World_SCRIP_gridT.nc"
@@ -214,11 +213,10 @@ then
    
    if [ `ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc|wc -l` -ne 0 ] 
    then
-#      chmod -R u+rw $ARCHIVE/CASO
-#      rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $ARCHIVE/CASO/ocn/hist/
       chmod -R u+rw $FINALARCHIVE/CASO
       mkdir -p $FINALARCHIVE/CASO/ocn/hist
-      func_error_dims "ocn"
+# TEMPORARY COMMENT
+#      func_error_dims "ocn"
       if [[ $FLAGERROR -ne 0 ]]
       then
          title="${CPSSYS} forecast ERROR"

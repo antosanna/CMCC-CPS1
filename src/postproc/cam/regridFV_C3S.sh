@@ -16,7 +16,6 @@ here=$PWD
 debug=1
 #
 
-repogrid=$MYCESMDATAROOT/CMCC-${SPSSYS}/files4${SPSSYS}
 if [ $debug -eq 1 ] 
 then
 #==================================================
@@ -48,17 +47,11 @@ else
    export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
    export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
    ens=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
-   set +euvx
-   if [ $yyyy -lt ${iniy_fore} ]
-   then
-     . $DIR_UTIL/descr_hindcast.sh
-   else
-     . $DIR_UTIL/descr_forecast.sh 
-   fi
-set -euvx
 fi
 
+set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
+set -euvx
 export ndaysreq=$fixsimdays
 startdate=$yyyy$st
 # These variables are required by ncl script regrid from SE to reg1x1
@@ -70,17 +63,23 @@ export Htoday=`date +%H`
 export Mtoday=`date +%M`
 export Stoday=`date +%S`
 export outputgrid="reg1x1"
-export srcGridName=$repogrid/srcGrd_ne60.nc
-export dstGridName=$repogrid/dstGrd_${outputgrid}.nc
-export wgtFileName=$repogrid/CAMFV05_2_${outputgrid}_C3S.nc
-export lsmFileName=$repogrid/lsm_SPS3.5_cam_h1_reg1x1_0.5_359.5.nc
+REPOTMP=$SCRATCHDIR/tmp
+#export srcGridName=$REPOGRID/srcGrd_FV.nc
+#export dstGridName=$REPOGRID/dstGrd_${outputgrid}.nc
+#export wgtFileName=$REPOGRID/CAMFV05_2_${outputgrid}_C3S.nc
+#export wgtFileNameCons=$REPOGRID/CAMFV05_2_${outputgrid}_conserve_C3S.nc
+export srcGridName=$REPOTMP/srcGrd_FV.nc
+export dstGridName=$REPOTMP/dstGrd_${outputgrid}.nc
+export wgtFileName=$REPOTMP/CAMFV05_2_${outputgrid}_C3S.nc
+export wgtFileNameCons=$REPOTMP/CAMFV05_2_${outputgrid}_conserve_C3S.nc
+export lsmFileName=$REPOGRID/lsm_SPS3.5_cam_h1_reg1x1_0.5_359.5.nc
 export version=$versionSPS
 export real="r"${ens}"i00p00"
 export last_term="_"${real}".nc"
 export C3Stable="$DIR_TEMPL/C3S_table.txt"
 #export C3Stable="$here/C3S_table.txt"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
-export fixsimdays=$fixsimdays
+export fixsimdays
 
 #----------------------------------------
 # INPUT TO BE REGRIDDED
@@ -88,10 +87,10 @@ export fixsimdays=$fixsimdays
 for type in h2 #h0 h1 h2 h3 
 do
    export type=$type
-   export inputFV=$inputdirCAM/$caso.cam.${type}.2000-02-01-00000.nc
+   export inputFV=$inputdirCAM/$caso.cam.${type}.$yyyy-$st-01-00000.nc
    case $type
    in
-       h0)  export inputFV=$inputdirCAM/$caso.cam.${type}.2000-02.nc ;;
+       h0)  export inputFV=$inputdirCAM/$caso.cam.${type}.$yyyy-$st.nc ;;
        h1)  export frq=6hr;outxday=4;;
        h2)  export frq=12hr;outxday=2;;
        h3)  export frq=day;outxday=1;;

@@ -28,19 +28,21 @@ DPSsystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2015
 refcaseHIST=SPS4_HIST_hyb_refcase
+#refcaseHIST=SPS4_HIST_hyb_CERISE
 refcaseSCEN=SPS4_SCEN_hyb_refcase
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
-   MYCESMDATAROOT=/data/$DIVISION/$USER/inputs/
+   MYCESMDATAROOT=/data/$DIVISION/$USER/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
    if [[ $machine == "juno" ]]
    then
       operational_user=cp1
       pID=0490 #Juno
       envcondacm3=da_definire
+      envcondanemo=de_definire
       maxnumbertosubmit=20
       env_workflow_tag=cmcc
    elif [[ $machine == "zeus" ]]
@@ -49,6 +51,7 @@ then
       operational_user=sara_sps-dev
       maxnumbertosubmit=10
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
+      envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       env_workflow_tag=cmcc
    fi
    WORK=/work/$DIVISION/$USER/
@@ -95,8 +98,10 @@ then
    fi
    SCRATCHDIR1=/work/csp/${operational_user}/scratch
    SCRATCHDIR=$WORK/scratch
-#   FINALARCHIVE1=/data/csp/${operational_user}/archive/CESM/${CPSSYS}/
-#   FINALARCHIVE=/data/csp/`whoami`/archive/CESM/${CPSSYS}/
+   FINALARCHIVE1=/work/csp/${operational_user}/test_archive/CPS/${CPSSYS}/
+   FINALARCHIVE=/work/csp/`whoami`/test_archive/CPS/${CPSSYS}/
+#   FINALARCHIVE1=/data/csp/${operational_user}/archive/CPS/${CPSSYS}/
+#   FINALARCHIVE=/data/csp/`whoami`/archive/CPS/${CPSSYS}/
 #   FINALARCHC3S1=/data/csp/${operational_user}/Seasonal/${CPSSYS}/daily_postpc
 #   if [[ `whoami` == ${operational_user} ]] ;then
 #      FINALARCHC3S=$FINALARCHC3S1
@@ -268,7 +273,7 @@ fixsimdays=185  # total number of simulation days
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
 # jobIDdummy=1234
-versionSPS=dummy
+versionSPS=20231001
 endy_hind=2022
 iniy_hind=1993
 # iniy_fore=2017
@@ -320,7 +325,8 @@ DIR_UTIL=$DIR_SRC/util
 # DIR_DIAG=$DIR_UTIL/diag
 # DIR_DIAG_C3S=$DIR_UTIL/diag_C3S_final
 DIR_TEMPL=$DIR_SRC/templates
-DIR_LOG=$DIR_ROOT/logs
+DIR_LOG1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/logs
+DIR_LOG=/work/csp/$USER/CPS/CMCC-${CPSSYS}/logs
 # DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
@@ -342,7 +348,7 @@ WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
 DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
-DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_SUBM_SCRIPTS=$WORK/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_ARCHIVE=$WORK_CPS/archive
 # ######## WORK DIRS FOR C3S 

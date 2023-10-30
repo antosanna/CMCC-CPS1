@@ -3,7 +3,8 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
-caso=SPS4_HIST_hyb_refcase
+#caso=SPS4_HIST_hyb_refcase
+caso=test1
 
 if [[ -d $DIR_CASES/$caso ]]
 then

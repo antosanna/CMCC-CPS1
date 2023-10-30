@@ -4,12 +4,33 @@
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
 CASEROOT={{ caseroot }}
+# go to archive logdir to read last atm.log and get curryear and currmon
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
+cd $DOUT_S_ROOT/logs
+gunzip `ls -1tr atm.log.* |tail -1`
+logCAM=`ls -1tr atm.log.* |tail -1`
+mese=`grep 'Current date' $logCAM |awk '{print $8}'`
+curryear=`grep 'Current date' $logCAM |awk '{print $7}'`
+gzip $logCAM
+currmon=`printf '%.2d' $mese`
+
+
 cd $CASEROOT
 #get case name and cores dedicated to ocean model from xml files
 caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
 resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
 
-./postproc_monthly_${caso}.sh 
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+
+flag_done=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
+if [[ ! -f $flag_done ]]
+then
+   ./postproc_monthly_${caso}.sh $flag_done
+fi
 
 if [[ $resubmit -ne 0 ]]
 then
@@ -17,8 +38,6 @@ then
 fi
 
 stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
-yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
-st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 if [[ $stop_op == "nmonths" ]]
 then
    ./check_6months_output_in_archive_${caso}.sh 
@@ -34,7 +53,11 @@ then
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
 
    fi
-   ./interp_cice2C3S_${caso}.sh 
+   flag_iceok=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
+   if [ ! -f $flag_iceok ]
+   then
+      ./interp_cice2C3S_${caso}.sh $flag_iceok
+   fi
 # now modify the environment to run the extra $nmoredays days to get $fixsimdays
    ./xmlchange STOP_OPTION="ndays" 
    dif=`${DIR_UTIL}/days_in_forecast.sh -y $yyyy -m $st -l true | tail -1`
@@ -42,6 +65,10 @@ then
    ./xmlchange STOP_N=$nmoredays
 # from now on the postproc of NEMO is not required anymore
    ./xmlchange NEMO_REBUILD=FALSE
+   conda deactivate 
+   conda activate $envcondacm3
+   ./case.submit
+   exit
 fi
 if [[ $stop_op == "ndays" ]]
 then

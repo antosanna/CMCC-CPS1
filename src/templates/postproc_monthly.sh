@@ -7,18 +7,19 @@
 . ${DIR_UTIL}/load_nco
 
 set -euxv
+flag_done=$1
 echo "-----------STARTING EXPNAME.l_archive-------- "`date`
 cd $DIR_CASES/EXPNAME
 ic="DUMMYIC"
-DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2`
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
 cd $DOUT_S_ROOT/logs
 gunzip `ls -1tr atm.log.* |tail -1`
-logCAM = `ls -1tr atm.log.* |tail -1`
-mese = `grep 'Current date' $logCAM |awk '{print $8}'`
-curryear = `grep 'Current date' $logCAM |awk '{print $7}'`
+logCAM=`ls -1tr atm.log.* |tail -1`
+mese=`grep 'Current date' $logCAM |awk '{print $8}'`
+curryear=`grep 'Current date' $logCAM |awk '{print $7}'`
 gzip $logCAM
-currmon=`printf '%.2d' $currmon`
-cd $CASEROOT
+currmon=`printf '%.2d' $mese`
+cd $DIR_CASES/EXPNAME
 
 #-----------------------------------------------------------------------
 # check presence of TMAX spikes
@@ -106,5 +107,6 @@ yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 $DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
+touch  $flag_done
 
 exit 0

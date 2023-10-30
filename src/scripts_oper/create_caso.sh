@@ -100,7 +100,7 @@ stop_op=nmonths
 
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow
-sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/ST/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
+sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/MM/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
 sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
@@ -110,7 +110,7 @@ chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
 sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_monthly.sh > $DIR_CASES/$caso/postproc_monthly_${caso}.sh
 chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
 sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_final.sh > $DIR_CASES/$caso/postproc_final_${caso}.sh
-chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
+chmod u+x $DIR_CASES/$caso/postproc_final_${caso}.sh
 
 mkdir -p $DIR_CASES/$caso/logs
 

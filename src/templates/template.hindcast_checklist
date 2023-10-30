@@ -14,8 +14,8 @@ cd $CASEROOT
 caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
 yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
-resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2`
-lg_continue=`./xmlquery CONTINUE_RUN|cut -d '=' -f2`
+resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2|sed 's/ //g'`
+lg_continue=`./xmlquery CONTINUE_RUN|cut -d '=' -f2|sed 's/ //g'`
 month=$(($nmonfore - $resubmit - 1))
 
 # TABLE FORMAT
@@ -24,12 +24,14 @@ month=$(($nmonfore - $resubmit - 1))
 # Assign proper list file according to $typeofrun (hindcast/forecast)
 listfiletocheck="${SPSSystem}_${typeofrun}_list.csv"
 # calc position of the ith-month inside csv table
+# ma il jobID?... non capisco a cosa serva...cambia di mese in mese
 table_month_id=$(($month + 2))
 # find line number
 LN="$(grep -n "$caso" ${DIR_CHECK}/$listfiletocheck | head -n 1 | cut -d: -f1)"
 LNp1=$(($LN + 1))
 LNm1=$(($LN - 1))
+# questo non mi sembra lo stesso
 if [ $resubmit == "True" ] ; then
- table_month_id=10
+  table_month_id=10
 fi
 # TO BE CONITNUE

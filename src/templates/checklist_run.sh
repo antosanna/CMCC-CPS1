@@ -70,20 +70,20 @@ set -euvx
 #caso=`echo $caso | awk '{$1=$1};1'`
 
 # get month
-getmonth $resubmit $continue
-echo "$month"
+#getmonth $resubmit $continue
+#echo "$month"
 # calc position of the ith-month inside csv table 
-table_month_id=$(($month + 2))
+#table_month_id=$(($month + 2))
 
 # TABLE FORMAT
 #CASO,JOBID,mese1,mese2,mese3,mese4,mese5,mese6,mese7,archivio
 #${SPSsystem}_199301_001,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy
 # Assign proper list file according to $typeofrun (hindcast/forecast)
-listfiletocheck="${SPSSYS}_${typeofrun}_list.csv"
+#listfiletocheck="${SPSSYS}_${typeofrun}_list.csv"
 # find line number
-LN="$(grep -n "$caso" ${DIR_CHECK}/$listfiletocheck | head -n 1 | cut -d: -f1)"
-LNp1=$(($LN + 1))
-LNm1=$(($LN - 1))
+#LN="$(grep -n "$caso" ${DIR_CHECK}/$listfiletocheck | head -n 1 | cut -d: -f1)"
+#LNp1=$(($LN + 1))
+#LNm1=$(($LN - 1))
 
 # just for LT_ARCHIVE
 if [ $ltarchdone == "True" ] ; then

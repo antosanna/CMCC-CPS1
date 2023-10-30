@@ -1,11 +1,26 @@
 #!/usr/bin/sh -l
 {{ batchdirectives }}
 . ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_nco
 set -euvx
 CASEROOT={{ caseroot }}
 cd $CASEROOT
 #get case name and cores dedicated to ocean model from xml files
 CASE=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+#
+# go to archive logdir to read last atm.log and get curryear and currmon
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
+cd $DOUT_S_ROOT/logs
+gunzip `ls -1tr atm.log.* |tail -1`
+logCAM=`ls -1tr atm.log.* |tail -1`
+mese=`grep 'Current date' $logCAM |awk '{print $8}'`
+curryear=`grep 'Current date' $logCAM |awk '{print $7}'`
+gzip $logCAM
+currmon=`printf '%.2d' $mese`
+#
+# go back to CASEROOT
+cd $CASEROOT
 NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
 # this is the number of parallel postprocessing you want to set
 # NTASK MUST BE A MULTIPLE OF N!!!
@@ -14,19 +29,19 @@ N=`$DIR_UTIL/max_prime_factor.sh $NTASK`
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
 # TEMPORARY
-conda activate /users_home/csp/as34319/.conda/envs/nemo_rebuild
+conda activate $envcondanemo
 # add your frequencies and grids. The script skip them if not present
 for frq in 1m 1d
 do
    for grd in T U V W ptr
    do
-      nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*grid_${grd}_0000.nc|wc -l`
+      nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
       then
          continue
       fi
 # this should be independent from expID and general
-      data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
+      data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
 # VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
       mpirun -n $N python -m mpi4py /users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
       stat=$?
@@ -34,17 +49,31 @@ do
       if [[ $stat -eq 0 ]]
       then
          rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
+         $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
+         statzip=$?
+         if [[ $statzip -eq 0 ]]
+         then
+            rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc 
+         fi
       fi
    done
    for grd in scalar
    do
-      nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*_${grd}_0000.nc|wc -l`
+      nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
       then
          continue
       fi
-      data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
-      listarm=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc|grep -v $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_${grd}_0000.nc`
-         rm $listarm
+      listarm=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0???.nc|grep -v $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
+      finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
+      headscalarfile=`echo $finalfile|sed 's/_0000.nc//g'`
+      mv $finalfile $headscalarfile.nc
+      $compress $headscalarfile.nc $headscalarfile.zip.nc
+      statzip=$?
+      if [[ $statzip -eq 0 ]]
+      then
+         rm $headscalarfile.nc
+      fi
+      rm $listarm
    done
 done

@@ -132,9 +132,10 @@ begin
     yyyy = getenv("yyyy")
     st = getenv("st")
     srcFileName = getenv("inputfile")
+    print("going to read "+srcFileName)
     lsmFileName = getenv("lsmfile")
     lsmfile = addfile(lsmFileName,"r")
-    lsm=tofloat(lsmfile->LANDFRAC)
+    lsm=tofloat(lsmfile->lsmC3S_SPS4)
     delete(lsm@_FillValue)
     lsm=lsm+1.
     lsm=where(lsm.eq.2.,0.,lsm)
@@ -306,13 +307,15 @@ begin
 
   nav_lat = sfile->nav_lat
   nav_lon = sfile->nav_lon
-  tem = sfile->votemper
-  sal = sfile->vosaline
-  sshn = sfile->sossheig
+  tem = sfile->thetao
+  sal = sfile->so
+  sshn = sfile->zos
 
   tmask = tofloat(meshmask->tmask(0,:,:,:))
-  fse3t = tofloat(meshmask->e3t(0,:,:,:))
-  e3t_0 = tofloat(meshmask->e3t_0(0,:))
+  fse3t = tofloat(meshmask->e3t_0(0,:,:,:))
+;  fse3t = tofloat(meshmask->e3t(0,:,:,:))
+;  e3t_0 = tofloat(meshmask->e3t_0(0,:))
+  e3t_0 = tofloat(meshmask->e3t_1d(0,:))
 
   lon=lonFlip(lon)
   delete(lon@lonFlip)
@@ -320,7 +323,7 @@ begin
   outdir=getenv("outdirC3S")
   system("/bin/rm -f "+outdir+"/interp_ORCA2_1X1_gridT2C3S.ncl_"+real+"_ok")
   print("this is the output dir "+outdir)
-  first=1
+  first=0
   do i=0,nv-1
        if (model(i).eq."nemo") then
 
@@ -337,7 +340,7 @@ begin
    
    ;---------------------------------------------
           xtmp   = tofloat(sfile->$varname(i)$) 
-          print(varname(i))
+          print("processing var "+varname(i))
           if ( varname(i).eq."somss300") then
              xtmp=avg300(sshn,sal,tmask,fse3t,e3t_0,fillval(i))
           end if
@@ -345,8 +348,17 @@ begin
              xtmp=avg300(sshn,tem,tmask,fse3t,e3t_0,fillval(i))
           end if
 
-          tos=xtmp(0,:,:)
+          nn=dimsizes(xtmp)
+          print("var size "+nn)
+          rank=dimsizes(nn)
+          print("var rank "+rank)
+          delete(nn)
+          if(rank.eq.3)then
+             tos=xtmp(0,:,:)
+          end if
           xtmp@_FillValue=1.e+20
+          printVarSummary(lsmnemo)
+          printVarSummary(xtmp)
           do it=0,nt-1
    
              xtmp(it,:,:)=where(lsmnemo(0,:,:).eq.lsmnemo@_FillValue,lsmnemo@_FillValue,xtmp(it,:,:))
@@ -422,8 +434,11 @@ begin
    ;       Opt@Debug        = True
           Opt@PrintTimings = True
    
+          mm=dimsizes(xtmp)
+          print("dimensions mm are "+mm)
           tmp = ESMF_regrid_with_weights(xtmp(0,:,:),wgtFile,Opt)
           nn=dimsizes(tmp)
+          print("dimensions nn are "+nn)
           varout=new((/nv,nt,nn(0),nn(1)/),"float")
           varout@_FillValue = 1.e+20
           delete(tmp)

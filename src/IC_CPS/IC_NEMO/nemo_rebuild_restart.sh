@@ -4,7 +4,12 @@
 . $DIR_UTIL/load_nco
 # activate needed env
 #TEMPORARY
-conda activate /users_home/csp/as34319/.conda/envs/nemo_rebuild
+if [[ $machine -ne "juno" ]]
+then
+   echo "we cannot run this script here because files are in Juno"
+   exit
+fi
+conda activate $envcondanemo
 set -euvx    # keep this instruction after conda activation
 #INPUT:
 yyyy=$1

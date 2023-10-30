@@ -193,26 +193,40 @@ begin
 ; 3. Generate the weights file, using the source and 
 ;    destination files created in #1 and #2.
 ;-----------------------------------------------------
-  wgtFileName=getenv("wgtFileName") 
-;  if(isfilepresent(wgtFileName)) then
-;      print("Found WeightFile "+wgtFileName)
-;  else
-      print("Creating WeightFile "+wgtFileName)
-      Opt               = True
-      Opt@WgtFileName=wgtFileName
-      Opt@InterpMethod  ="bilinear" ; "patch", "conserve"
-      Opt@SrcInputFileName  = srcFileName
-      Opt@SrcTitle="FV grid"
+   wgtFileName=getenv("wgtFileName") 
+   Opt               = True
+   Opt@WgtFileName=wgtFileName
+   Opt@InterpMethod  ="bilinear" ; "patch", "conserve"
+   Opt@SrcInputFileName  = srcFileName
+   Opt@SrcTitle="FV grid"
 ;---Destination file options
-      Opt@DstGridType       = "1x1"               ; 1x1 degree grid
-      Opt@DstLLCorner       = (/ -89.5,   0.5/)
-      Opt@DstURCorner       = (/  89.5, 359.5/)
+   Opt@DstGridType       = "1x1"               ; 1x1 degree grid
+   Opt@DstLLCorner       = (/ -89.5,   0.5/)
+   Opt@DstURCorner       = (/  89.5, 359.5/)
 
-      Opt@ForceOverwrite    = True
+   Opt@ForceOverwrite    = True
 
-      Opt@PrintTimings  =False ; True
-;      ESMF_regrid_gen_weights(srcGridName,dstGridName,wgtFileName,Opt)
-;  end if
+   Opt@PrintTimings  =False ; True
+
+;
+; 3. Generate the weights file for conservative interpolation, 
+;    using the source and 
+;    destination files created in #1 and #2.
+;-----------------------------------------------------
+   wgtFileNameCons=getenv("wgtFileNameCons") 
+   OptCons               = True
+   OptCons@WgtFileNameCons=wgtFileNameCons
+   OptCons@InterpMethod  ="conserve"
+   OptCons@SrcInputFileName  = srcFileName
+   OptCons@SrcTitle="FV grid"
+;---Destination file options
+   OptCons@DstGridType       = "1x1"               ; 1x1 degree grid
+   OptCons@DstLLCorner       = (/ -89.5,   0.5/)
+   OptCons@DstURCorner       = (/  89.5, 359.5/)
+
+   OptCons@ForceOverwrite    = True
+
+   OptCons@PrintTimings  =False ; True
 
 ;---Read from the weight file the method used to derive the remap weights
    wgt_file       = addfile(wgtFileName, "r")
@@ -510,9 +524,11 @@ begin
    ; regrid icefrac from ne60np4 to reg1x1
    ;__________________________________________________________
                    if(isfilepresent(wgtFileName)) then
-                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
+;                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
+                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
                    else
-                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
+;                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
+                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
                    end if
    ;__________________________________________________________
    ; define icemask as 1 where icefrac > .15
@@ -536,9 +552,11 @@ begin
    ; regrid icefrac from ne60np4 to reg1x1
    ;__________________________________________________________
                    if(isfilepresent(wgtFileName)) then
-                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
+;                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
+                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
                    else
-                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
+;                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
+                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
                    end if
    ;__________________________________________________________
    ; define icemask as 1 where icefrac > .15
@@ -680,15 +698,13 @@ begin
                        print("lwepr contains one or more values lower than -5mm/day, cannot continue.")
                        exit
                    end if
-                   Opt@InterpMethod  ="conserve"
                    var2regrid=where(var2regrid.lt.0.,0.,var2regrid)
                 end if
                 if ( varout(k).eq."sic" ) then
-                   Opt@InterpMethod  ="conserve"
                    if(isfilepresent(wgtFileName)) then
-                      icefrac1x1=ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)        
+                      icefrac1x1=ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons)        
                    else
-                      icefrac1x1=ESMF_regrid(var2regrid,Opt)        
+                      icefrac1x1=ESMF_regrid(var2regrid,OptCons)        
                    end if
                    delete(var2regrid)
    ;__________________________________________________________
@@ -704,11 +720,10 @@ begin
                    end do
                    dst_file->$varout(k)$ =(/icefrac1x1/)
                 else if (varout(k).eq."lweprc".or.varout(k).eq."lwepr".or.varout(k).eq."lweprsn") then
-                   Opt@InterpMethod  ="conserve"
                    if(isfilepresent(wgtFileName)) then
-                      tmp = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
+                      tmp = (/ ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons) /)
                    else
-                      tmp = (/ ESMF_regrid(var2regrid,Opt) /)
+                      tmp = (/ ESMF_regrid(var2regrid,OptCons) /)
                    end if
                    tmp=where(tmp.lt.0.,0.,tmp)
                    dst_file->$varout(k)$ =(/tmp/)

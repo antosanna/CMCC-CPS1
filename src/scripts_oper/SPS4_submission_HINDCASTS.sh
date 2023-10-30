@@ -81,14 +81,11 @@ do
   
             # is running?
             set +e
-            np=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${caso} -c yes`
-# QUESTA SERVE???
-#???            ns=`bjobs -w -sla ${sla_serialID} | grep ${yyyy}${st}_${ens}_run | wc -l`
-            ns=0 # TEMPORARY
+            np=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
             set -e
   
             # if is running, skip
-            if [ $np -gt 0 ] || [ $ns -gt 0 ] ; then
+            if [ $np -gt 0 ] ; then
               echo "job running. skip"
               cnt_run=$(( $cnt_run + 1 )) 
               continue

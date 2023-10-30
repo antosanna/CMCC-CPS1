@@ -11,6 +11,7 @@ export ic="$2"
 export outdirC3S=$3
 INPUT=$4
 running=$5 # 0 if running; 1 if off-line
+export checkfile=$6
 
 set -exv
 ens=`echo $caso|cut -d '_' -f3|cut -c 2,3`
@@ -26,7 +27,6 @@ else
 fi
 set -evxu
 
-export checkfile=$outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok
 #NEW 202103  +
 if [ -f $checkfile ] 
 then

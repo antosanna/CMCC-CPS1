@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{parallelq_l} -P $ENV{pID} -W 08:00 -x -app c3s2 -e logs/$CASE.run_%J.err -o logs/$CASE.run_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{parallelq_l} -P $ENV{pID} -W 08:00 -x -app CM3_1 -e logs/$CASE.run_%J.err -o logs/$CASE.run_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -220,7 +220,7 @@
     <entry id="template" value="$ENV{DIR_TEMPL}/template.lt_archive">
       <type>char</type>
     </entry>
-    <entry id="dependency" value="case.st_archive">
+    <entry id="dependency" value="case.nemo_rebuild">
       <type>char</type>
     </entry>
     <entry id="prereq" value="1">
@@ -248,7 +248,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_s} -P $ENV{pID} -W 00:20 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_m} -P $ENV{pID} -W 00:20 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
