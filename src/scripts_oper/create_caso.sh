@@ -53,6 +53,7 @@ $DIR_CESM/cime/scripts/create_clone -case $DIR_CASES/$caso -clone $DIR_CASES1/$r
 
 #----------------------------------------------------------
 mkdir -p $DIR_CASES/$caso/logs
+echo "$ic" > $DIR_CASES/$caso/logs/ic_${caso}.txt
 
 cd $DIR_CASES/$caso
 #----------------------------------------------------------

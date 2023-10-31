@@ -49,6 +49,7 @@ cd $DIR_CASES/$caso
 
 
 cat > user_nl_cam << EOF1
+inithist = 'NONE'
 ncdata = '\$DIN_LOC_ROOT/atm/cam/inic/fv/cami_0000-01-01_0.47x0.63_L83_c230109.nc'
 effgw_beres_dp         = 0.45D0
 gw_qbo_hdepth_scaling  = 0.25D0
@@ -63,7 +64,6 @@ gw_apply_tndmax          = .false.
 gw_limit_tau_without_eff = .true.
 gw_lndscl_sgh            = .false.
 gw_oro_south_fac         = 2.d0
-do_circulation_diags=.true.
 fv_nsplit   =            18
 fv_nspltrac =            9
 fv_nspltvrm =            9
@@ -117,7 +117,7 @@ fincl4 = 'ICEFRAC','PRECC','PRECT','PRECSL','PRECSC','SHFLX','LHFLX',
          'Z500','V850','U850','T850','VBOT','UBOT','TREFHT','RHREFHT',
          'WSPDSRFMX:X','U10','FSDS','PSL','PRECTMX:X','PRECT','TMQ' ,
 fincl5 = 'TS','CLDTOT',
-history_waccm=.false.
+do_circulation_diags=.false.
 
 EOF1
 

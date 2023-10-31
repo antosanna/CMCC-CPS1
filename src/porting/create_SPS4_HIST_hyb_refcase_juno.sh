@@ -62,7 +62,6 @@ gw_apply_tndmax          = .false.
 gw_limit_tau_without_eff = .true.
 gw_lndscl_sgh            = .false.
 gw_oro_south_fac         = 2.d0
-do_circulation_diags=.true.
 fv_nsplit   =            18
 fv_nspltrac =            9
 fv_nspltvrm =            9
@@ -112,7 +111,7 @@ fincl4 = 'ICEFRAC','PRECC','PRECT','PRECSL','PRECSC','SHFLX','LHFLX',
          'TREFMXAV:X','TREFMNAV:M',
          'Z500','V850','U850','T850','VBOT','UBOT','TREFHT',
          'WSPDSRFMX:X','U10','FSDS','PSL','PRECTMX:X','PRECT','TMQ' ,
-history_waccm=.false.
+do_circulation_diags=.false.
 
 EOF1
 

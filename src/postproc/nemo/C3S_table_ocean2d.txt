@@ -10,3 +10,4 @@ t26d,t26d,Depth of 26 degree Celsius Isotherm,depth_of_isosurface_of_sea_water_p
 t28d,t28d,Depth of 28 degree Celsius Isotherm,depth_of_isosurface_of_sea_water_potential_temperature,m,ocean,ocean2d,0,reftime realization time leadtime temperature lat lon,leadtime: mean (interval: 1 day),28.,nemo,1.e+20
 mlotst0.01,mlotstheta001,Ocean Mixed Layer Thickness Defined by Sigma Theta 0.01 kg/m3,ocean_mixed_layer_thickness_defined_by_sigma_theta,m,ocean,ocean2d,0,reftime realization time leadtime sigma_theta lat lon,leadtime: mean (interval: 1 day),0.01,nemo,1.e+20
 mlotst,mlotstheta003,Ocean Mixed Layer Thickness Defined by Sigma Theta 0.03 kg/m3,ocean_mixed_layer_thickness_defined_by_sigma_theta,m,ocean,ocean2d,0,reftime realization time leadtime sigma_theta lat lon,leadtime: mean (interval: 1 day),0.03,nemo,1.e+20
+hi,sithick,Sea Ice Thickness,sea_ice_thickness,m,ocean,ocean2d,0,reftime realization time leadtime lat lon,leadtime: mean (interval: 1 day),0.,cice,1.e+20

@@ -1,8 +1,8 @@
 #!/bin/sh -l
 #BSUB -q s_short
-#BSUB -J SPS4_checklist
-#BSUB -e ../../logs/SPS4_checklist%J.err
-#BSUB -o ../../logs/SPS4_checklist%J.out
+#BSUB -J SPS4_checklist_hindcast_zeus
+#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_checklist_hindcast_%J.err
+#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_checklist_hindcast_%J.out
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh

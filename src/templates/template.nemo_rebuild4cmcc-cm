@@ -24,11 +24,9 @@ cd $CASEROOT
 NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
 # this is the number of parallel postprocessing you want to set
 # NTASK MUST BE A MULTIPLE OF N!!!
-#this holds for NTASK=279
 N=`$DIR_UTIL/max_prime_factor.sh $NTASK`
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
-# TEMPORARY
 conda activate $envcondanemo
 # add your frequencies and grids. The script skip them if not present
 for frq in 1m 1d
@@ -42,8 +40,7 @@ do
       fi
 # this should be independent from expID and general
       data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
-# VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
-      mpirun -n $N python -m mpi4py /users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
+      mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
       stat=$?
 # if correctly merged remove single files
       if [[ $stat -eq 0 ]]

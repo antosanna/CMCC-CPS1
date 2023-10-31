@@ -5,7 +5,8 @@
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
 
-export outdirC3S=OUTDIRC3S
+#running=${1:-0}    # 0 if running; 1 if off-line
+export outdirC3S=/work/csp/sps-dev/CMCC-CM/archive/C3S/199307/
 
 set -exuv
 func_error_dims () {
@@ -40,9 +41,9 @@ done < "${archive_size_stats_file}"
 # check that all mandatory dir are in the csvdir
 arr1=`echo ${mandatory_dirs} ${csvdir} ${csvdir} | tr ' ' '\n' | sort | uniq -u `
 if [[ ! -z $arr1 ]];then
-   body="Stop $DIR_UTIL/mv_case2_archive.sh for case CASO mandatory_dirs in $DIR_ARCHIVE/CASO are more than csvdir defined in ${archive_size_stats_file}"
+   body="Stop $DIR_UTIL/mv_case2_archive.sh for case sps4_199307_003 mandatory_dirs in $DIR_ARCHIVE/sps4_199307_003 are more than csvdir defined in ${archive_size_stats_file}"
    echo $body
-   title="${CPSSYS} ERROR - mv_case2archive.sh CASO "
+   title="${CPSSYS} ERROR - mv_case2archive.sh sps4_199307_003 "
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit 1
 fi
@@ -51,15 +52,15 @@ listdir=" "
 for dir in $dir2examine
 do
  # first check if mandatory dir exist
-   if [ ! -d $DIR_ARCHIVE/CASO/${dir} ]; then
-      echo "ERROR CHECK $DIR_ARCHIVE/CASO/${dir} ${dir} not exist!!!! "
+   if [ ! -d $DIR_ARCHIVE/sps4_199307_003/${dir} ]; then
+      echo "ERROR CHECK $DIR_ARCHIVE/sps4_199307_003/${dir} ${dir} not exist!!!! "
       listdir+=" $dir NOT EXISTENT "
       size_error+=$(( $size_error + 1 ))
       continue
    fi
 
    size=0
-   size=`du -h --block-size=1K --max-depth=0 $DIR_ARCHIVE/CASO/${dir}/ | awk '{ print $1}'`
+   size=`du -h --block-size=1K --max-depth=0 $DIR_ARCHIVE/sps4_199307_003/${dir}/ | awk '{ print $1}'`
    FLAGERROR=0
    FLAGERROR=$(checkifoutofintervals ${lower2s[$dir]}  ${upper2s[$dir]} $size)
 done
@@ -94,12 +95,12 @@ EOF
 }
 
 
-archive_oce_ok=$DIR_CASES/CASO/logs/archive_CASO_oce_DONE
-ens=`echo CASO|cut -d '_' -f3|cut -c 2,3`
+archive_oce_ok=$DIR_CASES/sps4_199307_003/logs/archive_sps4_199307_003_oce_DONE
+ens=`echo sps4_199307_003|cut -d '_' -f3|cut -c 2,3`
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
 export real="r"${ens}"i00p00"
-export st=`echo CASO|cut -d '_' -f 2|cut -c 5-6`
-export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
+export st=`echo sps4_199307_003|cut -d '_' -f 2|cut -c 5-6`
+export yyyy=`echo sps4_199307_003|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
@@ -115,9 +116,16 @@ export ddtoday=`date +%d`
 export Htoday=`date +%H`
 export Mtoday=`date +%M`
 export Stoday=`date +%S`
-OUTDIR_NEMO=$DIR_ARCHIVE/CASO/ocn/hist/
-inputlist=`ls CASO*_1m_*grid_T.zip.nc`
-export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo//CASO_1m_grid_T.nc
+OUTDIR_NEMO=$DIR_ARCHIVE/sps4_199307_003/ocn/hist/
+cd $OUTDIR_NEMO
+#TAKES 3'
+#if [ $running -eq 0 ]
+#then
+#   inputlist=`ls sps4_199307_003*_1m_*grid_T.nc`
+#else    # from archive
+   inputlist=`ls sps4_199307_003*_1m_*grid_T.zip.nc`
+#fi
+export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/sps4_199307_003_1m_grid_T.nc
 #echo 'inizio ncrcat ' `date`
 if [ ! -f $inputfile ]
 then
@@ -144,7 +152,7 @@ echo "---------------------------------------------"
 if [ ! -f $outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_${real}_ok ]
 then
     title="[C3S] ${CPSSYS} forecast ERROR"
-    body="ERROR in standardization of ocean files for case CASO. 
+    body="ERROR in standardization of ocean files for case sps4_199307_003. 
             Script is ${DIR_POST}/nemo/$scriptname"
     exit 1
 else
@@ -167,37 +175,31 @@ do
    if [ ! -f $C3Sfile ]
    then
       title="${CPSSYS} forecast ERROR"
-      body="C3S ocean file $C3Sfile for variable not produced for case CASO. 
+      body="C3S ocean file $C3Sfile for variable not produced for case sps4_199307_003. 
             Script is ${DIR_POST}/nemo/$scriptname"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
       exit 1
    fi
 done  
-cd $OUTDIR_NEMO
-inputlist=`ls *1.zip.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
-inputlist=`ls *scalar*.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
+   cd $OUTDIR_NEMO
+   inputlist=`ls *.zip.nc`
+   for input in $inputlist
+   do
+      ncatted -O -a ic,global,a,c,"atm=01,lnd=01,ocn=01" ${input}
+   done
    
-if [ `ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc|wc -l` -ne 0 ] 
-then
-      chmod -R u+rw $FINALARCHIVE/CASO
-      mkdir -p $FINALARCHIVE/CASO/ocn/hist
-# TEMPORARY COMMENT
-#      func_error_dims "ocn"
+   if [ `ls $DIR_ARCHIVE/sps4_199307_003/ocn/hist/sps4_199307_003*zip.nc|wc -l` -ne 0 ] 
+   then
+      chmod -R u+rw $FINALARCHIVE/sps4_199307_003
+      mkdir -p $FINALARCHIVE/sps4_199307_003/ocn/hist
+      func_error_dims "ocn"
       if [[ $FLAGERROR -ne 0 ]]
       then
          title="${CPSSYS} forecast ERROR"
-         body="ERROR in archiving ocean files for case CASO. Dimensions are not the expected ones"
+         body="ERROR in archiving ocean files for case sps4_199307_003. Dimensions are not the expected ones"
          exit 1
       fi     
-      rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $FINALARCHIVE/CASO/ocn/hist/
+      rsync -auv --remove-source-files $DIR_ARCHIVE/sps4_199307_003/ocn/hist/sps4_199307_003*zip.nc $FINALARCHIVE/sps4_199307_003/ocn/hist/
       touch  $archive_oce_ok
-fi  
+   fi  
 exit 0

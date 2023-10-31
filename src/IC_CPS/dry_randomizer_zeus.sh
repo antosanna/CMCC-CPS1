@@ -1,18 +1,22 @@
 #!/bin/sh -l
-#BSUB -J dry_randomizer
-#BSUB -e ../../logs/hindcast/dry_randomizer_%J.err
-#BSUB -o ../../logs/hindcast/dry_randomizer_%J.out
+#BSUB -J dry_randomizer_zeus
+#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_%J.err
+#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_%J.out
 #BSUB -P 0574
 #BSUB -q s_short
 
 #***************************************
-# TEMPORARY COMMENTED send2CINECA
 #***************************************
 # load variables from descriptor
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/descr_ensemble.sh 1993
 
+if [[ $machine != "zeus" ]]
+then
+   echo "this script is meant to run only in Zeus"
+   exit
+fi
 set -evxu
 ntot=$nrunmax
 mkdir -p $TRIP_DIR

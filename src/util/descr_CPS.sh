@@ -115,6 +115,7 @@ then
    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
    DIR_ROOT1=/users_home/csp/${operational_user}/CPS/CMCC-${CPSSYS}
    DIR_CPS=$DIR_ROOT/src/scripts_oper
+   DIR_RECOVER=$DIR_ROOT/src/recover
 #   OUTDIR_DIAG=/work/csp/sp2/${CPSSYS}/
 #   DIR_WEB=/data/products/C3S/sp2/webpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
@@ -315,6 +316,13 @@ then
 elif [[ $machine == "zeus" ]]
 then
    DIR_CESM=/users_home/$DIVISION/as34319/CMCC_CM-dev122/
+fi
+# WILL BE
+#DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild
+# TEMPORARY
+if [[ $machine == "zeus" ]]
+then
+   DIR_NEMO_REBUILD=/users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src
 fi
 # DIR_STAT=$DIR_ROOT/static
 DIR_SRC=$DIR_ROOT/src

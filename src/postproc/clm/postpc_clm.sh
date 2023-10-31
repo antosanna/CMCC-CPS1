@@ -34,16 +34,29 @@ then
    running=1
    DIR_LOG=/users_home/csp/mb16318/SPS/SPS4/postproc/CLM/logs
 else
-   caso=$1
-   outdirC3S=$2  # where python write finalstandardized  output 
-   ic=$3         # initial conditions
-   OUTDIR=$4     # output dir of clm DMO
-   running=${5-:0}    # 0 in operational mode
-fi
 
-yyyy=`echo "${caso}" | cut -d '_' -f2 -c1-4`
-st=`echo "${caso}" | cut -d '_' -f2 -c5-6`
-pp=`echo "${caso}" | cut -d '_' -f3 -c2-3`
+#"$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
+ 
+   ppp=$1
+   startdate=$2
+   outdirC3S=$3
+   ic=$4
+   OUTDIR=$5
+   caso=$6
+   running=$7  
+#   caso=$1
+#   outdirC3S=$2  # where python write finalstandardized  output 
+#   ic=$3         # initial conditions
+#   OUTDIR=$4     # output dir of clm DMO
+#   running=${5-:0}    # 0 in operational mode
+fi
+yyyy=`echo "${startdate}" | cut -c1-4`
+st=`echo "${startdate}" | cut -c5-6`
+pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
+
+#yyyy=`echo "${caso}" | cut -d '_' -f2 -c1-4`
+#st=`echo "${caso}" | cut -d '_' -f2 -c5-6`
+#pp=`echo "${caso}" | cut -d '_' -f3 -c2-3`
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
@@ -82,12 +95,9 @@ then
 # Define working directories
    DIROUT_REG1x1=${OUTDIR}/reg1x1
    mkdir -p ${DIROUT_REG1x1}
-   #DIROUT_REG1x1_zip=${DIROUT_REG1x1}/zip
-   #mkdir -p $DIROUT_REG1x1_zip
 
 # Define all input and output files
    export CLM_OUTPUT_REG1x1=${DIROUT_REG1x1}/${rootname}.reg1x1.nc
-   #CLM_OUTPUT_REG1x1_zip=$DIROUT_REG1x1_zip/${rootname}.zip.nc	
    
    if [[ $debug -ne 0 ]] && [[ -f $CLM_OUTPUT_REG1x1 ]]
    then
@@ -121,8 +131,8 @@ then
 #     ncl /users_home/csp/mb16318/SPS/SPS4/postproc/CLM/regridFV_1x1_CLM.ncl
       vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
       ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
-      
-      if [[ $? -ne 0 ]]
+      stat=$?      
+      if [[ $stat -ne 0 ]]
       then 
           echo "problem in ncremap"
           exit 2

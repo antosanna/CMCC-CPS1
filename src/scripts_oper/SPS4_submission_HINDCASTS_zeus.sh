@@ -1,8 +1,8 @@
 #!/bin/sh -l
 #BSUB -q s_short
-#BSUB -J SPS4_main_hc
-#BSUB -e ../../logs/SPS4_main_hc%J.err
-#BSUB -o ../../logs/SPS4_main_hc%J.out
+#BSUB -J SPS4_main_hc_zeus
+#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast//logs/SPS4_main_hc%J.err
+#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast//logs/SPS4_main_hc%J.out
 #BSUB -P 0574 
 
 # load variables from descriptor

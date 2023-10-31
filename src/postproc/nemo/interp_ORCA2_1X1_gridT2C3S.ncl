@@ -339,7 +339,9 @@ begin
           opt   = 0
    
    ;---------------------------------------------
-          xtmp   = tofloat(sfile->$varname(i)$) 
+          if(varname(i).ne."somtt300".and.varname(i).ne."somss300")then
+             xtmp   = tofloat(sfile->$varname(i)$) 
+          end if
           print("processing var "+varname(i))
           if ( varname(i).eq."somss300") then
              xtmp=avg300(sshn,sal,tmask,fse3t,e3t_0,fillval(i))
@@ -369,19 +371,10 @@ begin
              delete(tmp2d)
           end do
    
-          SKIP_ORCA_SCRIP_GEN  = True
-          SKIP_WORLD_SCRIP_GEN = True
-          SKIP_WGT_GEN         = True
-   ;---if you want to print out the intermediate files set first=0
-          if (first.eq.0) then
-             SKIP_ORCA_SCRIP_GEN  = False
-             SKIP_WORLD_SCRIP_GEN = False
-             SKIP_WGT_GEN         = False
-          end if
    ;----------------------------------------------------------------------
    ; Convert ORCA to SCRIP file.
    ;----------------------------------------------------------------------
-          if(.not.SKIP_ORCA_SCRIP_GEN) then
+          if(.not.isfilepresent(srcGridName)) then
        ;---Convert to an SCRIP Convention file.
               Opt                = True
               Opt@ForceOverwrite = True
@@ -396,7 +389,7 @@ begin
    ;----------------------------------------------------------------------
    ; Convert 2 degree world grid to SCRIP file
    ;----------------------------------------------------------------------
-          if(.not.SKIP_WORLD_SCRIP_GEN)
+          if(.not.isfilepresent(dstGridName))
               Opt                = True
               Opt@LLCorner       = (/-89.5,-179.5 /)
               Opt@URCorner       = (/ 89.5, 179.5 /) 
@@ -413,7 +406,7 @@ begin
    ;----------------------------------------------------------------------
    ; Generate interpolation weights for ORCA Grid to World Grid    
    ;----------------------------------------------------------------------
-          if(.not.SKIP_WGT_GEN) then
+          if(.not.isfilepresent(wgtFile)) then
               Opt                      = True
               Opt@SrcESMF              = False
               Opt@DstESMF              = False
@@ -434,12 +427,10 @@ begin
    ;       Opt@Debug        = True
           Opt@PrintTimings = True
    
-          mm=dimsizes(xtmp)
-          print("dimensions mm are "+mm)
           tmp = ESMF_regrid_with_weights(xtmp(0,:,:),wgtFile,Opt)
-          nn=dimsizes(tmp)
-          print("dimensions nn are "+nn)
-          varout=new((/nv,nt,nn(0),nn(1)/),"float")
+          nn2=dimsizes(tmp)
+          print("dimensions nn2 are "+nn2)
+          varout=new((/nv,nt,nn2(0),nn2(1)/),"float")
           varout@_FillValue = 1.e+20
           delete(tmp)
    
@@ -507,7 +498,7 @@ begin
    
    
           temperature=0.d
-          if(varname(i).eq."so14chgt".or.varname(i).eq."so17chgt".or.varname(i).eq."so20chgt".or.varname(i).eq."so26chgt".or.varname(i).eq."so28chgt")then
+          if(varname(i).eq."t14d".or.varname(i).eq."t17d".or.varname(i).eq."t20d".or.varname(i).eq."t26d".or.varname(i).eq."t28d")then
              temperature=reflev(i)
              filevardef(ncdf, "temperature", C3S_type, "ncl_scalar")
              filevarattdef(ncdf,"temperature" ,temperature)    
@@ -515,7 +506,7 @@ begin
           end if
     
           sigma_theta=0.d
-          if(varname(i).eq."somxl001".or.varname(i).eq."somxl003")then
+          if(varname(i).eq."mlotst0.01".or.varname(i).eq."mlotst")then
              sigma_theta=reflev(i)
              filevardef(ncdf, "sigma_theta", C3S_type, "ncl_scalar")
              filevarattdef(ncdf,"sigma_theta" ,sigma_theta)    

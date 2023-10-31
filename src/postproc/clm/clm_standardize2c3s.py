@@ -476,7 +476,7 @@ if __name__ == '__main__':
     # log file
     if not dbmode:
         orig_stdout = sys.stdout
-        full_logdir=logdir +'/forecast/'+ startdate
+        full_logdir=logdir +'/'+forecast_t+'/'+ startdate
         createdir(full_logdir)
  
         f = open( full_logdir+ '/clm_postpc_C3S_' + ensemble + '.log', 'w')

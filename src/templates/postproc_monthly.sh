@@ -11,7 +11,7 @@ flag_done=$1
 echo "-----------STARTING EXPNAME.l_archive-------- "`date`
 cd $DIR_CASES/EXPNAME
 ic="DUMMYIC"
-DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
 cd $DOUT_S_ROOT/logs
 gunzip `ls -1tr atm.log.* |tail -1`
 logCAM=`ls -1tr atm.log.* |tail -1`
