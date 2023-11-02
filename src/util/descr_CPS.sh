@@ -42,7 +42,7 @@ then
       operational_user=cp1
       pID=0490 #Juno
       envcondacm3=da_definire
-      envcondanemo=de_definire
+      envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=20
       env_workflow_tag=cmcc
    elif [[ $machine == "zeus" ]]
@@ -123,29 +123,29 @@ then
 #   DIR_ARCHIVE1=/work/csp/${operational_user}/CESM/archive
 ######## ICs_CLM Juno
 # TEMPORARY FOR TESTS
-#   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
-#   IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
-#   if [ $(whoami) == ${operational_user} ]; then
-#      IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
-#   fi
-   IC_CLM_CPS_DIR=${DATA_ARCHIVE}/IC/CLM_${CPSSYS}/
+#   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}_test
+#   IC_CLM_CPS_DIR1=$SCRATCHDIR/IC/CLM_${CPSSYS}_test
+   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
    IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
+   if [ $(whoami) == ${operational_user} ]; then
+      IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
+   fi
 #   WOIS=/work/csp/${operational_user}/SPS/CMCC-OIS/
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
-#   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
-#   IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
-#   if [ $(whoami) == ${operational_user} ]; then
-#      IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
-#   fi
-   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
-   IC_NEMO_CPS_DIR1=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
+   IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
+#   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+#   IC_NEMO_CPS_DIR1=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+   if [ $(whoami) == ${operational_user} ]; then
+      IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
+   fi
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
-#   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
-#   IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
-   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
-   IC_CICE_CPS_DIR1=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
+   IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
+#   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+#   IC_CICE_CPS_DIR1=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
    if [ $(whoami) == ${operational_user} ]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
@@ -323,6 +323,9 @@ fi
 if [[ $machine == "zeus" ]]
 then
    DIR_NEMO_REBUILD=/users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src
+elif [[ $machine == "juno" ]]
+then
+   DIR_NEMO_REBUILD=/users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src/py_nemo_rebuild
 fi
 # DIR_STAT=$DIR_ROOT/static
 DIR_SRC=$DIR_ROOT/src
