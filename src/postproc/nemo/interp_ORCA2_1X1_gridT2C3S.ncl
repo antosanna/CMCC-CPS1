@@ -2,7 +2,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "$HOME/SPS/CMCC-SPS3.5/src/templates/C3S_globalatt.ncl"
+load "$HOME/CPS/CMCC-CPS1/src/templates/C3S_globalatt.ncl"
 
 undef ("definitions")
 function definitions(ncdf,lat,nlat,lon,nlon,leadtime,time,depth,nt,reftime,realization,lon_bnds,lat_bnds,leadtime_bnds,time_bnds,depth_bnds,C3S_type,vname)

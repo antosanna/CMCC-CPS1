@@ -2,7 +2,7 @@ load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/esmf/ESMF_regridding.ncl"
-load "$HOME/SPS/CMCC-SPS3.5/src/templates/C3S_globalatt.ncl"
+load "$HOME/CPS/CMCC-CPS1/src/templates/C3S_globalatt.ncl"
 
 undef ("definitions")
 function definitions(ncdf,lat,nlat,lon,nlon,leadtime,time,nt,reftime,realization,lon_bnds,lat_bnds,leadtime_bnds,time_bnds,C3S_type)
@@ -93,7 +93,7 @@ begin
     srcFileName = getenv("inputfile")
     lsmFileName = getenv("lsmfile")
     lsmfile = addfile(lsmFileName,"r")
-    lsm=tofloat(lsmfile->LANDFRAC)
+    lsm=tofloat(lsmfile->lsmC3S_SPS4)
     delete(lsm@_FillValue)
     slm=lsm+1.
     slm=where(slm.eq.2.,0.,slm)
@@ -159,10 +159,6 @@ begin
             mon=1
        end if
        ndays(i)=todouble(days_in_month(yy,mon))
-       ; BUG introdotto il 26 agosto Antonio e Maria
-       ;if ( (isleapyear(yy)) .and. (mon.eq.2) ) then
-       ; ndays(i) = ndays(i) - 1.d  
-       ;end if
        time_bnds(i,1)=ndays(i)+totdays-1.d
        time_bnds(i,0)=totdays
        totdays=totdays+ndays(i)

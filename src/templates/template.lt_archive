@@ -44,6 +44,7 @@ then
 #interp_ORCA2_1X1_gridT2C3S.sh
    outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
    mkdir -p $outdirC3S
+   running=0   # 0 if running; 1 if off-line
 # check if already done (for recovery)
    if [ ! -f $outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_r${ens}i00p00_ok ]
    then
@@ -56,7 +57,7 @@ then
    flag_iceok=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
    if [ ! -f $flag_iceok ]
    then
-      ./interp_cice2C3S_${caso}.sh $flag_iceok
+      ./interp_cice2C3S_${caso}.sh $flag_iceok $running
    fi
 # now modify the environment to run the extra $nmoredays days to get $fixsimdays
    ./xmlchange STOP_OPTION="ndays" 

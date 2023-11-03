@@ -7,8 +7,8 @@ LOG_FILE=$DIR_LOG/tests/launch_rebuild_nemo.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 # all these vars defined aboce but not yet available
 #TEMPORARY
-iniy=1993
-endy=1994
+iniy=1995
+endy=1996
 npoce=1
 # END TEMPORARY
 for yyyy in `seq $iniy $endy`

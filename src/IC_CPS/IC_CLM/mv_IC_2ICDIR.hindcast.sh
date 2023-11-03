@@ -28,5 +28,5 @@ if [[ -f ${clm_rest_file} ]] ; then
    rsync -auv ${clm_rest_file} $IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.$pp.nc
 fi
 if [[ -f ${hydros_rest_file} ]] ; then
-   rsync -auv ${hydros_rest_file} $IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.hydros.${yyyy}-${st}-01-00000.$pp.nc
+   rsync -auv ${hydros_rest_file} $IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.$pp.nc
 fi
