@@ -98,6 +98,7 @@ then
    fi
    SCRATCHDIR1=/work/csp/${operational_user}/scratch
    SCRATCHDIR=$WORK/scratch
+   DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
    FINALARCHIVE1=/work/csp/${operational_user}/test_archive/CPS/${CPSSYS}/
    FINALARCHIVE=/work/csp/`whoami`/test_archive/CPS/${CPSSYS}/
 #   FINALARCHIVE1=/data/csp/${operational_user}/archive/CPS/${CPSSYS}/
@@ -123,29 +124,44 @@ then
 #   DIR_ARCHIVE1=/work/csp/${operational_user}/CESM/archive
 ######## ICs_CLM Juno
 # TEMPORARY FOR TESTS
-#   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}_test
-#   IC_CLM_CPS_DIR1=$SCRATCHDIR/IC/CLM_${CPSSYS}_test
-   IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
-   IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
+   if [[ $machine == "zeus" ]]
+   then
+      IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}_test
+      IC_CLM_CPS_DIR1=${DATA_ARCHIVE}/IC/CLM_${CPSSYS}/
+   elif [[ $machine == "juno" ]]
+   then
+      IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
+      IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
+   fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
    fi
 #   WOIS=/work/csp/${operational_user}/SPS/CMCC-OIS/
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
-   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
-   IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
-#   IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
-#   IC_NEMO_CPS_DIR1=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+   if [[ $machine == "juno" ]]
+   then
+      IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
+      IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
+   elif [[ $machine == "zeus" ]]
+   then
+      IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+      IC_NEMO_CPS_DIR1=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+   fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
    fi
-######## ICs_NEMO Juno
+######## ICs_CICE Juno
 # TEMPORARY FOR TESTS
-   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
-   IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
-#   IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
-#   IC_CICE_CPS_DIR1=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+   if [[ $machine == "juno" ]]
+   then
+      IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
+      IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
+   elif [[ $machine == "zeus" ]]
+   then
+      IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+      IC_CICE_CPS_DIR1=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+   fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
@@ -329,12 +345,12 @@ then
 fi
 # DIR_STAT=$DIR_ROOT/static
 DIR_SRC=$DIR_ROOT/src
-DIR_CHECK=$DIR_ROOT/checklist_run
+DIR_CHECK=$DIR_ROOT/checklists
 # DIR_SRC1=$DIR_ROOT1/src
 # DIR_TEST_SUITE=$DIR_SRC/test_suite
 DIR_UTIL=$DIR_SRC/util
-# DIR_DIAG=$DIR_UTIL/diag
-# DIR_DIAG_C3S=$DIR_UTIL/diag_C3S_final
+DIR_DIAG=$DIR_SRC/diagnostics
+DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
 DIR_LOG1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/logs
 DIR_LOG=/work/csp/$USER/CPS/CMCC-${CPSSYS}/logs

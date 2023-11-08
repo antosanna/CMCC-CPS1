@@ -1,0 +1,168 @@
+#!/bin/sh -l
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -evxu
+
+#****************************** 
+#WARNING!!!
+#****************************** 
+# Before performing this analysis make sure you have precomputed the climatologies for the reference period (/users_home/sp2/CESM/CESM1.2/GIT/cesm/postproc/SPS35/SKILL_SCORES/ANOM)
+
+yyyy=$1          #`date +%Y`
+st=$2          #`date +%m`
+nrun=$3        #50
+nmf=$4         # this is the final forecast month to be processed
+flgmnth=$5 #1  # this is to decide the timescale plot: 0 for seasonal, 1 for monthly
+monthstr=$6
+checkfile=$7
+debug=${8:-0}
+
+mymail=$mymail
+ccmail=$mymail
+
+
+if [ $nmf -eq 2 ]
+then
+   echo " you set a not allowed value for nmf ! Exiting now from $DIR_DIAG/plot_forecast_all_vars.sh"
+   exit 1
+fi
+
+#****************************** 
+#****************************** 
+
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
+# ANTO new for automatic diagnositcs-
+flagproj=1 # this is for map projection: 0 for Robinson, 1 for CylidricalEquidistant
+refperiod=${iniy_hind}-${endy_hind}
+
+case $flgmnth
+in
+  0) tplot=seasonal ;;
+  1) tplot=monthly ;;
+esac
+
+echo "Starting procedures for computing anomalies and plotting ${tplot} forecast for stardate ${yyyy}${st} up to month ${nmf}"
+
+workdir=$SCRATCHDIR/${CPSSYS}/diagnostics/workdir
+monthdir=$SCRATCHDIR/${CPSSYS}/diagnostics/monthly
+scriptdir=$DIR_DIAG
+
+case $flagproj
+ in
+ 0) mproj="Robinson" ;;
+ 1) mproj="CylidricalEquidistant" ;;
+esac
+#****************************** 
+# Main var loop
+#****************************** 
+# IF YOU WANT TO COMPUTE TERCILES FOR REFERNCE PERIOD SET TO 1
+#ATTENZIONE! L'anomalia di Z500 non compare tra le diagnostiche runtime perche' quella estrapolata dal modello e' differente dalla climatologia che viene da quella estrapolata per C3S sull'intera colonna verticale
+#varlist="t2m sst precip mslp sic"
+varlist="sic"
+for var in $varlist
+do
+   if [ $flgmnth -eq 1 ] ; then
+      checkdiagfile=$DIR_LOG/$typeofrun/$yyyy$st/${var}_month${nmf}_diag_DONE
+      pldir=${SCRATCHDIR}/$yyyy${st}/diag/month/
+      mkdir -p $pldir
+#TO BE MODIFED      count=`ls /work/csp/sp2/${CPSSYS}/CESM/pctl/monthly/${var}_${st}_l?_??.nc|wc -l`
+      nmaxcount=12
+   else
+      l=$(($nmf - 2))     #lead season from nmf
+      checkdiagfile=$DIR_LOG/$typeofrun/$yyyy$st/${var}_lead${l}_diag_DONE
+      pldir=${SCRATCHDIR}/$yyyy${st}/diag/lead/
+      mkdir -p $pldir
+#TO BE MODIFED      count=`ls /work/csp/sp2/${CPSSYS}/CESM/pctl/${var}_${st}_l?_??.nc|wc -l`
+      nmaxcount=8
+   fi
+   if [ $debug -ne 1 ]
+   then
+      if [ $count -ne $nmaxcount ]
+      then
+         echo "You do not have terciles for this start-date $st and $var"
+         exit 1
+      fi
+   fi
+
+   set +e
+   rm -rf $workdir/${var}/*
+   rm -rf $monthdir/${var}/C3S/*_${yyyy}${st}_*
+   rm -rf $monthdir/${var}/C3S/anom/*_${yyyy}${st}_*
+   if [ $var = "mslp" ] ; then
+      rm -rf $monthdir/${var}/C3S/anom/NAO/*_${yyyy}${st}_*
+   fi
+   if [ $var = "sic" ] ; then
+      rm -rf $monthdir/${var}/C3S/full/*_${yyyy}${st}_*
+   fi
+  
+   set -evx
+
+   echo "postprocessing $var "$st
+   input="$yyyy $st $refperiod $var $nrun $nmf $mproj $flgmnth $scriptdir $monthdir $workdir $monthstr $checkdiagfile $pldir $debug"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -s compute_anomalies_auto_${var}.sh -j diag_ANOM_${var}${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+
+done
+
+while `true` ; do
+
+   nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n diag_ANOM_ -c yes`
+   if [ $nproc -eq 0 ] ; then
+      break
+   fi
+   sleep 60
+
+done
+
+#****************************** 
+# Send email 
+#****************************** 
+
+case $flgmnth
+ in
+ 1) textflag="first month" ; pdfflag="month1" ;;
+ 0) case $nmf
+     in
+     3) textflag="Lead season 0" ; pdfflag="Lead0" ;;
+     4) textflag="Lead season 0 and 1" pdfflag="Lead0_1" ;;
+     *) textflag="Lead season 0, 1 and 2" ; pdfflag="Lead0_1_2" ;;
+    esac ;;
+esac
+
+
+n_var=`echo $varlist|wc -w`
+if [ ${nmf} -eq 1 ] 
+then
+   nfiles=`ls $DIR_LOG/$typeofrun/$yyyy$st/*_month${nmf}_diag_DONE|wc -l`
+   if [ $nfiles -lt $n_var ] 
+   then
+      title="${CPSSYS} forecast ERROR"
+      body="not all diagnostics ok for nmf ${nmf} $yyyy$st. Exiting $DIR_UTIL/diag/plot_forecast_all_vars.sh"
+
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      exit 1
+   fi
+else
+   nfiles=`ls $DIR_LOG/$typeofrun/$yyyy$st/*_lead?_diag_DONE|wc -l`
+   if [ $nfiles -lt $(($n_var * $l )) ] 
+   then
+      title="${CPSSYS} forecast ERROR"
+      body="not all diagnostics ok for lead ${l} $yyyy$st. Exiting $DIR_UTIL/diag/plot_forecast_all_vars.sh"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+
+      exit 1
+   fi
+fi
+convert ${pldir}/*${yyyy}${st}*.png ${pldir}/${yyyy}${st}_${pdfflag}.pdf
+
+touch $checkfile    # to state completion of diagnostic process
+
+title="${CPSSYS} FORECAST $yyyy$st Diagnostics "${textflag}
+body="Dear Silvio e Stefano, \n you will find attached the diagnostics for $nrun members relative to "${textflag}".\n Thank you \n"
+
+app="${pldir}/${yyyy}${st}_${pdfflag}.pdf"
+
+${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -c $mymail -a $app
+

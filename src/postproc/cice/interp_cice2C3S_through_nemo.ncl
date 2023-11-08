@@ -140,7 +140,7 @@ begin
 
 ;---Retrieve data from ORCA Grid
     sfile = addfile(srcFileName,"r")
-    tmpsic=sfile->aicen001
+    tmpsic=sfile->aice ;aicen001
     sic=tmpsic/100
     copy_VarMeta(tmpsic,sic)
     delete(tmpsic)
@@ -266,18 +266,14 @@ begin
           xin   = sfile->$varname(i)$
           sic@_FillValue=0.
           xin=xin/sic
-          xinmean=xin
+          xtmp=xin
           nn=dimsizes(xin)
           nt=nn(0)
-          xtmp=new((/nt,nn(1)+1,nn(2)+2/),typeof(xin))*0.
-          xtmp(:,0:nn(1)-1,1:nn(2))=xin
-          xtmp(:,nn(1),1:nn(2))=xin(:,nn(1)-1,:)
-          xtmp(:,0:nn(1)-1,0)=xin(:,:,0)
-          xtmp(:,0:nn(1)-1,nn(2)+1)=xin(:,:,nn(2)-1)
-          xtmp@_FillValue=-999.
       ;
           xtmppois=xtmp
       
+          printVarSummary(xtmp)
+          printVarSummary(lsmnemo)
           do it=0,nt-1
       
              xtmp(it,:,:)=where(lsmnemo(0,:,:).eq.lsmnemo@_FillValue,lsmnemo@_FillValue,xtmp(it,:,:))

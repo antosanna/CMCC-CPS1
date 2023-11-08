@@ -1,0 +1,102 @@
+#!/bin/sh -l
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_cdo
+
+# HERE ADD ALSO SH
+set -euvx
+
+debug=0
+if [[ `whoami` == $operational_user ]]
+then
+   debug=0
+fi
+if [[ $debug -eq 1 ]]
+then
+   export yyyy=2021
+   export st=09
+   mymail=antonella.sanna@cmcc.it
+   DIR_DIAG=$PWD
+else
+   export yyyy=$1
+   export st=$2
+fi
+
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+
+#DONWLOAD OBS
+mkdir -p $SCRATCHDIR/SIE
+export yyyym1=`date -d "${yyyy}${st}01 -1 month" +%Y`
+export stm1=`date -d "${yyyy}${st}01 -1 month" +%m`
+
+# READ IC
+export diric=$IC_NEMO_SPS_DIR1/$st/
+export fileroot=ice_ic${yyyy}${st}
+export npoce=$n_ic_nemo
+export hiniy=$iniy_hind
+export hendy=$endy_hind
+export plottype="png"
+
+for mem in `seq -w 01 $nrunmax`
+do
+      caso=${SPSSystem}_${yyyy}${st}_0${mem}
+      #to take into account that there should be some members not available
+      if [[ `ls $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
+         cdo -O mergetime $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwk/$caso.cice.nc
+      elif [[ `ls $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
+         cdo -O mergetime $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwk/$caso.cice.nc
+      fi
+done
+
+export hemis
+for hemis in NH SH
+do
+   dirwk=$SCRATCHDIR/SIE/$hemis
+   mkdir -p $dirwk
+   cd $dirwk
+   case $hemis in
+      NH)obsfile=N_seaice_extent_daily_v3.0.csv;directory=north;plotname=NH_SIE_${yyyy}${st};;
+      SH)obsfile=S_seaice_extent_daily_v3.0.csv;directory=south;plotname=SH_SIE_${yyyy}${st};;
+   esac
+
+   if [ -f $dirwk/$obsfile ] ; then
+      rm $dirwk/$obsfile
+   fi
+   wget ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/$directory/daily/data/$obsfile
+   cat $obsfile | tr ",;" " " | grep "${yyyym1}     ${stm1}" | awk '{print $1" "$2" "$3" "$4}'
+
+# TO BE MODIFIED export filarea="$REPOSITORY/tarea.cice.nc"
+   export inpfile="$dirwk/$obsfile"
+   export outplot="$dirwk/$plotname"
+   export checkfileplot="$dirwk/${plotname}_OK"
+   export ntime=$nmonfore
+#
+   if [[ -f $checkfileplot ]]
+   then
+      rm $checkfileplot
+   fi
+
+# READ hindcast clim
+#export fileclim=/work/csp/sp2/${CPSSYS}/CESM/monthly/sic/SIE_NH/clim/SIE_NH_${CPSSYS}_1993-2016.${st}.nc
+   export fileclim=to_be_computed
+   if [[ ! -f $fileclim ]]
+   then
+      title="${CPSSYS} forecast ERROR"
+      body="$hemis SIE clim not available yet for $st. Compute it with $DIR_DIAG/compute_SIE_hincast_clim.sh"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      exit 1
+   fi
+
+   export SPSSystem
+   ncl $DIR_DIAG/ncl/compute_SIE_cice.ncl
+   if [[ $debug -eq 1 ]]
+   then
+      exit
+   fi
+   if [[ ! -f $checkfileplot ]]
+   then
+      title="${CPSSYS} forecast ERROR"
+      body="Something wrong with $0 script in $DIR_DIAG. Called by monitor_forecast.sh"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   fi
+done

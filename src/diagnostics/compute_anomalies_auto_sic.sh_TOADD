@@ -1,0 +1,46 @@
+#!/bin/sh -l
+
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -evxu
+
+yyyy=$1
+st=$2 #2 figures
+refperiod=$3
+varm=$4
+nrun=$5
+nmf=$6
+mproj=$7
+flgmnth=$8
+export scriptdir=$9
+monthdir=${10}
+workdir=${11}
+monthstr=${12}
+checkfile=${13}
+pldir=${14}
+debug=${15}
+#
+
+datamm=$monthdir/${varm}/C3S
+workdir=$workdir/${varm}
+
+#if [ $debug -ne 1 ]
+#then
+$DIR_UTIL/diag/$varm/assembler_SPS3_${varm}_month.sh $yyyy $st $nrun $datamm $workdir $varm $scriptdir $nmf
+if [ $var == "sic" ] ; then
+    mproj_polar=""
+    $DIR_UTIL/diag/forecast_auto_sic.sh $yyyy $st $nrun $mproj_polar $flgmnth $nmf $scriptdir ${monthstr} ${varm} $pldir
+else
+    $DIR_UTIL/diag/$varm/anom_SPS3_${varm}.sh $yyyy $st $refperiod $nrun $datamm $workdir $varm $nmf
+    #if [ $varm == "sst" ]
+    #then
+    #   $DIR_UTIL/diag/$varm/nino_plume.sh $yyyy $st $refperiod $nrun $datamm $scriptdir
+    #   $DIR_UTIL/diag/$varm/ENSO_plot.sh $yyyy $st Nino3.4
+    #fi
+    #fi
+    $DIR_UTIL/diag/forecast_auto.sh $yyyy $st $nrun $mproj $flgmnth $nmf $scriptdir ${monthstr} ${varm} $pldir
+fi
+touch $checkfile
+
+exit 0

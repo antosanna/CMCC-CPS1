@@ -23,4 +23,4 @@ yyyy=${2:-1993}    #assumes default is hindcast
 #
 set -euvx
 mkdir -p ${DIR_LOG}/$typeofrun/recover
-${DIR_UTIL}/submitcommand.sh -m $machine -M 10000 -q $serialq_s -j ${script_to_launch}_`date +%Y%m%d%M` -l ${DIR_LOG}/$typeofrun/recover -d $DIR_RECOVER -s $script_to_launch 
+${DIR_UTIL}/submitcommand.sh -m $machine -M 50000 -q $serialq_s -j ${script_to_launch}_`date +%Y%m%d%M` -l ${DIR_LOG}/$typeofrun/recover -d $DIR_RECOVER -s $script_to_launch 

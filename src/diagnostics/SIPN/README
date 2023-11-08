@@ -1,0 +1,12 @@
+The postprocessing addresses daily data and select a timeseries of 3 months (skipping the first)
+
+OUTPUT DIR 
+/work/csp/sp2/SPS3.5/SIPN/sea-ice_areas
+/work/csp/sp2/SPS3.5/SIPN/concentrations
+
+Data must be uploaded on google drive sp1
+Create a directory
+CMCC-SEA-ICE/YYYYMM
+copy the files locally in a temporary directory and upload them all there
+
+Before notifying the data are available check them followin instruction doc and in case of doubt ask Dorotea Iovino

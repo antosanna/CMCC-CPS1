@@ -1,0 +1,24 @@
+#!/bin/sh -l
+. ~/.bashrc
+. $DIR_UTIL/descr_SPS3.5.sh
+
+set -euvx
+start_date=`date +%Y%m`
+st=`date +%m`
+yyyy=`date +%Y`
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
+
+nmf=1
+flgmnth=1
+
+monthstr=`date -d "$yyyy${st}01 " +%B`
+
+checkfile1=$DIR_LOG/$typeofrun/$start_date/sic_first_month_diagnostics_${start_date}_DONE
+debug=1
+
+input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile1 $debug"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_sic.sh -j plot_forecast_sic_first_month_${yyyy}${st} -d ${DIR_DIAG}/sic -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+
+exit 0

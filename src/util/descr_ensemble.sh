@@ -12,8 +12,6 @@ then
    nrunC3Sfore=40  # 40 number of realizations required to C3S forecast
    typeofrun="hindcast"
    debug_push=1    # if 0 you are going to send results to ECMWF
-   iniy=1993
-   endy=2022
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY +
    export apprun=c3s2            #THESE COULD BE MODIFIED
    export S_apprun=SERIAL_cps   #THESE COULD BE MODIFIED

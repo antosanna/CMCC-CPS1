@@ -4,9 +4,8 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_ncl
 
-#NEW 202103: inserimento di un if su checkfile per cui l'interpolazione viene fatta solo se non esiste
 
-export ic=IC
+export ic=`cat $DIR_CASES/CASO/logs/ic_CASO.txt`
 export outdirC3S=OUTDIRC3S
 INPUT=${DIR_ARCHIVE}/CASO/ice/hist
 
@@ -35,16 +34,13 @@ then
          break 
       fi  
    done
-fi
-#NEW 202103  -
-if [ ! -f $checkfile ]
-then
+else
    export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
    export lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
    export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
-   export srcGridName="$REPOSITORY/ORCA_SCRIP_gridT.nc"
-   export dstGridName="$REPOSITORY/World1deg_SCRIP_gridT.nc"
-   export wgtFile="$REPOSITORY/ORCA_2_World_SCRIP_gridT.nc"
+   export srcGridName="$REPOGRID/ORCA_SCRIP_gridT.nc"
+   export dstGridName="$REPOGRID/World1deg_SCRIP_gridT.nc"
+   export wgtFile="$REPOGRID/ORCA_2_World_SCRIP_gridT.nc"
    
    export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
    export yyyytoday=`date +%Y`

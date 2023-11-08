@@ -117,6 +117,7 @@ fincl4 = 'ICEFRAC','PRECC','PRECT','PRECSL','PRECSC','SHFLX','LHFLX',
          'Z500','V850','U850','T850','VBOT','UBOT','TREFHT','RHREFHT',
          'WSPDSRFMX:X','U10','FSDS','PSL','PRECTMX:X','PRECT','TMQ' ,
 fincl5 = 'TS','CLDTOT',
+fincl7 = '',
 do_circulation_diags=.false.
 
 EOF1

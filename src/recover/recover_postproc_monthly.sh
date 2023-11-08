@@ -1,6 +1,7 @@
 #!/bin/sh -l
 #-----------------------------------------------------------------------
 # Determine necessary environment variables
+# reminder: this requires at least 15000MB
 #-----------------------------------------------------------------------
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -22,7 +23,8 @@ ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
 # HERE SET YEAR AND MONTHS TO RECOVER
 for curryear in 1993
 do
-   for currmon in {07..10}
+#   for currmon in {07..10}
+   for currmon in 11
    do
       flag_done=$SCRATCHDIR/ANTO/logs/postproc_monthly_${curryear}${currmon}_done
       if [[ -f $flag_done ]]
@@ -35,6 +37,11 @@ do
       for comp in atm rof lnd
       do
          file=$DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.nc
+         filezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc`
+         if [[ -f $filezip ]]
+         then
+            continue
+         fi
          pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
          $compress $pref.nc $pref.zip.nc
       #   rm $pref.nc  useless because copied from restdir each month
@@ -44,6 +51,10 @@ do
       for comp in ice 
       do
          file=$DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.nc
+         filezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc`
+         if [[ -f $filezip ]] ; then
+            continue
+         fi
          pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
          if [[ -f $pref.nc ]] ; then
             $compress $pref.nc $pref.zip.nc

@@ -1,0 +1,85 @@
+#!/bin/sh -l
+
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -exuv
+
+cd $HOME
+todonow=0
+# -------------------------------
+# get the date from system
+# -------------------------------
+export yyyyfore=$1
+echo $yyyyfore
+export mmfore=$2
+export nrun=$3
+export mproj=$4
+export flgmnth=$5
+nmf=$6
+scriptdir=$7
+export monthstr=$8
+var=$9
+pldir=${10}
+
+case $flgmnth
+ in
+# for lead season lead=$nmf - 3
+#TO BE MODIFED 0) export lead=$(($nmf - 3)) ; export pathterc="/work/csp/sp2/${SPSSYS}/CESM/pctl/" ;;
+#TO BE MODIFED 1) export lead=$(($nmf - 1)) ; export pathterc="/work/csp/sp2/${SPSSYS}/CESM/pctl/monthly/" ;;
+esac
+
+# -------------------------------
+# go to graphic dir
+# -------------------------------
+cd $scriptdir/ncl
+# -------------------------------
+# -------------------------------
+# plot current conditions wrt 1993-2016
+# -------------------------------
+
+mkdir -p plots
+
+export S=( "ppp" "ppp" "ppp" "ppp" )
+case $mmfore 
+ in
+ 01) S[1]="JFM";S[2]="FMA";S[3]="MAM";S[4]="AMJ";;
+ 02) S[1]="FMA";S[2]="MAM";S[3]="AMJ";S[4]="MJJ";;
+ 03) S[1]="MAM";S[2]="AMJ";S[3]="MJJ";S[4]="JJA";;
+ 04) S[1]="AMJ";S[2]="MJJ";S[3]="JJA";S[4]="JAS";;
+ 05) S[1]="MJJ";S[2]="JJA";S[3]="JAS";S[4]="ASO";;
+ 06) S[1]="JJA";S[2]="JAS";S[3]="ASO";S[4]="SON";;
+ 07) S[1]="JAS";S[2]="ASO";S[3]="SON";S[4]="OND";;
+ 08) S[1]="ASO";S[2]="SON";S[3]="OND";S[4]="NDJ";;
+ 09) S[1]="SON";S[2]="OND";S[3]="NDJ";S[4]="DJF";;
+ 10) S[1]="OND";S[2]="NDJ";S[3]="DJF";S[4]="JFM";;
+ 11) S[1]="NDJ";S[2]="DJF";S[3]="JFM";S[4]="FMA";;
+ 12) S[1]="DJF";S[2]="JFM";S[3]="FMA";S[4]="MAM";;
+esac
+
+# -------------------------------
+# do only one plot
+# -------------------------------
+l=$(($lead + 1))
+export plname="${pldir}/${var}_full_forecast_glo_${yyyyfore}${mmfore}_m1"
+export checkfile=${plname}"_DONE"
+if [ $flgmnth -eq 0 ] ; then
+   export SS=${S[$l]}
+   export plname="${pldir}/${var}_full_forecast_glo_${yyyyfore}${mmfore}_lead${lead}"
+   export checkfile=${plname}"_DONE"
+fi
+export inputm="$SCRATCHDIR/${CPSSYS}/CESM/monthly/${var}/C3S/full/${var}_${SPSSystem}_${yyyyfore}${mmfore}_ens_full.nc"
+export inputmall="$SCRATCHDIR/${CPSSYS}/CESM/monthly/${var}/C3S/full/${var}_${SPSSystem}_${yyyyfore}${mmfore}_all_full.nc"
+
+ncl ncl/${var}_season_lead_glo_2cat.ncl   # but this can perform also monthly diagnostics if $flgmnth -eq 1
+if [ ! -f $checkfile ]
+then
+   body="$DIR_DIAG/ncl/${var}_season_lead_glo_2cat.ncl not correctly ended for $var ${yyyyfore}${mmfore}"
+   title="[diags] ${CPSSYS} forecast error"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   exit 1
+fi
+
+# -------------------------------
+# ALL DONE
+# -------------------------------

@@ -1,0 +1,9 @@
+Model Name,C3S Name,dimension,long_name,standard_name,units,frequency,level_type,modeling_realm,multip-fac,add-fac,coordinates,cell_methods,varflg,type
+TS,sst,leadtime lat lon,Sea Surface Temperature,sea_surface_temperature,K,6hr,surface,ocean,1,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
+PSL,mslp,leadtime lat lon,Sea Level Pressure,air_pressure_at_sea_level,hPa,6hr,surface,atmos,0.01,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
+TREFHT,t2m,leadtime lat lon,2m-Temperature,air_temperature,Celsius,6hr,surface,atmos,1,-273.15,reftime realization time leadtime height lat lon,leadtime: point,0,h1
+PRECT,precip,leadtime lat lon,Liquid Water Equivalent Thickness of Total Precipitation Amount,lwe_thickness_of_precipitation_amount,mm/day,day,surface,atmos,86400000,0,reftime realization time leadtime lat lon,leadtime: sum,0,h1
+Z500,z500,leadtime lat lon,500hPa Geopotential Hieght,500hPa_geopot,m,6hr,surface,atmos,1,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
+T850,t850,leadtime lat lon,850hPa Temperature,850hPa_temperature,K,6hr,surface,atmos,1,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
+U200,u200,leadtime lat lon,200hPa Zonal Wind,200hPa_zonal_wind,m/s,6hr,surface,atmos,1,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
+V200,v200,leadtime lat lon,200hPa Meridional Wind,200hPa_meridional_wind,m/s,6hr,surface,atmos,1,0,reftime realization time leadtime lat lon,leadtime: point,0,h1
