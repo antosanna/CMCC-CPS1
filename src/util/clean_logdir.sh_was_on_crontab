@@ -1,0 +1,26 @@
+#!/bin/sh -l
+#BSUB -P 0490
+#BSUB -q s_long
+#BSUB -J clean_logdir
+#BSUB -o TOBEDEFINED/../logs/SCRATCH/clean_logdir%J.out
+#BSUB -e TOBEDEFINED/../logs/SCRATCH/clean_logdir%J.err
+# antonella sanna
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euxv
+echo '---------------------------------------'
+echo ' FIND files OLDER THAN 3 MONTH'
+echo '---------------------------------------'
+touch $DIR_LOG/AAANOTE
+listafiles=`find $DIR_LOG -type f -mtime +90`
+for file in $listafiles
+do
+      pathf=`dirname $file`
+      echo "partial path"
+      modifpath=$(echo $pathf| sed "s:$DIR_ROOT/:$WORK/:g")
+      mkdir -p $modifpath
+      newfile=$modifpath/`basename $file`
+      echo "present path $pathf"
+      echo "future path $modifpath"
+      rsync -auv --remove-source-files $file $newfile
+done

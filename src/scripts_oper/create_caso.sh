@@ -148,7 +148,10 @@ then
 #   fi
    echo "not implemented yet"
 else
-    conda activate $envcondacm3
+set +euvx
+    . $DIR_UTIL/condaactivation.sh
+    condafuncion activate $envcondacm3
+set -euvx
     $DIR_CASES/$caso/case.submit
 fi
 checktime=`date`

@@ -1,0 +1,3 @@
+netCDF4==1.5.1.2
+cfunits
+numpy>=1.17.2

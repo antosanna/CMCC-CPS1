@@ -1,6 +1,6 @@
 #!/bin/sh -l
 . ~/.bashrc
-. ${DIR_SPS35}/descr_SPS3.5.sh
+. ${DIR_UTIL}/descr_CPS.sh
 
 usage() { echo "Usage: $0 [-m <machine string >] [-i <input string >] " 1>&2; exit 1; }
 
@@ -29,7 +29,7 @@ then
     #usage
 fi
 # MACHINE DEPENDENT PART ----------------------------
-if [[  "$machine" == "zeus" ]]
+if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]]
 then
 #  set -evx
   isjobup=0

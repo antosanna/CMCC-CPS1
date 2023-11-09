@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -eu
+
+yy=$1
+mm=$2
+dd=$3
+hh=$4
+incr=$5
+infile=$6
+#dd=01
+incr2=1
+outfile=${infile}
+
+
+cdo settaxis,${yy}-${mm}-${dd},${hh}:00,${incr} ${infile} temp_${yy}${mm}
+cdo setreftime,${yy}-${mm}-${dd},${hh}:00 temp_${yy}${mm} ${outfile}
+rm temp_${yy}${mm}
+
+ 

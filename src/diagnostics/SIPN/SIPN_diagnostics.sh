@@ -78,7 +78,7 @@ in
 esac
 
 # account for leap year
-leap=`$DIR_UTIL/isleap.sh $yyyy $st`
+leap=`$DIR_DIAG/SIPN/isleap.sh $yyyy $st`
 if [ $leap -eq 1 ]
 then
    case $st

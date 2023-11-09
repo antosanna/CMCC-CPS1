@@ -1,0 +1,10 @@
+# ON THE HINDCAST PERIOD
+1-launch_compute_stats_part1.sh
+2-launch_compute_stats_part2.sh
+These should be the commands in crontab
+
+# ANTO HINDCAST C3S statistics
+#first this year by year
+#*/2 * * * * . /etc/profile; . ~/.bashrc && . ${DIR_SPS35}/descr_SPS3.5.sh && . ${DIR_SPS35}/descr_hindcast.sh && ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_s -j launch_compute_stats_part1  -l ${DIR_LOG}/DIAGS/stats -d $DIR_DIAG/C3S_statistics -s launch_compute_stats_part1.sh
+#second this, for all the climatological period
+#*/30 * * * * . /etc/profile; . ~/.bashrc && . ${DIR_SPS35}/descr_SPS3.5.sh && . ${DIR_SPS35}/descr_hindcast.sh && ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_s -j launch_compute_stats_part2 -l ${DIR_LOG}/DIAGS/stats -d $DIR_DIAG/C3S_statistics -s launch_compute_stats_part2.sh

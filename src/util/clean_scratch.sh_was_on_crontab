@@ -1,0 +1,19 @@
+#!/bin/sh -l
+#BSUB -P 0490
+#BSUB -J clean_scratch
+#BSUB -o ../../logs/SCRATCH/clean_scratch%J.out
+#BSUB -e ../../logs/SCRATCH/clean_scratch%J.err
+# antonella sanna
+. ~/.bashrc
+. $DIR_SPS35/descr_SPS3.5.sh
+set -euxv
+#LOG_FILE=$DIR_LOG/SCRATCH/find_old_files.`date +%Y%m%d%H`
+#exec 3>&1 1>>${LOG_FILE} 2>&1
+if [ -d $SCRATCHDIR ]
+then
+   echo '---------------------------------------'
+   echo ' FIND files OLDER THAN 1 MONTH'
+   echo '---------------------------------------'
+# this syntax bypass the problem of too long file list
+   find $SCRATCHDIR -type f -mtime +30 -exec rm -f {} +
+fi

@@ -1,0 +1,19 @@
+#!/bin/sh -l
+#BSUB -q s_long
+#BSUB -J compress_old_logs
+#BSUB -o ../../logs/ARCHIVE/compress_old_logs_%J.out
+#BSUB -e ../../logs/ARCHIVE/compress_old_logs_%J.err
+#BSUB -P 0490
+
+# load variables from descriptor
+. $HOME/.bashrc
+. ${DIR_SPS35}/descr_SPS3.5.sh
+
+set -euxv
+
+cd ${DIR_LOG}/
+
+# find all files but those already gzipped and gzip through -exec otherwise the list is too long
+find . -type f -name '*.*'  -a ! -name '*.gz' -mtime +10 -exec gzip -f {} + 
+
+exit 0
