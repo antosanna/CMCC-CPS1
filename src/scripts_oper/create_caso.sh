@@ -33,6 +33,7 @@ else  #for hindcast period
 fi
 # this should become a module on Juno
 cesmexe=$DIR_EXE/cesm.exe.CPS1
+mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
 #----------------------------------------------------------
