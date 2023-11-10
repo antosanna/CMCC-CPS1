@@ -48,7 +48,7 @@ then
    elif [[ $machine == "zeus" ]]
    then
       pID=0574 #zeus
-      operational_user=sara_sps-dev
+      operational_user=sps-dev
       maxnumbertosubmit=10
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
