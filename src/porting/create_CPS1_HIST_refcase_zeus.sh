@@ -47,7 +47,6 @@ $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM
 ./case.setup
 
 
-cd $DIR_CASES/
 cat > user_nl_cam << EOF1
 inithist = 'NONE'
 ncdata = '\$DIN_LOC_ROOT/atm/cam/inic/fv/cami_0000-01-01_0.47x0.63_L83_c230109.nc'
