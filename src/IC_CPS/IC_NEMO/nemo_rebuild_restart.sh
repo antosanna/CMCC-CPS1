@@ -41,7 +41,7 @@ stat=$?
 if [[ $stat -eq 0 ]]
 then
   # remove DELAY_fwb from OIS restarts
-  ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.$yyyy-${st}-01-00000.$poce.nc
+  ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
 fi
 
 nf_ice=`ls $OUTDIR/*.cice.r.*.nc |wc -l`

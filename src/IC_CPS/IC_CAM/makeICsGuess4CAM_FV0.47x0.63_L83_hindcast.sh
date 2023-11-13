@@ -20,6 +20,7 @@ debug=0
 checkfile=$1
 yyyy=$2
 st=$3
+ppeda=$4
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 # export vars needed by ncl script
@@ -39,91 +40,88 @@ echo ''
 
 #INPUT FILES DOWNLOADED FROM ECMWF
 #lev_ml=ECEDA_${yyIC}${mmIC}${dd}_${tstamp}lev.grib  #level fields
-for ppeda in {0..0}
-do
-   pp=`printf '%.2d' $(($ppeda + 1))`
-   
-   ICfile=$iniICfile.$pp.nc
+pp=`printf '%.2d' $(($ppeda + 1))`
 
-   inputECEDA=ECEDA${ppeda}_$yyIC$mmIC${dd}_${tstamp}.grib
-   inp=`echo $inputECEDA|rev |cut -d '.' -f1 --complement|rev`
-   
-   export output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc
-   ncdataSPS=$IC_CPS_guess/CAM/$st/$output
-   if [[ -f $ncdataSPS ]]
-   then
-      continue
-   fi
-   # this to check output after vertical interpolation
-   output_checkZIP="${CPSSYS}.EDAcam.i.$pp.3dfields_${yyIC}-${mmIC}-${dd}_${tstamp}_ECEDAgrid83lev.zip.nc"
-   
-   # create output dir if not existing already
-   mkdir -p $WORK_IC4CAM
-   
-   workdir="${WORK_IC4CAM}/WORK_${tstamp}_${yyIC}${mmIC}_${dd}"
-   if [ -d $workdir ] 
-   then
-      cd ${WORK_IC4CAM}
-      rm -rf WORK_${tstamp}_${yyIC}${mmIC}_${dd}
-   fi
-   mkdir -p $workdir
-   cd $workdir
-   
-   #NOW LEVEL FIELDS U, V, Q, T and lnPS (used to vertical interp)
-   # 20210429 +
-   if [ ! -f ${data}/${inputECEDA} ]
-   then
-      title="[CAMIC] ${CPSSYS} ERROR"
-      body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${data}/${inputECEDA} missing!"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-      exit 1
-   fi
-   # 20210429 -
-   cdo --eccodes -f nc copy ${data}/${inputECEDA} ${WORK_IC4CAM}/${inp}.tmp.nc
-   cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
-   cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.smooth.nc ${WORK_IC4CAM}/${inp}.nc
-   rm -f ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
-   export input3d=${WORK_IC4CAM}/${inp}.nc
-   export output_check=$WORK_IC4CAM/${inp}.tmp2.nc
-   export wgt_file=$REPOGRID/EDA2FV0.47x0.63_L83.nc
-   export wgt_file_slon=$REPOGRID/EDA2FV0.47x0.63_L83_slon.nc
-   export wgt_file_slat=$REPOGRID/EDA2FV0.47x0.63_L83_slat.nc
-   export src_grid_file=$REPOGRID/src_grid_file.nc
-   export dst_grid_file=$REPOGRID/dst_grid_file.nc
-   export src_grid_file1=$REPOGRID/src_grid_file_slon.nc
-   export dst_grid_file1=$REPOGRID/dst_grid_file_slon.nc
-   export src_grid_file2=$REPOGRID/src_grid_file_slat.nc
-   export dst_grid_file2=$REPOGRID/dst_grid_file_slat.nc
-   cd $DIR_ATM_IC/ncl
-   scriptregrid=regrid_ERA5_to_FV0.47x0.63_L83.ncl
-   echo "submit $scriptregrid "`date`
+ICfile=$iniICfile.$pp.nc
+
+inputECEDA=ECEDA${ppeda}_$yyIC$mmIC${dd}_${tstamp}.grib
+inp=`echo $inputECEDA|rev |cut -d '.' -f1 --complement|rev`
+
+export output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc
+ncdataSPS=$IC_CPS_guess/CAM/$st/$output
+if [[ -f $ncdataSPS ]]
+then
+   exit 0
+fi
+# this to check output after vertical interpolation
+output_checkZIP="${CPSSYS}.EDAcam.i.$pp.3dfields_${yyIC}-${mmIC}-${dd}_${tstamp}_ECEDAgrid83lev.zip.nc"
+
+# create output dir if not existing already
+mkdir -p $WORK_IC4CAM
+
+workdir="${WORK_IC4CAM}/WORK_${tstamp}_${yyIC}${mmIC}_${dd}"
+if [ -d $workdir ] 
+then
+   cd ${WORK_IC4CAM}
+   rm -rf WORK_${tstamp}_${yyIC}${mmIC}_${dd}
+fi
+mkdir -p $workdir
+cd $workdir
+
+#NOW LEVEL FIELDS U, V, Q, T and lnPS (used to vertical interp)
+# 20210429 +
+if [ ! -f ${data}/${inputECEDA} ]
+then
+   title="[CAMIC] ${CPSSYS} ERROR"
+   body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${data}/${inputECEDA} missing!"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   exit 1
+fi
+# 20210429 -
+cdo --eccodes -f nc copy ${data}/${inputECEDA} ${WORK_IC4CAM}/${inp}.tmp.nc
+cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
+cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.smooth.nc ${WORK_IC4CAM}/${inp}.nc
+rm -f ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
+export input3d=${WORK_IC4CAM}/${inp}.nc
+export output_check=$WORK_IC4CAM/${inp}.tmp2.nc
+export wgt_file=$REPOGRID/EDA2FV0.47x0.63_L83.nc
+export wgt_file_slon=$REPOGRID/EDA2FV0.47x0.63_L83_slon.nc
+export wgt_file_slat=$REPOGRID/EDA2FV0.47x0.63_L83_slat.nc
+export src_grid_file=$REPOGRID/src_grid_file.nc
+export dst_grid_file=$REPOGRID/dst_grid_file.nc
+export src_grid_file1=$REPOGRID/src_grid_file_slon.nc
+export dst_grid_file1=$REPOGRID/dst_grid_file_slon.nc
+export src_grid_file2=$REPOGRID/src_grid_file_slat.nc
+export dst_grid_file2=$REPOGRID/dst_grid_file_slat.nc
+cd $DIR_ATM_IC/ncl
+scriptregrid=regrid_ERA5_to_FV0.47x0.63_L83.ncl
+echo "submit $scriptregrid "`date`
+echo ''
+export fileok=${WORK_IC4CAM}/${inp}_ok
+ncl $scriptregrid
+if [ -f $fileok ]
+then
+   echo "ended $scriptregrid and begin compression check level fileds"`date`
    echo ''
-   export fileok=${WORK_IC4CAM}/${inp}_ok
-   ncl $scriptregrid
-   if [ -f $fileok ]
-   then
-      echo "ended $scriptregrid and begin compression check level fileds"`date`
-      echo ''
 #      rm $input3d
-   else
-      title="[CAMIC] ${CPSSYS} warning"
-      body="$IC_CPS/IC_CAM/ncl/$scriptregrid did not complete correctly "
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   fi
-   # the script produces check files for vertical interpolation $output_check
-   # put them in $WORK_IC4CAM
-   if [ -f $WORK_IC4CAM/$output_checkZIP ]
-   then
-       rm -f $WORK_IC4CAM/$output_checkZIP
-   fi
-   $compress ${output_check} $WORK_IC4CAM/$output_checkZIP
-   rm -f ${output_check}
-   
-   echo 'ended compression check level fields and begin compression IC CAM ' `date`echo ''
-   # put results in $IC_CPS_guess/CAM 
-   mkdir -p $IC_CPS_guess/CAM/$st
-   mv ${output} $ncdataSPS
-   echo 'ended compression IC CAM 00 '`date`
-   echo ''
-done
+else
+   title="[CAMIC] ${CPSSYS} warning"
+   body="$IC_CPS/IC_CAM/ncl/$scriptregrid did not complete correctly "
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+fi
+# the script produces check files for vertical interpolation $output_check
+# put them in $WORK_IC4CAM
+if [ -f $WORK_IC4CAM/$output_checkZIP ]
+then
+    rm -f $WORK_IC4CAM/$output_checkZIP
+fi
+$compress ${output_check} $WORK_IC4CAM/$output_checkZIP
+rm -f ${output_check}
+
+echo 'ended compression check level fields and begin compression IC CAM ' `date`echo ''
+# put results in $IC_CPS_guess/CAM 
+mkdir -p $IC_CPS_guess/CAM/$st
+mv ${output} $ncdataSPS
+echo 'ended compression IC CAM 00 '`date`
+echo ''
 touch $checkfile

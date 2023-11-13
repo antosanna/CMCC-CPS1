@@ -151,7 +151,7 @@ then
 else
 set +euvx
     . $DIR_UTIL/condaactivation.sh
-    condafuncion activate $envcondacm3
+    condafunction activate $envcondacm3
 set -euvx
     $DIR_CASES/$caso/case.submit
 fi

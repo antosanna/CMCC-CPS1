@@ -5,7 +5,6 @@
 
 set -euvx
 
-echo "temporary exit after deleting $DIR_CASES/$caso"
 caso=$1
 
 # ******************************************
@@ -30,7 +29,6 @@ if [ -d $DIR_CASES/$caso ] ; then
          rm -rf $caso
 fi
       
-exit
 # 2) remove $caso in work
 if [ -d $WORK_CPS/$caso ] ; then
          cd $WORK_CPS 

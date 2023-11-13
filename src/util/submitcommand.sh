@@ -186,10 +186,12 @@ then
          command+=' -sla $slaID -app $apprun'
       # $queue is defined and contains string serial -> serial        
       elif [[ "$queue" == *"s_"* ]]; then
-         if [[ `whoami` == $operational_user ]]
-         then
-            command+=' -sla ${sla_serialID} -app $S_apprun'
-         fi
+#TEMPORARY: not yet defined
+#         if [[ `whoami` == $operational_user ]]
+#         then
+#            command+=' -sla ${sla_serialID} -app $S_apprun'
+#         fi
+          :
       fi
    fi
 

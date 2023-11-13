@@ -3,7 +3,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
-caso=SPS4_HIST_hyb_CERISE
+caso=${CPSSYS}_HIST_reference
 
 if [[ -d $DIR_CASES/$caso ]]
 then
@@ -11,9 +11,8 @@ then
 fi
 
 conda activate $envcondacm3
-$DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach zeus --run-unsupported
+$DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
 
-cd $DIR_CASES/$caso
 
 ./xmlchange STOP_OPTION=ndays
 ./xmlchange NTASKS_ATM=-20
@@ -48,10 +47,11 @@ cd $DIR_CASES/$caso
 ./case.setup
 
 
+cd $DIR_CASES/
 cat > user_nl_cam << EOF1
 inithist = 'NONE'
 ncdata = '\$DIN_LOC_ROOT/atm/cam/inic/fv/cami_0000-01-01_0.47x0.63_L83_c230109.nc'
-effgw_beres_dp         = 0.45D0
+effgw_beres_dp         = 0.55D0
 gw_qbo_hdepth_scaling  = 0.25D0
 qbo_use_forcing        = .false.
 frontgfc               = 2.7D-15

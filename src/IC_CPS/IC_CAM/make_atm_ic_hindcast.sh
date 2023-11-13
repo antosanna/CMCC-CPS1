@@ -1,8 +1,8 @@
 #!/bin/sh -l
 #BSUB -J IC_CAM
-#BSUB -e /users_home/csp/as34319/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.err
-#BSUB -o /users_home/csp/as34319/CPS/CMCC-CPS1/logs/tests/IC_CAM_%J.out
-#BSUB -P 0490
+#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/IC_CAM/IC_CAM_%J.err
+#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/IC_CAM/IC_CAM_%J.out
+#BSUB -P 0516
 #BSUB -M 100
 
 # load variables from descriptor
@@ -14,13 +14,11 @@ set +euvx
 set -euvx
 
 debug=0
-bk=1
-pp=01
 refcase_rest=refcaseICcam
+tstamp=00
 mkdir -p $IC_CAM_CPS_DIR
 if [[ $debug -eq 1 ]]
 then
-   tstamp=00
    st=07
    yyyy=1993
    if [[ $machine == "zeus" ]]
@@ -41,7 +39,8 @@ else
 # bisogna decomprimere 
    yyyy=$1
    st=$2
-   oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$pp.nc
+   ppeda=$3
+   oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
    if [[ -f $oceic.gz ]]
    then
       gunzip $oceic.gz
@@ -53,9 +52,9 @@ else
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
       exit
    fi
-   iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$pp.nc
-   clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$pp.nc
-   rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$pp.nc
+   iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
+   clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
+   rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.01.nc
 fi
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -71,34 +70,32 @@ then
    dd=28
 fi
 
-for ppeda in {0..9}
-do
-   ppcam=`printf '%.2d' $(($ppeda + 1))`
-   ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$ppcam.$yyyy$st.nc
-   
-   output=${CPSSYS}.EDAcam.i.${ppcam}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
-   ncdataSPS=$IC_CPS_guess/CAM/$st/$output
-   caso=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
-   refdir_refcase_rest=/work/$DIVISION/$USER/restart_cps_IC_CAM/$caso
-   mkdir -p $refdir_refcase_rest
+ppcam=`printf '%.2d' $(($ppeda + 1))`
+ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc
+
+output=${CPSSYS}.EDAcam.i.${ppcam}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
+ncdataSPS=$IC_CPS_guess/CAM/$st/$output
+caso=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
+refdir_refcase_rest=$DIR_REST_INI/$caso
+mkdir -p $refdir_refcase_rest
 #NEMO
-   link_oceic=${refcase_rest}_${yyIC}$mmIC${dd}_restart.nc
-   ln -sf $oceic $refdir_refcase_rest/$link_oceic
+link_oceic=${refcase_rest}_${yyIC}$mmIC${dd}_restart.nc
+ln -sf $oceic $refdir_refcase_rest/$link_oceic
 #CICE
-   link_iceic=$refcase_rest.cice.r.$yyIC-$mmIC-${dd}-00000.nc
-   ln -sf $iceic $refdir_refcase_rest/$link_iceic
-   echo $link_iceic > $refdir_refcase_rest/rpointer.cice
+link_iceic=$refcase_rest.cice.r.$yyIC-$mmIC-${dd}-00000.nc
+ln -sf $iceic $refdir_refcase_rest/$link_iceic
+echo $link_iceic > $refdir_refcase_rest/rpointer.cice
 #CLM
-   link_clmic=$refcase_rest.clm2.r.$yyIC-$mmIC-${dd}-00000.nc 
-   ln -sf $clmic $refdir_refcase_rest/$link_clmic
-   echo $link_clmic >$refdir_refcase_rest/rpointer.lnd
+link_clmic=$refcase_rest.clm2.r.$yyIC-$mmIC-${dd}-00000.nc 
+ln -sf $clmic $refdir_refcase_rest/$link_clmic
+echo $link_clmic >$refdir_refcase_rest/rpointer.lnd
 #HYDROS
-   link_rofic=$refcase_rest.hydros.r.$yyIC-$mmIC-${dd}-00000.nc
-   ln -sf $rofic $refdir_refcase_rest/$link_rofic
-   echo $link_rofic >$refdir_refcase_rest/rpointer.hydros
+link_rofic=$refcase_rest.hydros.r.$yyIC-$mmIC-${dd}-00000.nc
+ln -sf $rofic $refdir_refcase_rest/$link_rofic
+echo $link_rofic >$refdir_refcase_rest/rpointer.hydros
 #SET TIMESTEP
-   ncpl=192
-   input="$yyIC $mmIC $dd $ppcam $caso $ncpl $bk $ncdataSPS $ICfile $refdir_refcase_rest $refcase_rest $yyyy $st"
-   mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
-   ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -j ${caso}_launch -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -d ${DIR_ATM_IC} -s ${CPSSYS}_IC4CAM.sh -i "$input"
-done
+ncpl=192
+input="$yyIC $mmIC $dd $ppcam $caso $ncpl $ncdataSPS $ICfile $refdir_refcase_rest $refcase_rest $yyyy $st"
+mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
+${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -j ${caso}_launch -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -d ${DIR_ATM_IC} -s ${CPSSYS}_IC4CAM.sh -i "$input"
+exit

@@ -17,27 +17,16 @@ ddin=$3
 pp=$4
 caso=$5
 ncpl=$6
-bk=$7
-ncdata=$8
-ICfile=${9}
-refdir_refcase_rest=${10}
-refcase_rest=${11}
-yyyy=${12}
-st=${13}
+ncdata=$7
+ICfile=${8}
+refdir_refcase_rest=${9}
+refcase_rest=${10}
+yyyy=${11}
+st=${12}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 refdate_rest=$yyin-$mmin-01 
 startdate=$yyyy${st}01
-#if [ $bk -eq 1 ]
-#then
-#   bkoce=${11}
-#   bkice=${12}
-#   bkclm=${13}
-#   bkrtm=${14}
-#   repo_rest=/work/csp/as34319/restart_cps_test/0020-01-01-00000
-#   refcase_rest=cm3_cam122_cpl2000-bgc_t01
-#   refdate_rest=0020-01-01
-#fi
 #------------------------------------------------------------
 
 diff=`${DIR_UTIL}/datediff.sh $startdate $yyin$mmin$ddin`
@@ -92,7 +81,7 @@ cd $DIR_CASES/$caso
 #----------------------------------------------------------
 # this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
 #----------------------------------------------------------
-rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${machine} env_workflow.xml
+rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${env_workflow_tag} env_workflow.xml
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
@@ -128,6 +117,10 @@ cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe
 #----------------------------------------------------------
 # submit first month
 #----------------------------------------------------------
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondacm3
+set -euvx
 ./case.submit
 checktime=`date`
 echo 'run submitted ' $checktime

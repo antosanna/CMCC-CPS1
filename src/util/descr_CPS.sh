@@ -27,9 +27,9 @@ SPSSystem=sps4
 DPSsystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2015
-refcaseHIST=SPS4_HIST_hyb_refcase
+refcaseHIST=${CPSSYS}_HIST_reference
 #refcaseHIST=SPS4_HIST_hyb_CERISE
-refcaseSCEN=SPS4_SCEN_hyb_refcase
+refcaseSCEN=${CPSSYS}_SCEN_reference
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -146,7 +146,7 @@ then
    elif [[ $machine == "zeus" ]]
    then
       IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
-      IC_NEMO_CPS_DIR1=$SCRATCHDIR/IC/NEMO_${CPSSYS}_test
+      IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
    fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
@@ -160,20 +160,18 @@ then
    elif [[ $machine == "zeus" ]]
    then
       IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
-      IC_CICE_CPS_DIR1=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
+      IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
    fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
 ######## ICs_CAM Juno
 # TEMPORARY FOR TESTS
-#   IC_CAM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CAM_${CPSSYS}/
-#   IIC_CAM_CPS_DIR1C_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}/
-   IC_CAM_CPS_DIR1=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
-   IC_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
-   if [ $(whoami) == ${operational_user} ]; then
-      IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
-   fi
+#   IC_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
+   IC_CAM_CPS_DIR=${DATA_ARCHIVE}/IC/CAM_${CPSSYS}/
+#   if [ $(whoami) == ${operational_user} ]; then
+#      IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
+#   fi
 # TEMPORARY
    if [[ $machine == "juno" ]]
    then
@@ -331,7 +329,7 @@ then
    DIR_CESM=/users_home/$DIVISION/dp16116/CMCC-CM_dev/
 elif [[ $machine == "zeus" ]]
 then
-   DIR_CESM=/users_home/$DIVISION/as34319/CMCC_CM-dev122/
+   DIR_CESM=/users_home/$DIVISION/sps-dev/CMCC-CM/
 fi
 # WILL BE
 #DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild
@@ -353,6 +351,7 @@ DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
 DIR_LOG1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/logs
+DIR_REST_INI=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_LOG=/work/csp/$USER/CPS/CMCC-${CPSSYS}/logs
 # DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
