@@ -89,14 +89,14 @@ rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${env_workflow_tag} env_workflow.xm
 #----------------------------------------------------------
 # CAM  IC $IC_CPS_guess/CAM
 #----------------------------------------------------------
-rsync -av $DIR_TEMPL/user_nl_ICcam_test $DIR_CASES/$caso/user_nl_cam
 sed -i '/ncdata/d' user_nl_cam
+sed -i '/inithist/d' user_nl_cam
 echo "ncdata='$ncdata'">>user_nl_cam
-#echo "inithist = 'ENDOFRUN'" >>user_nl_cam
+echo "inihist='ENDOFRUN'">>user_nl_cam
 
 #
 echo "timestep = $((86400 / $ncpl))"
-echo "vertical levels 86"
+echo "vertical levels 83"
 #----------------------------------------------------------
 # define the first month run as hybrid
 #----------------------------------------------------------

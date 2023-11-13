@@ -192,7 +192,9 @@ then
       elif [[ "$queue" == *"s_"* ]]; then
          if [[ `whoami` == $operational_user ]]
          then
-            command+=' -sla ${sla_serialID} -app $S_apprun'
+# TEMPORARY
+#            command+=' -sla ${sla_serialID} -app $S_apprun'
+            :
          fi
       fi
    fi
