@@ -120,7 +120,7 @@ then
    input="$caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    # 0 meaning that postprocessing is done runtime
 # modified 20201021  from parallelq to serialq_l
           # use the reservation
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -E yes -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
 
 
 fi   # if della flag C3S_DONE

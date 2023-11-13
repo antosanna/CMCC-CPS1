@@ -22,6 +22,7 @@ prev="None"
 exited="None"
 exited2="None"
 prev2="None"
+prev3="None"
 mem=1000
 partition="None"
 reservation="None"
@@ -31,7 +32,7 @@ ntask="None"
 localtime="None"
 basic="None"
 
-while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:Z:B:S:E:" o; do
+while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:W:Z:B:S:E:" o; do
     case "${o}" in
         S)
             qos=${OPTARG}
@@ -80,6 +81,9 @@ while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:Z:B:S:E:" o; do
             ;;
         w)
             prev2=${OPTARG}
+            ;;
+        W)
+            prev3=${OPTARG}
             ;;
         M)
             mem=${OPTARG}
@@ -186,12 +190,10 @@ then
          command+=' -sla $slaID -app $apprun'
       # $queue is defined and contains string serial -> serial        
       elif [[ "$queue" == *"s_"* ]]; then
-#TEMPORARY: not yet defined
-#         if [[ `whoami` == $operational_user ]]
-#         then
-#            command+=' -sla ${sla_serialID} -app $S_apprun'
-#         fi
-          :
+         if [[ `whoami` == $operational_user ]]
+         then
+            command+=' -sla ${sla_serialID} -app $S_apprun'
+         fi
       fi
    fi
 
@@ -209,7 +211,12 @@ then
       then
          if [[ "$prev2" != "None" ]]
          then
-            command+=' -w "done('$prev') && done('$prev2')"'
+            if [[ "$prev3" != "None" ]]
+            then
+               command+=' -w "done('$prev') && done('$prev2') && done('$prev3')"'
+            else
+               command+=' -w "done('$prev') && done('$prev2')"'
+            fi
          else
             command+=' -w "done('$prev')"'
          fi

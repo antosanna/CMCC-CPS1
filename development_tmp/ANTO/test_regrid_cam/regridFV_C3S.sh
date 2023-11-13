@@ -42,7 +42,8 @@ else
    export ic=$2
    export outdirC3S=$3
    inputdirCAM=$4
-   running=$5 # 0 if running; 1 if off-line
+   inputdirCICE=$5
+   running=$6 # 0 if running; 1 if off-line
    export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
    export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
    ens=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
@@ -83,13 +84,12 @@ export fixsimdays
 #----------------------------------------
 # INPUT TO BE REGRIDDED
 #----------------------------------------
-for type in h3 #h1 h2 h3 
+for type in h3 #h0 h1 h2 h3 
 do
    export type=$type
    export inputFV=$inputdirCAM/$caso.cam.${type}.$yyyy-$st-01-00000.nc
    case $type
    in
-#       h0)  export inputFV=$inputdirCAM/$caso.cam.${type}.$yyyy-$st.nc ;;
        h1)  export frq=6hr;outxday=4;;
        h2)  export frq=12hr;outxday=2;;
        h3)  export frq=day;outxday=1;;
@@ -162,23 +162,22 @@ do
        fi  
     fi  
 done
-# POSTPROC CICE moved to template.lt_archive
-#if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ] || [[ $debug -eq 0 ]]
-#then
+if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ] || [[ $debug -eq 0 ]]
+then
 #-------------------------------------------------------------
 # compute C3S var from CICE
 #-------------------------------------------------------------
-#   $DIR_POST/cice/interp_cice2C3S.sh $caso "$ic" $outdirC3S $inputdirCICE $running
-#fi
+   $DIR_POST/cice/interp_cice2C3S.sh $caso "$ic" $outdirC3S $inputdirCICE $running
+fi
 # NEW 202103 !!!!!! -
 # if check file for cice vars does not exist send ERROR email
-#if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ]
-#then
-#  body="ERROR in standardization of CICE file for $caso case. $DIR_POST/cice/interp_cice2C3S.sh "
-#  title="[C3S] ${SPSSYS} forecast ERROR "
-#  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-#  exit
-#fi
+if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ]
+then
+  body="ERROR in standardization of CICE file for $caso case. $DIR_POST/cice/interp_cice2C3S.sh "
+  title="[C3S] ${SPSSYS} forecast ERROR "
+  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+  exit
+fi
 check_cam_C3SDONE=$outdirC3S/${caso}_cam_C3SDONE
 #-------------------------------------------------------------
 # Compute rdst (check for checkfile inside the script)

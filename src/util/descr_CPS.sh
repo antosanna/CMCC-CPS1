@@ -16,6 +16,7 @@ then
 elif [[ -n `echo $PS1|grep juno` ]]
 then
    machine="juno"
+   alias rm="rm -f"
 elif [[ -n `echo $PS1|grep zeus` ]]
 then
    machine="zeus"
@@ -24,11 +25,10 @@ else
    exit -1
 fi
 SPSSystem=sps4
-DPSsystem=dps3
+DPSSystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2015
 refcaseHIST=${CPSSYS}_HIST_reference
-#refcaseHIST=SPS4_HIST_hyb_CERISE
 refcaseSCEN=${CPSSYS}_SCEN_reference
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
@@ -160,14 +160,16 @@ then
    elif [[ $machine == "zeus" ]]
    then
       IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}_test/
-      IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
+      IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}
    fi
    if [ $(whoami) == ${operational_user} ]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
 ######## ICs_CAM Juno
 # TEMPORARY FOR TESTS
-#   IC_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
+#   IC_CAM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CAM_${CPSSYS}/
+#   IIC_CAM_CPS_DIR1C_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}/
+   #IC_CAM_CPS_DIR1=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
    IC_CAM_CPS_DIR=${DATA_ARCHIVE}/IC/CAM_${CPSSYS}/
 #   if [ $(whoami) == ${operational_user} ]; then
 #      IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
@@ -180,7 +182,7 @@ then
    then
       DATA_ECACCESS=/data/delivery/csp/ecaccess/
    fi
-#   WORK_C3S1=/work/csp/$operational_user/CESM/archive/C3S/
+   WORK_C3S1=/work/csp/$operational_user/CESM/archive/C3S/
 #   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
    ecmwfmail=${mymail}
@@ -288,7 +290,8 @@ fixsimdays=185  # total number of simulation days
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
 # jobIDdummy=1234
-versionSPS=20231001
+versionSPS=20231101
+GCM_name=CMCC-CM3
 endy_hind=2022
 iniy_hind=1993
 # iniy_fore=2017
@@ -326,10 +329,10 @@ freq_forcings=8
 #DIR_CESM=/users_home/$DIVISION/$operational_user/CESM2/CMCC-CM_anto/
 if [[ $machine == "juno" ]]
 then
-   DIR_CESM=/users_home/$DIVISION/dp16116/CMCC-CM_dev/
+   DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
 elif [[ $machine == "zeus" ]]
 then
-   DIR_CESM=/users_home/$DIVISION/sps-dev/CMCC-CM/
+   DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
 fi
 # WILL BE
 #DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild
@@ -351,8 +354,8 @@ DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
 DIR_LOG1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/logs
-DIR_REST_INI=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_LOG=/work/csp/$USER/CPS/CMCC-${CPSSYS}/logs
+DIR_REST_INI=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/restart_ini
 # DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
@@ -379,7 +382,7 @@ DIR_SUBM_SCRIPTS=$WORK/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_ARCHIVE=$WORK_CPS/archive
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
-# WORK_C3S=$DIR_ARCHIVE_C3S
+WORK_C3S=$DIR_ARCHIVE_C3S
 # ####### WORK DIRS FOR ICs
 # ATM_IC=$WORK_CPS/CMCC-${CPSSYS}/WORK_ATM_IC
 WORKDIR_LAND=$WORK/WORK_LAND_IC
