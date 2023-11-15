@@ -21,6 +21,10 @@ yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 # add your frequencies and grids. The script skip them if not present
 OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+if [[ ! -d $OUTDIR ]]
+then
+   exit 0
+fi
 mkdir -p $IC_NEMO_CPS_DIR/$st
 TMPNEMOREST=$SCRATCHDIR/nemo_rebuild/restart/$yyyy$st
 mkdir -p $TMPNEMOREST
