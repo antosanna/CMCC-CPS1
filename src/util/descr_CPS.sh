@@ -1,7 +1,7 @@
 #!/bin/sh -l
 set -a
-#mymail=sp1@cmcc.it
-mymail=antonella.sanna@cmcc.it
+mymail=sp1@cmcc.it
+#mymail=antonella.sanna@cmcc.it
 #mymail=andrea.borrelli@cmcc.it
 #ncheck=`grep Juno /etc/mtab|wc -l`
 #ncheckbackup=`grep marconi /etc/mtab|wc -l`
@@ -49,7 +49,7 @@ then
    then
       pID=0574 #zeus
       operational_user=sps-dev
-      maxnumbertosubmit=10
+      maxnumbertosubmit=2
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       env_workflow_tag=cmcc
@@ -170,10 +170,10 @@ then
 #   IC_CAM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CAM_${CPSSYS}/
 #   IIC_CAM_CPS_DIR1C_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}/
    #IC_CAM_CPS_DIR1=${SCRATCHDIR}/IC/CAM_${CPSSYS}_test/
-   IC_CAM_CPS_DIR=${DATA_ARCHIVE}/IC/CAM_${CPSSYS}/
-#   if [ $(whoami) == ${operational_user} ]; then
-#      IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
-#   fi
+   IC_CAM_CPS_DIR1=${DATA_ARCHIVE}/IC/CAM_${CPSSYS}/
+   if [ $(whoami) == ${operational_user} ]; then
+      IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
+   fi
 # TEMPORARY
    if [[ $machine == "juno" ]]
    then

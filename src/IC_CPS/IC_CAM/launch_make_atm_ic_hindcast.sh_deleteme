@@ -14,7 +14,7 @@ do
    for yyyy in `seq $iniy $endy`
    do
        .  $DIR_UTIL/descr_ensemble.sh $yyyy
-       for pp in {0..9}
+       for pp in {8..9}
        do
           ppcam=`printf '%.2d' $(($pp + 1))`
           if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]

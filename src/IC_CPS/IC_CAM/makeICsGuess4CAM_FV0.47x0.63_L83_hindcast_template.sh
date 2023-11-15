@@ -17,10 +17,10 @@ set -euvx
 debug=0
 
 #INPUT SECTION
-checkfile=$1
-yyyy=$2
-st=$3
-ppeda=$4
+checkfile=CHECKFILE
+yyyy=YYYY
+st=ST
+ppeda=PPEDA
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 # export vars needed by ncl script
@@ -96,7 +96,7 @@ export dst_grid_file2=$REPOGRID/dst_grid_file_slat.nc
 scriptregrid=$SCRATCHDIR/EDA2CAM_regrid/$yyyy${st}_${pp}/regrid_ERA5_to_FV0.47x0.63_L83_${yyyy}${st}_${pp}.ncl
 mkdir -p $SCRATCHDIR/EDA2CAM_regrid/$yyyy${st}_${pp}/
 sleep 2
-rsync -auv $DIR_ATM_IC/ncl/regrid_ERA5_to_FV0.47x0.63_L83.ncl $scriptregrid
+cp $DIR_ATM_IC/ncl/regrid_ERA5_to_FV0.47x0.63_L83.ncl $scriptregrid
 echo "submit $scriptregrid "`date`
 echo ''
 export fileok=${WORK_IC4CAM}/${inp}_ok
