@@ -26,13 +26,13 @@ else
    yyyy=$1
    st=$2
 fi
-outdir=${DIR_LOG}/$typeofrun/$startdate
+outdir=${DIR_LOG}/$typeofrun/
 
 # ----------------------------------------------------------------
 #  Quota
 # ----------------------------------------------------------------
 # 
-fname=$outdir/${CPSSYS}_quota_${startdate}.log
+fname=$outdir/${CPSSYS}_quota_${yyyy}$st.`date +%Y%m%d%M`.log
 cat /dev/null >> $fname
 echo "date is `date`" >> $fname
 echo "Filesystem Size  Used  Avail Use%" >> $fname

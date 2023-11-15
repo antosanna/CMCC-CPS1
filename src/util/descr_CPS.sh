@@ -17,6 +17,7 @@ elif [[ -n `echo $PS1|grep juno` ]]
 then
    machine="juno"
    alias rm="rm -f"
+   alias cp="/bin/cp -f"
 elif [[ -n `echo $PS1|grep zeus` ]]
 then
    machine="zeus"
@@ -41,9 +42,9 @@ then
    then
       operational_user=cp1
       pID=0490 #Juno
-      envcondacm3=da_definire
+      envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
-      maxnumbertosubmit=20
+      maxnumbertosubmit=4
       env_workflow_tag=cmcc
    elif [[ $machine == "zeus" ]]
    then
@@ -284,8 +285,8 @@ nmonfore=6      # number of forecast months
 fixsimdays=185  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
-# natm3d=5    # number of required fields for C3S 3d atmospheric
-# nfieldsC3S=53    # number of required fields for C3S with ocean  monthly + new pwr var
+ natm3d=5    # number of required fields for C3S 3d atmospheric
+ nfieldsC3S=53    # number of required fields for C3S with ocean  monthly + new pwr var
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
@@ -294,10 +295,7 @@ versionSPS=20231101
 GCM_name=CMCC-CM3
 endy_hind=2022
 iniy_hind=1993
-# iniy_fore=2017
-# n_ic_cam=10
-# n_ic_clm=3
-# n_ic_nemo=9
+iniy_fore=2024
 # nproc_postrun=4
 freq_forcings=8
 # 
@@ -377,8 +375,7 @@ WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
 DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
-DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
-DIR_SUBM_SCRIPTS=$WORK/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_SUBM_SCRIPTS=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_ARCHIVE=$WORK_CPS/archive
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S

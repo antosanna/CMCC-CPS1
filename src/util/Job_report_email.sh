@@ -1,6 +1,6 @@
 #!/bin/sh -l
 . $HOME/.bashrc
-. ${DIR_UTIL}/descr_SPS4.sh
+. ${DIR_UTIL}/descr_CPS.sh
 mymail=$1
 
 if [ $LSB_JOBEXIT_STAT -ne 0  ] ; then
@@ -14,18 +14,18 @@ if [ $LSB_JOBEXIT_STAT -ne 0  ] ; then
            Output file : $LSB_OUTPUTFILE \n
            Error file : $LSB_ERRORFILE"  
     ag=`echo $LSB_JOBNAME |grep ag_12h`
-    sps_CAM_IC=`echo $LSB_JOBNAME |grep ${SPSsystem}_CAM_IC`
+    sps_CAM_IC=`echo $LSB_JOBNAME |grep ${SPSSystem}_CAM_IC`
     log_check=`echo $LSB_JOBNAME |grep log_checker`
-    title="${SPSSYS} forecast ERROR" 
+    title="${CPSSYS} forecast ERROR" 
     if [ ! -z $ag ]
     then
-       title="[CAMIC] ${SPSSYS} atmospheric guess ERROR"
+       title="[CAMIC] ${CPSSYS} atmospheric guess ERROR"
     elif [ ! -z $sps_CAM_IC ]
     then
-       title="[CAMIC] ${SPSSYS} SPS guess ERROR"
+       title="[CAMIC] ${CPSSYS} SPS guess ERROR"
     elif [ ! -z $log_check ]
     then
-       title="${SPSSYS} log_checker ERROR" 
+       title="${CPSSYS} log_checker ERROR" 
     fi
     $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$message" -t "$title" 
 fi

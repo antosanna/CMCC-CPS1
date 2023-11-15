@@ -1,15 +1,28 @@
 #!/bin/sh -l
-#BSUB -q s_short
-#BSUB -J SPS4_main_hc_zeus
-#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.err
-#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.out
-#BSUB -P 0516 
-#BSUB -M 1000
-
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/descr_ensemble.sh 1993
+if [[ $machine == "zeus" ]]
+then
+#BSUB -q s_short
+#BSUB -J SPS4_main_hc
+#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.err
+#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.out
+#BSUB -P 0516 
+#BSUB -M 1000
+   :
+elif [[ $machine == "juno" ]]
+then
+#BSUB -q s_short
+#BSUB -J SPS4_main_hc
+#BSUB -e /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.err
+#BSUB -o /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/SPS4_main_hc%J.out
+#BSUB -P 0516 
+#BSUB -M 1000
+   :
+fi
+
 set -evx
 
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
@@ -19,7 +32,7 @@ then
    exit
 fi
 # Input **********************
-stlist=$1
+stlist=11 #$1
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 if [ $np_all -lt $maxnumbertosubmit ]
 then
@@ -60,7 +73,7 @@ do
          flg_continue=0
          echo "n $n *****************************"
          ens=`printf '%.3d' $n`
-         script_to_submit=$DIR_SUBM_SCRIPTS1/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
+         script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
          submittable_cnt=$(( $submittable_cnt + 1 ))
          if [ -f $script_to_submit ] ; then
             res1=`grep submitcommand.sh ${script_to_submit} | cut -d ' ' -f18`

@@ -107,6 +107,7 @@ echo "vertical levels 83"
 ./xmlchange STOP_DATE=$startdate
 ./xmlchange STOP_N=$diff
 ./xmlchange ATM_NCPL=$ncpl
+./xmlchange GET_REFCASE=TRUE
 
 # AL MOMENTO NON CI SONO
 cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe

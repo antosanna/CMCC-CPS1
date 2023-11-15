@@ -59,14 +59,7 @@ output_checkZIP="${CPSSYS}.EDAcam.i.$pp.3dfields_${yyIC}-${mmIC}-${dd}_${tstamp}
 # create output dir if not existing already
 mkdir -p $WORK_IC4CAM
 
-workdir="${WORK_IC4CAM}/WORK_${tstamp}_${yyIC}${mmIC}_${dd}"
-if [ -d $workdir ] 
-then
-   cd ${WORK_IC4CAM}
-   rm -rf WORK_${tstamp}_${yyIC}${mmIC}_${dd}
-fi
-mkdir -p $workdir
-cd $workdir
+cd ${WORK_IC4CAM}
 
 #NOW LEVEL FIELDS U, V, Q, T and lnPS (used to vertical interp)
 # 20210429 +
@@ -75,7 +68,7 @@ then
    title="[CAMIC] ${CPSSYS} ERROR"
    body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${data}/${inputECEDA} missing!"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   exit 1
+   exit 
 fi
 # 20210429 -
 cdo --eccodes -f nc copy ${data}/${inputECEDA} ${WORK_IC4CAM}/${inp}.tmp.nc

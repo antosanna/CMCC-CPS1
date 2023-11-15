@@ -1,22 +1,30 @@
 #!/bin/sh -l
-#BSUB -J dry_randomizer_zeus
-#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_%J.err
-#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_%J.out
-#BSUB -P 0574
-#BSUB -q s_short
-
-#***************************************
-#***************************************
-# load variables from descriptor
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/descr_ensemble.sh 1993
-
-if [[ $machine != "zeus" ]]
+if [[ $machine == "juno" ]]
 then
-   echo "this script is meant to run only in Zeus"
-   exit
+   :
+#BSUB -J dry_randomizer_hindcast
+#BSUB -e /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_hindcast_%J.err
+#BSUB -o /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_hindcast_%J.out
+#BSUB -P 0490
+#BSUB -q s_short
+#BSUB -M 500
+elif [[ $machine == "zeus" ]]
+then
+   :
+#BSUB -J dry_randomizer_hindcast
+#BSUB -e /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_hindcast_%J.err
+#BSUB -o /work/csp/cp1/CPS/CMCC-CPS1/logs/hindcast/dry_randomizer_hindcast_%J.out
+#BSUB -P 0490
+#BSUB -q s_short
+#BSUB -M 500
 fi
+#***************************************
+#***************************************
+# load variables from descriptor
+
 set -evxu
 ntot=$nrunmax
 mkdir -p $TRIP_DIR
@@ -25,8 +33,8 @@ do
    for st in {01..12}
    do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
-      mkdir -p $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts
-      mkdir -p $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts/CINECA
+      mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts
+      mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA
 
       for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
    
@@ -83,7 +91,7 @@ EOF
 
          caso=${SPSSystem}_${yyyy}${st}_${nrun3}
          input="$yyyy $st $pp $ppland $poce $nrun"
-         cat > $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh << EOF1
+         cat > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh << EOF1
 #!/bin/sh -l
 . \$HOME/.bashrc
 . \${DIR_UTIL}/descr_CPS.sh
@@ -93,12 +101,12 @@ mkdir -p \$DIR_LOG/$typeofrun/$yyyy$st
 \${DIR_UTIL}/submitcommand.sh -m \$machine -q \$serialq_m -j crea_${CPSSYS}_$yyyy${st}_${nrun3} -l \${DIR_LOG}/$typeofrun/$yyyy$st -d \$DIR_CPS -s create_caso.sh -i "$input"
 EOF1
 
-         chmod u+x $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
+         chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
 
       #crea analogo per CINECA + (dopo il fcst di marzo aggiungere le code di MARCONI!!!)
       # ATTENZIONE! I LOG SU CINECA VENGONO PRODOTTI RUN_TIME QUINDI NON POSSONO ESSERE SCRITTI SU UNA DIRECTORY NON ANCORA ESISTENTE, LA DIR LOGS DEL CASO VA CREATA prima
 
-         cat > $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh << EOF2
+         cat > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh << EOF2
 #!/bin/sh -l
 . \$HOME/.bashrc
 . \$DIR_UTIL/descr_CPS.sh
@@ -111,7 +119,7 @@ mkdir -p $caso/logs
 \${DIR_UTIL}/submitcommand.sh -m \$machine -S qos_resv -q \$serialq_l -r \$sla_serialID -j crea_${SPSSystem}_$yyyy${st}_${nrun3} -l \$DIR_LOG/$typeofrun/$yyyy${st} -d \$DIR_CPS -s create_caso.sh -i "$input"
 
 EOF2
-         chmod u+x $DIR_SUBM_SCRIPTS1/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+         chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
 #crea analogo per CINECA -
          nrun=`expr $nrun + 1`
          cd $DIR_CPS 
@@ -119,12 +127,12 @@ EOF2
 
 
 # COPY SCRIPTS, triplette_random AND ICs TO CINECA
-      cd ${DIR_SUBM_SCRIPTS1}/$st/$yyyy${st}_scripts/CINECA/
+      cd ${DIR_SUBM_SCRIPTS}/$st/$yyyy${st}_scripts/CINECA/
       if [ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]; then
          cp $TRIP_DIR/triplette.random.$yyyy$st.txt .
       fi
       tar -cvf $yyyy${st}_scripts_CINECA.tar *
-      mkdir -p $DIR_SUBM_SCRIPTS1/backup_machine
+      mkdir -p $DIR_SUBM_SCRIPTS/backup_machine
       mv $yyyy${st}_scripts_CINECA.tar $DIR_SUBM_SCRIPTS/backup_machine/
    done   #loop on start-date months
 done   #loop on hindcast years

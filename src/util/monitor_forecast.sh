@@ -7,8 +7,7 @@
 
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-#-- parameters -----------------------------------------------------------------
-lastmon=$nmonfore
+set -eu
 
 #-- functions ------------------------------------------------------------------
 function write_help
@@ -28,16 +27,11 @@ fi
 # if 0 print all the members running/pending, otherwise only their number
 txtfile=0
 
-
-# Path
-
-#-- Initialization -------------------------------------------------------------
-
-#output=`cindata -u \`whoami\` `
-#`gpfsrepquota -d -u|grep csp`
 yyyy=$1
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 st=$2
+logfile=$DIR_LOG/$typeofrun/monitor_${typeofrun}.$yyyy$st.`date +%Y%m%d%M`.txt
+exec 3>&1 1>>${logfile} 2>&1
 if [ $3 -eq 0 ]  ; then # manage the case ./monitor_forecast
     doplot=0
 elif [ $3 -eq 1 ]  ; then # manage the case ./monitor_forecast 1
@@ -53,51 +47,51 @@ echo "Current system time : "$(date | cut -d \  -f 2-5)
 echo ""
 echo ""
 
-$DIR_UTIL/monitor_quota_op.sh
+$DIR_UTIL/monitor_quota.sh $yyyy $st
 
 #-- Main loop (ensamble mebers) ------------------------------------------------                                                                          
 echo ""
-#alljobsonqueue=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run |awk '{print $7}'`
+#alljobsonqueue=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${SPSSystem}_${start_date} -N _run |awk '{print $7}'`
 if [[ "$machine" == "marconi" ]] ; then
-   alljobsonqueue=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run |awk '{print $2}' `
+   alljobsonqueue=`${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} |awk '{print $2}' `
    #select job_name--->actually option not included in findjobs
-elif [[ "$machine" == "zeus" ]] ; then
-   alljobsonqueue=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run |awk '{print $7}' `
+elif [[ "$machine" == "zeus" ]] || [[ "$machine" == "juno" ]]; then
+   alljobsonqueue=`${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} |awk '{print $7}' `
    #select job_name--->actually option not included in findjobs
 fi
-nrun=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run -c yes ` 
+nrun=`${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} -c yes ` 
 all_start_date=$start_date
 
-if [ `${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run -c yes ` -ne 0 ] 
+if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} -c yes ` -ne 0 ] 
 then
    echo "Loop over all $nrun members on queue:"  
    printf "%-20s %-13s %-5s %-8s %-15s %-13s %-18s %-10s %-8s\n" "caso" "job_status" "N_done" "l_archive" "last_restart" "current_date" "starting_time" "Nvar_C3S[$nfieldsC3S]" "C3S ok"
    
    for member in $alljobsonqueue ; do
-     caso=`echo $member |cut -d '_' -f1-3`
-     ens=`echo $member |cut -d '_' -f3|cut -c 2-3`
-     ens3=`echo $member |cut -d '_' -f3|cut -c 1-3`
+     caso=`echo $member |cut -d '.' -f2`
+     ens=`echo $caso |cut -d '_' -f3|cut -c 2-3`
+     ens3=`echo $caso |cut -d '_' -f3|cut -c 1-3`
    # Get job status (RUN, PEND, nil)
      job_status="nil"
      job_id=""
-     string=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${caso}`
+     string=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso}`
      if [ $? -eq 0 ] ; then
 #set +e
        #this line is before 02/12/2022
-       #job_status=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${caso}` #$(echo $string | awk '{print $3}' | tail -n 1)
+       #job_status=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso}` #$(echo $string | awk '{print $3}' | tail -n 1)
        #
        job_status=$(echo $string | awk '{print $3}' | tail -n 1)
-       job_id=`${DIR_SPS35}/findjobs.sh -m ${machine} -n ${caso} -i yes`  #$(echo $string | awk '{print $4}' | tail -n 1)
+       job_id=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso} -i yes`  #$(echo $string | awk '{print $4}' | tail -n 1)
 #set -e
      fi
    
    # Number of logfiles
-     nlogs=$(grep 'run SUCCESSFUL' ${DIR_CASES}/${caso}/CaseStatus | wc -l)
+     nlogs=$(grep 'case.run success' ${DIR_CASES}/${caso}/CaseStatus | wc -l)
    
    # Number of .nc files produced for C3S (single members)
      if [ -d ${WORK_C3S}/$start_date ]
      then
-        nC3S=$(ls -1 ${WORK_C3S}/$start_date/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${start_date}0100_*r${ens}i00p00.nc 2>/dev/null | wc -l)
+        nC3S=$(ls -1 ${WORK_C3S}/$start_date/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*r${ens}i00p00.nc 2>/dev/null | wc -l)
         if [ $nC3S -eq $nfieldsC3S ]
         then 
             if [ `ls ${WORK_C3S}/$start_date/meta_checker_ok_* | wc -l` -eq $nfieldsC3S ] && [ `ls ${WORK_C3S}/$start_date/qa_checker_ok_* | wc -l` -eq $nfieldsC3S ] && [ `ls ${WORK_C3S}/$start_date/tmpl_checker_ok_0*|wc -l` -eq $nfieldsC3S ]
@@ -115,37 +109,31 @@ then
      begin_time="------"
 
      if [[ "$job_status" == *"RUN"* ]]; then
-       if [[ "$machine" == "marconi" ]] ; then
-          tmpbpeek=`cat $DIR_CASES/$caso/logs/${caso}_run_${job_id}.out | grep "CSM EXECUTION BEGINS HERE"`
-          begin_time=`echo $tmpbpeek | awk {'print $4'} `
-        elif [[ "$machine" == "zeus" ]] ; then
-          tmpbpeek=`bpeek $job_id  2>&1 | grep "CSM EXECUTION BEGINS HERE" `
-          begin_time="$( echo $tmpbpeek | cut -d \  -f 2-5 | tr , " " | tr "." " " | cut -d " " -f 1-3,5-6 )"
-        fi
+        begin_time=`grep case.run starting $job_id  $DIR_CASES/$caso/CaseStatus|awk {'print $2'}|cut -c 1-8`
      fi
 
 
    
-   # Month being processed (presently not used)
-     cmonth=""
+   # starting date of the actual run YYYYMMDD (presently not used)
+     cyyyystdd=""
      if [[ "$job_status" == *"RUN"* ]]; then
-       file=`ls $WORK_SPS3/${caso}/run/namelist`
-       cmonth=$(grep ^nn_date0 $file | awk '{print $3}')
+       file=`ls $WORK_CPS/${caso}/run/namelist`
+       cyyyystdd=$(grep ^nn_date0 $file | awk '{print $3}')
      fi
    
-   # Last day processsed
+   # Last day processed (with YYYYMM)
      cdate="--------"
      if [[ "$job_status" == *"RUN"* ]]; then
-       file=$(ls $WORK_SPS3/${caso}/run/atm.log* 2>/dev/null)
-       if [ `ls $WORK_SPS3/${caso}/run/atm.log* 2>/dev/null | wc -l ` -ne 0 ]
+       if [ `ls $WORK_CPS/${caso}/run/rof.log* | wc -l ` -ne 0 ]
        then
-          cdate=$(grep ncdate $file | tail -n 1 | awk '{print $3}')
+          file=`ls $WORK_CPS/${caso}/run/rof.log* |tail -n 1`
+          cdate=$(grep "model date is" $file | awk '{print $5}')
        fi
      fi
    
    # Get last restart file
      last_rest=""
-     file=$(ls -1 $WORK_SPS3/archive/${caso}/rest 2>/dev/null)
+     file=$(ls -1 $WORK_CPS/archive/${caso}/rest 2>/dev/null)
      if [ $? -eq 0 ] ; then
        last_rest=$(echo $file | tail -n 1 | awk '{print substr($1,1,4) substr($1,6,2)}')
      fi
@@ -177,7 +165,7 @@ then
      then
        lastc='IC'
      fi
-     if [ $nlogs -eq $lastmon ]
+     if [ $nlogs -eq $nmonfore ]
      then
        job_status="DONE"
      fi
@@ -186,10 +174,10 @@ then
      #MB/AB 2/7---> is this final postpc (i.e. postpc_clm)? or also the l_archive (job_name=$caso.postpc) ?
      #${id}  is not defined...is it the member tag? in this case ens3 has been defined as the full (3digits) member tag.
 
-     postpc_string=`${DIR_SPS35}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3}`
+     postpc_string=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3}`
      if [ $? -eq 0 ] ; then
-       postpc=`${DIR_SPS35}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -i yes`
-       postpc_nr=`${DIR_SPS35}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -c yes`
+       postpc=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -i yes`
+       postpc_nr=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -c yes`
        if [ $postpc_nr -gt 1 ]; then
          postpc=$postpc_nr
        fi
@@ -206,21 +194,21 @@ fi
 
 #-------------------------------------------------------------------------------
 # Total jobs running3S
-if [ `${DIR_SPS35}/findjobs.sh -m ${machine} -N ${SPSsystem}_${start_date} -c yes` -ne 0 ] 
+if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -c yes` -ne 0 ] 
 then
    echo ""
-   echo "TOTAL FORECASTS ON QUEUE PARALLEL: "`${DIR_SPS35}/findjobs.sh -m ${machine} -N ${SPSsystem}_${start_date} -n _run -c yes`
+   echo "TOTAL FORECASTS ON QUEUE PARALLEL: "`${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -n _run -c yes`
    echo ""
-   echo "TOTAL FORECASTS RUNNING:           "`${DIR_SPS35}/findjobs.sh  -m ${machine} -N ${SPSsystem}_${start_date} -n _run -a $BATCHRUN -c yes`
+   echo "TOTAL FORECASTS RUNNING:           "`${DIR_UTIL}/findjobs.sh  -m ${machine} -N ${SPSSystem}_${start_date} -n _run -a $BATCHRUN -c yes`
    if [[ $txtfile -eq 0 ]]
    then
-       echo `${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run -a $BATCHRUN -J yes `
+       echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n ${SPSSystem}_${start_date} -N _run -a $BATCHRUN -J yes `
    fi
    echo ""
-   echo "TOTAL FORECASTS PENDING:           "`${DIR_SPS35}/findjobs.sh -m ${machine} -N ${SPSsystem}_${start_date} -n _run -a PEND -c yes`
+   echo "TOTAL FORECASTS PENDING:           "`${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -n _run -a PEND -c yes`
    if [[ $txtfile -eq 0 ]]
    then
-         echo `${DIR_SPS35}/findjobs.sh -m ${machine} -n ${SPSsystem}_${start_date} -N _run -a PEND -J yes `
+         echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n ${SPSSystem}_${start_date} -N _run -a PEND -J yes `
    fi
 else
    echo ""
@@ -234,12 +222,8 @@ fi
 allst=`echo ${all_start_date}| tr ' ' '\n' |sort -u`
 for start_date in $allst
 do
-   if [ `echo $start_date|cut -c 1-4` -lt $iniy_fore ]
-   then
-     . $DIR_SPS35/descr_hindcast.sh
-   else
-     . $DIR_SPS35/descr_forecast.sh
-   fi
+   yyyy=`echo $start_date|cut -c 1-4`
+   . $DIR_UTIL/descr_ensemble.sh $yyyy
    mkdir -p $DIR_LOG/$typeofrun/$start_date
    if [ $doplot -eq 1 ]
    then
@@ -282,8 +266,8 @@ do
 # Find which parameter is presently being processsed
    if [ -d $WORK_C3S/${start_date} ]
    then
-      files=$(ls $WORK_C3S/${start_date}/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${start_date}0100*.nc 2>/dev/null)
-      nfiles=$(ls $WORK_C3S/${start_date}/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${start_date}0100*.nc 2>/dev/null | wc -l )
+      files=$(ls $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100*.nc 2>/dev/null)
+      nfiles=$(ls $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100*.nc 2>/dev/null | wc -l )
       if [ $nfiles -eq 0 ] ; then
         cvar="-"
         echo "Now ready files               :" $nfiles
@@ -297,7 +281,7 @@ do
       fi
    fi
 # Count files ready for transfer to ECMWF
-   npush=$(ls -1 ${pushdir}/$start_date/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${start_date}0100*.* 2>/dev/null | wc -l)
+   npush=$(ls -1 ${pushdir}/$start_date/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100*.* 2>/dev/null | wc -l)
    echo "Files ready for transfer (expected $((($nfieldsC3S - $natm3d + $nchunks * $natm3d) * 2 )) + Manifest): "$npush
 
 done
