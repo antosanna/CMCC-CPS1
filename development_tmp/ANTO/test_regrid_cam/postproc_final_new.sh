@@ -48,16 +48,19 @@ then
 #      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -E yes -r $sla_serialID -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/tests/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
    done
-exit
    #--------------------------------------------
    # CAM C3S standardization
    #-------------------------------------------- 
-   echo "start regrid CAM "`date`
-   input="$caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    # 0 meaning that postprocessing is done runtime
+   for ft in $filetyp
+   do
+      echo "start regrid CAM "`date`
+      input="$ft $caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    # 0 meaning that postprocessing is done runtime
 # modified 20201021  from parallelq to serialq_l
           # use the reservation
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -E yes -r $sla_serialID -S qos_resv -t "24" -p create_cam_files_h1_${caso} -w create_cam_files_h2_${caso} -W create_cam_files_h3_${caso} -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+# WILL BE    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serailq_m -r $sla_serialID -S qos_resv -t "24" -p create_cam_files_h1_${caso} -w create_cam_files_h2_${caso} -W create_cam_files_h3_${caso} -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
 
+   done
 
 fi   # if della flag C3S_DONE
 

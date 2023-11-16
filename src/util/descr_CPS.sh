@@ -50,7 +50,7 @@ then
    then
       pID=0574 #zeus
       operational_user=sps-dev
-      maxnumbertosubmit=2
+      maxnumbertosubmit=6
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       env_workflow_tag=cmcc
