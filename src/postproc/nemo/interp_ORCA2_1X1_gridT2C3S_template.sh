@@ -116,8 +116,9 @@ export Htoday=`date +%H`
 export Mtoday=`date +%M`
 export Stoday=`date +%S`
 OUTDIR_NEMO=$DIR_ARCHIVE/CASO/ocn/hist/
-inputlist=`ls CASO*_1m_*grid_T.zip.nc`
+inputlist=`ls $OUTDIR_NEMO/CASO*_1m_*grid_T.zip.nc`
 export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo//CASO_1m_grid_T.nc
+mkdir -p $SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/
 #echo 'inizio ncrcat ' `date`
 if [ ! -f $inputfile ]
 then
@@ -174,7 +175,7 @@ do
    fi
 done  
 cd $OUTDIR_NEMO
-inputlist=`ls *1.zip.nc`
+inputlist=`ls *1*.zip.nc`
 for input in $inputlist
 do
       ncatted -O -a ic,global,a,c,"IC" ${input}
@@ -191,12 +192,13 @@ then
       mkdir -p $FINALARCHIVE/CASO/ocn/hist
 # TEMPORARY COMMENT
 #      func_error_dims "ocn"
-      if [[ $FLAGERROR -ne 0 ]]
-      then
-         title="${CPSSYS} forecast ERROR"
-         body="ERROR in archiving ocean files for case CASO. Dimensions are not the expected ones"
-         exit 1
-      fi     
+#      if [[ $FLAGERROR -ne 0 ]]
+#      then
+#         title="${CPSSYS} forecast ERROR"
+#         body="ERROR in archiving ocean files for case CASO. Dimensions are not the expected ones"
+#         exit 1
+#      fi     
+#TEMPORARY COMMENT 
       rsync -auv --remove-source-files $DIR_ARCHIVE/CASO/ocn/hist/CASO*zip.nc $FINALARCHIVE/CASO/ocn/hist/
       touch  $archive_oce_ok
 fi  

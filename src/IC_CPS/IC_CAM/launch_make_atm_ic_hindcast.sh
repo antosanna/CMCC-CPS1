@@ -1,7 +1,7 @@
 #!/bin/sh -l
 . ~/.bashrc
 .  $DIR_UTIL/descr_CPS.sh
-
+. $DIR_UTIL/descr_ensemble.sh 1993
 set -euvx
 mkdir -p $DIR_LOG/IC_CAM
 LOG_FILE=$DIR_LOG/IC_CAM/launch_make_atm_ic_`date +%Y%m%d%H%M`
@@ -10,12 +10,12 @@ iniy=$iniy_hind
 endy=2003
 debugp=0   # if 1 do only one and exit
 debugy=0   # if 1 do only one year
+
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
 for st in 07 #10 12 02 04 06 
 do
    for yyyy in `seq $iniy $endy`
    do
-       .  $DIR_UTIL/descr_ensemble.sh $yyyy
        for pp in {0..9}
        do
           ppcam=`printf '%.2d' $(($pp + 1))`

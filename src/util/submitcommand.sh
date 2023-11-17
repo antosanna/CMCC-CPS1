@@ -234,7 +234,7 @@ then
       if [[ "$mem" != "None" ]]
       then
 # (mem is expressed in MB)
-         command+=' -R "rusage[mem='$mem']" -M $mem'
+         command+=' -R "rusage[mem='$mem']"'
       fi
    fi
    if [[ "$starttime" != "None" ]]
@@ -379,7 +379,7 @@ then
       if [[ "$mem" != "None" ]]
       then
 # (mem is expressed in MB)
-         command+=' -R "rusage[mem='$mem']" -M $mem'
+         command+=' -R "rusage[mem='$mem']"'
       fi
    fi
    if [[ "$starttime" != "None" ]]

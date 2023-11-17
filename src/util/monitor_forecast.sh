@@ -76,17 +76,26 @@ then
      job_id=""
      string=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso}`
      if [ $? -eq 0 ] ; then
-#set +e
-       #this line is before 02/12/2022
-       #job_status=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso}` #$(echo $string | awk '{print $3}' | tail -n 1)
        #
        job_status=$(echo $string | awk '{print $3}' | tail -n 1)
-       job_id=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso} -i yes`  #$(echo $string | awk '{print $4}' | tail -n 1)
-#set -e
+       job_id=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso} -i yes`  
      fi
    
-   # Number of logfiles
-     nlogs=$(grep 'case.run success' ${DIR_CASES}/${caso}/CaseStatus | wc -l)
+   # Number of successfully completed runs
+   # check last available restart
+     nrest=`ls -altr $DIR_ARCHIVE/$caso/rest| wc -l`
+     if [[ $nrest -ne 0 ]]
+     then
+        cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+        if [[ $((10#$cmm)) -gt $((10#$st)) ]]
+        then
+           nlogs=$(($((10#$cmm)) - $((10#$st))))
+        else
+           nlogs=$((12+$((10#$cmm)) - $((10#$st))))
+        fi
+     else
+        nlogs=0
+     fi
    
    # Number of .nc files produced for C3S (single members)
      if [ -d ${WORK_C3S}/$start_date ]
@@ -138,18 +147,8 @@ then
        last_rest=$(echo $file | tail -n 1 | awk '{print substr($1,1,4) substr($1,6,2)}')
      fi
    
-   # Check if lt archive exist
-     file=$(ls ${ARCHIVE}/${caso}/rest/${caso}.rest.tar.gz 2>/dev/null)
-     if [ $? -eq 0 ] ; then
-       lt_arc="Y"
-     else
-       lt_arc="N"
-     fi
-   
    # Output to screen
-     if [ $lt_arc = "Y" ] ; then
-       lastc="archiv"
-     elif [ -z $last_rest ] ; then
+     if [ -z $last_rest ] ; then
        lastc="------"
      else
        lastc=$last_rest
@@ -174,17 +173,18 @@ then
      #MB/AB 2/7---> is this final postpc (i.e. postpc_clm)? or also the l_archive (job_name=$caso.postpc) ?
      #${id}  is not defined...is it the member tag? in this case ens3 has been defined as the full (3digits) member tag.
 
-     postpc_string=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3}`
+     postpc_string=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3}`
      if [ $? -eq 0 ] ; then
-       postpc=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -i yes`
-       postpc_nr=`${DIR_UTIL}/findjobs.sh -m ${machine} -N l_archive -n sps_${start_date}_${ens3} -c yes`
+       postpc=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3} -i yes`
+       postpc_nr=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3} -c yes`
        if [ $postpc_nr -gt 1 ]; then
          postpc=$postpc_nr
        fi
      else
        postpc="------"
      fi
-   
+     #TEMPORARY
+     postpc="------"
      #echo $id" # "$job_status" # "$nlogs" # "$postpc" # "$lastc" # "$str_cdate" # "$begin_time" # "$nC3S" ("$nC3S_tmp")"
    printf "%-20s %-13s %-5s %-8s %-15s %-13s %-18s %-10s %-8s\n" $caso $job_status $nlogs $postpc $lastc $str_cdate "$begin_time" $nC3S $C3S_ok
    
@@ -197,18 +197,18 @@ fi
 if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -c yes` -ne 0 ] 
 then
    echo ""
-   echo "TOTAL FORECASTS ON QUEUE PARALLEL: "`${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -n _run -c yes`
+   echo "TOTAL FORECASTS ON QUEUE PARALLEL: "`${DIR_UTIL}/findjobs.sh -m ${machine} -N run.${SPSSystem}_${start_date} -c yes`
    echo ""
-   echo "TOTAL FORECASTS RUNNING:           "`${DIR_UTIL}/findjobs.sh  -m ${machine} -N ${SPSSystem}_${start_date} -n _run -a $BATCHRUN -c yes`
+   echo "TOTAL FORECASTS RUNNING:           "`${DIR_UTIL}/findjobs.sh  -m ${machine} -N run.${SPSSystem}_${start_date} -a $BATCHRUN -c yes`
    if [[ $txtfile -eq 0 ]]
    then
-       echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n ${SPSSystem}_${start_date} -N _run -a $BATCHRUN -J yes `
+       echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} -a $BATCHRUN -J yes `
    fi
    echo ""
-   echo "TOTAL FORECASTS PENDING:           "`${DIR_UTIL}/findjobs.sh -m ${machine} -N ${SPSSystem}_${start_date} -n _run -a PEND -c yes`
+   echo "TOTAL FORECASTS PENDING:           "`${DIR_UTIL}/findjobs.sh -m ${machine} -N run.${SPSSystem}_${start_date} -a PEND -c yes`
    if [[ $txtfile -eq 0 ]]
    then
-         echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n ${SPSSystem}_${start_date} -N _run -a PEND -J yes `
+         echo `${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${SPSSystem}_${start_date} -a PEND -J yes `
    fi
 else
    echo ""

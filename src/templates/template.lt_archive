@@ -27,19 +27,23 @@ st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 
 flag_done=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
-if [[ ! -f $flag_done ]]
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
+if [[ ! -f $flag_done ]] && [[ $stop_op == "nmonths" ]]
 then
    ./postproc_monthly_${caso}.sh $flag_done
 fi
-
-if [[ $resubmit -ne 0 ]]
+cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+if [[ $((10#$cmm)) -gt $((10#$st)) ]]
 then
-   exit 0
+    nmonthsrun=$(($((10#$cmm)) - $((10#$st)) + 1))
+else
+    nmonthsrun=$((12+$((10#$cmm)) - $((10#$st)) + 1))
 fi
 
-stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
-if [[ $stop_op == "nmonths" ]]
+
+if [[ $nmonthsrun -eq 6 ]] && [[ $stop_op == "nmonths" ]]
 then
+
    ./check_6months_output_in_archive_${caso}.sh 
 #interp_ORCA2_1X1_gridT2C3S.sh
    outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
@@ -51,7 +55,7 @@ then
 # set if running or post
       input="$running"
 
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
 
    fi
    flag_iceok=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
@@ -66,16 +70,9 @@ then
    ./xmlchange STOP_N=$nmoredays
 # from now on the postproc of NEMO is not required anymore
    ./xmlchange NEMO_REBUILD=FALSE
+   ./xmlchange --subgroup case.lt_archive_moredays prereq=1
    conda deactivate 
    conda activate $envcondacm3
    ./case.submit
    exit
-fi
-if [[ $stop_op == "ndays" ]]
-then
-   checkfile=logs/postproc_final_${caso}_DONE
-   if [[ ! -f $checkfile ]]
-   then
-      ./postproc_final_${caso}.sh $checkfile
-   fi
 fi

@@ -64,6 +64,7 @@ then
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
    BATCHRUN="RUN"
    nmb_nemo_domains=279
+   nmb_nemo_dmofiles=48 #8 files for each month
 # queues Juno
    serial_test=s_long
    serialq_s=s_short

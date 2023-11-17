@@ -32,7 +32,7 @@ then
    exit
 fi
 # Input **********************
-stlist=11 #$1
+stlist=$1
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 if [ $np_all -lt $maxnumbertosubmit ]
 then

@@ -1,0 +1,27 @@
+#!/bin/sh -l
+{{ batchdirectives }}
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euvx
+CASEROOT={{ caseroot }}
+
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
+
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
+
+if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]] 
+then
+   checkfile=logs/postproc_final_${caso}_DONE
+   if [[ ! -f $checkfile ]]
+   then
+      ./postproc_final_${caso}.sh $checkfile
+   fi  
+fi
+
+
