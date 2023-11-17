@@ -7,7 +7,7 @@
 
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-set -eu
+set -u
 
 #-- functions ------------------------------------------------------------------
 function write_help
@@ -31,7 +31,7 @@ yyyy=$1
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 st=$2
 logfile=$DIR_LOG/$typeofrun/monitor_${typeofrun}.$yyyy$st.`date +%Y%m%d%M`.txt
-exec 3>&1 1>>${logfile} 2>&1
+#exec 3>&1 1>>${logfile} 2>&1
 if [ $3 -eq 0 ]  ; then # manage the case ./monitor_forecast
     doplot=0
 elif [ $3 -eq 1 ]  ; then # manage the case ./monitor_forecast 1
@@ -43,7 +43,7 @@ start_date=${yyyy}${st}
 last_date=`date -d "${start_date}01 + $nmonfore months" +%Y%m`
 
 echo "Forecast start date: $start_date"
-echo "Current system time : "$(date | cut -d \  -f 2-5)
+echo "Current system time : "$(date | cut -d \  -f 2-)
 echo ""
 echo ""
 
@@ -74,29 +74,30 @@ then
    # Get job status (RUN, PEND, nil)
      job_status="nil"
      job_id=""
-     string=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso}`
+     string=`${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${caso}`
      if [ $? -eq 0 ] ; then
        #
        job_status=$(echo $string | awk '{print $3}' | tail -n 1)
-       job_id=`${DIR_UTIL}/findjobs.sh -m ${machine} -n ${caso} -i yes`  
+       job_id=`${DIR_UTIL}/findjobs.sh -m ${machine} -n run.${caso} -i yes`  
      fi
    
    # Number of successfully completed runs
    # check last available restart
-     nrest=`ls -altr $DIR_ARCHIVE/$caso/rest| wc -l`
-     if [[ $nrest -ne 0 ]]
-     then
-        cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
-        if [[ $((10#$cmm)) -gt $((10#$st)) ]]
-        then
-           nlogs=$(($((10#$cmm)) - $((10#$st))))
-        else
-           nlogs=$((12+$((10#$cmm)) - $((10#$st))))
-        fi
+     if [[ -d $DIR_ARCHIVE/$caso/rest ]] ; then 
+       nrest=`ls -altr $DIR_ARCHIVE/$caso/rest| wc -l`
+       if [[ $nrest -ne 0 ]]
+       then
+           cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+           if [[ $((10#$cmm)) -gt $((10#$st)) ]]
+           then
+               nlogs=$(($((10#$cmm)) - $((10#$st))))
+           else
+               nlogs=$((12+$((10#$cmm)) - $((10#$st))))
+           fi
+       fi
      else
-        nlogs=0
+       nlogs=0
      fi
-   
    # Number of .nc files produced for C3S (single members)
      if [ -d ${WORK_C3S}/$start_date ]
      then
@@ -118,7 +119,7 @@ then
      begin_time="------"
 
      if [[ "$job_status" == *"RUN"* ]]; then
-        begin_time=`grep case.run starting $job_id  $DIR_CASES/$caso/CaseStatus|awk {'print $2'}|cut -c 1-8`
+        begin_time=`grep "case.run starting $job_id"  $DIR_CASES/$caso/CaseStatus|awk {'print $2'}|cut -c 1-8`
      fi
 
 
@@ -126,7 +127,7 @@ then
    # starting date of the actual run YYYYMMDD (presently not used)
      cyyyystdd=""
      if [[ "$job_status" == *"RUN"* ]]; then
-       file=`ls $WORK_CPS/${caso}/run/namelist`
+       file=`ls $WORK_CPS/${caso}/run/namelist_cfg`
        cyyyystdd=$(grep ^nn_date0 $file | awk '{print $3}')
      fi
    
@@ -136,15 +137,18 @@ then
        if [ `ls $WORK_CPS/${caso}/run/rof.log* | wc -l ` -ne 0 ]
        then
           file=`ls $WORK_CPS/${caso}/run/rof.log* |tail -n 1`
-          cdate=$(grep "model date is" $file | awk '{print $5}')
+          cdate=$(grep "model date is" $file | awk '{print $5}' |tail -n 1)
        fi
      fi
    
    # Get last restart file
      last_rest=""
-     file=$(ls -1 $WORK_CPS/archive/${caso}/rest 2>/dev/null)
-     if [ $? -eq 0 ] ; then
-       last_rest=$(echo $file | tail -n 1 | awk '{print substr($1,1,4) substr($1,6,2)}')
+     if [[ -d $WORK_CPS/archive/${caso}/rest ]] ; then
+        nfile=`ls $WORK_CPS/archive/${caso}/rest |wc -l`
+        if [[ $nfile -ne 0 ]] ; then
+           file=`ls $WORK_CPS/archive/${caso}/rest`
+           last_rest=$(echo $file | tail -n 1 | awk '{print substr($1,1,4) substr($1,6,2)}')
+        fi
      fi
    
    # Output to screen

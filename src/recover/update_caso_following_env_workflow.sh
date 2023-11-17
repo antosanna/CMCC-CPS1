@@ -10,7 +10,7 @@ set -euxv
 LOG_FILE=$DIR_LOG/hindcast/recover/update_caso_following_env_workflow_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-listofcases="sps4_199308_011 sps4_199308_007 sps4_199308_008 sps4_199308_012 sps4_199308_004 sps4_199308_035 sps4_199408_004 sps4_199308_005 sps4_199308_025 sps4_199308_027 sps4_199308_039"
+listofcases="sps4_199308_011 sps4_199308_007 sps4_199308_008 sps4_199308_012 sps4_199308_004 sps4_199308_035 sps4_199408_004 sps4_199308_005"
 for caso in $listofcases 
 do
   if [[ ! -d $DIR_CASES/$caso ]] ; then

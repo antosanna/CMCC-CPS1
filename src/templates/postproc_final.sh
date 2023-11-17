@@ -117,10 +117,10 @@ then
    #-------------------------------------------- 
    filetyp="h1 h2 h3"
    echo "start regrid CAM "`date`
-   input="$caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    # 0 meaning that postprocessing is done runtime
-# modified 20201021  from parallelq to serialq_l
-          # use the reservation
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+   input="$caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    
+# 0 meaning that postprocessing is done runtime
+ #TEMPORARY 
+ #   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
 
 
 fi   # if della flag C3S_DONE
@@ -167,7 +167,8 @@ then
    #--------------------------------------------
    echo "start of postpc_clm "`date`
    input="$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"  #0 means done while running (1 if from archive)
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -E yes -M 6500 -r $sla_serialID -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+#TEMPORARY
+#   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -E yes -M 6500 -r $sla_serialID -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
 fi
 
@@ -183,14 +184,15 @@ fi
 #***********************************************************************
 # Remove $WORK_SPS3/$caso
 #***********************************************************************
-if [ -d $WORK_SPS3/$caso ]
-then
-  cd $WORK_SPS3/$caso
-  rm -rf run
-  rm -rf bld
-  cd $WORK_SPS3
-  rmdir $caso
-fi
+#TEMPORARY
+#if [ -d $WORK_SPS3/$caso ]
+#then
+#  cd $WORK_SPS3/$caso
+#  rm -rf run
+#  rm -rf bld
+#  cd $WORK_SPS3
+#  rmdir $caso
+#fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED
 #rm $DIR_ARCHIVE/$caso/rof/hist/$caso.rtm.h0.????-??.nc

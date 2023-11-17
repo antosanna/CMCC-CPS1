@@ -4,7 +4,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
-set -vxeu
+set -eu
 
 if [[ $1 == "" ]]
 then
