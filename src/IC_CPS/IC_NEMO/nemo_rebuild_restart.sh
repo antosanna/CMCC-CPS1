@@ -34,25 +34,31 @@ rootname=`basename $OUTDIR/*_restart_0000.nc|rev|cut -d '_' -f2-|rev`
 # find maximum divider
 N=`$DIR_UTIL/max_prime_factor.sh $nf`
  
-cd $TMPNEMOREST
-for ff in $listaf
-do 
-   rsync -auv $ff .
-done
-
-mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $TMPNEMOREST/${rootname}
-stat=$?
-if [[ $stat -eq 0 ]]
+if [[ ! -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc ]]
 then
-  # remove DELAY_fwb from OIS restarts
-  ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
+   cd $TMPNEMOREST
+   for ff in $listaf
+   do 
+      rsync -auv $ff .
+   done
+   
+   mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $TMPNEMOREST/${rootname}
+   stat=$?
+   if [[ $stat -eq 0 ]]
+   then
+     # remove DELAY_fwb from OIS restarts
+     ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
+   fi
 fi
 
-nf_ice=`ls $OUTDIR/*.cice.r.*.nc |wc -l`
-if [[ ${nf_ice} -eq 1 ]] ; then
-    listaf_ice=`ls $OUTDIR/*.cice.r.${yyyy}-${st}*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
-    for ff in ${listaf_ice} 
-    do
-       rsync -auv $ff ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
-    done
+if [[ ! -f ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc ]]
+then
+   nf_ice=`ls $OUTDIR/*.cice.r.*.nc |wc -l`
+   if [[ ${nf_ice} -eq 1 ]] ; then
+       listaf_ice=`ls $OUTDIR/*.cice.r.${yyyy}-${st}*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
+       for ff in ${listaf_ice} 
+       do
+          rsync -auv $ff ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
+       done
+   fi
 fi

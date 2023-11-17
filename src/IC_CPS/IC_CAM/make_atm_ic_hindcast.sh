@@ -41,6 +41,10 @@ else
    st=$2
    ppeda=$3
    oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
+   iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
+   clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
+   rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.01.nc
+
    if [[ -f $oceic.gz ]]
    then
       gunzip $oceic.gz
@@ -49,12 +53,48 @@ else
    then
       title="[CAMIC] - $oceic not present"
       body="you cannot produce CAM ic for $yyyy and $st because $oceic not available"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      echo $body
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
       exit
    fi
-   iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
-   clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
-   rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.01.nc
+   if [[ -f $clmic.gz ]] 
+   then
+      gunzip $clmic.gz
+   fi
+   if [[ ! -f $clmic ]]
+   then
+      title="[CAMIC] - $clmic not present"
+      body="you cannot produce CAM ic for $yyyy and $st because $clmic not available"
+      echo $body
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      exit
+   fi 
+   if [[ -f $rofic.gz ]]  
+   then
+      gunzip $rofic.gz
+   fi  
+   if [[ ! -f $rofic ]]
+   then
+      title="[CAMIC] - $rofic not present"
+      body="you cannot produce CAM ic for $yyyy and $st because $rofic not available"
+      echo $body
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      exit
+   fi
+   if [[ -f $iceic.gz ]]  
+   then
+      gunzip $iceic.gz
+   fi  
+   if [[ ! -f $iceic ]] 
+   then
+      title="[CAMIC] - $iceic not present"
+      body="you cannot produce CAM ic for $yyyy and $st because $iceic not available"
+      echo $body
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      exit
+   fi
+
+
 fi
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
