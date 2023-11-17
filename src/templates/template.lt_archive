@@ -35,9 +35,9 @@ fi
 cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 if [[ $((10#$cmm)) -gt $((10#$st)) ]]
 then
-    nmonthsrun=$(($((10#$cmm)) - $((10#$st)) + 1))
+    nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
 else
-    nmonthsrun=$((12+$((10#$cmm)) - $((10#$st)) + 1))
+    nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
 fi
 
 
