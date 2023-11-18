@@ -9,10 +9,12 @@
 
 set -euxv
 
-caso=sps4_199307_003
+yyyy=1993
+st=07
+caso=sps4_${yyyy}${st}_003
 
 debug=0 #only one month
-mkdir -p $SCRATCHDIR/ANTO/logs
+mkdir -p $DIR_LOG/hindcast/recover/
 echo "-----------STARTING ${caso}.l_archive-------- "`date`
 cd $DIR_CASES/${caso}
 DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
@@ -23,10 +25,9 @@ ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
 # HERE SET YEAR AND MONTHS TO RECOVER
 for curryear in 1993
 do
-#   for currmon in {07..10}
-   for currmon in 11
+   for currmon in `seq -w $st $(($((10#$st + nmonfore - 1))))`
    do
-      flag_done=$SCRATCHDIR/ANTO/logs/postproc_monthly_${curryear}${currmon}_done
+      flag_done=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
       if [[ -f $flag_done ]]
       then
          continue
