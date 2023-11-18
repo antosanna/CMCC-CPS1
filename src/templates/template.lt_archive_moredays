@@ -18,10 +18,11 @@ stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
 if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]] 
 then
    checkfile=logs/postproc_final_${caso}_DONE
-   if [[ ! -f $checkfile ]]
-   then
-      ./postproc_final_${caso}.sh $checkfile
-   fi  
+#TEMPORARY COMMENTED
+#   if [[ ! -f $checkfile ]]
+#   then
+#      ./postproc_final_${caso}.sh $checkfile
+#   fi  
 fi
 
 

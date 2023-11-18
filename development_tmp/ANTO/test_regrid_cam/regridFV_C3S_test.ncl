@@ -12,8 +12,8 @@ load "$HOME/CPS/CMCC-CPS1/src/templates/C3S_globalatt.ncl"
 undef ("definitions")
 function definitions(var,cell_method,level,dst_file,plev,nlev,lat,nlat,lon,mlon,timein,nt,reftime,hcrs,realization,lon_bnds,lat_bnds,frqvar,C3S_type)
 begin
-     yyyy=getenv("yyyy")
-     st=getenv("st")
+     yyyy="2000"
+     st="01"
      if (frqvar.eq."12hr" ) then
            dimNames = (/"leadtime","plev","lat","lon", "str31",  "bnds"/)
            dimSizes = (/ nt   ,  nlev,  nlat , mlon ,dimsizes(realization),2/)
@@ -126,10 +126,10 @@ end
 
 begin
 
-  srcFileName   = getenv("inputFV")
-  srcGridName   = getenv("srcGridNameFV")
-  dstGridName   = getenv("dstGridName")
-  fixsimdays      = getenv("fixsimdays")   ; impostiamo da fuori 185 C3S2_370
+  srcFileName   = "/work/csp/cp1/CMCC-CM/archive/cpl_XX_hyb_sps_t8/atm/hist//cpl_XX_hyb_sps_t8.cam.h1.2000-01-01-00000.nc"
+  srcGridName   = "srcGrd_FV.nc"
+  dstGridName   = "dstGrd_reg1x1.nc"
+  fixsimdays      = "185"   ; impostiamo da fuori 185 C3S2_370
 
 ; output required precision
   C3S_type="double"
@@ -138,8 +138,7 @@ begin
   print("Beginning to regrid "+srcFileName)
 
 ; --- Define grid
-  outputgrid=getenv("outputgrid")
-
+  outputgrid="reg1x1"
 ; 0. Set the source/destination file names, 
 ;    open the source file for reading, 
 ;    create a destination file for regridded data.
@@ -189,7 +188,7 @@ begin
 ; 3. Generate the weights file, using the source and 
 ;    destination files created in #1 and #2.
 ;-----------------------------------------------------
-   wgtFileName=getenv("wgtFileName") 
+   wgtFileName="/data/csp/cp1/CMCC-CPS1/regrid_files/CAMFV05_2_"+outputgrid+"_bilinear_C3S.nc" ; getenv
    Opt               = True
    Opt@WgtFileName=wgtFileName
    Opt@InterpMethod  ="bilinear" ; "patch", "conserve"
@@ -209,7 +208,7 @@ begin
 ;    using the source and 
 ;    destination files created in #1 and #2.
 ;-----------------------------------------------------
-   wgtFileNameCons=getenv("wgtFileNameCons") 
+   wgtFileNameCons="/data/csp/cp1/CMCC-CPS1/regrid_files/CAMFV05_2_"+outputgrid+"_conserve_C3S.nc"   ;getenv()
    OptCons               = True
    OptCons@WgtFileNameCons=wgtFileNameCons
    OptCons@InterpMethod  ="conserve"
@@ -236,7 +235,7 @@ begin
 ; Define input var list and output var and realm list 
 ; =====================================================================
 
-  C3Stable=getenv("C3Stable")
+  C3Stable="/users_home/csp/cp1/CPS/CMCC-CPS1/src/postproc/cam/C3S_table.txt" ; getenv()
   strs = asciiread(C3Stable,-1,"string")
   delim=","
   nfield = str_fields_count(strs(0), delim)
@@ -269,8 +268,8 @@ begin
   field=14
   type = str_get_field(strs(1:), field, delim )
 
-  frqin=getenv("frq")  ; output frequency
-  typein=getenv("type")  ; output frequency
+  frqin="6hr" ;getenv("frq")  ; output frequency
+  typein="h1" ;getenv("type")  ; output frequency
   print("----going to process "+typein)
 
   if (typein.eq."h2")then
@@ -326,7 +325,7 @@ begin
   lat_bnds(:,1)=lat(:)+0.5
   delete_VarAtts(lat_bnds,-1)
 
-  real=getenv("real")
+  real="r01" ;getenv("real")
   realization=tochar(real+"                      ")
   realization@units = "1"
   realization@long_name = "realization" ;
@@ -345,8 +344,8 @@ begin
   height@axis = "Z"
   height@positive = "up"
 
-  yyyy=getenv("yyyy")
-  st=getenv("st")
+  yyyy="2000" ;getenv("yyyy")
+  st="01"; getenv("st")
   reftime=0
   reftime@long_name = "Start date of the forecast" ;
   reftime@standard_name = "forecast_reference_time" ;
@@ -389,13 +388,13 @@ begin
 ;                    PREDEFINE MODE
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
-  outDir=getenv("outdirC3S")
+  outDir="." ;getenv("outdirC3S")
   if(isfilepresent(outDir+"/regridSE_C3S.ncl_"+typein+"_"+real+"_ok") ) then
      system("rm -f "+outDir+"/regridSE_C3S.ncl_"+typein+"_"+real+"_ok")
   end if
 
-  fore_type=getenv("fore_type")
-  typein=getenv("type")
+  fore_type="hindcast"; getenv("fore_type")
+  typein="h1" ;getenv("type")
   Opt = True
   Opt@WgtFileName       = wgtFileName
   do k=0,dimsizes(varin)-1
@@ -707,7 +706,7 @@ begin
    ;__________________________________________________________
    ; read lsm binary from repogrid
    ;__________________________________________________________
-                   lsmFileName=getenv("lsmFileName")
+                   lsmFileName="/data/csp/cp1//CMCC-CPS1/regrid_files/SPS4_C3S_LSM.nc" ;getenv("lsmFileName")
                    lsm_file=addfile(lsmFileName,"r")
                    landseamask=lsm_file->LANDFRAC(0,:,:)
                    icefrac1x1@_FillValue = 1.e+20

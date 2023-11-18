@@ -8,11 +8,9 @@
 
 set -evxu
 
-
 checkfile=$1
 caso=EXPNAME
 ic="DUMMYIC"
-# NEW 202103: aggiunto argomento di debug in regridSEne60_C3S.sh e in postpc_clm.sh e if operational_user per checkrunlist
 
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
@@ -23,6 +21,7 @@ set -euvx
 ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 startdate=$yyyy$st
 
+# SECTION FORECAST TO BE TESTED
 if [ "$typeofrun" == "forecast" ]
 then
    mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
@@ -46,6 +45,7 @@ then
 
    fi
 fi
+# END OF FORECAST SECTION
 
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
@@ -61,69 +61,27 @@ then
    filetyp="h1 h2 h3"
    for ft in $filetyp
    do
-   #--------------------------------------------
-   # cam define mulptiplier for timestep (daily,6h,12h)
-   #--------------------------------------------
-      case $ft in
-        h1 ) mult=4 ;; # 6h
-        h2 ) mult=2 ;; # 12h
-        h3 ) mult=1 ;; # daily
-      esac
-      #--------------------------------------------
-      #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
-      #--------------------------------------------
-      if [ ! -f $caso.cam.$ft.$yyyy-$st.zip.nc ] 
+      checkfile=$wkdir/${caso}_cam_${ft}_done
+      if [[ -f $checkfile ]]
       then
-         echo "starting compression for file $ft "`date`
-         $compress $caso.cam.$ft.$yyyy-$st-01-00000.nc pre.$caso.cam.$ft.$yyyy-$st.zip.nc
-         ncatted -O -a ic,global,a,c,"$ic" pre.$caso.cam.$ft.$yyyy-$st.zip.nc
-      fi
-    
-      nt=`cdo -ntime $DIR_ARCHIVE/$caso/atm/hist/pre.$caso.cam.$ft.$yyyy-$st.zip.nc`
-    
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
-      if [ $nt -lt $expected_ts  ]
-      then
-         body="ERROR Total number of timesteps for files pre.$caso.cam.$ft.$yyyy-$st.nc , ne to $expected_ts but is $nt. Exit "
-         title="${CPSSYS} forecast ERROR "
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-         exit 1
-      elif [ $nt -gt $expected_ts  ]
-      then
-         ncks -O -F -d time,1,$expected_ts pre.$caso.cam.$ft.$yyyy-$st.zip.nc tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
-         mv tmp.$caso.cam.$ft.$yyyy-$st.zip.nc pre.$caso.cam.$ft.$yyyy-$st.zip.nc   
-      fi
-   
-         # remove nr.1 timestep according to filetyp $ft
-      if [ $ft == "h3" ]
-      then
-         # take from 2nd timestep
-         echo "start ncks for $ft "`date`
-         ncks -O -F -d time,2, pre.$caso.cam.$ft.$yyyy-$st.zip.nc tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
-         mv tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $caso.cam.$ft.$yyyy-$st.zip.nc		      
-         echo "end of ncks for $ft "`date`
-      else
-         # take all but last timestep
-         echo "start ncks for $ft "`date`
-         nstep=`cdo -ntime pre.$caso.cam.$ft.$yyyy-$st.zip.nc` 		
-         nstepm1=$(($nstep - 1))
-         ncks -O -F -d time,1,$nstepm1 pre.$caso.cam.$ft.$yyyy-$st.zip.nc tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
-         mv tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $caso.cam.$ft.$yyyy-$st.zip.nc			 	
-         echo "end of ncks for $ft "`date`
-      fi
-   done  
-   #--------------------------------------------
-   # CAM C3S standardization
-   #-------------------------------------------- 
-   filetyp="h1 h2 h3"
-   echo "start regrid CAM "`date`
-   input="$caso $ic $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ $DIR_ARCHIVE/$caso/ice/hist 0"    
-# 0 meaning that postprocessing is done runtime
- #TEMPORARY 
- #   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -r $sla_serialID -S qos_resv -t "24" -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+         continue
 
+      fi
+      finalfile=/work/csp/cp1/scratch/regrid_tests/CAM/$caso.cam.$ft.$yyyy-$st.zip.nc
+      input="$caso $ft $yyyy $st $ens $checkfile $wkdir $finalfile" 
+#      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -E yes -r $sla_serialID -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/tests/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      echo "start regrid CAM "`date`
+      input="$ft $caso $outdirC3S $DIR_ARCHIVE/$caso/atm/hist/ 0"    # 0 meaning that postprocessing is done runtime
+          # use the reservation
+# WILL BE    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serailq_m -r $sla_serialID -S qos_resv -t "24" -p create_cam_files_${ft}_${caso} -M 55000 -j regrid_cam_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
 
-fi   # if della flag C3S_DONE
+   done
+fi
+
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -p regrid_h1_${caso} -w regrid_h2_${caso} -W regrid_h3_${caso} -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
+echo "Done."
 
 #***********************************************************************
 # Standardization for CLM 
@@ -140,18 +98,18 @@ then
    then
       $compress $caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
       ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
- 
+
      #--------------------------------------------
      # clm (II) check that number of timesteps is the expected one and remove extra timestep
      #--------------------------------------------
- 
+
       expected_ts=$(( $fixsimdays * $mult + 1 ))
       nt=`cdo -ntime $DIR_ARCHIVE/$caso/lnd/hist/pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
       if [ $nt -lt $expected_ts  ]
       then
           body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.$yyyy-$st.zip.nc , ne to $expected_ts but is $nt. Exit "
           title="${CPSSYS} forecast notification - ERROR "
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"   
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  
           exit 1
       fi
      # remove nr.1 timestep according to filetyp $ft
@@ -171,7 +129,6 @@ then
 #   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -E yes -M 6500 -r $sla_serialID -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
 fi
-
 #***********************************************************************
 # checkout the list
 #***********************************************************************
@@ -180,7 +137,6 @@ if [ `whoami` == ${operational_user} ]
 then
    ./checklist_run.sh $jobIDdummy True
 fi
-
 #***********************************************************************
 # Remove $WORK_SPS3/$caso
 #***********************************************************************
@@ -203,6 +159,7 @@ fi
 # Exit
 #***********************************************************************
 echo "Done."
+
 
 exit 0
 
