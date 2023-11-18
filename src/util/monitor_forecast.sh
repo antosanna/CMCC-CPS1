@@ -18,6 +18,10 @@ function write_help
 # Command line parameters
 #start_date=$(date +"%Y%m")
 
+if [ $# -eq 0 ] ; then # manage the case ./monitor_forecast -h
+    write_help
+    exit 1
+fi
 if [ "$1" == "-h" ] ; then # manage the case ./monitor_forecast -h
     write_help
     exit 1

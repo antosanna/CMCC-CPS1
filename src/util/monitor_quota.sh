@@ -39,6 +39,6 @@ echo "Filesystem Size  Used  Avail Use%" >> $fname
 gpfsrepquota -f /work/csp | grep $operational_user >> $fname
 gpfsrepquota -f /data/csp | grep $operational_user >> $fname
 
-echo "$0 Done"
+echo "$0 Done with output in $fname"
 exit 0
 
