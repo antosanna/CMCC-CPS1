@@ -42,6 +42,9 @@ then
    then
       operational_user=cp1
       pID=0490 #Juno
+      cores_per_node=72
+      nnodes_SC=56
+      cores_per_run=288
       envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=4
@@ -49,6 +52,9 @@ then
    elif [[ $machine == "zeus" ]]
    then
       pID=0574 #zeus
+      nnodes_SC=120
+      cores_per_node=36
+      cores_per_run=720
       operational_user=sps-dev
       maxnumbertosubmit=6
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2

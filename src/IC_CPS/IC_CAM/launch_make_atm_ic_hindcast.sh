@@ -5,13 +5,39 @@
 set -euvx
 mkdir -p $DIR_LOG/IC_CAM
 LOG_FILE=$DIR_LOG/IC_CAM/launch_make_atm_ic_`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
+#exec 3>&1 1>>${LOG_FILE} 2>&1
 iniy=$iniy_hind
 endy=2003
 debugp=0   # if 1 do only one and exit
 debugy=0   # if 1 do only one year
 
+totcores_SC=$(($nnodes_SC*$cores_per_node))
+np_clim=`${DIR_UTIL}/findjobs.sh -m $machine -n run.cm3_cam122 -c yes`
+np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+if [ $np_clim -eq 0 ]
+then
+   echo "go on with hindcast submission"
+   tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
+else
+# this is temporary and holds only for Juno but is harmless on Zeus
+   ncoresclim=1296
+   if [ $np_all -ne 0 ]
+   then
+      ncoreshind=$(($np_all*$cores_per_run))
+      totcores=$(($ncoresclim + $ncoreshind))
+      if [[ $totcores -ge $totcores_SC ]]
+      then
+         echo "Exiting now! already $np_all job on parallel queue"
+         exit
+      fi
+      tobesubmitted=$((($totcores_SC - $totcores)/$cores_per_run))
+# just to be really safe take out 2
+      tobesubmitted=$(($tobesubmitted - 2 ))
+   fi
+fi
+
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
+nrun_submitted=0
 for st in 07 #10 12 02 04 06 
 do
    for yyyy in `seq $iniy $endy`
@@ -35,6 +61,11 @@ do
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh -i "$input"
           input="$yyyy $st $pp"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic_hindcast.sh -i "$input"
+          nrun_submitted=$(($nrun_submitted + 1))
+          if [[ $nrun_submitted -eq $tobesubmitted ]]
+          then
+             exit
+          fi
           sleep 10
           
           if [[ $debugp -eq 1 ]]

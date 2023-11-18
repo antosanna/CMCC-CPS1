@@ -1,5 +1,5 @@
 start-date,IC1,IC2,IC3,IC4
-199301,DONE,dummy,dummy,dummy
+199301,DONE,DONE,dummy,dummy
 199401,DONE,DONE,dummy,dummy
 199501,DONE,DONE,dummy,dummy
 199601,DONE,DONE,dummy,dummy
@@ -10,7 +10,7 @@ start-date,IC1,IC2,IC3,IC4
 200101,DONE,DONE,dummy,dummy
 200201,DONE,DONE,dummy,dummy
 200301,DONE,dummy,dummy,dummy
-200401,dummy,dummy,dummy,dummy
+200401,DONE,dummy,dummy,dummy
 200501,dummy,dummy,dummy,dummy
 200601,dummy,dummy,dummy,dummy
 200701,dummy,dummy,dummy,dummy
@@ -40,7 +40,7 @@ start-date,IC1,IC2,IC3,IC4
 200102,DONE,DONE,dummy,dummy
 200202,DONE,DONE,dummy,dummy
 200302,DONE,dummy,dummy,dummy
-200402,dummy,dummy,dummy,dummy
+200402,DONE,dummy,dummy,dummy
 200502,dummy,dummy,dummy,dummy
 200602,dummy,dummy,dummy,dummy
 200702,dummy,dummy,dummy,dummy
@@ -70,7 +70,7 @@ start-date,IC1,IC2,IC3,IC4
 200103,DONE,DONE,dummy,dummy
 200203,DONE,DONE,dummy,dummy
 200303,DONE,dummy,dummy,dummy
-200403,dummy,dummy,dummy,dummy
+200403,DONE,dummy,dummy,dummy
 200503,dummy,dummy,dummy,dummy
 200603,dummy,dummy,dummy,dummy
 200703,dummy,dummy,dummy,dummy
@@ -100,7 +100,7 @@ start-date,IC1,IC2,IC3,IC4
 200104,DONE,DONE,dummy,dummy
 200204,DONE,DONE,dummy,dummy
 200304,DONE,dummy,dummy,dummy
-200404,dummy,dummy,dummy,dummy
+200404,DONE,dummy,dummy,dummy
 200504,dummy,dummy,dummy,dummy
 200604,dummy,dummy,dummy,dummy
 200704,dummy,dummy,dummy,dummy
@@ -130,7 +130,7 @@ start-date,IC1,IC2,IC3,IC4
 200105,DONE,DONE,dummy,dummy
 200205,DONE,DONE,dummy,dummy
 200305,DONE,dummy,dummy,dummy
-200405,dummy,dummy,dummy,dummy
+200405,DONE,dummy,dummy,dummy
 200505,dummy,dummy,dummy,dummy
 200605,dummy,dummy,dummy,dummy
 200705,dummy,dummy,dummy,dummy
@@ -188,7 +188,7 @@ start-date,IC1,IC2,IC3,IC4
 199907,DONE,DONE,dummy,dummy
 200007,DONE,DONE,dummy,dummy
 200107,DONE,DONE,dummy,dummy
-200207,DONE,dummy,dummy,dummy
+200207,DONE,DONE,dummy,dummy
 200307,DONE,dummy,dummy,dummy
 200407,dummy,dummy,dummy,dummy
 200507,dummy,dummy,dummy,dummy
@@ -218,7 +218,7 @@ start-date,IC1,IC2,IC3,IC4
 199908,DONE,DONE,dummy,dummy
 200008,DONE,DONE,dummy,dummy
 200108,DONE,DONE,dummy,dummy
-200208,DONE,dummy,dummy,dummy
+200208,DONE,DONE,dummy,dummy
 200308,DONE,dummy,dummy,dummy
 200408,dummy,dummy,dummy,dummy
 200508,dummy,dummy,dummy,dummy

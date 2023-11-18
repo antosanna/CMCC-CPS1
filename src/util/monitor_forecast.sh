@@ -103,6 +103,7 @@ then
        nlogs=0
      fi
    # Number of .nc files produced for C3S (single members)
+     C3S_ok="NONE"
      if [ -d ${WORK_C3S}/$start_date ]
      then
         nC3S=$(ls -1 ${WORK_C3S}/$start_date/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*r${ens}i00p00.nc 2>/dev/null | wc -l)
