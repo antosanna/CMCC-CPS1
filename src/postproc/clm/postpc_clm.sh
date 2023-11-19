@@ -39,24 +39,18 @@ else
  
    ppp=$1
    startdate=$2
-   outdirC3S=$3
-   ic=$4
-   OUTDIR=$5
-   caso=$6
-   running=$7  
-#   caso=$1
-#   outdirC3S=$2  # where python write finalstandardized  output 
-#   ic=$3         # initial conditions
-#   OUTDIR=$4     # output dir of clm DMO
-#   running=${5-:0}    # 0 in operational mode
+   outdirC3S=$3  # where python write finalstandardized  output 
+   OUTDIR=$4     # output dir of clm DMO
+   caso=$5
+   check_postpcclm=$6
+   checkfile=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+   running=${8-:0}  # 0 in operational mode
 fi
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
 pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
+ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
 
-#yyyy=`echo "${caso}" | cut -d '_' -f2 -c1-4`
-#st=`echo "${caso}" | cut -d '_' -f2 -c5-6`
-#pp=`echo "${caso}" | cut -d '_' -f3 -c2-3`
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
@@ -73,12 +67,11 @@ rootname=${caso}.${landcase}.zip
 #**********************************************************
 # Start postprocessing operations only if not already done
 #**********************************************************
-check_postpcclm=$outdirC3S/${caso}_clm_C3SDONE
 if [ ! -f $check_postpcclm ]
 then
 
 #remap input *************************************************
-   export weight_file="/data/csp/mb16318/file4SPS4/CAMFV05_2_reg1x1_conserve_C3S.nc"
+   export weight_file=$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
    CLM_OUTPUT_FV="${OUTDIR}/${rootname}.nc"
 
 # ${caso}.clm2.${filetyp}.nc $caso.clm2.$ft.nc
@@ -149,15 +142,10 @@ then
 # Standardize in C3S format
 #************************************************************************
 # C3S vars    prefix
-   prefix="cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${startdate}0100_land_day_"
+   prefix="${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_land_day_"
    suffix="i00p00.nc"
    
 # (I) FIRST FORMAT IN C3S STANDARD
-#set +euvx
-#  . $DIR_UTIL/condaactivation.sh #activate CMOR_5
-#  condafunction activate CMOR_5 
-#set -euvx
-#   conda activate CMOR_5
    conda activate /work/csp/sp1/anaconda3/envs/CMOR_5
    cd ${DIR_POST}/clm # where python script is
    
@@ -200,7 +188,6 @@ fi
 cd $outdirC3S   #can be redundant
 allC3S=`ls *${pp}i00p00.nc|wc -l`
 member=$pp
-checkfile=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
 mkdir -p $DIR_CASES/$caso/logs
 # IF ALL VARS HAVE BEEN COMPUTED QUALITY-CHECK
 if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $checkfile ]

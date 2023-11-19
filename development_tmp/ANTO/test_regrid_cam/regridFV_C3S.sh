@@ -11,34 +11,8 @@
 . $DIR_UTIL/load_nco
 . $DIR_UTIL/load_ncl
 set -euvx
-here=$PWD
-#debug=${7:-0}    #new argument to allow test in debug mode
-ftype=$1
-debug=1
+export inputFV=$1
 #
-
-if [ $debug -eq 1 ] 
-then
-#==================================================
-# USER DEFINED SECTION
-#==================================================
-   caso=cps_complete_test_output
-   export ic="atm=test,lnd=test,ocn=test"
-   export outdirC3S=$SCRATCHDIR/output_test_C3S
-   mkdir -p $outdirC3S
-   inputdirCAM=/work/csp/$USER/CESM2/archive/cps_complete_test_output/atm/hist/
-   inputdirCICE=/work/csp/$USER/CESM2/archive/cps_complete_test_output/ice/hist
-   running=0 # 0 if running; 1 if off-line
-   export st=01
-   export yyyy=2000
-   ens=001
-#==================================================
-# END USER DEFINED SECTION
-#==================================================
-else
-#==================================================
-# IN OPERATIONAL MODE RECEIVE INPUTS FROM PARENT SCRIPT
-#==================================================
    caso=$2
    export ic=$3
    export outdirC3S=$4
@@ -48,7 +22,6 @@ else
    export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
    export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
    ens=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
-fi
 
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
@@ -86,7 +59,6 @@ export fixsimdays
 # INPUT TO BE REGRIDDED
 #----------------------------------------
 export type=$ftype
-export inputFV=$inputdirCAM/$caso.cam.${type}.$yyyy-$st-01-00000.nc
 case $type
 in
        h1)  export frq=6hr;outxday=4;;

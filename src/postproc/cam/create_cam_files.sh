@@ -21,9 +21,8 @@ ft=$2
 yyyy=$3
 st=$4
 ens=$5
-checkfile=$6 
-wkdir=$7
-finalfile=$8
+wkdir=$6
+finalfile=$7
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 #WILL BE ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
@@ -85,6 +84,5 @@ then
          rsync -auv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile
          echo "end of ncks for $ft "`date`
       fi
-      touch $checkfile
    fi
 fi

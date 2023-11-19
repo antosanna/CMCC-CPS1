@@ -394,7 +394,7 @@ begin
      system("rm -f "+outDir+"/regridSE_C3S.ncl_"+typein+"_"+real+"_ok")
   end if
 
-  fore_type=getenv("fore_type")
+  typeofrun=getenv("typeofrun")
   typein=getenv("type")
   Opt = True
   Opt@WgtFileName       = wgtFileName
@@ -404,7 +404,7 @@ begin
        if ( typein.eq.type(k)) then
           global=define_att(realm(k),level(k),frq(k)) 
           source=str_split(global@source,":")
-          ini_term=global@institute_id+"_"+source(0)+"_"+fore_type+"_S"+yyyy+st+"0100"
+          ini_term=global@institute_id+"_"+source(0)+"_"+typeofrun+"_S"+yyyy+st+"0100"
           print(" ")
           print("Output C3S field -------- "+varout(k))
           print("type C3S field -------- "+type(k))
@@ -750,5 +750,5 @@ begin
     end if   ;if not rsdt
   end do
 ; touch file to state that the process is correctly finished
-  system("touch "+outDir+"/regridFV_C3S.ncl_"+typein+"_"+real+"_ok")
+  system("touch "+checkfile)
 end
