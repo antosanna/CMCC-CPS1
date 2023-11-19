@@ -157,15 +157,16 @@ fi
 #***********************************************************************
 # checkout the list
 #***********************************************************************
-cd $DIR_CASES/$caso/Tools/
-if [ `whoami` == ${operational_user} ]
-then
-   ./checklist_run.sh $jobIDdummy True
-fi
+# NOT SURE WE NEED IT
+#cd $DIR_CASES/$caso/Tools/
+#if [ `whoami` == ${operational_user} ]
+#then
+#   ./checklist_run.sh $jobIDdummy True
+#fi
 #***********************************************************************
-# Remove $WORK_SPS3/$caso
+# Remove $WORK_CPS/$caso
 #***********************************************************************
-#TEMPORARY
+#TEMPORARY COMMENTED
 #if [ -d $WORK_SPS3/$caso ]
 #then
 #  cd $WORK_SPS3/$caso
