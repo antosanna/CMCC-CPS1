@@ -69,6 +69,7 @@ rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
+rsync -av $DIR_TEMPL/file_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 # IC_NEMO_CPS_DIR and IC_CICE_CPS_DIR will contain physical fields
