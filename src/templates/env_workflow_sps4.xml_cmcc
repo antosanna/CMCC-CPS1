@@ -279,7 +279,7 @@
     <entry id="dependency" value="case.nemo_rebuild">
       <type>char</type>
     </entry>
-    <entry id="prereq" value="1">
+    <entry id="prereq" value="$NEMO_REBUILD">
       <type>char</type>
     </entry>
     <entry id="task_count" value="1">
