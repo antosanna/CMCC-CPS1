@@ -265,7 +265,7 @@ case running $cnt_run \n
 case already created $cnt_dircases \n
 \n
 archive_tmp $cnt_archive \n"
-title="NEW HINDCAST JOBS SUBMITTED"
+title="NEW HINDCAST JOBS SUBMITTED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
 
