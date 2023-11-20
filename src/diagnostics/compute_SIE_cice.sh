@@ -2,27 +2,30 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
+. $DIR_UTIL/load_ncl
 
-# HERE ADD ALSO SH
+function write_help
+{
+  echo "Use: monitor_forecast.sh [<yyyy>] [<st>]"
+}
 set -euvx
 
-debug=0
 if [[ `whoami` == $operational_user ]]
 then
    debug=0
 fi
-if [[ $debug -eq 1 ]]
+debug=1
+if [[ $# -eq 0 ]]
 then
-   export yyyy=2021
-   export st=09
-   mymail=antonella.sanna@cmcc.it
-   DIR_DIAG=$PWD
-else
-   export yyyy=$1
-   export st=$2
+   write_help
+   exit
 fi
+export yyyy=$1
+export st=$2
 
+set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
+set -euvx
 
 #DONWLOAD OBS
 mkdir -p $SCRATCHDIR/SIE
@@ -30,8 +33,8 @@ export yyyym1=`date -d "${yyyy}${st}01 -1 month" +%Y`
 export stm1=`date -d "${yyyy}${st}01 -1 month" +%m`
 
 # READ IC
-export diric=$IC_NEMO_SPS_DIR1/$st/
-export fileroot=ice_ic${yyyy}${st}
+export diric=$IC_CICE_CPS_DIR1/$st/
+export fileroot=CPS1.cice.r.${yyyy}-${st}-01-00000.
 export npoce=$n_ic_nemo
 export hiniy=$iniy_hind
 export hendy=$endy_hind
@@ -70,6 +73,7 @@ do
    export outplot="$dirwk/$plotname"
    export checkfileplot="$dirwk/${plotname}_OK"
    export ntime=$nmonfore
+   export typeofrun
 #
    if [[ -f $checkfileplot ]]
    then
@@ -77,9 +81,8 @@ do
    fi
 
 # READ hindcast clim
-#export fileclim=/work/csp/sp2/${CPSSYS}/CESM/monthly/sic/SIE_NH/clim/SIE_NH_${CPSSYS}_1993-2016.${st}.nc
-   export fileclim=to_be_computed
-   if [[ ! -f $fileclim ]]
+   export fileclim=/work/csp/sp2/${CPSSYS}/CESM/monthly/sic/SIE_NH/clim/SIE_NH_${CPSSYS}_1993-2016.${st}.nc
+   if [[ ! -f $fileclim ]] && [[ $typeofrun == "forecast" ]]
    then
       title="${CPSSYS} forecast ERROR"
       body="$hemis SIE clim not available yet for $st. Compute it with $DIR_DIAG/compute_SIE_hincast_clim.sh"

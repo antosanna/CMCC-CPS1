@@ -24,14 +24,15 @@ seldata = str_match_ic_regex(lines, strkey)
   N=dimsizes(si_extent)
 
 ntime=toint(getenv("ntime"))
-  areasic_obs=new((/ntime+1/),"float",1.e+20)
-  areasic_obs(0) = si_extent(N-1)
+areasic_obs=new((/ntime+1/),"float",1.e+20)
+areasic_obs(0) = si_extent(N-1)
 
 ;
 ;read useful directories
 dirwk=getenv("dirwk")
 diric=getenv("diric")
 npoce=toint(getenv("npoce"))
+typeofrun=getenv("typeofrun")
 fileroot=getenv("fileroot")
 yyyyfore=getenv("yyyy")
 hiniy=getenv("hiniy")
@@ -41,6 +42,7 @@ st=getenv("st")
 filic = systemfunc("cd "+diric+" ; ls "+fileroot+"*nc")
 nfilsic=dimsizes(filic)
 fi = addfile (diric+"/"+filic(0), "r")
+print("------goign to read "+diric+"/"+filic(0))
 hiic=fi->aicen
 ndim=dimsizes(hiic)
 nlat=ndim(1)
@@ -56,29 +58,18 @@ do i=0,nfilsic-1
    end if
 end do
 
-; read area cell
-filarea=getenv("filarea")
-fa=addfile(filarea,"r")
-if(hemis.eq."NH")then
-   areain=fa->tarea(nlat/2:,:)
-else
-   areain=fa->tarea(0:nlat/2-1,:)
-end if
-; express area in km^2
-area=(areain/1000000)
-copy_VarMeta(areain,area)
-;
 ; read start-end reforecast period
 ; read hindcast member number
-ne=toint(getenv("nhindmem"))
-fileclim=getenv("fileclim")
-fi = addfile (fileclim, "r")
-tmp_areasic_hc=fi->areasic_hc(:,0:ntime-1)
-mdims=dimsizes(tmp_areasic_hc)
-areasic_hc=new((/mdims(0),ntime+1/),typeof(tmp_areasic_hc),1.e+20)
-areasic_hc(:,1:ntime)=tmp_areasic_hc
-delete(tmp_areasic_hc)
-printVarSummary(areasic_hc)
+if(typeofrun.eq."forecast") then
+   fileclim=getenv("fileclim")
+   fi = addfile (fileclim, "r")
+   tmp_areasic_hc=fi->areasic_hc(:,0:ntime-1)
+   mdims=dimsizes(tmp_areasic_hc)
+   areasic_hc=new((/mdims(0),ntime+1/),typeof(tmp_areasic_hc),1.e+20)
+   areasic_hc(:,1:ntime)=tmp_areasic_hc
+   delete(tmp_areasic_hc)
+   printVarSummary(areasic_hc)
+end if 
 ;
 
 ; now read forecast res
@@ -88,8 +79,18 @@ nfils=dimsizes(fili)
 ;nfils=5 ;for debug purposes
 fi = addfile (dirwk+"/"+fili(0), "r")
 print("going to read "+dirwk+"/"+fili(0))
-tmp=fi->aicen001
+tmp=fi->aice
 nn=dimsizes(tmp)
+; read area cell
+if(hemis.eq."NH")then
+   areain=fi->tarea(nlat/2:,:)
+else
+   areain=fi->tarea(0:nlat/2-1,:)
+end if
+; express area in km^2
+area=(areain/1000000)
+copy_VarMeta(areain,area)
+;
 
 ;
 sic_fc = new((/nfils,ntime+1,nlat/2,nlon/),typeof(tmp))
@@ -103,7 +104,7 @@ do nf=0,nfils-1
    ic = fi@ic
    strs = str_split(ic, "=")
    pocefc(nf)=toint(strs(3))-1
-   tmp=fi->aicen001
+   tmp=fi->aice
    nn=dimsizes(tmp)
    if(hemis.eq."NH")then
       sic_fc(nf,1:nn(0),:,:)=tmp(:,nlat/2:,:)
@@ -151,9 +152,11 @@ do i=0,npoce-1
    first_month(i,1)=dim_avg(areasic(i,:,1))
 end do
 
-mnmx=new((/2,ntime+1/),typeof(areasic_hc))
-mnmx(0,:)=dim_min_n(areasic_hc,0)
-mnmx(1,:)=dim_max_n(areasic_hc,0)
+if(typeofrun.eq."forecast")then
+   mnmx=new((/2,ntime+1/),typeof(areasic_hc))
+   mnmx(0,:)=dim_min_n(areasic_hc,0)
+   mnmx(1,:)=dim_max_n(areasic_hc,0)
+end if
 
 ;#############################################
 ; PLOT resources
@@ -167,7 +170,11 @@ res                       = True                        ; plot mods desired
 res@gsnDraw               = False             ; don't draw yet 
 res@gsnFrame              = False             ; don't advance frame yet 
 res@tiYAxisString         = "Extent (Millions of km~S~2~N~)"
-res@tiXAxisString         = "Forecast time (months)"
+if(typeofrun.eq."forecast")then
+   res@tiXAxisString         = "Forecast time (months)"
+else
+   res@tiXAxisString         = "Hindcast time (months)"
+end if
 res@tiMainString          = "Arctic Sea Ice Extent ~C~ "+yyyyfore+st+"01 present member number = "+sprinti("%0.2i",nfils)
 
 res@tmYLMode              = "Manual"
@@ -190,23 +197,25 @@ res@tmXBLabelFontHeightF    = 0.012
 res@xyLineThicknessF=2
 res@xyDashPattern  = 0
 res@xyLineColor    = "purple"
-plot=gsn_csm_y(wks,areasic1,res)
+plot=gsn_csm_y(wks,areasic(0,:,:),res)
 res@xyLineColor    = "magenta"
-plot2=gsn_csm_y(wks,areasic2,res)
+plot2=gsn_csm_y(wks,areasic(1,:,:),res)
 res@xyLineColor    = "pink"
-plot3=gsn_csm_y(wks,areasic3,res)
+plot3=gsn_csm_y(wks,areasic(2,:,:),res)
 res@xyLineColor    = "red"
-plot4=gsn_csm_y(wks,areasic4,res)
+plot4=gsn_csm_y(wks,areasic(3,:,:),res)
 res@xyLineColor    = "orange"
-plot5=gsn_csm_y(wks,areasic5,res)
-res@xyLineColor    = "yellow"
-plot6=gsn_csm_y(wks,areasic6,res)
-res@xyLineColor    = "chartreuse"
-plot7=gsn_csm_y(wks,areasic7,res)
-res@xyLineColor    = "chartreuse4"
-plot8=gsn_csm_y(wks,areasic8,res)
-res@xyLineColor    = "blue4" 
-plot9=gsn_csm_y(wks,areasic9,res)
+if(typeofrun.eq."forecast")then
+   plot5=gsn_csm_y(wks,areasic(4,:,:),res)
+   res@xyLineColor    = "yellow"
+   plot6=gsn_csm_y(wks,areasic(5,:,:),res)
+   res@xyLineColor    = "chartreuse"
+   plot7=gsn_csm_y(wks,areasic(6,:,:),res)
+   res@xyLineColor    = "chartreuse4"
+   plot8=gsn_csm_y(wks,areasic(7,:,:),res)
+   res@xyLineColor    = "blue4" 
+   plot9=gsn_csm_y(wks,areasic(8,:,:),res)
+end if
 
 res@xyLineThicknessF=1
 res@xyDashPattern  = 2
@@ -233,19 +242,24 @@ delete(res@xyLineColor)
 delete(res@xyMarkerSizeF)
 delete(res@xyMarkers)
 delete(res@xyMarkerColors)
-res@gsnXYFillColors = "lightgrey"
-res@xyLineColor     = -1
-botplot=gsn_csm_y(wks,mnmx(0:1,:),res)
+if(typeofrun.eq."forecast")then
+   res@gsnXYFillColors = "lightgrey"
+   res@xyLineColor     = -1
+   botplot=gsn_csm_y(wks,mnmx(0:1,:),res)
+end if 
+
 
 overlay(plot2,botplot)
 overlay(plot2,first_month_plot)
 overlay(plot2,icplot)
 overlay(plot2,obsplot)
-overlay(plot2,plot9)
-overlay(plot2,plot8)
-overlay(plot2,plot7)
-overlay(plot2,plot6)
-overlay(plot2,plot5)
+if(typeofrun.eq."forecast")then
+   overlay(plot2,plot9)
+   overlay(plot2,plot8)
+   overlay(plot2,plot7)
+   overlay(plot2,plot6)
+   overlay(plot2,plot5)
+end if
 overlay(plot2,plot4)
 overlay(plot2,plot3)
 overlay(plot2,plot)
@@ -268,7 +282,11 @@ lbres@lbMonoFillPattern  = True          ; Solid fill pattern
 lbres@lbLabelFontHeightF = 0.008 ;2          ; font height. default is small
 lbres@lbLabelJust        = "CenterLeft"  ; left justify labels
 
-lbid = gsn_create_labelbar(wks,11,(/"poce 1","poce 2","poce 3","poce 4","poce 5","poce 6","poce 7","poce 8","poce 9","Hindcast ("+hiniy+"-"+hendy+")","NSIDC"/),lbres)         ; create legend
+if(typeofrun.eq."forecast")then
+   lbid = gsn_create_labelbar(wks,11,(/"poce 1","poce 2","poce 3","poce 4","poce 5","poce 6","poce 7","poce 8","poce 9","Hindcast ("+hiniy+"-"+hendy+")","NSIDC"/),lbres)         ; create legend
+else
+   lbid = gsn_create_labelbar(wks,11,(/"poce 1","poce 2","poce 3","poce 4","NSIDC"/),lbres)         ; create legend
+end if
 
 amres = True
 amres@amJust           = "TopRight"

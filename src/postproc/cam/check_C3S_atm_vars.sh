@@ -51,29 +51,14 @@ then
    #-------------------------------------------------------------
    # now check that all required vars but rsdt have been produced
    #-------------------------------------------------------------
-       if [ ${var} != "rsdt" ]
-       then
-          if [ ! -f *${var}_*${real}.nc ]
-          then
-              body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridSEne60_C3S.sh "
-              title="[C3S] ${CPSSYS} forecast ERROR"
-              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-              exit
-          fi  
-       fi  
+      if [ ! -f *${var}_*${real}.nc ]
+      then
+         body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridSEne60_C3S.sh "
+         title="[C3S] ${CPSSYS} forecast ERROR"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         exit
+      fi  
    done
-   #-------------------------------------------------------------
-   # Compute rdst (check for checkfile inside the script)
-   #-------------------------------------------------------------
-   $DIR_POST/cam/compute_daily_rsdt.sh $yyyy $st $ens $outdirC3S
-   stat=$?
-   if [ $stat -ne 0 ]
-   then
-      body="ERROR in $DIR_POST/cam/compute_daily_rsdt.sh for $caso case launched by $DIR_POST/cam/regridSEne60_C3S.sh "
-      title="[C3S] ${CPSSYS} forecast ERROR "
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-      exit 
-   fi
    
    #-------------------------------------------------------------
    # CHECK TIMESTEP AND IN CASE FIX IT

@@ -109,8 +109,6 @@ mkdir -p $wkdir
 checkfile_clm=$wkdir/${caso}_clm_C3SDONE
 if [ ! -f $checkfile_clm ]
 then
-#   cd $DIR_ARCHIVE/$caso/lnd/hist/
-# mv working stuff on $wkdir
    cd $wkdir
    ft="h1"
    case $ft in
@@ -119,7 +117,6 @@ then
    ppp=`echo $caso|cut -d '_' -f 3 `
    if [ ! -f $caso.clm2.$ft.$yyyy-$st.zip.nc ]
    then
-#      $compress $caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
       $compress $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
       ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
 

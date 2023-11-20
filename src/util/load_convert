@@ -1,0 +1,11 @@
+#!/bin/sh -l
+. ~/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+if [[ "${machine}" == "zeus" ]] ; then
+  :
+elif [[ "${machine}" == "juno" ]] ; then 
+  module load intel-2021.6.0/imagemagick/7.0.8-7-2475g
+elif [[ "${machine}" == "marconi" ]] ; then 
+ :
+fi 
+

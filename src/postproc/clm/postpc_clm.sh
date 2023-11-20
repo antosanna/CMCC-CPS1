@@ -71,7 +71,7 @@ if [ ! -f $check_postpcclm ]
 then
 
 #remap input *************************************************
-   export weight_file=$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
+   export weight_file="$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
    CLM_OUTPUT_FV="${OUTDIR}/${rootname}.nc"
 
 # ${caso}.clm2.${filetyp}.nc $caso.clm2.$ft.nc
@@ -121,15 +121,10 @@ then
 
       # Interpolation phase
       # create interpolated file in ./reg1x1 dir
+#     replaced by ncremap because to demanding in terms of computing time
 #     ncl /users_home/csp/mb16318/SPS/SPS4/postproc/CLM/regridFV_1x1_CLM.ncl
       vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
       ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
-      stat=$?      
-      if [[ $stat -ne 0 ]]
-      then 
-          echo "problem in ncremap"
-          exit 2
-      fi
    
 
    fi
