@@ -29,7 +29,7 @@ areasic_obs(0) = si_extent(N-1)
 
 ;
 ;read useful directories
-dirwk=getenv("dirwk")
+dirwkroot=getenv("dirwkroot")
 diric=getenv("diric")
 npoce=toint(getenv("npoce"))
 typeofrun=getenv("typeofrun")
@@ -52,9 +52,9 @@ delete(hiic)
 do i=0,nfilsic-1
    fi = addfile(diric+"/"+filic(i),"r")
    if(hemis.eq."NH")then
-      sic_ic(i,:,:)=fi->aicen(0,nlat/2:,:)
+      sic_ic(i,:,:)=dim_sum_n(fi->aicen(:,nlat/2:,:),0)
    else
-      sic_ic(i,:,:)=fi->aicen(0,0:nlat/2-1,:)
+      sic_ic(i,:,:)=dim_sum_n(fi->aicen(:,0:nlat/2-1,:),0)
    end if
 end do
 
@@ -74,18 +74,21 @@ end if
 
 ; now read forecast res
 SPSsys=getenv("SPSSystem")
-fili = systemfunc("cd "+dirwk+" ; ls "+SPSsys+"_"+yyyyfore+st+"*.cice.nc")
+fili = systemfunc("cd "+dirwkroot+" ; ls "+SPSsys+"_"+yyyyfore+st+"*.cice.nc")
 nfils=dimsizes(fili)
 ;nfils=5 ;for debug purposes
-fi = addfile (dirwk+"/"+fili(0), "r")
-print("going to read "+dirwk+"/"+fili(0))
+fi = addfile (dirwkroot+"/"+fili(0), "r")
+print("going to read "+dirwkroot+"/"+fili(0))
 tmp=fi->aice
 nn=dimsizes(tmp)
+;
 ; read area cell
+ftarea=getenv("ftarea")
+farea=addfile(ftarea,"r")
 if(hemis.eq."NH")then
-   areain=fi->tarea(nlat/2:,:)
+   areain=farea->tarea(nlat/2:,:)
 else
-   areain=fi->tarea(0:nlat/2-1,:)
+   areain=farea->tarea(0:nlat/2-1,:)
 end if
 ; express area in km^2
 area=(areain/1000000)
@@ -100,7 +103,7 @@ delete(tmp)
 delete(nn)
 do nf=0,nfils-1
    print("going to read "+fili(nf))
-   fi = addfile (dirwk+"/"+fili(nf), "r")
+   fi = addfile (dirwkroot+"/"+fili(nf), "r")
    ic = fi@ic
    strs = str_split(ic, "=")
    pocefc(nf)=toint(strs(3))-1
@@ -139,15 +142,6 @@ do pp=0,npoce-1
 end do
 first_month=areasic_ic
 ;
-areasic1=areasic(0,:,:)
-areasic2=areasic(1,:,:)
-areasic3=areasic(2,:,:)
-areasic4=areasic(3,:,:)
-areasic5=areasic(4,:,:)
-areasic6=areasic(5,:,:)
-areasic7=areasic(6,:,:)
-areasic8=areasic(7,:,:)
-areasic9=areasic(8,:,:)
 do i=0,npoce-1
    first_month(i,1)=dim_avg(areasic(i,:,1))
 end do
@@ -249,7 +243,9 @@ if(typeofrun.eq."forecast")then
 end if 
 
 
-overlay(plot2,botplot)
+if (typeofrun.eq."forecast")then
+   overlay(plot2,botplot)
+end if
 overlay(plot2,first_month_plot)
 overlay(plot2,icplot)
 overlay(plot2,obsplot)

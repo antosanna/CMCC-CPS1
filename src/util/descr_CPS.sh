@@ -45,6 +45,7 @@ then
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
+      envcondaclm=CLM_C3S
       envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=4
@@ -57,6 +58,7 @@ then
       cores_per_run=720
       operational_user=sps-dev
       maxnumbertosubmit=6
+      envcondaclm=/work/csp/sp1/anaconda3/envs/CMOR_5
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       env_workflow_tag=cmcc

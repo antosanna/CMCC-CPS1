@@ -2,6 +2,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
+. $DIR_UTIL/load_nco
 . $DIR_UTIL/load_ncl
 
 function write_help
@@ -15,6 +16,7 @@ then
    debug=0
 fi
 debug=1
+skip=1
 if [[ $# -eq 0 ]]
 then
    write_help
@@ -40,21 +42,31 @@ export hiniy=$iniy_hind
 export hendy=$endy_hind
 export plottype="png"
 
+export dirwkroot=$SCRATCHDIR/SIE
+mkdir -p $dirwkroot
+export ftarea=$REPOGRID/${SPSSystem}.tarea.cice.nc
+if [[ $skip -eq 0 ]]
+then
 for mem in `seq -w 01 $nrunmax`
 do
-      caso=${SPSSystem}_${yyyy}${st}_0${mem}
+   caso=${SPSSystem}_${yyyy}${st}_0${mem}
       #to take into account that there should be some members not available
-      if [[ `ls $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
-         cdo -O mergetime $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwk/$caso.cice.nc
-      elif [[ `ls $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
-         cdo -O mergetime $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwk/$caso.cice.nc
+   if [[ `ls $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
+      if [[ ! -f $ftarea ]]
+      then
+      	  ncks -v tarea $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h.$yyyy-$st.zip.nc $ftarea
       fi
+      cdo -O mergetime $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwkroot/$caso.cice.nc
+   elif [[ `ls $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
+      cdo -O mergetime $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwkroot/$caso.cice.nc
+   fi
 done
+fi
 
 export hemis
 for hemis in NH SH
 do
-   dirwk=$SCRATCHDIR/SIE/$hemis
+   export dirwk=$dirwkroot/$hemis
    mkdir -p $dirwk
    cd $dirwk
    case $hemis in
@@ -62,11 +74,14 @@ do
       SH)obsfile=S_seaice_extent_daily_v3.0.csv;directory=south;plotname=SH_SIE_${yyyy}${st};;
    esac
 
-   if [ -f $dirwk/$obsfile ] ; then
-      rm $dirwk/$obsfile
+   if [[ $typeofrun == "forecast" ]] 
+   then
+      if [ -f $dirwk/$obsfile ] ; then
+         rm $dirwk/$obsfile
+      fi
+      wget ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/$directory/daily/data/$obsfile
+      cat $obsfile | tr ",;" " " | grep "${yyyym1}     ${stm1}" | awk '{print $1" "$2" "$3" "$4}'
    fi
-   wget ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/$directory/daily/data/$obsfile
-   cat $obsfile | tr ",;" " " | grep "${yyyym1}     ${stm1}" | awk '{print $1" "$2" "$3" "$4}'
 
 # TO BE MODIFIED export filarea="$REPOSITORY/tarea.cice.nc"
    export inpfile="$dirwk/$obsfile"

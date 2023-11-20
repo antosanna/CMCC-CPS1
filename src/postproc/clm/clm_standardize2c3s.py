@@ -255,7 +255,7 @@ def modify_C3S(ncfile, atm_elem):
     ncfile.variables[atm_elem[1]].grid_mapping = 'hcrs'
 
 
-def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl):
+def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl,lsmfile):
 
     first_time = True
     #for idx, cmcc_f in enumerate(cmcc_files):
@@ -360,9 +360,7 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
     if c3s_el[2] == 'lnd':
         # mask the ocean
         print("var shape before masking",ncf.variables[c3s_el[1]][:].shape)
-        #regridfile='/work/csp/sp1/CESMDATAROOT/CMCC-SPS3.5/regrid_files/lsm_sps3.5_cam_h1_reg1x1_0.5_359.5.nc'    
-        f_lsm = netCDF4.Dataset('/data/csp/as34319/CMCC-CPS1/regrid_files/SPS4_C3S_LSM.nc','r')
-        #f_lsm = netCDF4.Dataset(regridfile, 'r') 
+        f_lsm = netCDF4.Dataset(lsmfile,'r')
         f_lsm_mask = f_lsm.variables['lsmC3S_SPS4'][:]
         # here land is 1 and sea 0 we want opposite
         # change land=-1
@@ -425,7 +423,9 @@ if __name__ == '__main__':
     versionSPS = str(sys.argv[12])
     clmC3Stable= str(sys.argv[13])
     case       = str(sys.argv[14])
-     
+    lsmfile    = str(sys.argv[15])   
+ 
+ 
     year = startdate[0:4]
     month = startdate[4:6]
     pp = ensemble[1:3]
@@ -440,7 +440,7 @@ if __name__ == '__main__':
     createdir(output_dir)
         
     # define the suffix cmcc_CMCC-CM2-v20191201_hindcast
-    suffix = 'cmcc_CMCC-CM2-v'+versionSPS+'_' + forecast_t + '_S' + startdate +'0100'
+    suffix = 'cmcc_CMCC-CM3-v'+versionSPS+'_' + forecast_t + '_S' + startdate +'0100'
 
     # C3S table list (note that we use same file H2OSOI to calculate both mrlsl and its integral mrso)
 
@@ -495,7 +495,7 @@ if __name__ == '__main__':
         vars_list = var_name.split()
        
         
-        create_c3s_var2(c3s_elem,files_from_model,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl)
+        create_c3s_var2(c3s_elem,files_from_model,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl,lsmfile)
 
         print('Done var',c3s_elem[0])
 

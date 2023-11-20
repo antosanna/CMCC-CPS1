@@ -72,6 +72,7 @@ then
 
 #remap input *************************************************
    export weight_file="$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
+   lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
    CLM_OUTPUT_FV="${OUTDIR}/${rootname}.nc"
 
 # ${caso}.clm2.${filetyp}.nc $caso.clm2.$ft.nc
@@ -141,17 +142,20 @@ then
    suffix="i00p00.nc"
    
 # (I) FIRST FORMAT IN C3S STANDARD
-   conda activate /work/csp/sp1/anaconda3/envs/CMOR_5
+   set +euvx
+    . $DIR_UTIL/condaactivation.sh
+    condafunction activate $envcondaclm
+   set -euvx
    cd ${DIR_POST}/clm # where python script is
    
-   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $DIROUT_REG1x1 $SPSsystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt $versionSPS ${DIR_POST}/clm/C3S_table_clm.txt $caso
-#   if [ $? -eq 0 ]
-#   then
+   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $DIROUT_REG1x1 $SPSsystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt $versionSPS ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile
+   if [ $? -ne 0 ]
+   then
 # remove catted product
 #      rm $CLM_OUTPUT_FV 
 # intermidiate product
 #      rm ${DIROUT_REG1x1}/${rootname}.reg1x1.nc
-   else
+#   else
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
@@ -162,7 +166,7 @@ then
    cd $outdirC3S
    
    set +euvx
-   condafunction deactivate CMOR_5 
+   condafunction deactivate $envcondaclm 
    set -euvx   
 
    echo "postpc_clm.sh DONE"

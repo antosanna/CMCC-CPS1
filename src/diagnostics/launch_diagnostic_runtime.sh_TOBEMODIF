@@ -9,7 +9,7 @@
 # Only one $DIR_DIAG/plot_forecast_all_vars.sh allowed at a time!
 
 . ~/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
+. $DIR_UTIL/descr_CPS.sh
 #-- parameters -----------------------------------------------------------------
 set -euxv
 debug=1
@@ -27,19 +27,14 @@ start_date=`date +%Y%m`
 st=`date +%m`
 yyyy=`date +%Y`
 set +euvx
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euxv
-LOG_FILE=$DIR_LOG/$typeofrun/$yyyy$st/launch_forecast_diag_`date +%Y%m%d%H%M`.out
+LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_forecast_diag_`date +%Y%m%d%H%M`.out
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-checkfile1=$DIR_LOG/$typeofrun/$start_date/first_month_diagnostics_${start_date}_DONE
-checkfile2=$DIR_LOG/$typeofrun/$start_date/lead0_diagnostics_${start_date}_DONE
-checkfile3=$DIR_LOG/$typeofrun/$start_date/lead1_diagnostics_${start_date}_DONE
+checkfile1=$DIR_LOG/forecast/$start_date/first_month_diagnostics_${start_date}_DONE
+checkfile2=$DIR_LOG/forecast/$start_date/lead0_diagnostics_${start_date}_DONE
+checkfile3=$DIR_LOG/forecast/$start_date/lead1_diagnostics_${start_date}_DONE
 if [[  -f $checkfile3 ]]
 then
    exit
@@ -59,7 +54,7 @@ then
    nrunC3Sfore=4
    for ens in {001..004}
    do  
-      caso=${SPSsystem}_${yyyy}${st}_${ens}
+      caso=${SPSSystem}_${yyyy}${st}_${ens}
       m1=`date -d "${start_date}01 + 1 months" +%m`
       y1=`date -d "${start_date}01 + 1 months" +%Y`
       m3=`date -d "${start_date}01 + 3 months" +%m`
@@ -74,7 +69,7 @@ thirdmonth=`date -d "${start_date}01 + 3 months" +%Y%m`
 forthmonth=`date -d "${start_date}01 + 4 months" +%Y%m`
 
 
-echo "Forecast start date: $start_date"
+echo "forecast start date: $start_date"
 echo ""
 echo ""
 
@@ -88,7 +83,7 @@ list_of_cases_lead0=""
 list_of_cases_lead1=""
 for ens2d in `seq -w 01 $nrunmax`
 do
-   caso=${SPSsystem}_${start_date}_0${ens2d}
+   caso=${SPSSystem}_${start_date}_0${ens2d}
    
    if [[ ! -d $WORK_SPS3/archive/${caso}/rest ]]
    then
@@ -142,10 +137,10 @@ fi
 #
 if [ $n_first_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile1 ]
 then
-   mkdir -p $DIR_LOG/$typeofrun/$start_date/
-   inputfile=$DIR_LOG/$typeofrun/$start_date/list_of_cases_1m
+   mkdir -p $DIR_LOG/forecast/$start_date/
+   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_1m
    echo $list_of_cases_1m > $inputfile
-   nproc0=`${DIR_SPS35}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
+   nproc0=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
    if [ $nproc0 -eq 0 ]
    then
       nmf=1
@@ -153,7 +148,7 @@ then
       monthstr=`date -d "$yyyy${st}01 " +%B`
 set +euvx
       input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile1 $inputfile $debug"
-      ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit
    else
@@ -164,8 +159,8 @@ set -euvx
    if [ $debug -eq 1 ]
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month"
-      title="${SPSSYS} forecast notification"
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      title="${CPSSYS} forecast notification"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    fi
 else
    echo "Already run for first_month_${yyyy}${st}"
@@ -174,9 +169,9 @@ fi
 ## run the diagnostics only if not yet launched and running
 if [ $n_third_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile2 ]
 then
-   inputfile=$DIR_LOG/$typeofrun/$start_date/list_of_cases_lead0
+   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_lead0
    echo $list_of_cases_lead0 > $inputfile
-   nproc1=`${DIR_SPS35}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
+   nproc1=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
    if [ $nproc1 -eq 0 ]
    then
       nmf=3
@@ -185,7 +180,7 @@ then
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
       input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile2 $inputfile $debug"
-      ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 # Only one $DIR_UTIL/diag/plot_forecast_all_vars.sh allowed at a time!
 set -euvx
       exit
@@ -197,8 +192,8 @@ set -euvx
    if [ $debug -eq 1 ]
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0"
-      title="${SPSSYS} forecast notification"
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      title="${CPSSYS} forecast notification"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    fi
 else
    echo "Already run for lead0_${yyyy}${st}"
@@ -209,9 +204,9 @@ fi
 #END PRESENT VERSION
 if [ $n_forth_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile3 ]
 then
-   inputfile=$DIR_LOG/$typeofrun/$start_date/list_of_cases_lead1
+   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_lead1
    echo $list_of_cases_lead1 > $inputfile
-   nproc2=`${DIR_SPS35}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
+   nproc2=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
    if [ $nproc2 -eq 0 ]
    then
       nmf=4
@@ -220,7 +215,7 @@ then
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
       input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile3 $inputfile $debug"
-      ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit
    else
@@ -231,8 +226,8 @@ set -euvx
    if [ $debug -eq 1 ]
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead $debug"
-      title="${SPSSYS} forecast notification"
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      title="${CPSSYS} forecast notification"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    fi
 else
    echo "Already run for lead1_${yyyy}${st}"
