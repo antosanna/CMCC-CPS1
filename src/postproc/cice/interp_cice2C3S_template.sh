@@ -3,6 +3,7 @@
 # load variables from descriptor
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_ncl
+. $DIR_UTIL/load_nco
 
 
 export ic=`cat $DIR_CASES/CASO/logs/ic_CASO.txt`
