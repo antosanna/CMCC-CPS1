@@ -71,8 +71,10 @@ then
 # from now on the postproc of NEMO is not required anymore
    ./xmlchange NEMO_REBUILD=FALSE
    ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+set +euvx
    conda deactivate 
    conda activate $envcondacm3
+set -euvx
    ./case.submit
    exit
 fi

@@ -57,7 +57,4 @@ fi
 # archive restart
 #---------------------------------------
 mkdir -p $FINALARCHIVE/CASO/rest
-#mkdir -p $ARCHIVE/CASO/rest
-# do not --remove-source-files, since it's used by make_${SPSSYS}_C3S_b_moredays.sh !
-#rsync -auv $DIR_ARCHIVE/CASO/rest/${resty}-${restm}-01-00000 $ARCHIVE/CASO/rest/
 rsync -auv $DIR_ARCHIVE/CASO/rest/${resty}-${restm}-01-00000 $FINALARCHIVE/CASO/rest/
