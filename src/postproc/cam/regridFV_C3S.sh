@@ -43,6 +43,8 @@ export real="r"${ens}"i00p00"
 export last_term="_"${real}".nc"
 export C3Stable="$DIR_POST/cam/C3S_table.txt"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
+export GCM_and_version=${GCM_name}_v${version}
+export ini_term=cmcc_${GCM_name}_v${version}_${typeofrun}_S${yyyy}${st}0100
 
 #----------------------------------------
 # INPUT TO BE REGRIDDED

@@ -403,7 +403,7 @@ begin
        if ( typein.eq.type(k)) then
           global=define_att(realm(k),level(k),frq(k)) 
           source=str_split(global@source,":")
-          ini_term=global@institute_id+"_"+source(0)+"_"+typeofrun+"_S"+yyyy+st+"0100"
+          ini_term=getenv("ini_term")
           print(" ")
           print("Output C3S field -------- "+varout(k))
           print("type C3S field -------- "+type(k))

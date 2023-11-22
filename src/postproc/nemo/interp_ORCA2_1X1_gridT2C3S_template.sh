@@ -128,7 +128,7 @@ fi
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-prefix=`sed -n 4p $DIR_TEMPL/C3S_globalatt.txt |cut -d '=' -f2|cut -d ':' -f1|awk '{$1=$1};1'`
+prefix=${GCM_name}_v${versionSPS}
 export fore_type=$typeofrun
 export frq="mon"
 export level="ocean2d"
