@@ -20,6 +20,7 @@ set -euvx
 #
 member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 startdate=$yyyy$st
+ppp=`echo $caso|cut -d '_' -f 3 `
 
 # SECTION FORECAST TO BE TESTED
 if [ "$typeofrun" == "forecast" ]
@@ -51,18 +52,60 @@ checkfile_qa=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
+
+#***********************************************************************
+# Standardization for CLM 
+#***********************************************************************
+wkdir_clm=$SCRATCHDIR/regrid_C3S/CLM/$caso
+mkdir -p ${wkdir_clm}
+checkfile_clm=${wkdir_clm}/${caso}_clm_C3SDONE
+
+if [[ ! -f $checkfile_clm ]]
+then
+  
+   cd ${wkdir_clm}
+   ft="h1"
+   case $ft in
+       h1 ) mult=1 ;; # for land h1 is daily, multiplier=1
+   esac
+   finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+   if [[ ! -f $finalfile_clm ]]
+   then
+
+        input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} $checkfile_clm"
+        # ADD the reservation for serial !!!
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+        
+
+        echo "start of postpc_clm "`date`
+        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $checkfile_clm $checkfile_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        # ADD the reservation for serial !!!
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+
+   else
+    # meaning that preproc files have been done by create_clm_files.sh
+    # so submit without dependency
+        
+        echo "start of postpc_clm "`date`
+        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $checkfile_clm $checkfile_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        # ADD the reservation for serial !!!
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+   fi
+fi
+
+
 #***********************************************************************
 # Cam files archiving
 #***********************************************************************
 # Standardization for CAM 
 #***********************************************************************
-wkdir=$SCRATCHDIR/regrid_C3S/CAM/$caso
-mkdir -p $wkdir
-checkfile_all_camC3S_done=$wkdir/${caso}_all_cam_C3SDONE
+wkdir_cam=$SCRATCHDIR/regrid_C3S/CAM/$caso
+mkdir -p ${wkdir_cam}
+checkfile_all_camC3S_done=${wkdir_cam}/${caso}_all_cam_C3SDONE
 filetyp="h1 h2 h3"
 for ft in $filetyp
 do
-   checkfile_regridC3S_type=$wkdir/${caso}_cam_regrid_C3S
+   checkfile_regridC3S_type=${wkdir_cam}/${caso}_cam_regrid_C3S
    if [[ -f ${checkfile_regridC3S_type}_${ft}_DONE ]]
    then
 # meaning that preproc files have been done by create_cam_files.sh
@@ -72,18 +115,18 @@ do
    finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
    if [[ ! -f $finalfile ]]
    then
-      input="$caso $ft $yyyy $st $member $wkdir $finalfile" 
+      input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile" 
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-      input="$finalfile $caso $outdirC3S $wkdir $ft ${checkfile_regridC3S_type}_${ft}"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${checkfile_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    else
 # meaning that preproc files have been done by create_cam_files.sh
 # so submit without dependency
-      input="$finalfile $caso $outdirC3S $wkdir $ft ${checkfile_regridC3S_type}_${ft}"
+      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${checkfile_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 55000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    fi
          
 done
@@ -97,61 +140,10 @@ do
    fi
    sleep 60
 done
-exit
 input="$ft $caso $outdirC3S $checkfile_all_camC3S_done $checkfile_qa"
           # ADD the reservation for serial !!!
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
 
-#***********************************************************************
-# Standardization for CLM 
-#***********************************************************************
-wkdir=$SCRATCHDIR/regrid_C3S/CLM/$yyyy$st
-mkdir -p $wkdir
-checkfile_clm=$wkdir/${caso}_clm_C3SDONE
-if [ ! -f $checkfile_clm ]
-then
-   cd $wkdir
-   ft="h1"
-   case $ft in
-     h1 ) mult=1 ;; # for land h1 is daily, multiplier=1
-   esac
-   ppp=`echo $caso|cut -d '_' -f 3 `
-   if [ ! -f $caso.clm2.$ft.$yyyy-$st.zip.nc ]
-   then
-      $compress $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
-      ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
-
-     #--------------------------------------------
-     # clm (II) check that number of timesteps is the expected one and remove extra timestep
-     #--------------------------------------------
-
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
-      nt=`cdo -ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
-      if [ $nt -lt $expected_ts  ]
-      then
-          body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.$yyyy-$st.zip.nc , ne to $expected_ts but is $nt. Exit "
-          title="${CPSSYS} forecast notification - ERROR "
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  
-          exit 1
-      fi
-     # remove nr.1 timestep according to filetyp $ft
-     # take from 2nd timestep
-      echo "start of ncks for clm one file "`date`
-      ncks -O -F -d time,2, pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
-      echo "end of ncks for clm one file "`date`
-      mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
-   fi
-   #--------------------------------------------
-   # C3S standardization for CLM 
-   # $caso.clm2.$ft.nc is a temp file, input for ${DIR_POST}/clm/postpc_clm.sh 
-   #--------------------------------------------
-   echo "start of postpc_clm "`date`
-   input="$ppp $startdate $outdirC3S $DIR_ARCHIVE/$caso/lnd/hist $caso $checkfile_clm $checkfile_qa 0"  #0 means done while running (1 if from archive)
-#TEMPORARY
-#   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -r $sla_serialID -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
-
-fi
 #***********************************************************************
 # checkout the list
 #***********************************************************************

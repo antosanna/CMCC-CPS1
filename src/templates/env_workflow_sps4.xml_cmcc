@@ -160,8 +160,8 @@
       <desc>Store user override for queue</desc>
     </entry>
   </group>
-  <group id="case.hindcast_checklist">
-    <entry id="template" value="$ENV{DIR_TEMPL}/template.hindcast_checklist">
+  <group id="case.checklist">
+    <entry id="template" value="$ENV{DIR_TEMPL}/template.checklist">
       <type>char</type>
     </entry>
     <entry id="dependency" value="case.st_archive">
@@ -192,7 +192,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-W 00:30 -q $ENV{serialq_s} -P $ENV{pID} -M 1000 -e logs/checklist_%J.err -o logs/checklist_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q $ENV{serialq_s} -P $ENV{pID} -W 00:30 -M 1000 -e logs/checklist_%J.err -o logs/checklist_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

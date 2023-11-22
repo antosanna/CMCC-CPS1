@@ -30,7 +30,7 @@ export ndaysreq=$fixsimdays
 startdate=$yyyy$st
 export C3Stable="$DIR_POST/cam/C3S_table.txt"
 export fixsimdays
-
+export real="r"${ens}"i00p00"
 #-------------------------------------------------------------
 # Go to output dir for C3S vars
 #-------------------------------------------------------------

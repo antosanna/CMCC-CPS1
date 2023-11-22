@@ -7,34 +7,30 @@ set -euvx
 #then
 #  exit
 #fi
-{{ batchdirectives }}
 CASEROOT={{ caseroot }} 
 cd $CASEROOT
 #get case name and cores dedicated to ocean model from xml files
 caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
 yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
-resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2|sed 's/ //g'`
-stop_op=`./xmlquery STOP_OPTION|cut -d '=' -f2|sed 's/ //g'`
+resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
 month=$(($nmonfore - $resubmit))
 
 # TABLE FORMAT
-#CASO,LAST_JOBID,mese1,mese2,mese3,mese4,mese5,mese6,mese7,archivio
+#CASO,mese1,mese2,mese3,mese4,mese5,mese6,days,archivio
 #${SPSsystem}_199301_001,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy
 # Assign proper list file according to $typeofrun (hindcast/forecast)
 listfiletocheck="${SPSSystem}_${typeofrun}_list.csv"
 # calc position of the ith-column inside csv table
-table_column_id=$(($month + 2))
+table_column_id=$(($month + 1))
 # find line number
 LN="$(grep -n "$caso" ${DIR_CHECK}/$listfiletocheck | cut -d: -f1)"
 #
 if [[ $stop_op == "ndays" ]] ; then
-   if [[ $resubmit -ne 0 ]] ; then
-      table_column_id=9
-   else
-      table_column_id=10
-   fi
+      table_column_id=7
 fi
+
 
 ( 
 # Wait for 160 sec lock on $DIR_TEMP/.checklist_${typeofrun}.exclusivelock
@@ -49,11 +45,6 @@ fi
 # add 1 second wait to be sure the file has been modified
    sleep 1
 
-   awk -v r=$LN -v c=2 -v val=$jobID 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck.tmp1 > $DIR_TEMP/$listfiletocheck.tmp2
-
-   sleep 1
-
-   mv $DIR_TEMP/$listfiletocheck.tmp2 ${DIR_CHECK}/$listfiletocheck
-   rm $DIR_TEMP/$listfiletocheck.tmp1
+   mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck
 
 )200> $DIR_TEMP/.checklist_${typeofrun}.exclusivelock

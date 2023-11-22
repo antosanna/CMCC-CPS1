@@ -300,7 +300,7 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
     realization = 'r' + pp + 'i00p00'
        
     # create the new NetCDF file
-    file_name = output_dir + '/' + suffix + '_' + c3s_el[10] + '_' + \
+    file_name = output_dir + '/' + prefix + '_' + c3s_el[10] + '_' + \
                 c3s_el[8] + '_' + c3s_el[9] + '_' + c3s_el[1] + '_' + \
                 realization + '.nc'
     
@@ -401,7 +401,7 @@ def createdir(dirname):
         os.makedirs(dirname)
 
 if __name__ == '__main__':
-    # TODO: substitute print with logging, pass suffix hindcast/forecst from arguments, import environment variable
+    # TODO: substitute print with logging, pass prefix hindcast/forecst from arguments, import environment variable
      
     # activate test mode (in operational mode must be False)
     dbmode = False
@@ -413,18 +413,17 @@ if __name__ == '__main__':
     ensemble   = str(sys.argv[2])
     h_type     = str(sys.argv[3])
     forecast_t = str(sys.argv[4])
-    input_dir  = str(sys.argv[5])
+    input_file  = str(sys.argv[5])
     modelname  = str(sys.argv[6])
     outputdir  = str(sys.argv[7])
     logdir     = str(sys.argv[8])
     repo_dir   = str(sys.argv[9])
     ic         = str(sys.argv[10])        
     templfile  = str(sys.argv[11])
-    versionSPS = str(sys.argv[12])
-    clmC3Stable= str(sys.argv[13])
-    case       = str(sys.argv[14])
-    lsmfile    = str(sys.argv[15])   
- 
+    clmC3Stable= str(sys.argv[12])
+    case       = str(sys.argv[13])
+    lsmfile    = str(sys.argv[14])   
+    prefix     = str(sys.argv[15]) 
  
     year = startdate[0:4]
     month = startdate[4:6]
@@ -432,15 +431,14 @@ if __name__ == '__main__':
     case = case #modelname + "_"+startdate+"_"+ensemble
     print(case)
     # input directory
-    #input_dir = workdir+'/'+case+'/lnd/hist/reg1x1'
      
     # output directory
     output_dir = outputdir #+'/'+case+'/C3S'
 
     createdir(output_dir)
         
-    # define the suffix cmcc_CMCC-CM2-v20191201_hindcast
-    suffix = 'cmcc_CMCC-CM3-v'+versionSPS+'_' + forecast_t + '_S' + startdate +'0100'
+    # define the prefix cmcc_CMCC-CM2-v20191201_hindcast
+    #prefix = 'cmcc_CMCC-CM3-v'+versionSPS+'_' + forecast_t + '_S' + startdate +'0100'
 
     # C3S table list (note that we use same file H2OSOI to calculate both mrlsl and its integral mrso)
 
@@ -485,7 +483,7 @@ if __name__ == '__main__':
     # input file to be analyzed
     # sps3.5_201812_001.clm2.h1.reg1x1.nc
     files_type = ['clm2']
-    files_from_model = input_dir+'/'+case+'.'+files_type[0]+'.'+h_type+'.reg1x1.nc'
+    files_from_model = input_file
     print(c3s_list)
     for c3s_elem in c3s_list:
         print('Start var',c3s_elem[0])

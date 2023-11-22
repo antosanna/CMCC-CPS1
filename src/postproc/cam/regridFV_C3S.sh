@@ -25,7 +25,7 @@ set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 startdate=$yyyy$st
-export typeofrun
+export fore_type=$typeofrun
 export yyyytoday=`date +%Y`
 export mmtoday=`date +%m`
 export ddtoday=`date +%d`

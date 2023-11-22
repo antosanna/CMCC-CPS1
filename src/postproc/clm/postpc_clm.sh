@@ -4,8 +4,7 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-# load specific libreries for CLM
-. ${DIR_TEMPL}/load_nco
+. ${DIR_UTIL}/load_nco
 
 set -evxu
 
@@ -20,7 +19,7 @@ ifexistdelete() {
 #*************************************************************************
 # Input 
 #*************************************************************************
-debug=${1:-0}
+debug=0
 #
 #
 if [ $debug -eq 1 ]
@@ -36,15 +35,15 @@ then
 else
 
 #"$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
- 
-   ppp=$1
-   startdate=$2
-   outdirC3S=$3  # where python write finalstandardized  output 
-   OUTDIR=$4     # output dir of clm DMO
+   CLM_OUTPUT_FV=$1 
+   ppp=$2
+   startdate=$3
+   outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
    check_postpcclm=$6
    checkfile=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
-   running=${8-:0}  # 0 in operational mode
+   wkdir=$8
+   running=${9-:0}  # 0 in operational mode
 fi
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
@@ -73,21 +72,12 @@ then
 #remap input *************************************************
    export weight_file="$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
    lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
-   CLM_OUTPUT_FV="${OUTDIR}/${rootname}.nc"
-
-# ${caso}.clm2.${filetyp}.nc $caso.clm2.$ft.nc
-   clm2_files_number=`ls -1 ${OUTDIR}/${rootname}.nc|wc -l`
-   if [ $clm2_files_number -ne 1 ] ; then
-      echo "Number of land clm file  ${rootname}.nc "${clm2_files_number}" not equal to expected: 1 "
-      echo "Something went wrong in l_archive maybe."
-      exit 1
-   fi
 
 # C script to compute snow density
    rhosnow_ncap2_script=$DIR_POST/clm/calc_rhosnow4clm.c 
 
 # Define working directories
-   DIROUT_REG1x1=${OUTDIR}/reg1x1
+   DIROUT_REG1x1=${wkdir}/reg1x1
    mkdir -p ${DIROUT_REG1x1}
 
 # Define all input and output files
@@ -101,24 +91,24 @@ then
       # (I) H2OSOI
       # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
       cd ${DIROUT_REG1x1}  
-      ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${CLM_OUTPUT_FV}_tmp_H2OSOI
-      mv ${CLM_OUTPUT_FV}_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
+      ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+      mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
    
       # (II) SNOW
-      ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${CLM_OUTPUT_FV}_tmp_RHOSNO
-      mv ${CLM_OUTPUT_FV}_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
+      ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${rootname}.nc_tmp_RHOSNO
+      mv ${rootname}.nc_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
    
       # (III) Remove extra vars
-      ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${CLM_OUTPUT_FV}_tmp_rm
+      ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${rootname}.nc_tmp_rm
       rm ${rootname}.tmp_RHOSNO.nc
    	
       # (IV) Change variable attributes
-      ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${CLM_OUTPUT_FV}_tmp_rm	
-      ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${CLM_OUTPUT_FV}_tmp_rm	
+      ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${rootname}.nc_tmp_rm	
+      ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${rootname}.nc_tmp_rm	
    
-      ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${CLM_OUTPUT_FV}_tmp_rm	
-      ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${CLM_OUTPUT_FV}_tmp_rm	
-      export interp_input=${CLM_OUTPUT_FV}_tmp_rm
+      ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${rootname}.nc_tmp_rm	
+      ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${rootname}.nc_tmp_rm	
+      export interp_input=${rootname}.nc_tmp_rm
 
       # Interpolation phase
       # create interpolated file in ./reg1x1 dir
@@ -131,15 +121,14 @@ then
    fi
    
 # remove intermidiate output files
-   ifexistdelete ${CLM_OUTPUT_FV}_tmp_rm 
+   ifexistdelete ${rootname}.nc_tmp_rm 
    ifexistdelete ${rootname}.tmp_*.nc 
    
 #************************************************************************
 # Standardize in C3S format
 #************************************************************************
 # C3S vars    prefix
-   prefix="${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_land_day_"
-   suffix="i00p00.nc"
+   prefix="${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx
@@ -148,7 +137,7 @@ then
    set -euvx
    cd ${DIR_POST}/clm # where python script is
    
-   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $DIROUT_REG1x1 $SPSsystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt $versionSPS ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile
+   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $CLM_OUTPUT_REG1x1 $SPSsystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # remove catted product
@@ -170,16 +159,16 @@ then
    set -euvx   
 
    echo "postpc_clm.sh DONE"
-   touch $check_postpcclm
-   if [ $running -eq 1 ]  # 0 if running; 1 if off-line
-   then
-      rm $OUTDIR/$caso.clm2.*
-   fi  
+   touch ${check_postpcclm}
+   #if [ $running -eq 1 ]  # 0 if running; 1 if off-line
+   #then
+   #   rm $OUTDIR/$caso.clm2.*
+   #fi  
 else
    body="$startdate postprocessing CLM already completed. \n
-         $OUTDIR/${caso}_clm_C3SDONE exists. If you want to recomputed first delete it"
-   title="${SPSSYS} FORECAST warning"
-   ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${check_postpcclm} exists. If you want to recomputed first delete it"
+   title="${CPSSYS} FORECAST warning"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    
 fi
 
@@ -191,7 +180,7 @@ mkdir -p $DIR_CASES/$caso/logs
 # IF ALL VARS HAVE BEEN COMPUTED QUALITY-CHECK
 if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $checkfile ]
 then
-   ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -r $sla_serialID -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi
 echo "$0 completed"
 exit 0

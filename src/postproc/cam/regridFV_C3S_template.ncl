@@ -326,7 +326,7 @@ begin
   lat_bnds(:,1)=lat(:)+0.5
   delete_VarAtts(lat_bnds,-1)
 
-  real=MEMBER
+  real="MEMBER"
   realization=tochar(real+"                      ")
   realization@units = "1"
   realization@long_name = "realization" ;
