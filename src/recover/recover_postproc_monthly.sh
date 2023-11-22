@@ -9,11 +9,11 @@
 
 set -euxv
 
-yyyy=1993
-st=07
-caso=sps4_${yyyy}${st}_003
+yyyy=1994
+st=08
+caso=sps4_${yyyy}${st}_004
 
-debug=0 #only one month
+debug=1 #only one month
 mkdir -p $DIR_LOG/hindcast/recover/
 echo "-----------STARTING ${caso}.l_archive-------- "`date`
 cd $DIR_CASES/${caso}
@@ -23,7 +23,7 @@ ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
 
 
 # HERE SET YEAR AND MONTHS TO RECOVER
-for curryear in 1993
+for curryear in 1994
 do
    for currmon in `seq -w $st $(($((10#$st + nmonfore - 1))))`
    do
@@ -38,8 +38,8 @@ do
       for comp in atm rof lnd
       do
          file=$DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.nc
-         filezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc`
-         if [[ -f $filezip ]]
+         nfilezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc |wc -l`
+         if [[ $nfilezip -eq 1 ]]
          then
             continue
          fi
@@ -52,8 +52,8 @@ do
       for comp in ice 
       do
          file=$DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.nc
-         filezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc`
-         if [[ -f $filezip ]] ; then
+         nfilezip=`ls $DOUT_S_ROOT/$comp/hist/${caso}.*.${type}.${curryear}-${currmon}.zip.nc |wc -l`
+         if [[ $nfilezip -eq 1 ]] ; then
             continue
          fi
          pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`

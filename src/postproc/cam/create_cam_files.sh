@@ -25,8 +25,8 @@ wkdir=$6
 finalfile=$7
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-#WILL BE ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
-ic="mia nonna"
+ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
+#ic="mia nonna"
 #
 
 if [[ ! -f $checkfile ]]
@@ -47,7 +47,7 @@ then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc ]]
       then
-         $compress /work/csp/cp1/scratch/regrid_tests/CAM/$caso.cam.$ft.$yyyy-$st-01-00000.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
+         $compress $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
       fi
 #         ic=(from txt in casedir)
       ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc

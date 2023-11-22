@@ -56,14 +56,14 @@ mkdir -p $outdirC3S
 #***********************************************************************
 # Standardization for CAM 
 #***********************************************************************
-wkdir=$SCRATCHDIR/regrid_C3S/CAM/$yyyy$st
+wkdir=$SCRATCHDIR/regrid_C3S/CAM/$caso
 mkdir -p $wkdir
 checkfile_all_camC3S_done=$wkdir/${caso}_all_cam_C3SDONE
 filetyp="h1 h2 h3"
 for ft in $filetyp
 do
-   checkfile_regridC3S_ft=$wkdir/${caso}_cam_${ft}_regrid_C3Sdone
-   if [[ -f $checkfile_regridC3S_ft ]]
+   checkfile_regridC3S_type=$wkdir/${caso}_cam_regrid_C3S
+   if [[ -f ${checkfile_regridC3S_type}_${ft}_DONE ]]
    then
 # meaning that preproc files have been done by create_cam_files.sh
 # and regridded by regridFV_C3S.sh
@@ -74,16 +74,16 @@ do
    then
       input="$caso $ft $yyyy $st $member $wkdir $finalfile" 
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-      input="$finalfile $caso $outdirC3S $wkdir $ft $checkfile_regridC3S_ft"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      input="$finalfile $caso $outdirC3S $wkdir $ft ${checkfile_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    else
 # meaning that preproc files have been done by create_cam_files.sh
 # so submit without dependency
-      input="$finalfile $caso $outdirC3S $wkdir $ft $checkfile_regridC3S_ft"
+      input="$finalfile $caso $outdirC3S $wkdir $ft ${checkfile_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 55000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    fi
          
 done
@@ -91,12 +91,13 @@ done
 # now wait that all of the ft files have been regridded
 while `true`
 do
-   if [[ -f $wkdir/${caso}_cam_h1_regrid_C3Sdone ]] && [[ -f $wkdir/${caso}_cam_h2_regrid_C3Sdone ]] && [[ -f $wkdir/${caso}_cam_h3_regrid_C3Sdone ]] 
+   if [[ `ls ${checkfile_regridC3S_type}_h?_DONE|wc -l` -eq 3 ]]
    then
       break
    fi
    sleep 60
 done
+exit
 input="$ft $caso $outdirC3S $checkfile_all_camC3S_done $checkfile_qa"
           # ADD the reservation for serial !!!
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
@@ -181,7 +182,7 @@ fi
 #***********************************************************************
 # Exit
 #***********************************************************************
-touch checkfile_postproc_final
+touch $checkfile_postproc_final
 echo "Done."
 
 

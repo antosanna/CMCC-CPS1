@@ -34,7 +34,7 @@ export fixsimdays
 #-------------------------------------------------------------
 # Go to output dir for C3S vars
 #-------------------------------------------------------------
-if [[ ! -f checkfile_all_camC3S_done ]]
+if [[ ! -f $checkfile_all_camC3S_done ]]
 then
    cd $outdirC3S
    #-------------------------------------------------------------
@@ -79,7 +79,8 @@ mkdir -p $DIR_CASES/$caso/logs/
 # if not already launched
 if [ $allC3S -eq $nfieldsC3S ] && [ ! -f $checkfile ]
 then
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -r $sla_serialID -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
+ ###!! TO BE ADDED SERIAL RESERVATION
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi
 echo "$0 completed"
 exit 0
