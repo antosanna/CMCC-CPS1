@@ -73,7 +73,7 @@ then
       # take from 2nd timestep
          echo "start ncks for $ft "`date`
          ncks -O -F -d time,2, $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
-         rsync -auv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/$caso.cam.$ft.$yyyy-$st.zip.nc		      
+         rsync -auv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile		      
          echo "end of ncks for $ft "`date`
       else
       # take all but last timestep
