@@ -1,0 +1,23 @@
+
+---- touchfiles defined in $DIR_TEMPL/postproc_final.sh
+check_qa=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+check_clm=${wkdir_clm}/${caso}_clm_C3SDONE
+check_all_camC3S_done=${wkdir_cam}/${caso}_all_cam_C3SDONE
+check_regridC3S_type=${wkdir_cam}/${caso}_cam_regrid_C3S
+
+---- touchfiles defined in $DIR_TEMPL/template.lt_archive_moredays
+check_pp_final=$CASEROOT/logs/postproc_final_${caso}_DONE
+check_run_moredays=${CASEROOT}/logs/run_moredays_${caso}_DONE
+
+---- touchfiles defined in $DIR_C3S/checker_and_archive.sh
+check_allchecksC3S=$outdirC3S/all_checkers_ok_0
+
+---- touchfiles defined in $DIR_POST/cam/check_C3S_atm_vars.sh
+checkfix_timesteps=$outdirC3S/fix_timesteps_C3S_${startdate}_${ens}_ok
+
+---- touchfiles defined in $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh
+check_archive_oce_ok=$DIR_CASES/CASO/logs/archive_CASO_oce_DONE
+
+---- touchfiles defined in $DIR_TEMPL/template.lt_archive
+check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
+check_iceregrid=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok

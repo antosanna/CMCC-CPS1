@@ -38,7 +38,14 @@ fi
 
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
 nrun_submitted=0
-for st in 07 #10 12 02 04 06 
+if [[ $machine == "zeus" ]]
+then
+   inist=8
+elif [[ $machine == "juno" ]]
+then
+   inist=7
+fi
+for st in `seq -w $inist 2 12`
 do
    for yyyy in `seq $iniy $endy`
    do

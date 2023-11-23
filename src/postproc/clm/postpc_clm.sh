@@ -137,7 +137,7 @@ then
    set -euvx
    cd ${DIR_POST}/clm # where python script is
    
-   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $CLM_OUTPUT_REG1x1 $SPSsystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # remove catted product

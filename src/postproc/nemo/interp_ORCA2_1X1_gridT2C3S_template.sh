@@ -95,7 +95,7 @@ EOF
 }
 
 
-archive_oce_ok=$DIR_CASES/CASO/logs/archive_CASO_oce_DONE
+archive_oce_ok=`grep check_archive_oce_ok $dictionary|cut -d '=' -f2`
 ens=`echo CASO|cut -d '_' -f3|cut -c 2,3`
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
 export real="r"${ens}"i00p00"

@@ -63,7 +63,7 @@ then
    #-------------------------------------------------------------
    # CHECK TIMESTEP AND IN CASE FIX IT
    #-------------------------------------------------------------
-   checkfix_timesteps=$outdirC3S/fix_timesteps_C3S_${startdate}_${ens}_ok
+   checkfix_timesteps=`grep checkfix_timesteps $dictionary|cut -d '=' -f2`
    $DIR_C3S/fix_timesteps_C3S_1member.sh $startdate $ens $checkfix_timesteps $outdirC3S
    
    touch $checkfile_all_camC3S_done

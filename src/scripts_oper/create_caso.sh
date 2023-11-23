@@ -101,6 +101,12 @@ stop_op=nmonths
 ./xmlchange INFO_DBUG=0
 ./xmlchange NEMO_REBUILD=TRUE  
 ./xmlchange GET_REFCASE=TRUE
+if [[ $typeofrun == "hindcast" ]]
+then
+   ./xmlchange --subgroup case.checklist prereq=0
+else
+   ./xmlchange --subgroup case.checklist prereq=1
+fi
 
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow

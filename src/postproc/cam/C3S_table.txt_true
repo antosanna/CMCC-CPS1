@@ -32,4 +32,6 @@ T,ta,leadtime plev lat lon,Air Temperature,air_temperature,K,12hr,pressure,atmos
 U,ua,leadtime plev lat lon,Eastward Wind,x_wind,m s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
 V,va,leadtime plev lat lon,Northward Wind,y_wind,m s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
 Z,zg,leadtime plev lat lon,Geopotential Height,geopotential_height,m,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,-1,h2
+PHIS,orog,lat lon,Surface Altitude,surface_altitude,m,fix,surface,atmos,1,lat lon,dummy,0,h0
+LANDFRAC,sftlf,lat lon,Land Area Fraction,land_area_fraction,1,fix,surface,atmos,1,lat lon,dummy,0,h0
 rsdt,rsdt,lat lon,Land Area Fraction,land_area_fraction,1,fix,surface,atmos,1,lat lon,dummy,0,h1

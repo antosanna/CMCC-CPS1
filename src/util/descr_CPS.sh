@@ -357,6 +357,7 @@ DIR_CHECK=$DIR_ROOT/checklists
 # DIR_SRC1=$DIR_ROOT1/src
 # DIR_TEST_SUITE=$DIR_SRC/test_suite
 DIR_UTIL=$DIR_SRC/util
+dictionary=$DIR_UTIL/CPS1_checkfile_list.txt
 DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates

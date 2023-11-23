@@ -33,6 +33,7 @@ else
 fi
 set -uexv
 # IF ALL VARS HAVE BEEN COMPUTED QUALITY-CHECK
+check_allchecksC3S=`grep check_allchecksC3S $dictionary|cut -d '=' -f2`
 if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $checkfile ]
 then
 # check that the process has not been already submitted by regridSEne60_C3S.sh
@@ -90,9 +91,9 @@ then
       then
          ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member $checkfile_daily $outdirC3S
       fi
-      touch $outdirC3S/all_checkers_ok_0${member}
+      touch $check_allchecksC3S$member
    fi  
-   allcheckersok=`ls $outdirC3S/all_checkers_ok_0??|wc -l`
+   allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
    if [ $allcheckersok -ge $nrunC3Sfore ] 
    then
       ns=`${DIR_SPS35}/findjobs.sh -m $machine -r ${sla_serialID} -n submit_tar_and_push${startdate} -c yes`

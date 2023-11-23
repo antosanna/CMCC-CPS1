@@ -23,11 +23,15 @@ ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
 
 
 # HERE SET YEAR AND MONTHS TO RECOVER
-for curryear in 1994
+curryear=$yyyy
+for currmon in `seq -w $st $(($((10#$st + nmonfore - 1))))`
 do
-   for currmon in `seq -w $st $(($((10#$st + nmonfore - 1))))`
-   do
-      flag_done=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
+      if [[ $currmon -gt 12 ]]
+      then
+         curryear=$(($yyyy + 1))
+         currmon=0$(($currmon - 12))
+      fi
+      flag_done=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
       if [[ -f $flag_done ]]
       then
          continue
@@ -78,6 +82,5 @@ do
          exit
       fi
    done
-done
 
 exit 0

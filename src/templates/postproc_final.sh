@@ -48,7 +48,7 @@ then
 fi
 # END OF FORECAST SECTION
 
-checkfile_qa=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+checkfile_qa=`grep check_qa $dictionary|cut -d '=' -f2`
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
@@ -58,7 +58,7 @@ mkdir -p $outdirC3S
 #***********************************************************************
 wkdir_clm=$SCRATCHDIR/regrid_C3S/CLM/$caso
 mkdir -p ${wkdir_clm}
-checkfile_clm=${wkdir_clm}/${caso}_clm_C3SDONE
+checkfile_clm=`grep check_clm $dictionary|cut -d '=' -f2`
 
 if [[ ! -f $checkfile_clm ]]
 then
@@ -101,11 +101,11 @@ fi
 #***********************************************************************
 wkdir_cam=$SCRATCHDIR/regrid_C3S/CAM/$caso
 mkdir -p ${wkdir_cam}
-checkfile_all_camC3S_done=${wkdir_cam}/${caso}_all_cam_C3SDONE
+checkfile_all_camC3S_done=`grep check_all_camC3S_done $dictionary|cut -d '=' -f2`
 filetyp="h1 h2 h3"
 for ft in $filetyp
 do
-   checkfile_regridC3S_type=${wkdir_cam}/${caso}_cam_regrid_C3S
+   checkfile_regridC3S_type=`grep check_regridC3S_type $dictionary|cut -d '=' -f2`
    if [[ -f ${checkfile_regridC3S_type}_${ft}_DONE ]]
    then
 # meaning that preproc files have been done by create_cam_files.sh
