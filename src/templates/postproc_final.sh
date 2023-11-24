@@ -75,13 +75,13 @@ then
 
         input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} $check_postclm"
         # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
         
 
         echo "start of postpc_clm "`date`
         input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
    else
     # meaning that preproc files have been done by create_clm_files.sh
@@ -90,7 +90,7 @@ then
         echo "start of postpc_clm "`date`
         input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6500 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    fi
 fi
 
@@ -118,16 +118,16 @@ do
    then
       input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile" 
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1500 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 8000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    else
 # meaning that preproc files have been done by create_cam_files.sh
 # so submit without dependency
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 8000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
    fi
          
 done
@@ -143,7 +143,7 @@ do
 done
 input="$ft $caso $outdirC3S $check_all_camC3S_done $check_qa"
           # ADD the reservation for serial !!!
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 55000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
 
 #***********************************************************************
 # checkout the list
