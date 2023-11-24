@@ -31,9 +31,6 @@ do
             table_column_id=$(($((10#$poce)) + 1))
             awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
             rsync -auv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck 
-            title=" $machine IC NEMO checklist"
-            body="Updated IC NEMO checklist from $machine "`date`
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
             continue
          fi
          if [[ $machine == "zeus" ]]
@@ -46,4 +43,7 @@ do
       done
    done
 done
+title=" $machine IC NEMO checklist"
+body="Updated IC NEMO checklist from $machine "`date`
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
 

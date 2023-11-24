@@ -27,7 +27,7 @@ then
    inist=01
    freq=1
 fi
-for st in `seq $inist $freq 12`
+for st in `seq -w $inist $freq 12`
 do
    for yyyy in `seq $iniy_hind $endy_hind`
    do
