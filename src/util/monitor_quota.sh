@@ -22,9 +22,15 @@ then
 # --------------------------------------------------------------------------
    startdate=`date +%Y%m`
    . $DIR_UTIL/descr_ensemble.sh `date +%Y`
-else
+elif [[ $# -eq 2 ]]
+then
    yyyy=$1
    st=$2
+   typeofrun="forecast"
+elif [[ $# -eq 1 ]]
+then
+   st=$1
+   typeofrun="hindcast"
 fi
 outdir=${DIR_LOG}/$typeofrun/
 
@@ -32,7 +38,12 @@ outdir=${DIR_LOG}/$typeofrun/
 #  Quota
 # ----------------------------------------------------------------
 # 
-fname=$outdir/${CPSSYS}_quota_${yyyy}$st.`date +%Y%m%d%M`.log
+if [[ $typeofrun == "forecast" ]]
+then
+   fname=$outdir/${CPSSYS}_quota_${yyyy}$st.`date +%Y%m%d%M`.log
+else
+   fname=$outdir/${CPSSYS}_quota.`date +%Y%m%d%M`.log
+fi
 cat /dev/null >> $fname
 echo "date is `date`" >> $fname
 echo "Filesystem Size  Used  Avail Use%" >> $fname
