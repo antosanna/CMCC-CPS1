@@ -125,26 +125,18 @@ set -e
   nC3S="undef"
   if [[ -d ${wrkdir} ]]
   then
-     nC3S=$(ls -1 ${wrkdir}/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${startdate}0100_*r${member}i00p00.nc 2>/dev/null | wc -l)
+     nC3S=$(ls -1 ${wrkdir}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*r${member}i00p00.nc 2>/dev/null | wc -l)
   else
      nC3S=0
   fi
   
-  # Check if lt archive exist
-  lt_arc="undef"
-  nfile=$(ls ${ARCHIVE}/${SPSSystem}_${startdate}_${ens}/rest/${SPSSystem}_${startdate}_${ens}.rest.tar.gz 2>/dev/null |wc -l)
-  if [[ $nfile -ne 0 ]] ; then
-    lt_arc="Y"
-  else
-    lt_arc="N"
-  fi
  
   # Postprocessing
-  npostpc_run=`$DIR_UTIL/findjobs.sh -m $machine -n l_archive -N ${SPSSystem}_${startdate}_${ens} -c yes`
+  npostpc_run=`$DIR_UTIL/findjobs.sh -m $machine -n lt_archive -N ${SPSSystem}_${startdate}_${ens} -c yes`
   postpc="undef"
   if [[ $npostpc_run -ne 0 ]] ; then
 set +e
-    postpc=`$DIR_UTIL/findjobs.sh -m $machine -n l_archive -N ${SPSSystem}_${startdate}_${ens}`
+    postpc=`$DIR_UTIL/findjobs.sh -m $machine -n lt_archive -N ${SPSSystem}_${startdate}_${ens}`
 set -e
 # this holds for Zeus (RUN) and Marconi (RUNNING)
     if [[ "$postpc" =~ "RUN" ]]
@@ -242,7 +234,7 @@ done
 tstamp=`date "+%Y%m%d-%H%M%S"`
 txtfile="monitorforecast_$tstamp.txt"
 pdffile="monitorforecast_$tstamp.pdf"
-mkdir -p $SCRATCHDIR/$st
+mkdir -p $DIR_TEMP/$st
 
 # $doplot can be 0=NoPlot or 1=Plot 
 if [[ $notif_type -eq 0  ]] ; then
@@ -260,24 +252,30 @@ else
 fi
 # if an old $sstfile exists, remove it before calling monitor_forecast sp1 1
 if [[ $doplot -eq 1 ]]; then
-  mkdir -p $SCRATCHDIR/nemo_timeseries/${startdate}/plots  
-  sstfile=$SCRATCHDIR/nemo_timeseries/${startdate}/plots/${CPSSYS}_${startdate}_nemo_timeseries.pdf
+  mkdir -p $DIR_TEMP_NEMOPLOT/${startdate}/plots  
+  sstfile=$DIR_TEMP_NEMOPLOT/${startdate}/plots/${CPSSYS}_${startdate}_nemo_timeseries.pdf
   if [[ -f $sstfile ]]; then
     rm $sstfile
   fi
-  if [[ -f $SCRATCHDIR/SIE/SIE_${yyyy}${st}.png ]]
+  NH_SIEplot=$DIR_TEMP_CICEPLOT/NH/NH_SIE_${yyyy}${st}.png 
+  if [[ -f $NH_SIEplot ]]
   then
-     rm $SCRATCHDIR/SIE/SIE_${yyyy}${st}.png
+     rm $NH_SIEplot
+  fi
+  SH_SIEplot=$DIR_TEMP_CICEPLOT/SH/SH_SIE_${yyyy}${st}.png 
+  if [[ -f $SH_SIEplot ]]
+  then
+     rm $SH_SIEplot
   fi
 fi
-${DIR_UTIL}/monitor_forecast.sh $operator $doplot 1 $yyyy $st > $SCRATCHDIR/$st/$txtfile
+${DIR_UTIL}/monitor_forecast.sh $operator $doplot 1 $yyyy $st > $DIR_TEMP/$st/$txtfile
 
 # lag needed to generate the sstplot
 if [[ $doplot -eq 1 ]]; then
   sleep 360 #lag to needed to generate the sstplot
 fi
 # convert in pdf
-convert -size 860x1200  -pointsize 10 $SCRATCHDIR/$st/${txtfile} $SCRATCHDIR/$st/$pdffile
+convert -size 860x1200  -pointsize 10 $DIR_TEMP/$st/${txtfile} $DIR_TEMP/$st/$pdffile
 
 #-------------------------------------------------------------------------------
 # GET INFO
@@ -356,8 +354,7 @@ fi
 #---------------------------------------
 # Manage SIE plot
 #---------------------------------------
-checkfileSIE=$SCRATCHDIR/SIE/SIEplot_${yyyy}${st}_OK
-SIEplot=$SCRATCHDIR/SIE/SIE_${yyyy}${st}.png 
+check_SIEplot=`grep check_SIEplot $dictionary|cut -d '=' -f2`
 #-------------------------------------------------------------------------------
 # PREPARE EMAIL
 #-------------------------------------------------------------------------------
@@ -452,10 +449,10 @@ if [[ ${notif_type} -eq 0 ]] ; then
   # Notificate job status
   if [[ ${prog_count} -lt 4 ]] ; then
     # Uniq Slot.
-    if [[ ${countrun} -eq ${nrunmax} ]] && [[ ! -f $SCRATCHDIR/$st/uniqslot.info ]] ; then
+    if [[ ${countrun} -eq ${nrunmax} ]] && [[ ! -f $DIR_TEMP/$st/uniqslot.info ]] ; then
       composedmessage=${intro_slot}${jobstatusline}${compmonthsline}${grazie}
       # create file to avoid re-entering in this if condition
-      touch $SCRATCHDIR/$st/uniqslot.info
+      touch $DIR_TEMP/$st/uniqslot.info
     else
       composedmessage=${intro}${jobstatusline}${compmonthsline}${grazie}
     fi
@@ -483,10 +480,10 @@ fi
 #-------------------------------------------------------------------------------
 if [[ ${notif_type} -eq 1 ]] ; then
   # Just IC condition
-  norcafile=`ls -1 $SCRATCHDIR/$st/${startdate}*_all_anom*|wc -l`
+  norcafile=`ls -1 $DIR_TEMP/$st/${startdate}*_all_anom*|wc -l`
   if [[ $norcafile -ne 0 ]]
   then
-     orcafile=`ls -1 $SCRATCHDIR/$st/${startdate}*_all_anom*`
+     orcafile=`ls -1 $DIR_TEMP/$st/${startdate}*_all_anom*`
   fi
   orcapng=`basename $orcafile`
 fi
@@ -498,18 +495,18 @@ fi
 if [[ ${notif_type} -eq 1 ]] ; then
   # last date
   ymds=$(date -d "${startdate}01 -1 day" +%Y%m%d)
-  graphdir=$SCRATCHDIR/$st
+  graphdir=$DIR_TEMP/$st
   ncldir=${DIR_OCE_IC}
   ${DIR_OCE_IC}/calc_daily_anom.sh $ymds $graphdir $ncldir
 
   noaa_ok=0
   outname=${ymds}_tmp
-  if [[ -f $SCRATCHDIR/$st/${outname}.png ]] ; then
+  if [[ -f $DIR_TEMP/$st/${outname}.png ]] ; then
     echo "noaa procedure was ok"
 #    tstamp=`date "+%Y%m%d-%H%M%S"`
     tstamp=`date "+%Y%m"`
     noaafile="noaa_anom_$tstamp.png"
-    mv $SCRATCHDIR/$st/${outname}.png $SCRATCHDIR/$st/${noaafile}
+    mv $DIR_TEMP/$st/${outname}.png $DIR_TEMP/$st/${noaafile}
     noaa_ok=1
   fi
 fi
@@ -518,25 +515,29 @@ fi
 #-------------------------------------------------------------------------------
 # SEND EMAIL with attachment
 #-------------------------------------------------------------------------------
+attachment=""
 if [[ ${notif_type} -eq 1 ]] ; then
-  # Just IC condition (no $SCRATCHDIR/$st/$txtfile is needed )
-  attachment="$SCRATCHDIR/$st/$orcapng "
+  # Just IC condition (no $DIR_TEMP/$st/$txtfile is needed )
+  attachment="$DIR_TEMP/$st/$orcapng "
   if [[ ${noaa_ok} -eq 1 ]] ; then
-    attachment+=" $SCRATCHDIR/$st/$noaafile "
+    attachment+=" $DIR_TEMP/$st/$noaafile "
   fi
 else
 
-  attachment="$SCRATCHDIR/$st/$pdffile  "
-  if [[ ${sst_ok} -eq 1 ]]; then
+  if [[ $doplot -eq 1 ]]
+  then
+     attachment="$DIR_TEMP/$st/$pdffile  "
+     if [[ ${sst_ok} -eq 1 ]]; then
       attachment+=" $sstfile  "
-  fi # plot sst/sss
-  if [[ -f $checkfileSIE ]]; then
-# UNTIL FORECAST 202108 KEEP set +e
-      set +e
-      attachment+=" $SIEplot"
-      set -euvx
-  fi #  plot sea-ice extent
+     fi # plot sst/sss
+     if [[ -f $NH_SIEplot ]]; then
+         attachment+=" $NH_SIEplot"
+     fi #  plot sea-ice extent
+     if [[ -f $SH_SIEplot ]]; then
+         attachment+=" $SH_SIEplot"
+     fi #  plot sea-ice extent
 
+  fi # end doplot
 fi # end $notif_type if statement
 
 ${DIR_UTIL}/sendmail.sh -m $machine -c $ccmail -e $mymail -M "$composedmessage" -t "$title" -a "$attachment"

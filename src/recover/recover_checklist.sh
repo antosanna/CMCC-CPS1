@@ -53,7 +53,7 @@ do
   done
   
 done
-mv ${DIR_CHECK}/$listfiletocheck ${DIR_CHECK}/${$hindcasts_list}
+mv ${DIR_CHECK}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
 
 if [[ $machine == "juno" ]]
 then

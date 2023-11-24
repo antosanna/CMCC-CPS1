@@ -15,7 +15,7 @@ set -evxu
 yyyy=$1
 st=$2 
 it=$3
-checkfileok=$4
+checkfileok=$4    # to be defined in dictionary
 
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 #-- USEFUL FUNCTIONS -----------------------------
@@ -118,7 +118,8 @@ do
          if [[ `ls $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*_restart_0???.nc|wc -l` -eq 0 ]]
          then
             mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-            touch $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO/${poce}_IC_missing
+            check_IC_Nemo_miss=`grep check_IC_Nemo_miss $dictionary|cut -d '=' -f2`
+            touch $check_IC_Nemo_miss
             continue
          else
             $DIR_OCE_IC/nemo_rebuild_restart.sh $yyyy $st $poce
@@ -131,7 +132,8 @@ do
             rsync -auv $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*cice.r.*nc $IC_CICE_CSP_DIR/$st/$iceic
          else
             mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CICE
-            touch $DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
+            check_IC_CICE_miss=`grep check_IC_CICE_miss $dictionary|cut -d '=' -f2`
+            touch $check_IC_CICE_miss
          fi
       fi 
       icsoce+=" $poce"
@@ -212,6 +214,8 @@ do
    then
       if [[ -f $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ]]
       then
+         ln -sf $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.nc
+         body="Using ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc as IC for perturbation $atmic" 
          ln -sf $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.nc
          body="Using ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc as IC for perturbation $atmic" 
          title="[CAMIC] ${CPSSYS} forecast notification"
@@ -360,8 +364,6 @@ cd $DIR_CPS
 # COPY SCRIPTS, triplette_random AND ICs TO CINECA
 cd ${DIR_SUBM_SCRIPTS}/$st/$yyyy${st}_scripts/CINECA/
 if [ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]; then
-   cp $TRIP_DIR/triplette.random.$yyyy$st.txt .
-fi
 tar -cvf $yyyy${st}_scripts_CINECA.tar *
 body="Starting scripts dispach to CINECA" 
 title="${CPSSYS} forecast notification"

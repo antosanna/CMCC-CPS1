@@ -17,7 +17,7 @@ set -euvx
 debug=0
 
 #INPUT SECTION
-checkfile=$1
+check_IC_CAMguess=$1
 yyyy=$2
 st=$3
 ppeda=$4
@@ -119,4 +119,4 @@ mkdir -p $IC_CPS_guess/CAM/$st
 mv ${output} $ncdataSPS
 echo 'ended compression IC CAM 00 '`date`
 echo ''
-touch $checkfile
+touch $check_IC_CAMguess

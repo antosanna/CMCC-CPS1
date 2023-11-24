@@ -26,11 +26,11 @@ st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 
-flag_done=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
+check_pp_monthly=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
 stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
-if [[ ! -f $flag_done ]] && [[ $stop_op == "nmonths" ]]
+if [[ ! -f $check_pp_monthly ]] && [[ $stop_op == "nmonths" ]]
 then
-   ./postproc_monthly_${caso}.sh $flag_done
+   ./postproc_monthly_${caso}.sh $check_pp_monthly
 fi
 cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 if [[ $((10#$cmm)) -gt $((10#$st)) ]]
@@ -58,10 +58,10 @@ then
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
 
    fi
-   flag_iceok=`grep check_iceregrid $dictionary|cut -d '=' -f2`
-   if [ ! -f $flag_iceok ]
+   check_iceregrid=`grep check_iceregrid $dictionary|cut -d '=' -f2`
+   if [ ! -f $check_iceregrid ]
    then
-      ./interp_cice2C3S_${caso}.sh $flag_iceok $running
+      ./interp_cice2C3S_${caso}.sh $check_iceregrid $running
    fi
 # now modify the environment to run the extra $nmoredays days to get $fixsimdays
    ./xmlchange STOP_OPTION="ndays" 

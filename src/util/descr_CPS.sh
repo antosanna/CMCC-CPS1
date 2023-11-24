@@ -110,6 +110,8 @@ then
    SCRATCHDIR1=/work/csp/${operational_user}/scratch
    SCRATCHDIR=$WORK/scratch
    DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
+   DIR_TEMP_NEMOPLOT=$SCRATCHDIR/nemo_timeseries
+   DIR_TEMP_CICEPLOT=$SCRATCHDIR/SIE
    FINALARCHIVE1=/work/csp/${operational_user}/test_archive/CPS/${CPSSYS}/
    FINALARCHIVE=/work/csp/`whoami`/test_archive/CPS/${CPSSYS}/
 #   FINALARCHIVE1=/data/csp/${operational_user}/archive/CPS/${CPSSYS}/

@@ -61,10 +61,10 @@ do
               continue
           fi  
 
-          checkfile=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done
+          check_IC_CAMguess=`grep check_IC_CAMguess $dictionary|cut -d '=' -f2`
           mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
           echo "---> going to produce first guess for CAM and start date $yyyy $st"
-          input="$checkfile $yyyy $st $pp"
+          input="$check_IC_CAMguess $yyyy $st $pp"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh -i "$input"
           input="$yyyy $st $pp"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic_hindcast.sh -i "$input"

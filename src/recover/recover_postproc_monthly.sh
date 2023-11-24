@@ -31,8 +31,8 @@ do
          curryear=$(($yyyy + 1))
          currmon=0$(($currmon - 12))
       fi
-      flag_done=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
-      if [[ -f $flag_done ]]
+      check_pp_monthly=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
+      if [[ -f $check_pp_monthly ]]
       then
          continue
       fi
@@ -76,7 +76,7 @@ do
       st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
       $DIR_POST/nemo/rebuild_EquT_1month.sh ${caso} $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
       echo "-----------postproc_monthly_${caso}.sh COMPLETED-------- "`date`
-      touch  $flag_done
+      touch  $check_pp_monthly
       if [[ $debug -eq 1 ]]
       then
          exit

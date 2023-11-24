@@ -19,10 +19,10 @@ if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]]
 then
    check_run_moredays=`grep check_run_moredays $dictionary|cut -d '=' -f2`
    touch $check_run_moredays
-   checkfile=`grep check_pp_final $dictionary|cut -d '=' -f2`
-   if [[ ! -f $checkfile ]]
+   check_pp_final=`grep check_pp_final $dictionary|cut -d '=' -f2`
+   if [[ ! -f $check_pp_final ]]
    then
-      ./postproc_final_${caso}.sh $checkfile
+      ./postproc_final_${caso}.sh $check_pp_final
    fi  
 fi
 

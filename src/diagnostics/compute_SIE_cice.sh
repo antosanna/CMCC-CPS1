@@ -30,7 +30,8 @@ set +euvx
 set -euvx
 
 #DONWLOAD OBS
-mkdir -p $SCRATCHDIR/SIE
+export dirwkroot=$DIR_TEMP_CICEPLOT
+mkdir -p $DIR_TEMP_CICEPLOT
 export yyyym1=`date -d "${yyyy}${st}01 -1 month" +%Y`
 export stm1=`date -d "${yyyy}${st}01 -1 month" +%m`
 
@@ -42,8 +43,6 @@ export hiniy=$iniy_hind
 export hendy=$endy_hind
 export plottype="png"
 
-export dirwkroot=$SCRATCHDIR/SIE
-mkdir -p $dirwkroot
 export ftarea=$REPOGRID/${SPSSystem}.tarea.cice.nc
 if [[ $skip -eq 0 ]]
 then
@@ -63,6 +62,7 @@ do
 done
 fi
 
+check_SIEplot=`grep check_SIEplot $dictionary|cut -d '=' -f2`
 export hemis
 for hemis in NH SH
 do
@@ -86,7 +86,7 @@ do
 # TO BE MODIFIED export filarea="$REPOSITORY/tarea.cice.nc"
    export inpfile="$dirwk/$obsfile"
    export outplot="$dirwk/$plotname"
-   export checkfileplot="$dirwk/${plotname}_OK"
+   export checkfileplot="$check_SIEplot"_${hemis}
    export ntime=$nmonfore
    export typeofrun
 #

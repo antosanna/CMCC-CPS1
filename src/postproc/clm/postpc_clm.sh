@@ -40,7 +40,7 @@ else
    startdate=$3
    outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
-   check_postpcclm=$6
+   check_postclm=$6
    checkfile=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
    wkdir=$8
    running=${9-:0}  # 0 in operational mode
@@ -66,7 +66,7 @@ rootname=${caso}.${landcase}.zip
 #**********************************************************
 # Start postprocessing operations only if not already done
 #**********************************************************
-if [ ! -f $check_postpcclm ]
+if [ ! -f $check_postclm ]
 then
 
 #remap input *************************************************
@@ -159,7 +159,7 @@ then
    set -euvx   
 
    echo "postpc_clm.sh DONE"
-   touch ${check_postpcclm}
+   touch ${check_postclm}
    #if [ $running -eq 1 ]  # 0 if running; 1 if off-line
    #then
    #   rm $OUTDIR/$caso.clm2.*

@@ -20,7 +20,7 @@ yyyy=$1
 st=$2
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
-outdir=$SCRATCHDIR/nemo_timeseries/$yyyy$st
+outdir=$DIR_TEMPL_NEMOPLOT/$yyyy$st
 mkdir -p $outdir
 # clean the output files before start if they exist
 cntseries=$(ls -1 $outdir/*_ss?_series.nc | wc -l)

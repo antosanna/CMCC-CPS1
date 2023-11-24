@@ -10,7 +10,7 @@ export ic=`cat $DIR_CASES/CASO/logs/ic_CASO.txt`
 export outdirC3S=OUTDIRC3S
 INPUT=${DIR_ARCHIVE}/CASO/ice/hist
 
-export checkfile=$1
+export check_iceregrid=$1
 running=$2   # 0 if running; 1 if off-line
 
 set -exv
@@ -23,15 +23,15 @@ $DIR_UTIL/descr_ensemble.sh $yyyy
 set -evxu
 
 #NEW 202103  +
-if [ -f $checkfile ] 
+if [ -f $check_iceregrid ] 
 then
 # se il checkfile e' piu' vecchio del DMO rimuovi e rifai
    cd $INPUT
    for file in CASO*cice.h.*nc
    do
-      if [[ $file -nt ${checkfile} ]]
+      if [[ $file -nt ${check_iceregrid} ]]
       then
-         rm $checkfile
+         rm $check_iceregrid
          break 
       fi  
    done
@@ -81,7 +81,7 @@ else
    echo "executed $scriptname "`date`
    echo "---------------------------------------------"
 
-   if [ ! -f $checkfile ]
+   if [ ! -f $check_iceregrid ]
    then
      title="[C3S] ${CPSSYS} forecast ERROR"
      body="ERROR in standardization of CICE files for case CASO. 
