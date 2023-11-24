@@ -59,6 +59,6 @@ if [[ $machine == "juno" ]]
 then
    title="Zeus hindcast checklist"
    body="Updated hindcast checklist from Zeus "`date`
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/${$hindcasts_list}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/${hindcasts_list}
 fi
 exit 0
