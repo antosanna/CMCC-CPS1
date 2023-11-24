@@ -57,8 +57,8 @@ mv ${DIR_CHECK}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
 
 if [[ $machine == "juno" ]]
 then
-   title="Zeus hindcast checklist"
-   body="Updated hindcast checklist from Zeus "`date`
+   title="hindcast checklist"
+   body="Updated hindcast checklist "`date`
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/${hindcasts_list}
 fi
 exit 0

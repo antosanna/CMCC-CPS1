@@ -15,7 +15,7 @@ mkdir -p $DIR_TEMP
 for yyyy in `seq $iniy $endy`
 do
    . $DIR_UTIL/descr_ensemble.sh $yyyy
-   listfiletocheck=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
+   listfiletocheck=${SPSSystem}_${typeofrun}_IC_NEMO_list.$machine.csv
 #TEMPORARY
    for st in {01..12}
    do
@@ -31,6 +31,13 @@ do
             table_column_id=$(($((10#$poce)) + 1))
             awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
             rsync -auv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck 
+            title=" $machine IC NEMO checklist"
+            body="Updated IC NEMO checklist from $machine "`date`
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
+            continue
+         fi
+         if [[ $machine == "zeus" ]]
+         then
             continue
          fi
          input="$yyyy $st $poce"
