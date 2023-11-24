@@ -5,9 +5,9 @@
 set -euvx
 mkdir -p $DIR_LOG/IC_CAM
 LOG_FILE=$DIR_LOG/IC_CAM/launch_make_atm_ic_`date +%Y%m%d%H%M`
-#exec 3>&1 1>>${LOG_FILE} 2>&1
+exec 3>&1 1>>${LOG_FILE} 2>&1
 iniy=$iniy_hind
-endy=2003
+endy=$endy_hind
 debugp=0   # if 1 do only one and exit
 debugy=0   # if 1 do only one year
 
