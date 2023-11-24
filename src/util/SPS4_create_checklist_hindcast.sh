@@ -1,15 +1,9 @@
 #!/bin/sh -l
-#BSUB -q s_short
-#BSUB -J SPS4_checklist_hindcast_zeus
-#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_checklist_hindcast_%J.err
-#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/hindcast/SPS4_checklist_hindcast_%J.out
-#BSUB -P 0574
-# load variables from descriptor
+
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-
-set -vxue
+set -vxeu
 
 # This script it's an utility that create the run list files:
 # $DIR_CHECK/${CPSSYS}_hindcast_list.csv
@@ -78,7 +72,7 @@ echo " file2 will be written in $file2"
 
 
 # Write header ---------------------------------------
-echo "CASO,LAST_JOBID,month1,month2,month3,month4,month5,month6,days,archive" > $file1
+echo "CASO,month1,month2,month3,month4,month5,month6,days,archive" > $file1
 echo "CASO,SUBM_FLAG" > $file2
 # Write body -----------------------------------------
 for st in {01..12}
@@ -90,7 +84,7 @@ do
          caso=${SPSSystem}_${yyyy}${st}_${ens}
 
          # write body
-         echo "$caso,job_id,dummy,dummy,dummy,dummy,dummy,dummy,dummy,dummy" >> $file1
+         echo "$caso,--,--,--,--,--,--,--,--" >> $file1
          echo "$caso,0" >> $file2
          
       done
