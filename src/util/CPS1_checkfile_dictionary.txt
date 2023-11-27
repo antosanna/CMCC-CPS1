@@ -1,36 +1,35 @@
-
----- touchfiles defined in $DIR_TEMPL/postproc_final.sh
-check_qa=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
-check_postclm=${wkdir_clm}/${caso}_clm_C3SDONE
-check_all_camC3S_done=${wkdir_cam}/${caso}_all_cam_C3SDONE
-check_regridC3S_type=${wkdir_cam}/${caso}_cam_regrid_C3S
+#--#-- touchfiles defined in $DIR_TEMPL/postproc_final.sh
+check_qa_start=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+check_postclm=$SCRATCHDIR/regrid_C3S/CLM/$caso/${caso}_clm_C3SDONE
+check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_all_cam_C3SDONE
+check_regridC3S_type=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_cam_regrid_C3S
 check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
 check_submitnotificate=$DIR_LOG/$typeofrun/$yyyy$st/${caso}_submittingnotificate
 
----- touchfiles defined in $DIR_TEMPL/template.lt_archive_moredays
+#--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive_moredays
 check_pp_final=$CASEROOT/logs/postproc_final_${caso}_DONE
 check_run_moredays=${CASEROOT}/logs/run_moredays_${caso}_DONE
 
----- touchfiles defined in $DIR_C3S/checker_and_archive.sh
+#--#-- touchfiles defined in $DIR_C3S/checker_and_archive.sh
 check_allchecksC3S=$outdirC3S/all_checkers_ok_0
 
----- touchfiles defined in $DIR_POST/cam/check_C3S_atm_vars.sh
+#--#-- touchfiles defined in $DIR_POST/cam/check_C3S_atm_vars.sh
 checkfix_timesteps=$outdirC3S/fix_timesteps_C3S_${startdate}_${ens}_ok
 
----- touchfiles defined in $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh
-check_archive_oce_ok=$DIR_CASES/CASO/logs/archive_CASO_oce_DONE
+#--#-- touchfiles defined in $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh
+check_archive_oce_ok=$DIR_CASES/$caso/logs/archive_${caso}_oce_DONE
 
----- touchfiles defined in $DIR_TEMPL/template.lt_archive
+#--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive
 check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
 check_iceregrid=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
 
----- touchfiles defined in $DIR_ATM_IC/launch_make_atm_ic_hindcast.sh
+#--#-- touchfiles defined in $DIR_ATM_IC/launch_make_atm_ic_hindcast.sh
 check_IC_CAMguess=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done
 
----- touchfiles defined in $IC_CPS/randomizer.sh
+#--#-- touchfiles defined in $IC_CPS/randomizer.sh
 check_IC_Nemo_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO/${poce}_IC_missing
 check_IC_CICE_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
 
----- touchfiles defined in $DIR_UTIL/notificate.sh
+#--#-- touchfiles defined in $DIR_UTIL/notificate.sh
 check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK

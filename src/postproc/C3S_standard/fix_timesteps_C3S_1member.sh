@@ -13,8 +13,9 @@ set -euvx
 echo "enter fix_timesteps_C3S.sh"
 startdate=$1
 ens=$2
-checkfile=$3
-outdirC3S=$4
+outdirC3S=$3
+
+#
 cd $outdirC3S
 out=6hr
 lista6h=`ls *6hr*_r${ens}i00p00.nc`
@@ -66,4 +67,8 @@ do
 done
 
 echo "succesfully completed fix_timesteps_C3S.sh"
-touch $checkfile
+#get checkfix_timesteps from dictionary
+set +euvx
+. $dictionary
+set -euvx
+touch $checkfix_timesteps

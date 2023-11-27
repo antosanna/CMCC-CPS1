@@ -26,7 +26,10 @@ st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 
-check_pp_monthly=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
+# get check_pp_monthly from dictionary
+set +euvx
+. $dictionary
+set -euvx
 stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
 if [[ ! -f $check_pp_monthly ]] && [[ $stop_op == "nmonths" ]]
 then
@@ -58,7 +61,7 @@ then
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input"
 
    fi
-   check_iceregrid=`grep check_iceregrid $dictionary|cut -d '=' -f2`
+# get   check_iceregrid from dictionary
    if [ ! -f $check_iceregrid ]
    then
       ./interp_cice2C3S_${caso}.sh $check_iceregrid $running

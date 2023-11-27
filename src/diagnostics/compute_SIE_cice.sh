@@ -62,7 +62,10 @@ do
 done
 fi
 
-check_SIEplot=`grep check_SIEplot $dictionary|cut -d '=' -f2`
+# get check_SIEplot from dictionary
+set +euvx
+. $dictionary
+set -euvx
 export hemis
 for hemis in NH SH
 do

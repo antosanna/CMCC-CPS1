@@ -118,7 +118,11 @@ do
          if [[ `ls $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*_restart_0???.nc|wc -l` -eq 0 ]]
          then
             mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-            check_IC_Nemo_miss=`grep check_IC_Nemo_miss $dictionary|cut -d '=' -f2`
+#           get  check_IC_NEMO_miss from dictionary
+
+            set +euvx
+            . $dictionary
+            set -euvx
             touch $check_IC_Nemo_miss
             continue
          else
@@ -132,7 +136,10 @@ do
             rsync -auv $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*cice.r.*nc $IC_CICE_CSP_DIR/$st/$iceic
          else
             mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CICE
-            check_IC_CICE_miss=`grep check_IC_CICE_miss $dictionary|cut -d '=' -f2`
+#           get  check_IC_CICE_miss from dictionary
+            set +euvx
+            . $dictionary
+            set -euvx
             touch $check_IC_CICE_miss
          fi
       fi 

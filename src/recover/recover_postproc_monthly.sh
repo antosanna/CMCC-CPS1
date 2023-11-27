@@ -31,7 +31,10 @@ do
          curryear=$(($yyyy + 1))
          currmon=0$(($currmon - 12))
       fi
-      check_pp_monthly=`grep check_pp_monthly $dictionary|cut -d '=' -f2`
+# get check_pp_monthly each cycle from dictionary
+      set +euvx
+      . $dictionary
+      set -euvx
       if [[ -f $check_pp_monthly ]]
       then
          continue

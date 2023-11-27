@@ -16,8 +16,8 @@ set -euvx
 ft=$1
 caso=$2
 export outdirC3S=$3
-checkfile_all_camC3S_done=$4
-checkfile_qa=$5 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+check_all_camC3S_done=$4
+check_qa_start=$5 
 
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
@@ -34,7 +34,7 @@ export real="r"${ens}"i00p00"
 #-------------------------------------------------------------
 # Go to output dir for C3S vars
 #-------------------------------------------------------------
-if [[ ! -f $checkfile_all_camC3S_done ]]
+if [[ ! -f $check_all_camC3S_done ]]
 then
    cd $outdirC3S
    #-------------------------------------------------------------
@@ -63,10 +63,9 @@ then
    #-------------------------------------------------------------
    # CHECK TIMESTEP AND IN CASE FIX IT
    #-------------------------------------------------------------
-   checkfix_timesteps=`grep checkfix_timesteps $dictionary|cut -d '=' -f2`
-   $DIR_C3S/fix_timesteps_C3S_1member.sh $startdate $ens $checkfix_timesteps $outdirC3S
+   $DIR_C3S/fix_timesteps_C3S_1member.sh $startdate $ens $outdirC3S
    
-   touch $checkfile_all_camC3S_done
+   touch $check_all_camC3S_done
 fi
 
 cd $outdirC3S   #can be redundant

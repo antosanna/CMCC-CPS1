@@ -10,13 +10,21 @@ member=$1
 outdirC3S=$2
 startdate=$3
 caso=$4
+
+yyyy=`echo ${startdate:0:4}`
+set +uexv
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+set -uexv
 echo "STILL TO BE UPDATED, NOW EXITING"
 exit 0
 
 debug=0
 cd $outdirC3S   #can be redundant
 allC3S=`ls *${member}i00p00.nc|wc -l`
-checkfile=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+# get check_qa_start e check_allchecksC3S from dictionary
+set +euvx
+. $dictionary
+set -euvx
 mkdir -p $DIR_CASES/$caso/logs
 
 yyyy=`echo "${startdate}" | cut -c1-4`
@@ -24,24 +32,15 @@ st=`echo "${startdate}" | cut -c5-6`
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
-set +uexv
-if [ $yyyy -gt $endy_hind ]
-then
-   . $DIR_SPS35/descr_forecast.sh
-else
-   . $DIR_SPS35/descr_hindcast.sh
-fi
-set -uexv
 # IF ALL VARS HAVE BEEN COMPUTED QUALITY-CHECK
-check_allchecksC3S=`grep check_allchecksC3S $dictionary|cut -d '=' -f2`
-if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $checkfile ]
+if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $check_qa_start ]
 then
 # check that the process has not been already submitted by regridSEne60_C3S.sh
 # qa checker
    if [ ! -f $outdirC3S/qa_checker_ok_0${member} ] || [[ $debug -eq 0 ]]
    then
 # if not already launched
-         ${DIR_C3S}/launch_c3s_qa_checker_1member.sh $startdate $member $checkfile $outdirC3S
+         ${DIR_C3S}/launch_c3s_qa_checker_1member.sh $startdate $member $check_qa_start $outdirC3S
    fi
 # others checkers 
    if [ ! -f $outdirC3S/meta_checker_ok_0${member} ] || [[ $debug -eq 0 ]]

@@ -17,9 +17,11 @@ stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
 
 if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]] 
 then
-   check_run_moredays=`grep check_run_moredays $dictionary|cut -d '=' -f2`
+# get  check_run_moredays and check_pp_final from dictionary
+   set +euvx
+   . $dictionary
+   set -euvx
    touch $check_run_moredays
-   check_pp_final=`grep check_pp_final $dictionary|cut -d '=' -f2`
    if [[ ! -f $check_pp_final ]]
    then
       ./postproc_final_${caso}.sh $check_pp_final

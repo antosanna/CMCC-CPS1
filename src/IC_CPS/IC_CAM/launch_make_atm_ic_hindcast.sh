@@ -61,7 +61,10 @@ do
               continue
           fi  
 
-          check_IC_CAMguess=`grep check_IC_CAMguess $dictionary|cut -d '=' -f2`
+#         get check_IC_CAMguess from dictionary
+          set +euvx
+          . $dictionary
+          set -euvx
           mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
           echo "---> going to produce first guess for CAM and start date $yyyy $st"
           input="$check_IC_CAMguess $yyyy $st $pp"

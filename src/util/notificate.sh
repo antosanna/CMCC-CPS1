@@ -19,6 +19,7 @@ exit
 
 icline=""
 
+set +uevx
 #-- functions ------------------------------------------------------------------
 function write_help
 {
@@ -354,7 +355,10 @@ fi
 #---------------------------------------
 # Manage SIE plot
 #---------------------------------------
-check_SIEplot=`grep check_SIEplot $dictionary|cut -d '=' -f2`
+#get check_SIEplot from dictionary
+set +uevx
+. $dictionary      #fixed
+set -uevx
 #-------------------------------------------------------------------------------
 # PREPARE EMAIL
 #-------------------------------------------------------------------------------

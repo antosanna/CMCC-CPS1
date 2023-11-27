@@ -23,11 +23,13 @@ startdate=$yyyy$st
 ppp=`echo $caso|cut -d '_' -f 3 `
 
 # SECTION FORECAST TO BE TESTED
+set +euvx
+. $dictionary
+set -euvx
 if [ "$typeofrun" == "forecast" ]
 then
    mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
-   check_endrun=`grep check_endrun $dictionary|cut -d '=' -f2`_${caso}
-   check_notificate=`grep check_notificate $dictionary|cut -d '=' -f2`
+#get   check_endrun check_notificate check_submitnotificate from dictionary
    touch $fileendrun
    # dal 50 al 54esimo il primo che arriva entra qua
    cntforecastend=$(ls ${check_endrun}_* | wc -l)
@@ -36,7 +38,7 @@ then
       
       # qui va il 4^ notificate
       if [ ! -f $check_notificate ]; then
-         check_submitnotificate=`grep check_submitnotificate $dictionary|cut -d '=' -f2`
+# get check_submitnotificate from dictionary
          touch $check_submitnotificate
          # submit notificate 4 - FINE JOBS PARALLELI
          input="`whoami` 0 $yyyy $st 1 4"
@@ -49,7 +51,7 @@ then
 fi
 # END OF FORECAST SECTION
 
-check_qa=`grep check_qa $dictionary|cut -d '=' -f2`
+# get check_qa_start from dictionary
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
@@ -59,7 +61,7 @@ mkdir -p $outdirC3S
 #***********************************************************************
 wkdir_clm=$SCRATCHDIR/regrid_C3S/CLM/$caso
 mkdir -p ${wkdir_clm}
-check_postclm=`grep check_postclm $dictionary|cut -d '=' -f2`
+# get check_postclm  from dictionary
 
 if [[ ! -f $check_postclm ]]
 then
@@ -79,7 +81,7 @@ then
         
 
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
@@ -88,7 +90,7 @@ then
     # so submit without dependency
         
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    fi
@@ -102,11 +104,11 @@ fi
 #***********************************************************************
 wkdir_cam=$SCRATCHDIR/regrid_C3S/CAM/$caso
 mkdir -p ${wkdir_cam}
-check_all_camC3S_done=`grep check_all_camC3S_done $dictionary|cut -d '=' -f2`
+#get check_all_camC3S_done from dictionary
 filetyp="h1 h2 h3"
 for ft in $filetyp
 do
-   check_regridC3S_type=`grep check_regridC3S_type $dictionary|cut -d '=' -f2`
+#get check_regridC3S_type from dictionary
    if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
    then
 # meaning that preproc files have been done by create_cam_files.sh
@@ -141,7 +143,7 @@ do
    fi
    sleep 60
 done
-input="$ft $caso $outdirC3S $check_all_camC3S_done $check_qa"
+input="$ft $caso $outdirC3S $check_all_camC3S_done $check_qa_start"
           # ADD the reservation for serial !!!
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
 
