@@ -7,8 +7,8 @@
 . ${DIR_UTIL}/load_nco
 
 set -euxv
-mkdir -p $DIR_LOG/hindcast/recover
-LOG_FILE=$DIR_LOG/hindcast/recover/recover_checklist_`date +%Y%m%d%H%M`
+mkdir -p $DIR_LOG/hindcast/
+LOG_FILE=$DIR_LOG/hindcast/SPS4_hindcast_checklist_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 typeofrun="hindcast"
