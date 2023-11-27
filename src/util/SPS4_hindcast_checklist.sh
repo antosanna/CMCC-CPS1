@@ -21,7 +21,7 @@ fi
 
 cd $DIR_ARCHIVE
 
-listofcases=`ls|grep ${SPSSystem}_`
+listofcases=`ls|grep ${SPSSystem}_[12]`
 cd $DIR_CASES
 listfiletocheck="deleteme.csv"
 cp ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$listfiletocheck
@@ -58,7 +58,7 @@ do
   set -euvx
   if [[ -f $check_run_moredays ]]
   then
-     table_column_id=$(($i + 1))
+     table_column_id=$(($table_column_id + 1))
 # assign a value with -val selecting a row with -v and a column with -c
      awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 # add 1 second wait to be sure the file has been modified
