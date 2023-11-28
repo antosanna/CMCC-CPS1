@@ -8,10 +8,9 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
-CASEROOT=/work/csp/sps-dev/CPS/CMCC-CPS1/cases/sps4_199307_003
+CASE=sps4_199307_003
+CASEROOT=$DIR_CASES/$CASE
 cd $CASEROOT
-#get case name and cores dedicated to ocean model from xml files
-CASE=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
 #
 # go back to CASEROOT
 cd $CASEROOT

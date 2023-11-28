@@ -7,7 +7,7 @@
 . ${DIR_UTIL}/load_nco
 
 set -euxv
-LOG_FILE=$DIR_LOG/hindcast/recover/recover_postproc_final_`date +%Y%m%d%H%M`
+LOG_FILE=$DIR_LOG/hindcast/recover/recover_postproc_C3S_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 if [[ $# -eq 0 ]]
@@ -25,8 +25,8 @@ do
   filename=$DIR_CASES/$caso/logs/ic_${caso}.txt
   while read line; do ic=`echo $line`; done < $filename
    
-  sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_final.sh > $DIR_CASES/$caso/postproc_final_${caso}.sh
-  chmod u+x $DIR_CASES/$caso/postproc_final_${caso}.sh
+  sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_C3S.sh > $DIR_CASES/$caso/postproc_C3S_${caso}.sh
+  chmod u+x $DIR_CASES/$caso/postproc_C3S_${caso}.sh
   
 done
 

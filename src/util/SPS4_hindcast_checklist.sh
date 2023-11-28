@@ -16,7 +16,8 @@ hindcasts_list=${SPSSystem}_${typeofrun}_list.csv
 #copy the relative file from Zeus
 if [[ $machine == "juno" ]]
 then
-   rsync -auv sps-dev@zeus01.cmcc.scc:/users_home/csp/sps-dev/CPS/CMCC-CPS1/checklists/$hindcasts_list $DIR_CHECK
+   rsync -auv sps-dev@zeus01.cmcc.scc:/users_home/csp/sps-dev/CPS/CMCC-CPS1/checklists/$hindcasts_list $DIR_CHECK/
+   cp $DIR_CHECK/$hindcasts_list $DIR_CHECK/${SPSSystem}_${typeofrun}_list_zeus.csv
 fi
 
 cd $DIR_ARCHIVE
@@ -57,6 +58,16 @@ do
   . $dictionary     #fixed
   set -euvx
   if [[ -f $check_run_moredays ]]
+  then
+     table_column_id=$(($table_column_id + 1))
+# assign a value with -val selecting a row with -v and a column with -c
+     awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+# add 1 second wait to be sure the file has been modified
+     sleep 1
+
+     mv -f $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck
+  fi
+  if [[ -f $check_pp_C3S ]]
   then
      table_column_id=$(($table_column_id + 1))
 # assign a value with -val selecting a row with -v and a column with -c

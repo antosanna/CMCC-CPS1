@@ -119,8 +119,8 @@ sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/inter
 chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
 sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_monthly.sh > $DIR_CASES/$caso/postproc_monthly_${caso}.sh
 chmod u+x $DIR_CASES/$caso/postproc_monthly_${caso}.sh
-sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_final.sh > $DIR_CASES/$caso/postproc_final_${caso}.sh
-chmod u+x $DIR_CASES/$caso/postproc_final_${caso}.sh
+sed -e "s:EXPNAME:$caso:g;s:DUMMYIC:$ic:g;" $DIR_TEMPL/postproc_C3S.sh > $DIR_CASES/$caso/postproc_C3S_${caso}.sh
+chmod u+x $DIR_CASES/$caso/postproc_C3S_${caso}.sh
 
 mkdir -p $DIR_CASES/$caso/logs
 

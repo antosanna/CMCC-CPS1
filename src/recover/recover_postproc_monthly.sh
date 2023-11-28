@@ -23,14 +23,11 @@ ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
 
 
 # HERE SET YEAR AND MONTHS TO RECOVER
-curryear=$yyyy
-for currmon in `seq -w $st $(($((10#$st + nmonfore - 1))))`
+yyyystdd=$yyyy${st}15
+for mon in `seq 0 $(($nmonfore - 1))`
 do
-      if [[ $currmon -gt 12 ]]
-      then
-         curryear=$(($yyyy + 1))
-         currmon=0$(($currmon - 12))
-      fi
+      curryear=`date -d "$yyyystdd + $mon month" +%Y`
+      currmon=`date -d "$yyyystdd + $mon month" +%m`
 # get check_pp_monthly each cycle from dictionary
       set +euvx
       . $dictionary

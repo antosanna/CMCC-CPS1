@@ -25,7 +25,7 @@ then
    write_help
    exit
 fi
-set -eux
+set -eu
 
 mo_today=`date +%m`
 yy_today=`date +%Y`
@@ -43,7 +43,7 @@ fi
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
-debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -69,7 +69,7 @@ cnt_lt_archive=0         # CASES INTERRUPTED IN PROCESSING LT_ARCHIVE
 cnt_resubmit=0    # CASES INTERPUTTED DURING MONTHLY RUNS
 cnt_regrid_ice=0    # CASES WITH MISSING REGRID_CICE
 cnt_regrid_oce=0    # CASES WITH MISSING REGRID_ORCA
-cnt_pp_final=0          # CASES WITH INTERRUPTED POSTPROC_FINAL
+cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 
 
 ### INITIALIZE LISTS
@@ -77,7 +77,8 @@ lista_lt_archive=" "
 lista_resubmit=" "
 lista_regrid_ice=" "
 lista_regrid_oce=" "
-lista_pp_final=" "
+lista_pp_C3S=" "
+#lista_pp_C3S_cam_or_clm=" "
 
 
 
@@ -104,7 +105,7 @@ for caso in $listofcases ; do
   CASEROOT=$DIR_CASES/$caso/
   set +uevx
   . $dictionary
-  set -euvx
+  set -eu
 
 ### check if there are dependency never satisfied to be killed
   set +e
@@ -142,8 +143,6 @@ for caso in $listofcases ; do
      then 
         cnt_resubmit=$(($cnt_resubmit + 1))
         lista_resubmit+=" $caso"
-##        aggiungi
-##        ./case.submit
      fi
   fi
 # aggiungere un check su nemo_rebuild e postproc_monthly prima di check_6month
@@ -159,15 +158,20 @@ for caso in $listofcases ; do
      lista_regrid_oce+=" $caso"
   fi
      
-  if [[ ! -f $check_pp_final ]]
+# meaning that the 185 day-run has been completed but last pp (C3S regrid) has not.
+  if [[ -f $check_run_moredays ]]
   then
-     cnt_pp_final=$(($cnt_pp_final + 1))
-     lista_pp_final+=" $caso"
-  else
-     if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]]
+     if [[ ! -f $check_pp_C3S ]] 
      then
-        cnt_pp_final=$(($cnt_pp_final + 1))
-        lista_pp_final+=" $caso"
+        cnt_pp_C3S=$(($cnt_pp_C3S + 1))
+        lista_pp_C3S+=" $caso"
+     else
+        if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]]
+        then
+           cnt_pp_C3S=$(($cnt_pp_C3S + 1))
+           lista_pp_C3S+=" $caso"
+#           lista_pp_C3S_cam_or_clm+=" $caso"
+         fi
      fi
   fi
 #               checkin_qa=`ls $DIR_CASES/$caso/logs/qa_started_${yyyy}${st}_0${member}_ok | wc -l`
@@ -180,7 +184,7 @@ done
 
 if [[ "$lista_lt_archive"  != " " ]]
 then
-   echo "Cases incomplete "
+   echo "Cases to be resubmitted from lt_archive "
    echo "$lista_lt_archive"
    echo ""
 fi
@@ -202,11 +206,12 @@ then
    echo "$lista_regrid_oce" 
    echo ""
 fi
-if [[ "$lista_pp_final" != " " ]]
+if [[ "$lista_pp_C3S" != " " ]]
 then
-   echo "Cases with interrupted post_final.sh"
-   echo "$lista_pp_final" 
+   echo "Cases with interrupted postproc_C3S.sh TEMPORARY DISABLED"
+   echo "$lista_pp_C3S" 
    echo ""
+#   echo " from which $lista_pp_C3S_cam_or_clm "
 fi
 
 
@@ -244,7 +249,8 @@ if [[ $debug -ne 2 ]] ; then
    
    for caso in $lista_resubmit
    do
-      $DIR_CASES/$caso/case.submit
+      command="$DIR_CASES/$caso/case.submit"
+      eval $command
       
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
@@ -288,16 +294,18 @@ if [[ $debug -ne 2 ]] ; then
    done
    
    
+#TEMPORARY UNTIL WE FIX THE PYTHON ISSUE ON JUNO
+exit
 # resubmit lt_archive_moredays
-   if [[ $cnt_pp_final -ne 0 ]] ; then
+   if [[ $cnt_pp_C3S -ne 0 ]] ; then
       echo "RESUBMIT .case.lt_archive_moredays FOR THE FOLLOWING CASES"
-      echo "$lista_pp_final"
+      echo "$lista_pp_C3S"
       echo ""
    fi
    
-   for caso in $lista_pp_final
+   for caso in $lista_pp_C3S
    do
-      $DIR_RECOVER/recover_postproc_final.sh $caso
+      $DIR_RECOVER/recover_postproc_C3S.sh $caso
       cd $DIR_CASES/$caso
       bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       if [[ $debug -eq 1 ]] ; then break ; fi
