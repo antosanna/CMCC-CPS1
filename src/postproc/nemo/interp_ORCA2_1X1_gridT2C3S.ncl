@@ -517,7 +517,8 @@ begin
           delete(tmp)
        end if  ; if on nemo vars
   end do   ; end loop on var
-  system("touch "+outdir+"/interp_ORCA2_1X1_gridT2C3S.ncl_"+real+"_ok")
+  check_oceregrid=getenv("check_oceregrid")
+  system("touch "+check_oceregrid)
 
 end
 

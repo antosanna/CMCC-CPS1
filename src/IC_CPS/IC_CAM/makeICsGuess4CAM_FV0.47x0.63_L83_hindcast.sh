@@ -21,6 +21,8 @@ check_IC_CAMguess=$1
 yyyy=$2
 st=$3
 ppeda=$4
+tstamp=$5
+export inputECEDA=$6
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 # export vars needed by ncl script
@@ -32,9 +34,7 @@ export ftemplate=${CESMDATAROOT}/inputdata/atm/cam/inic/fv/cami_0000-01-01_0.47x
 
 mkdir -p $IC_CAM_CPS_DIR/$st/
 startdate=$yyyy${st}01
-tstamp="00"
 iniICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.EDAcam.i.$yyyy$st
-data=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/
 echo 'starting preprocessing for raw date '$yyIC $mmIC $dd $tstamp `date`
 echo ''
 
@@ -44,8 +44,7 @@ pp=`printf '%.2d' $(($ppeda + 1))`
 
 ICfile=$iniICfile.$pp.nc
 
-inputECEDA=ECEDA${ppeda}_$yyIC$mmIC${dd}_${tstamp}.grib
-inp=`echo $inputECEDA|rev |cut -d '.' -f1 --complement|rev`
+inp=`basename $inputECEDA|rev |cut -d '.' -f1 --complement|rev`
 
 export output=${CPSSYS}.EDAcam.i.${pp}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc
 ncdataSPS=$IC_CPS_guess/CAM/$st/$output
@@ -62,16 +61,7 @@ mkdir -p $WORK_IC4CAM
 cd ${WORK_IC4CAM}
 
 #NOW LEVEL FIELDS U, V, Q, T and lnPS (used to vertical interp)
-# 20210429 +
-if [ ! -f ${data}/${inputECEDA} ]
-then
-   title="[CAMIC] ${CPSSYS} ERROR"
-   body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${data}/${inputECEDA} missing!"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   exit 
-fi
-# 20210429 -
-cdo --eccodes -f nc copy ${data}/${inputECEDA} ${WORK_IC4CAM}/${inp}.tmp.nc
+cdo --eccodes -f nc copy ${inputECEDA} ${WORK_IC4CAM}/${inp}.tmp.nc
 cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
 cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.smooth.nc ${WORK_IC4CAM}/${inp}.nc
 rm -f ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc

@@ -10,8 +10,6 @@ export ic=`cat $DIR_CASES/CASO/logs/ic_CASO.txt`
 export outdirC3S=OUTDIRC3S
 INPUT=${DIR_ARCHIVE}/CASO/ice/hist
 
-export check_iceregrid=$1
-running=$2   # 0 if running; 1 if off-line
 
 set -exv
 ens=`echo CASO|cut -d '_' -f3|cut -c 2,3`
@@ -20,8 +18,10 @@ export st=`echo CASO|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
 set +evxu
 $DIR_UTIL/descr_ensemble.sh $yyyy
+. $dictionary
 set -evxu
 
+export check_iceregrid
 #NEW 202103  +
 if [ -f $check_iceregrid ] 
 then
@@ -92,8 +92,4 @@ else
      rm $inputfile
    fi
 fi
-if [ $running -eq 1 ]  # 0 if running; 1 if off-line
-then
-     rm $INPUT/CASO.cice.*
-fi  
 exit 0

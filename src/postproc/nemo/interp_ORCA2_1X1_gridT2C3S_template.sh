@@ -97,10 +97,11 @@ EOF
 
 
 # get check_archive_oce_ok from dictionary
+ens=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary
 set -euvx
-ens=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
+export check_oceregrid
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
 export real="r"${ens}"i00p00"
 export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`

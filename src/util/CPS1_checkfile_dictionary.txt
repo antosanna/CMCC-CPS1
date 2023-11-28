@@ -1,7 +1,7 @@
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_final.sh
 check_qa_start=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
-check_postclm=$SCRATCHDIR/regrid_C3S/CLM/$caso/${caso}_clm_C3SDONE
-check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_all_cam_C3SDONE
+check_postclm=$DIR_CASES/$caso/logs/${caso}_clm_C3SDONE
+check_all_camC3S_done=$DIR_CASES/$caso/logs/${caso}_all_cam_C3SDONE
 check_regridC3S_type=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_cam_regrid_C3S
 check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
@@ -17,12 +17,16 @@ check_allchecksC3S=$outdirC3S/all_checkers_ok_0
 #--#-- touchfiles defined in $DIR_POST/cam/check_C3S_atm_vars.sh
 checkfix_timesteps=$outdirC3S/fix_timesteps_C3S_${startdate}_${ens}_ok
 
+#--#-- touchfiles defined in $DIR_TEMPL/check_6months_output_in_archive.sh
+check_6months_done=$DIR_CASES/$caso/${caso}_${nmonfore}months_done
+
 #--#-- touchfiles defined in $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh
 check_archive_oce_ok=$DIR_CASES/$caso/logs/archive_${caso}_oce_DONE
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive
 check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
 check_iceregrid=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
+check_oceregrid=$outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_r${ens}i00p00_ok
 
 #--#-- touchfiles defined in $DIR_ATM_IC/launch_make_atm_ic_hindcast.sh
 check_IC_CAMguess=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done
@@ -33,3 +37,6 @@ check_IC_CICE_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
 
 #--#-- touchfiles defined in $DIR_UTIL/notificate.sh
 check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK
+
+#--#-- touchfiles defined in $DIR_TEMPL/template.nemo_rebuild4cmcc-cm
+check_nemo_rebuild=$DIR_CASES/$caso/logs/nemo_rebuild_${curryear}${currmon}_done

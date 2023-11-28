@@ -13,7 +13,12 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 dorelaunch=0
 #listofcases="sps4_199307_002 sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
-listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
+if [[ $# -eq 0 ]]
+then
+   listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
+else
+   listofcases=$1
+fi
 for caso in $listofcases 
 do
   if [[ ! -d $DIR_CASES/$caso ]] ; then
@@ -31,6 +36,9 @@ do
   sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
   chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
   cd $DIR_CASES/$caso
+# to refresh lt_achive from template
+  ./case.setup --reset
+  ./xmlchange BUILD_COMPLETE=TRUE
   bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out  < .case.lt_archive
   
 done

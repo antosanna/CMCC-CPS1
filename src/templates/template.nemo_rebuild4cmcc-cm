@@ -77,3 +77,7 @@ do
       rm $listarm
    done
 done
+set +euvx
+. $dictionary
+set -euvx
+touch $check_nemo_rebuild
