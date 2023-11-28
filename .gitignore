@@ -3,3 +3,4 @@ logs
 executables_cesm
 work
 checklists/sps4_hindcast_list.csv
+checklists/sps4_hindcast_list_zeus.csv

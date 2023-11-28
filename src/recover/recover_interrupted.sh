@@ -43,7 +43,7 @@ fi
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
-debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=1 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -96,7 +96,8 @@ lista_pp_C3S=" "
 
 cd $DIR_CASES/
 
-for caso in $listofcases ; do
+#for caso in $listofcases ; do
+for caso in sps4_199307_023 ; do
 
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
@@ -139,8 +140,18 @@ for caso in $listofcases ; do
   then
      cnt_lt_archive=$(($cnt_lt_archive + 1))
      lista_lt_archive+=" $caso"
-     if [[ ! -f $check_6months_done ]] 
-     then 
+#get last restart directory month
+     cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+#compute num of months run nmonthsrun
+     if [[ $((10#$cmm)) -gt $((10#$st)) ]]
+     then
+         nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
+     else
+         nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
+     fi
+# if not all of the $nmonfore have been done resubmit run.$caso
+     if [[ $nmonthsrun -lt $nmonfore ]] 
+     then
         cnt_resubmit=$(($cnt_resubmit + 1))
         lista_resubmit+=" $caso"
      fi

@@ -81,22 +81,30 @@ cd $DIR_CASES/EXPNAME
 type=h0
 for comp in atm rof lnd
 do
-   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.*.${type}.${curryear}-${currmon}.nc
-   pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
-   $compress $pref.nc $pref.zip.nc
+   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$comp.${type}.${curryear}-${currmon}.nc
+   nfile=`ls $file|wc -l`
+   if [[ $nfile -ne 0 ]]
+   then
+      pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
+      $compress $file $pref.zip.nc
 #   rm $pref.nc  useless because copied from restdir each month
-   ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
+      ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
+   fi
 done
 type=h
 for comp in ice 
 do
-   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.*.${type}.${curryear}-${currmon}.nc
-   pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
-   if [[ -f $pref.nc ]] ; then
-      $compress $pref.nc $pref.zip.nc
-      rm $pref.nc
+   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$comp.${type}.${curryear}-${currmon}.nc
+   nfile=`ls $file|wc -l`
+   if [[ $nfile -ne 0 ]]
+   then
+      pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
+      if [[ ! -f $pref.zip.nc ]] ; then
+         $compress $file $pref.zip.nc
+         ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
+         rm $file
+      fi
    fi
-   ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
 done
 
 if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
@@ -105,7 +113,10 @@ fi
 # now rebuild EquT from NEMO
 yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
-$DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
+if [[ `ls $DOUT_S_ROOT/ocn/hist/EXPNAME_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
+then
+   $DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
+fi
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
 touch  $check_pp_monthly
 

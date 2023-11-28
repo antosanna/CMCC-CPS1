@@ -82,7 +82,7 @@ end
 begin
 
 ;---Remove old checkfile
-    checkfile=getenv("checkfile")
+    checkfile=getenv("check_iceregrid")
     if (isfilepresent(checkfile)) then
       system("/bin/rm " + checkfile)
     end if

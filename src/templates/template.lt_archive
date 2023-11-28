@@ -44,7 +44,7 @@ else
 fi
 
 
-if [[ $nmonthsrun -eq 6 ]] && [[ $stop_op == "nmonths" ]]
+if [[ $nmonthsrun -eq $nmonfore ]] && [[ $stop_op == "nmonths" ]]
 then
 
    ./check_6months_output_in_archive_${caso}.sh 
