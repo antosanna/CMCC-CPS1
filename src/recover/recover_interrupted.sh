@@ -43,7 +43,7 @@ fi
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
-debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=1 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -243,6 +243,10 @@ fi
 if [[ $debug -ne 2 ]] ; then
     
    echo "NOW PROCESSING THE INTERRUPTED CASES"
+set +eu
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondacm3
+set -eu
 
 # lt_archive
    if [[ $cnt_lt_archive -ne 0 ]] ; then
