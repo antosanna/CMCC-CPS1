@@ -7,7 +7,7 @@
 . ${DIR_UTIL}/load_nco
 
 set -euxv
-LOG_FILE=$DIR_LOG/hindcast/recover/recover_postproc_C3S_`date +%Y%m%d%H%M`
+LOG_FILE=$DIR_LOG/hindcast/recover/refresh_postproc_C3S_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 if [[ $# -eq 0 ]]

@@ -43,7 +43,7 @@ fi
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
-debug=1 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -67,6 +67,7 @@ fi
 
 cnt_lt_archive=0         # CASES INTERRUPTED IN PROCESSING LT_ARCHIVE
 cnt_resubmit=0    # CASES INTERPUTTED DURING MONTHLY RUNS
+cnt_moredays=0    # CASES INTERPUTTED BEFORE RUNNING LAST FEW DAYS
 cnt_regrid_ice=0    # CASES WITH MISSING REGRID_CICE
 cnt_regrid_oce=0    # CASES WITH MISSING REGRID_ORCA
 cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
@@ -78,6 +79,7 @@ lista_resubmit=" "
 lista_regrid_ice=" "
 lista_regrid_oce=" "
 lista_pp_C3S=" "
+lista_moredays=" "
 #lista_pp_C3S_cam_or_clm=" "
 
 
@@ -96,8 +98,7 @@ lista_pp_C3S=" "
 
 cd $DIR_CASES/
 
-#for caso in $listofcases ; do
-for caso in sps4_199307_023 ; do
+for caso in $listofcases ; do
 
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
@@ -154,6 +155,9 @@ for caso in sps4_199307_023 ; do
      then
         cnt_resubmit=$(($cnt_resubmit + 1))
         lista_resubmit+=" $caso"
+     else
+        lista_moredays+=" $caso"
+        cnt_moredays=$(($cnt_moredays + 1))
      fi
   fi
 # aggiungere un check su nemo_rebuild e postproc_monthly prima di check_6month
@@ -195,13 +199,16 @@ done
 
 if [[ "$lista_lt_archive"  != " " ]]
 then
-   echo "Cases to be resubmitted from lt_archive "
+   echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted"
    echo "$lista_lt_archive"
+   echo ""
+   echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing "
+   echo "$lista_moredays"
    echo ""
 fi
 if [[ "$lista_resubmit" != " " ]]
 then
-   echo "Cases to be resubmitted from $DIR_CASES/CASO"
+   echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted "
    echo "$lista_resubmit"
    echo ""
 fi
@@ -246,6 +253,7 @@ if [[ $debug -ne 2 ]] ; then
    
    for caso in $lista_lt_archive 
    do
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
       $DIR_RECOVER/recover_lt_archive.sh $caso
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -260,6 +268,7 @@ if [[ $debug -ne 2 ]] ; then
    
    for caso in $lista_resubmit
    do
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
       command="$DIR_CASES/$caso/case.submit"
       eval $command
       
@@ -280,6 +289,7 @@ if [[ $debug -ne 2 ]] ; then
       then
          continue
       fi
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -299,6 +309,7 @@ if [[ $debug -ne 2 ]] ; then
       then
          continue
       fi
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -316,7 +327,7 @@ exit
    
    for caso in $lista_pp_C3S
    do
-      $DIR_RECOVER/recover_postproc_C3S.sh $caso
+      $DIR_RECOVER/refresh_postproc_C3S.sh $caso
       cd $DIR_CASES/$caso
       bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       if [[ $debug -eq 1 ]] ; then break ; fi
