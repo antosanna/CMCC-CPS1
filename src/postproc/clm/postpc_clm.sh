@@ -128,7 +128,7 @@ then
 # Standardize in C3S format
 #************************************************************************
 # C3S vars    prefix
-   prefix="${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
+   prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx

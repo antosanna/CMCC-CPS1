@@ -78,10 +78,12 @@ do
    set +euvx
    . $dictionary
    set -euvx
-   if [[ -f $check_pp_monthly ]]
-   then
-      continue
-   fi
+#MB 20231130 - temporary(?) commented to allow recover for bugged postproc_monthly
+#indeed safe anyway, since there are the check on the presence of zipped/EquT file
+#   if [[ -f $check_pp_monthly ]]
+#   then
+#      continue
+#   fi
    # add ic to global attributes of each output file
    #-----------------------------------------------------------------------
    type=h0
@@ -120,7 +122,10 @@ do
    # now rebuild EquT from NEMO
    yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
    st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
-   $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
+   if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
+   then
+       $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
+   fi
    echo "-----------postproc_monthly_${CASE}.sh COMPLETED-------- "`date`
    touch  $check_pp_monthly
 done

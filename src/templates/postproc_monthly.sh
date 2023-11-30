@@ -81,7 +81,14 @@ cd $DIR_CASES/EXPNAME
 type=h0
 for comp in atm rof lnd
 do
-   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$comp.${type}.${curryear}-${currmon}.nc
+   case $comp
+   in
+   atm) tag="cam" ;;
+   rof) tag="hydros" ;;
+   lnd) tag="clm2" ;;
+   esac
+
+   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$tag.${type}.${curryear}-${currmon}.nc
    nfile=`ls $file|wc -l`
    if [[ $nfile -ne 0 ]]
    then
@@ -94,7 +101,12 @@ done
 type=h
 for comp in ice 
 do
-   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$comp.${type}.${curryear}-${currmon}.nc
+   case $comp
+   in  
+   ice) tag="cice" ;;
+   esac
+   
+   file=$DOUT_S_ROOT/$comp/hist/EXPNAME.$tag.${type}.${curryear}-${currmon}.nc
    nfile=`ls $file|wc -l`
    if [[ $nfile -ne 0 ]]
    then

@@ -8,9 +8,9 @@ set -euvx
 #----------------------------------------------------------
 # get from the parent script start-date and perturbations
 #----------------------------------------------------------
-yyyy=1993
-st=07
-nrun=017
+yyyy=1995
+st=08
+nrun=040
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${SPSSystem}_${yyyy}${st}_${nrun}

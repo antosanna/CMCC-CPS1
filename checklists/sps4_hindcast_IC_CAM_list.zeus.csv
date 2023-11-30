@@ -94,9 +94,9 @@ start-date,IC1,IC2,IC3,IC4,IC5,IC6,IC7,IC8,IC9,IC10
 199508,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE
 199608,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE
 199708,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE,DONE
-199808,DONE,DONE,DONE,DONE,--,--,--,--,--,--
-199908,--,--,--,--,--,--,--,--,--,--
-200008,--,--,--,--,--,--,--,--,--,--
+199808,DONE,DONE,DONE,DONE,DONE,DONE,--,DONE,--,--
+199908,--,--,DONE,--,DONE,DONE,DONE,DONE,DONE,DONE
+200008,DONE,--,--,--,--,--,--,--,--,--
 200108,--,--,--,--,--,--,--,--,--,--
 200208,--,--,--,--,--,--,--,--,--,--
 200308,--,--,--,--,--,--,--,--,--,--
