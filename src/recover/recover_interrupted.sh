@@ -43,7 +43,7 @@ fi
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
-debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -102,9 +102,10 @@ for caso in $listofcases ; do
 
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-  member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
+  ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
+  outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
   set +uevx
   . $dictionary
   set -eu

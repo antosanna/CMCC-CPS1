@@ -25,6 +25,12 @@ rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
+if [[ $typeofrun == "hindcast" ]]
+then
+   ./xmlchange --subgroup case.checklist prereq=0
+else
+   ./xmlchange --subgroup case.checklist prereq=1
+fi
 
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow
