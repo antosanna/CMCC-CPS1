@@ -95,11 +95,12 @@ lista_moredays=" "
 #listtoignore4c3sdaily="	"									  # ignore in listac3sdaily       ##202212 - not used anymore with the new $DIR_C3S/checker_and_archive.sh
 #listtoignore4mvcase=" "             # ignore in listamvcase         ##202212 - not used anymore with the new $DIR_C3S/checker_and_archive.sh 
 #listtoignore4interp=" "             # ignore in listainterp_orca
-
+caso_ignored=sps4_199407_009
 cd $DIR_CASES/
-
 for caso in $listofcases ; do
-
+  if [[ $caso == ${caso_ignored} ]] ; then
+     continue  
+  fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
   ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
@@ -248,7 +249,7 @@ set +eu
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
 set -eu
-
+caso=""
 # lt_archive
    if [[ $cnt_lt_archive -ne 0 ]] ; then
       echo "RELAUNCH lt_archive FOR CASES:"
@@ -271,12 +272,32 @@ set -eu
       echo ""
    fi
    
-   for caso in $lista_resubmit
-   do
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
-      command="$DIR_CASES/$caso/case.submit"
-      eval $command
-      
+   for caso in ${lista_resubmit}
+   do 
+      echo "going to relaunch case $caso"
+      #to avoid refresh of templates while lt_archive is running from previous list (lista_resubmit is a subset of lista_lt_archive)
+      #$DIR_RECOVER/refresh_all_scripts.sh $caso
+      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n lt_archive.${caso} -c yes`
+      if [[ $isrunning -eq 0 ]]
+      then
+         $DIR_RECOVER/refresh_all_scripts.sh $caso
+      fi   
+     
+      st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+      yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+      ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
+ 
+      CASEROOT=$DIR_CASES/$caso/
+      outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+      set +uevx
+      . $dictionary
+      set -eu
+      cd ${DIR_CASES}/$caso
+      command="case.submit"
+      echo $command
+      ./$command
+      echo "$command done"
+
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
    

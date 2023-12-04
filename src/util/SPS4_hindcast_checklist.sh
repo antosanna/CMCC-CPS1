@@ -44,7 +44,7 @@ do
      # calc position of the ith-column inside csv table
      table_column_id=$(($i + 1))
 # assign a value with -val selecting a row with -v and a column with -c
-     awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+     awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 
 # add 1 second wait to be sure the file has been modified
      sleep 1
