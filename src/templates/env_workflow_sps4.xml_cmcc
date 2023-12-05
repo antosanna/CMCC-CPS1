@@ -80,7 +80,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-W 00:30 -q $ENV{serialq_s} -P $ENV{pID} -M 1000 -e logs/st_archive_%J.err -o logs/st_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-W 01:00 -q $ENV{serialq_m} -P $ENV{pID} -M 1000 -e logs/st_archive_%J.err -o logs/st_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

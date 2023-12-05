@@ -40,6 +40,10 @@ else
    yyyy=$1
    st=$2
    ppeda=$3
+   yyIC=$4  # IC year
+   mmIC=$5   # IC month; this is not a number (2 digits)
+   dd=$6    # last day of month previous to $st
+   caso=$7   #casoIC in launcher
    oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
    iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
    clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
@@ -101,21 +105,12 @@ fi
 mkdir -p $IC_CAM_CPS_DIR/$st/
 startdate=$yyyy${st}01
 #
-# export vars needed by ncl script
-yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
-mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month; this is not a number (2 digits)
-dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # last day of month previous to $st
-if [[ $dd -eq 29 ]]
-then
-   dd=28
-fi
 
 ppcam=`printf '%.2d' $(($ppeda + 1))`
 ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc
 
 output=${CPSSYS}.EDAcam.i.${ppcam}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
 ncdataSPS=$IC_CPS_guess/CAM/$st/$output
-caso=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
 refdir_refcase_rest=$DIR_REST_INI/$caso
 mkdir -p $refdir_refcase_rest
 #NEMO
