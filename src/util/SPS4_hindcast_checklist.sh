@@ -23,7 +23,7 @@ fi
 cd $DIR_ARCHIVE
 
 table_column_id_ndays=$(($nmonfore + 2))
-n_complete=0
+n_complete=`grep TOTAL ${DIR_CHECK}/${hindcasts_list} |cut -d ',' -f $(( $nmonfore + 2))`
 listofcases=`ls|grep ${SPSSystem}_[12]`
 cd $DIR_CASES
 listfiletocheck="deleteme.csv"
@@ -82,7 +82,12 @@ do
   
 done
 awk -v r=2 -v c=$table_column_id_ndays -v val="$n_complete" 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
-mv ${DIR_CHECK}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
+sleep 1
+if [[ ! -f ${DIR_TEMP}/$listfiletocheck.tmp1 ]]
+then
+   echo "not found"
+fi
+mv ${DIR_TEMP}/$listfiletocheck.tmp1 ${DIR_CHECK}/${hindcasts_list}
 
 if [[ $machine == "juno" ]]
 then

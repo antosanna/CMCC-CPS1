@@ -159,20 +159,21 @@ ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 10
 #***********************************************************************
 # Remove $WORK_CPS/$caso
 #***********************************************************************
-#TEMPORARY COMMENTED
-#if [ -d $WORK_SPS3/$caso ]
-#then
-#  cd $WORK_SPS3/$caso
-#  rm -rf run
-#  rm -rf bld
-#  cd $WORK_SPS3
-#  rmdir $caso
-#fi
+if [ -d $WORK_CPS/$caso ]
+then
+  cd $WORK_CPS/$caso
+  rm -rf run
+  rm -rf bld
+  cd $WORK_CPS
+  rmdir $caso
+fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED
-#rm $DIR_ARCHIVE/$caso/rof/hist/$caso.rtm.h0.????-??.nc
-#rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
-#rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
+rm $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc
+rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
+rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
+rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
+rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc
 
 #***********************************************************************
 # Exit

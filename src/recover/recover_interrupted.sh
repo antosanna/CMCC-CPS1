@@ -26,7 +26,6 @@ then
    exit
 fi
 set -eu
-
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
@@ -34,14 +33,14 @@ if [[ $# -ge 1 ]]
 then
    st=${1:-$mo_today}
    yyyy=""
+   listofcases=`ls -d ${SPSSystem}_????${st}_0??`
+   . ${DIR_UTIL}/descr_ensemble.sh 1993
 elif [[ $# -eq 2 ]]
 then
    yyyy=${2:-$yy_today}
+   listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
+   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
-
-
-#st=03       #start month
-#yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
 
 debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
@@ -49,18 +48,17 @@ debug=2 #set to 2 the first time you run in order to print only the list of inte
 
 
 
+LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
+exec 3>&1 1>>${LOG_FILE} 2>&1
+
+#st=03       #start month
+#yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
+
+
 
 
 ###LIST OF CASES YOU WANT TO PROCESS or PROCESS ENTIRE START-DATE
 cd $DIR_CASES
-if [[ "$yyyy" != "" ]]
-then
-  listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
-  . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-else
-  listofcases=`ls -d ${SPSSystem}_????${st}_0??`
-  . ${DIR_UTIL}/descr_ensemble.sh 1993
-fi
 
 
 ### INITIALIZE COUNTER 
@@ -86,18 +84,7 @@ lista_first_month=" "
 
 
 
-### FOR EACH CATEGORY YOU COULD DECIDE TO IGNORE SOME CASES FOR SPECIFIC REASONS
-#listtoignore4incomplete=" "         # ignore in listaincomplete
-#listtoignore4arch=" 199904_039"     # ignore in listaltarch
-#listtoignore4abort=" "														# ignore in listaaborted
-#listtoignore4misscheck_arch=" "     # ignore in listamisscheck_arch
-#listtoignore4notarch=" "            # ignore in lista6monthnotarch
-#listtoignore4bmore=" "              # ignore in listamake_b_more
-#listtoignore4ltmore=" "             # ignore in listaltarch_more
-#listtoignore4c3sdaily="	"									  # ignore in listac3sdaily       ##202212 - not used anymore with the new $DIR_C3S/checker_and_archive.sh
-#listtoignore4mvcase=" "             # ignore in listamvcase         ##202212 - not used anymore with the new $DIR_C3S/checker_and_archive.sh 
-#listtoignore4interp=" "             # ignore in listainterp_orca
-caso_ignored=sps4_199407_009
+caso_ignored=sps4_199407_009   #this one has 7 months! will be fixed by standardization
 cd $DIR_CASES/
 for caso in $listofcases ; do
   if [[ $caso == ${caso_ignored} ]] ; then

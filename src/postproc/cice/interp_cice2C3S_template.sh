@@ -55,7 +55,13 @@ else
    input=CASO.cice.nc 
    if [ ! -f $input ] 
    then
-      inputlist=`ls CASO*cice.h.*nc`
+      inputlist=" "
+      for mon in `seq 0 $(($nmonfore - 1))`
+      do
+         curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
+         currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
+         inputlist+=" CASO.cice.h.${curryear}-${currmon}.zip.nc"
+      done
    #echo "inizio ncrcat " `date`
       ncrcat -O $inputlist $input
    #echo 'fine ncrcat ' `date`

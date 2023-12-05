@@ -122,7 +122,13 @@ export Htoday=`date +%H`
 export Mtoday=`date +%M`
 export Stoday=`date +%S`
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
-inputlist=`ls $OUTDIR_NEMO/${caso}*_1m_*grid_T.zip.nc`
+inputlist=" "
+for mon in `seq 0 $(($nmonfore - 1))`
+do
+   curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
+   currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
+   inputlist+=" `ls $OUTDIR_NEMO/${caso}_1m_${curryear}${currmon}_*grid_T.zip.nc`"
+done
 export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo//${caso}_1m_grid_T.nc
 mkdir -p $SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/
 #echo 'inizio ncrcat ' `date`
@@ -192,19 +198,13 @@ do
       ncatted -O -a ic,global,a,c,"IC" ${input}
 done
    
+echo "missing mv to $FINALARCHIVE (not yet defined)"
+exit 0
+
 if [ `ls $DIR_ARCHIVE/${caso}/ocn/hist/${caso}*zip.nc|wc -l` -ne 0 ] 
 then
       chmod -R u+rw $FINALARCHIVE/${caso}
       mkdir -p $FINALARCHIVE/${caso}/ocn/hist
-# TEMPORARY COMMENT
-#      func_error_dims "ocn"
-#      if [[ $FLAGERROR -ne 0 ]]
-#      then
-#         title="${CPSSYS} forecast ERROR"
-#         body="ERROR in archiving ocean files for case ${caso}. Dimensions are not the expected ones"
-#         exit 1
-#      fi     
-#TEMPORARY COMMENT 
       rsync -auv --remove-source-files $DIR_ARCHIVE/${caso}/ocn/hist/${caso}*zip.nc $FINALARCHIVE/${caso}/ocn/hist/
       touch  $check_archive_oce_ok
 fi  
