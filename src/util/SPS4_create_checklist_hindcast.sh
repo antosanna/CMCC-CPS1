@@ -41,6 +41,7 @@ echo " file2 will be written in $file2"
 
 # Write header ---------------------------------------
 echo "CASO,month1,month2,month3,month4,month5,month6,days,C3S,archive" > $file1
+echo "TOTAL DONE,--,--,--,--,--,--,--,--,--" >> $file1
 echo "CASO,SUBM_FLAG" > $file2
 # Write body -----------------------------------------
 for st in {01..12}

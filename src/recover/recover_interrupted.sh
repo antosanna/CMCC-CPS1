@@ -11,7 +11,7 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 #######################################################################################################
-### LO SCRIPT NON E' ASSOLUTAMENTE ESAUSTIVO! INTERCETTA UN GRAN NUMERO DI CASISTICHE MA NON TUTTE. ###
+### THE SCRIPT IS NOT EXAUSTIVE!!! 
 #######################################################################################################
 
 function write_help
@@ -71,6 +71,7 @@ cnt_moredays=0    # CASES INTERPUTTED BEFORE RUNNING LAST FEW DAYS
 cnt_regrid_ice=0    # CASES WITH MISSING REGRID_CICE
 cnt_regrid_oce=0    # CASES WITH MISSING REGRID_ORCA
 cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
+cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 
 
 ### INITIALIZE LISTS
@@ -80,6 +81,7 @@ lista_regrid_ice=" "
 lista_regrid_oce=" "
 lista_pp_C3S=" "
 lista_moredays=" "
+lista_first_month=" "
 #lista_pp_C3S_cam_or_clm=" "
 
 
@@ -141,25 +143,32 @@ for caso in $listofcases ; do
 #  num_months_done=`ls $DIR_CASES/$caso/logs/postproc_monthly_??????_done|wc -l`
   if [[ ! -f $check_run_moredays ]]
   then
-     cnt_lt_archive=$(($cnt_lt_archive + 1))
-     lista_lt_archive+=" $caso"
+
+     nmb_rest=`ls -d $DIR_ARCHIVE/$caso/rest/ |wc -l`
+     if [[ ${nmb_rest} -eq 0 ]] ; then
+        cnt_first_month=$(($cnt_first_month + 1))
+        lista_first_month+=" $caso"
+     else
+        cnt_lt_archive=$(($cnt_lt_archive + 1))
+        lista_lt_archive+=" $caso"
 #get last restart directory month
-     cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+        cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 #compute num of months run nmonthsrun
-     if [[ $((10#$cmm)) -gt $((10#$st)) ]]
-     then
-         nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
-     else
-         nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
-     fi
+        if [[ $((10#$cmm)) -gt $((10#$st)) ]]
+        then
+          nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
+        else
+          nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
+        fi
 # if not all of the $nmonfore have been done resubmit run.$caso
-     if [[ $nmonthsrun -lt $nmonfore ]] 
-     then
-        cnt_resubmit=$(($cnt_resubmit + 1))
-        lista_resubmit+=" $caso"
-     else
-        lista_moredays+=" $caso"
-        cnt_moredays=$(($cnt_moredays + 1))
+        if [[ $nmonthsrun -lt $nmonfore ]] 
+        then
+           cnt_resubmit=$(($cnt_resubmit + 1))
+           lista_resubmit+=" $caso"
+        else
+           lista_moredays+=" $caso"
+           cnt_moredays=$(($cnt_moredays + 1))
+        fi
      fi
   fi
 # aggiungere un check su nemo_rebuild e postproc_monthly prima di check_6month
@@ -214,6 +223,12 @@ then
    echo "$lista_resubmit"
    echo ""
 fi
+if [[ "$lista_first_month" != " " ]]
+then
+   echo "Cases interrupted during first month"
+   echo "$lista_first_month" 
+   echo ""
+fi
 if [[ "$lista_regrid_ice" != " " ]]
 then
    echo "Cases with missing regrid ice"
@@ -250,6 +265,33 @@ set +eu
    condafunction activate $envcondacm3
 set -eu
 caso=""
+# first month
+   if [[ $cnt_first_month -ne 0 ]] ; then
+      echo "RELAUNCH first month FOR CASES:"
+      echo "$lista_first_month"
+      echo ""
+   fi
+   for caso in $lista_first_month
+   do
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
+      st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+      yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+      ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+
+      CASEROOT=$DIR_CASES/$caso/
+      outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+      set +uevx
+      . $dictionary
+      set -eu
+      cd ${DIR_CASES}/$caso
+# workaround in order to keep the syntax highlights correct (case is a shell command)
+      command="case.submit"
+      echo $command
+      ./$command
+      echo "$command done"
+
+      if [[ $debug -eq 1 ]] ; then break ; fi
+   done
 # lt_archive
    if [[ $cnt_lt_archive -ne 0 ]] ; then
       echo "RELAUNCH lt_archive FOR CASES:"

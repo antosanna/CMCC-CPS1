@@ -22,6 +22,8 @@ fi
 
 cd $DIR_ARCHIVE
 
+table_column_id_ndays=$(($nmonfore + 2))
+n_complete=0
 listofcases=`ls|grep ${SPSSystem}_[12]`
 cd $DIR_CASES
 listfiletocheck="deleteme.csv"
@@ -61,17 +63,17 @@ do
   then
      table_column_id=$(($table_column_id + 1))
 # assign a value with -val selecting a row with -v and a column with -c
-     awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+     awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 # add 1 second wait to be sure the file has been modified
+     n_complete=$(($n_complete + 1))
      sleep 1
 
      mv -f $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck
   fi
   if [[ -f $check_pp_C3S ]]
   then
-     table_column_id=$(($table_column_id + 1))
 # assign a value with -val selecting a row with -v and a column with -c
-     awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+     awk -v r=$LN -v c=$table_column_id_ndays -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 # add 1 second wait to be sure the file has been modified
      sleep 1
 
@@ -79,6 +81,7 @@ do
   fi
   
 done
+awk -v r=2 -v c=$table_column_id_ndays -v val="$n_complete" 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 mv ${DIR_CHECK}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
 
 if [[ $machine == "juno" ]]
