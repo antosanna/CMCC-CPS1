@@ -127,7 +127,7 @@ for mon in `seq 0 $(($nmonfore - 1))`
 do
    curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
    currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
-   inputlist+=" `ls $OUTDIR_NEMO/${caso}_1m_${curryear}${currmon}_*grid_T.zip.nc`"
+   inputlist+=" `ls $OUTDIR_NEMO/${caso}_1m_${curryear}${currmon}*grid_T.zip.nc`"
 done
 export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo//${caso}_1m_grid_T.nc
 mkdir -p $SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/
