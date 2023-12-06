@@ -137,7 +137,7 @@ then
    DIR_ARCHIVE1=/work/csp/${operational_user}/CMCC-CM/archive
    DIR_ARCHIVE=$WORK_CPS/archive
 ######## ICs_CLM Juno
-   IC_CLM_CPS_DIR1=${DATA_ARCHIVE}/IC/CLM_${CPSSYS}/
+   IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
    IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
    if [ $(whoami) == ${operational_user} ]; then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
