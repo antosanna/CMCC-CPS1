@@ -29,6 +29,8 @@ set -eu
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
+cd $DIR_CASES/
+
 if [[ $# -ge 1 ]]
 then
    st=${1:-$mo_today}

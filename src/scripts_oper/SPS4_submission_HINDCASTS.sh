@@ -42,10 +42,10 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-
+endyear=2014 #to stop in the historical run
 for st in $stlist
 do
-   for yyyy in $(seq $iniy_hind $endy_hind)
+   for yyyy in $(seq $iniy_hind $endyear)
    do
       echo "YEAR $yyyy *****************************"
        for n in `seq 1 $nrunmax`
