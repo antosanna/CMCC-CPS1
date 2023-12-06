@@ -1,7 +1,7 @@
 #!/bin/sh -l
 #BSUB -J mv_back
-#BSUB -e /work/csp/cp1/scratch/ANTO/tmp/mv_back%J.err
-#BSUB -o /work/csp/cp1/scratch/ANTO/tmp/mv_back%J.out
+#BSUB -e /work/csp/sps-dev/scratch/ANTO/tmp/mv_back%J.err
+#BSUB -o /work/csp/sps-dev/scratch/ANTO/tmp/mv_back%J.out
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -13,10 +13,12 @@ set +euvx
 set -euvx
 
 
-cd /work/csp/cp1/test_archive/CPS/CPS1/
+cd /work/csp/sps-dev/test_archive/CPS/CPS1/
 lista=`ls -d *`
 for dd in $lista
 do
-    rsync -auv --remove-source-files $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
+    rsync -auv $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
+    rsync -auv $dd/rest/* $DIR_ARCHIVE/$dd/rest/
+#    rsync -auv --remove-source-files $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
 done
 
