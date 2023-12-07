@@ -40,10 +40,10 @@ listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
 nrun_submitted=0
 if [[ $machine == "zeus" ]]
 then
-   inist=8
+   inist=2
 elif [[ $machine == "juno" ]]
 then
-   inist=7
+   inist=1
 fi
 tstamp="00"
 for st in `seq -w $inist 2 12`
