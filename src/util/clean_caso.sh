@@ -39,12 +39,6 @@ if [ -d $DIR_ARCHIVE/$caso ] ; then
          cd $DIR_ARCHIVE
          rm -rf $caso
 fi
-# 6) remove $caso in /data/..
-if [ -d $FINALARCHIVE/$caso ] ; then
-         cd $FINALARCHIVE
-         chmod -R 755 $caso
-         rm -rf $caso
-fi
 # 7) remove $caso data from C3S/..
 if [ -d $DIR_ARCHIVE_C3S/$startdate ] ; then
          cd $DIR_ARCHIVE_C3S/$startdate
