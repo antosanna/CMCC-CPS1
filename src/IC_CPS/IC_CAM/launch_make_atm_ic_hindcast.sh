@@ -12,7 +12,9 @@ debugp=0   # if 1 do only one and exit
 debugy=0   # if 1 do only one year
 
 totcores_SC=$(($nnodes_SC*$cores_per_node))
-np_clim=`${DIR_UTIL}/findjobs.sh -m $machine -n run.cm3_cam122 -c yes`
+#np_clim=`${DIR_UTIL}/findjobs.sh -m $machine -n run.cm3_cam122 -c yes`
+np_clim=0
+# removed from c3s2
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 if [ $np_clim -eq 0 ]
 then
