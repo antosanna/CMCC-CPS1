@@ -37,6 +37,10 @@ cnt_iceIC=0
 
 cnt_fy=0
 listacasi=()
+listaskipCAM=()
+listaskipNEMO=()
+listaskipCICE=()
+listaskipCLM=()
 listaskip=()
 
 submittable_cnt=0
@@ -120,7 +124,7 @@ do
                    echo "skip $caso                                  "
                    echo ""
                    cnt_atmICfile=$(( $cnt_atmICfile + 1 ))              
-                   listaskip+="$caso "
+                   listaskipCAM+="$caso "
                    flg_continue=1
                fi
             fi
@@ -135,7 +139,7 @@ do
                  echo "skip $caso                                  "
                  echo ""
                  cnt_nemoIC=$(( $cnt_nemoIC + 1 ))              
-                 listaskip+="$caso "
+                 listaskipNEMO+="$caso "
                  flg_continue=1
               fi
             fi
@@ -150,7 +154,7 @@ do
                   echo "skip $caso                                  "
                   echo ""
                   cnt_iceIC=$(( $cnt_iceIC + 1 ))              
-                  listaskip+="$caso "
+                  listaskipCICE+="$caso "
                   flg_continue=1
                fi       
             fi       
@@ -162,7 +166,7 @@ do
                 echo "skip $caso                                  "
                 echo ""
                 cnt_lndIC=$(( $cnt_lndIC + 1 ))              
-                listaskip+="$caso "
+                listaskipCLM+="$caso "
                 flg_continue=1
             else 
                if [ -f $rofICfile.gz ] 
@@ -209,14 +213,16 @@ done
 
 echo "For climatological start-date $st submitted $subm_cnt members"
 echo "Submittable $submittable_cnt"
-totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_data_archive + $cnt_dircases + $cnt_temp_archive + $cnt_atmICfile + $cnt_lndICfile + $cnt_iceICfile + $cnt_oceICfile + $cnt_fy  ))
+totalskipIC=${listaskipCAM}" "${listaskipCICE}" "${listaskipNEMO}" "${listaskipCLM}
+listaskip=${listaskipCAM}" "${listaskipCICE}" "${listaskipNEMO}" "${listaskipCLM}
+cnt_skipIC=`echo $totalskipIC|wc -w`
+totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_data_archive + $cnt_dircases + $cnt_temp_archive + $cnt_skipIC ))
 echo "Total skipped $totalskipped"
 echo "Land $cnt_lndICfile "
 echo "Atm $cnt_atmICfile "
 echo "Ocn $cnt_oceICfile "
 echo "Ice $cnt_iceICfile "
 echo "temporary archive ($DIR_ARCHIVE) $cnt_temp_archive "
-#echo "archive_tmp ($ARCHIVE) $cnt_archive "
 echo "final archive ($FINALARCHIVE) $cnt_data_archive "
 echo "case already created $cnt_dircases "
 echo "running $cnt_run "
@@ -231,25 +237,21 @@ Cycled on: ${iniy_hind}-${ylast} \n
 Submittable $submittable_cnt \n
 \n
 Total skipped $totalskipped \n
-${listaskip[@]} \n
+${listaskip}
 \n
 Land IC file missing $cnt_lndIC \n
 \n
 Atm IC file missing $cnt_atmICfile \n
 \n
-OCE ice IC file missing $cnt_iceIC \n
+ICE cice IC file missing $cnt_iceIC \n
 \n
 OCE nemo IC file missing $cnt_nemoIC \n
 \n
 temporary archive $cnt_temp_archive \n
 \n
-final archive ($FINALARCHIVE) $cnt_data_archive \n
-\n
 case running $cnt_run \n
 \n
-cases already created $cnt_dircases \n
-\n
-archive_tmp $cnt_archive \n"
+cases already created $cnt_dircases \n"
 title="NEW HINDCAST JOBS SUBMITTED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
