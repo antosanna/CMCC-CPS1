@@ -18,7 +18,7 @@ check_allchecksC3S=$outdirC3S/all_checkers_ok_0
 checkfix_timesteps=$outdirC3S/fix_timesteps_C3S_${startdate}_${ens}_ok
 
 #--#-- touchfiles defined in $DIR_TEMPL/check_6months_output_in_archive.sh
-check_6months_done=$DIR_CASES/$caso/${caso}_${nmonfore}months_done
+check_6months_done=$DIR_CASES/$caso/logs/${caso}_${nmonfore}months_done
 
 #--#-- touchfiles defined in $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh
 check_archive_oce_ok=$DIR_CASES/$caso/logs/archive_${caso}_oce_DONE
