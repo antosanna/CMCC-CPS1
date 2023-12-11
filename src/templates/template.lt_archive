@@ -75,6 +75,8 @@ then
 # from now on the postproc of NEMO is not required anymore
    ./xmlchange NEMO_REBUILD=FALSE
    ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+   mkdir -p ${DIR_TEMP}/$caso
+   sed -e 's:DIRTEMP:${DIR_TEMP}/$caso:g' $DIR_TEMPL/user_nl_nemo_moredays > $DIR_CASES/$caso/user_nl_nemo
 set +euvx
    conda deactivate 
    conda activate $envcondacm3
