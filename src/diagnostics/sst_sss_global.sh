@@ -30,7 +30,6 @@ fi
 
 # gather DMO nemo files in all possible directories
 ARCHIVE1=$DIR_ARCHIVE
-ARCHIVE3=$FINALARCHIVE
 cnt=0
 for ens in `seq -w 01 $nrunmax`
 do
@@ -56,9 +55,6 @@ do
    if [ `ls $ARCHIVE1/$caso/ocn/hist/${caso}_1m_*grid_T*|wc -l` -ne 0 ]
    then
       cd $ARCHIVE1/$caso/ocn/hist/
-   elif [ `ls $ARCHIVE3/$caso/ocn/hist/${caso}_1m_*grid_T*|wc -l` -ne 0 ]
-   then
-      cd $ARCHIVE3/$caso/ocn/hist/
    else
       continue
    fi

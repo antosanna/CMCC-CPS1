@@ -96,12 +96,6 @@ do
               cnt_dircases=$(( $cnt_dircases + 1 ))            
               lg_continue=1
             fi
-# NOT IMPLEMENTED YET
-#            if [ -d $FINALARCHIVE/$caso ] ; then
-#              echo "$FINALARCHIVE/$caso exist. skip"  
-#              cnt_data_archive=$(( $cnt_data_archive + 1 ))            
-#              continue
-#            fi
 #            fi
             # if exist in temporary archive, skip
             if [ -d $DIR_ARCHIVE/$caso ] ; then
@@ -223,7 +217,6 @@ echo "Atm $cnt_atmICfile "
 echo "Ocn $cnt_oceICfile "
 echo "Ice $cnt_iceICfile "
 echo "temporary archive ($DIR_ARCHIVE) $cnt_temp_archive "
-echo "final archive ($FINALARCHIVE) $cnt_data_archive "
 echo "case already created $cnt_dircases "
 echo "running $cnt_run "
 body="Submitted $subm_cnt startdates \n

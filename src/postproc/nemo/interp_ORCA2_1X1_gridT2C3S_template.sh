@@ -198,14 +198,5 @@ do
       ncatted -O -a ic,global,a,c,"IC" ${input}
 done
    
-echo "missing mv to $FINALARCHIVE (not yet defined)"
 exit 0
 
-if [ `ls $DIR_ARCHIVE/${caso}/ocn/hist/${caso}*zip.nc|wc -l` -ne 0 ] 
-then
-      chmod -R u+rw $FINALARCHIVE/${caso}
-      mkdir -p $FINALARCHIVE/${caso}/ocn/hist
-      rsync -auv --remove-source-files $DIR_ARCHIVE/${caso}/ocn/hist/${caso}*zip.nc $FINALARCHIVE/${caso}/ocn/hist/
-      touch  $check_archive_oce_ok
-fi  
-exit 0

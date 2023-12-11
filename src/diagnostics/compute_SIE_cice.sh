@@ -56,8 +56,6 @@ do
       	  ncks -v tarea $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h.$yyyy-$st.zip.nc $ftarea
       fi
       cdo -O mergetime $DIR_ARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwkroot/$caso.cice.nc
-   elif [[ `ls $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc |wc -l` -ne 0 ]] ; then 
-      cdo -O mergetime $FINALARCHIVE/$caso/ice/hist/$caso.cice.h*zip.nc $dirwkroot/$caso.cice.nc
    fi
 done
 fi

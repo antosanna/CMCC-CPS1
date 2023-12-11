@@ -267,6 +267,7 @@ fi
 # forecastday="02" # FORECAST starts the second of the month
 # endforecastday="08" # late FORECAST end 
 # n_notif=6
+FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
 nmonfore=6      # number of forecast months
 fixsimdays=185  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
