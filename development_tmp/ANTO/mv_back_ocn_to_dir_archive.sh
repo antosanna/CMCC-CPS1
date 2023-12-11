@@ -17,8 +17,14 @@ cd /work/csp/sps-dev/test_archive/CPS/CPS1/
 lista=`ls -d *`
 for dd in $lista
 do
-    rsync -auv $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
-    rsync -auv $dd/rest/* $DIR_ARCHIVE/$dd/rest/
+    if [[ -d $dd/ocn/hist ]]
+    then
+       rsync -auv --remove-source-files $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
+    fi
+    if [[ -d $dd/rest ]]
+    then
+       rsync -auv --remove-source-files $dd/rest/* $DIR_ARCHIVE/$dd/rest/
+    fi
 #    rsync -auv --remove-source-files $dd/ocn/hist/* $DIR_ARCHIVE/$dd/ocn/hist/
 done
 
