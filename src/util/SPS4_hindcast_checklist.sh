@@ -23,7 +23,12 @@ fi
 cd $DIR_ARCHIVE
 
 table_column_id_ndays=$(($nmonfore + 2))
-n_complete=`grep TOTAL ${DIR_CHECK}/${hindcasts_list} |cut -d ',' -f $(( $nmonfore + 2))`
+if [[ $machine == "juno" ]]
+then
+   n_complete=`grep TOTAL ${DIR_CHECK}/${hindcasts_list} |cut -d ',' -f $(( $nmonfore + 2))`
+else
+   n_complete=0
+fi
 listofcases=`ls|grep ${SPSSystem}_[12]`
 cd $DIR_CASES
 listfiletocheck="deleteme.csv"
