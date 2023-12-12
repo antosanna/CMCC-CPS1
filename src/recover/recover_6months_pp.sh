@@ -45,7 +45,14 @@ do
          if [[ $stat -eq 0 ]]
          then
             rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
-         fi
+            $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
+            statzip=$?
+            if [[ $statzip -eq 0 ]]
+            then
+                rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc
+            fi 
+         fi    
+
       done
       for grd in scalar
       do
@@ -56,8 +63,14 @@ do
          fi
          listarm=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0???.nc|grep -v $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
          finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
-         scalarfile=`echo $finalfile|sed 's/_0000.nc/.nc/g'`
-         mv $finalfile $scalarfile
+         headscalarfile=`echo $finalfile|sed 's/_0000.nc//g'`
+         mv $finalfile $headscalarfile.nc
+         $compress $headscalarfile.nc $headscalarfile.zip.nc
+         statzip=$?
+         if [[ $statzip -eq 0 ]]
+         then
+             rm $headscalarfile.nc
+         fi
          rm $listarm
       done
    done
