@@ -61,7 +61,7 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
 
-if [[ $USER == "$operationa-user" ]]
+if [[ $USER == "$operational_user" ]]
 then
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 else
