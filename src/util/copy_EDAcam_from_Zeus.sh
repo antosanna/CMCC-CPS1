@@ -12,8 +12,8 @@ remotedir=/data/delivery/csp/ecaccess/EDA/snapshot/00Z
 localdir=$SCRATCHDIR/DATA_ECACCESS/EDA/snapshot/00Z
 #copy EDA from Zeus
 nmax=20
-#for stm1 in `seq -w 2 2 12`
-for stm1 in 06 10
+for stm1 in `seq -w 2 2 12`
+#for stm1 in 06 10
 do
    n_rsync=0
    for yym1 in {1992..2022}
