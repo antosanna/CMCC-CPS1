@@ -34,6 +34,17 @@ do
          nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|wc -l`
          if [[ $nfile -eq 0 ]]
          then
+            if [[ `ls  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}.nc|wc -l` -eq 1 ]]
+# meaning that the file has been done but not zipped
+            then
+               ff=`basename $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}.nc`
+               ffzip=`echo $ff|rev|cut -d '.' -f2-|rev`
+               $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ff} $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc
+               if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc ]]
+               then
+                  rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ff}
+               fi
+            fi
             continue
          fi
    # this should be independent from expID and general
@@ -59,6 +70,12 @@ do
          nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc|wc -l`
          if [[ $nfile -eq 0 ]]
          then
+            if [[ `ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc|wc -l` -eq 1 ]]
+            then
+               ff=`basename $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc`
+               ffzip=`echo $ff|rev|cut -d '.' -f2-|rev`
+               $compress $ff $ffzip.zip.nc
+            fi
             continue
          fi
          listarm=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0???.nc|grep -v $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
@@ -91,12 +108,6 @@ do
    set +euvx
    . $dictionary
    set -euvx
-#MB 20231130 - temporary(?) commented to allow recover for bugged postproc_monthly
-#indeed safe anyway, since there are the check on the presence of zipped/EquT file
-#   if [[ -f $check_pp_monthly ]]
-#   then
-#      continue
-#   fi
    # add ic to global attributes of each output file
    #-----------------------------------------------------------------------
    type=h0
@@ -137,7 +148,14 @@ do
    st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
    if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
    then
-       $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
+      if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc|wc -l` -eq 1 ]]
+      then
+         rootname=`basename $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc  |rev |cut -d '.' -f1 --complement|rev`
+         $compress $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.nc $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
+         ncatted -O -a ic,global,a,c,"$ic" $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
+         continue
+      fi
+     $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
    fi
    echo "-----------postproc_monthly_${CASE}.sh COMPLETED-------- "`date`
    touch  $check_pp_monthly

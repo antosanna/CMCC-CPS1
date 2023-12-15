@@ -85,8 +85,7 @@ lista_first_month=" "
 #lista_pp_C3S_cam_or_clm=" "
 
 
-
-caso_ignored=sps4_199407_009   #this one has 7 months! will be fixed by standardization
+caso_ignored=" "   #this one has 7 months! will be fixed by standardization
 cd $DIR_CASES/
 for caso in $listofcases ; do
   if [[ $caso == ${caso_ignored} ]] ; then
@@ -282,15 +281,23 @@ caso=""
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
 # lt_archive
-   if [[ $cnt_lt_archive -ne 0 ]] ; then
-      echo "RELAUNCH lt_archive FOR CASES:"
-      echo "$lista_lt_archive"
+   if [[ $cnt_moredays -ne 0 ]] ; then
+      echo "RELAUNCH lt_archive to resubmit moredays FOR CASES:"
+      echo "$lista_moredays"
       echo ""
    fi
    
-   for caso in $lista_lt_archive 
+   for caso in $lista_moredays 
    do
       $DIR_RECOVER/refresh_all_scripts.sh $caso
+      
+      cd $DIR_CASES/$caso
+      stopoption=`./xmlquery STOP_OPTION|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
+      resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
+      if [[ $resubmit -eq 0 ]] && [[ $stopoption=="ndays" ]]
+      then
+         ./xmlchange STOP_OPTION=nmonths
+      fi
       $DIR_RECOVER/recover_lt_archive.sh $caso
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -312,6 +319,7 @@ caso=""
       if [[ $isrunning -eq 0 ]]
       then
          $DIR_RECOVER/refresh_all_scripts.sh $caso
+         $DIR_RECOVER/recover_lt_archive.sh $caso
       fi   
      
       st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
@@ -341,7 +349,7 @@ caso=""
    
    for caso in $lista_regrid_ice
    do
-      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n lt_archive.${caso} -c yes`
+      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
       if [[ $isrunning -ne 0 ]]
       then
          continue
@@ -361,12 +369,13 @@ caso=""
    
    for caso in $lista_regrid_oce
    do
-      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n lt_archive.${caso} -c yes`
+      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
       if [[ $isrunning -ne 0 ]]
       then
          continue
       fi
       $DIR_RECOVER/refresh_all_scripts.sh $caso
+      $DIR_RECOVER/recover_6months_pp.sh $caso
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh
       
       if [[ $debug -eq 1 ]] ; then break ; fi
