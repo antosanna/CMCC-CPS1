@@ -47,6 +47,7 @@ submittable_cnt=0
 subm_cnt=0
 
 endyear=2014 #to stop in the historical run
+#iniy_hind=1999
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
@@ -57,6 +58,38 @@ do
          flg_continue=0
          echo "n $n *****************************"
          ens=`printf '%.3d' $n`
+         caso=${SPSSystem}_${yyyy}${st}_${ens}
+  
+         # is running?
+         set +e
+         np=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
+         set -e
+  
+         # if is running, skip
+         if [ $np -gt 0 ] ; then
+            echo "job running. skip"
+            cnt_run=$(( $cnt_run + 1 )) 
+            continue
+         fi
+  
+         lg_continue=0
+         # if exist in $DIR_CASES, skip
+         if [ -d $DIR_CASES/$caso ] ; then
+            echo "$DIR_CASES/$caso exist. skip"  
+            cnt_dircases=$(( $cnt_dircases + 1 ))            
+            lg_continue=1
+         fi
+         # if exist in temporary archive, skip
+         if [ -d $DIR_ARCHIVE/$caso ] ; then
+            echo "$DIR_ARCHIVE/$caso exist. skip"  
+            cnt_temp_archive=$(( $cnt_temp_archive + 1 ))            
+            lg_continue=1
+         fi 
+  
+         if [[ $lg_continue -eq 1 ]]
+         then
+            continue
+         fi 
          script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
          submittable_cnt=$(( $submittable_cnt + 1 ))
          if [ -f $script_to_submit ] ; then
@@ -75,39 +108,6 @@ do
             nemoICfile=${IC_NEMO_CPS_DIR}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${oceIC}.nc
             iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceIC}.nc
   
-            caso=${SPSSystem}_${yyyy}${st}_${ens}
-  
-            # is running?
-            set +e
-            np=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
-            set -e
-  
-            # if is running, skip
-            if [ $np -gt 0 ] ; then
-              echo "job running. skip"
-              cnt_run=$(( $cnt_run + 1 )) 
-              continue
-            fi
-  
-            lg_continue=0
-            # if exist in $DIR_CASES, skip
-            if [ -d $DIR_CASES/$caso ] ; then
-              echo "$DIR_CASES/$caso exist. skip"  
-              cnt_dircases=$(( $cnt_dircases + 1 ))            
-              lg_continue=1
-            fi
-#            fi
-            # if exist in temporary archive, skip
-            if [ -d $DIR_ARCHIVE/$caso ] ; then
-              echo "$DIR_ARCHIVE/$caso exist. skip"  
-              cnt_temp_archive=$(( $cnt_temp_archive + 1 ))            
-              lg_continue=1
-            fi 
-  
-            if [[ $lg_continue -eq 1 ]]
-            then
-               continue
-            fi 
             # if atmospheric IC condition not exist, skip
             if [ ! -f $atmICfile ] ; then
                 if [ -f $atmICfile.gz ] ; then
