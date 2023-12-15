@@ -49,7 +49,7 @@ then
       envcondaclm=CLM_C3S
       envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
-      maxnumbertosubmit=13
+      maxnumbertosubmit=15
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/csp/aspect/CESM2/rea_archive/
    elif [[ $machine == "zeus" ]]
@@ -59,7 +59,7 @@ then
       cores_per_node=36
       cores_per_run=720
       operational_user=sps-dev
-      maxnumbertosubmit=6
+      maxnumbertosubmit=7
       envcondaclm=/work/csp/sp1/anaconda3/envs/CMOR_5
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
@@ -80,6 +80,7 @@ then
 #now suppressed because redundant
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
    BATCHRUN="RUN"
+   BATCHPEND="PEND"
    nmb_nemo_domains=279
    nmb_nemo_dmofiles=48 #8 files for each month
 # queues Juno
@@ -187,9 +188,11 @@ then
 #   clm_clim_dir=${DIR_CLIM}/CLM_restart
 
 # ######## MARCONI SECTION
- elif [[ "$machine" == "marconi" ]]
- then
+elif [[ "$machine" == "marconi" ]]
+then
     operational_user=`whoami`
+   BATCHRUN="RUN"
+   BATCHPEND="PEND"
 #    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
 #    pID=1234
 #    apprun=dummy
