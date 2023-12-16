@@ -9,10 +9,10 @@ set -eu #vx
 job_run=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHRUN -c yes`
 job_pen=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHPEND -c yes`
 
-if [[ $job_run -lt $maxnumbertosubmit ]]
+if [[ $job_run -lt $maxnumberguarantee ]]
 then
    title="[SPS4 HINDCASTS] $machine WARNING!!! less then expected jobs"
-   body="Found $job_run job running instead of the expected $maxnumbertosubmit \n
+   body="Found $job_run job running instead of the expected $maxnumberguarantee \n
  and $job_pen job pending \n
    \n
    Please check if there is anything wrong \n

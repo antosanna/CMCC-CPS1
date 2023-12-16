@@ -50,6 +50,7 @@ then
       envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=15
+      maxnumberguarantee=14
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/csp/aspect/CESM2/rea_archive/
    elif [[ $machine == "zeus" ]]
@@ -60,6 +61,7 @@ then
       cores_per_run=720
       operational_user=sps-dev
       maxnumbertosubmit=7
+      maxnumberguarantee=6
       envcondaclm=/work/csp/sp1/anaconda3/envs/CMOR_5
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
