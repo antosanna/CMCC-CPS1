@@ -11,7 +11,7 @@ job_pen=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHPEND -c
 
 if [[ $job_run -lt $maxnumbertosubmit ]]
 then
-   title="[SPS4 HINDCASTS] WARNING!!! less then expected jobs"
+   title="[SPS4 HINDCASTS] $machine WARNING!!! less then expected jobs"
    body="Found $job_run job running instead of the expected $maxnumbertosubmit \n
  and $job_pen job pending \n
    \n
