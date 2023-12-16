@@ -20,7 +20,12 @@ poce1=$((10#$(($poce - 1))))
 yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 # add your frequencies and grids. The script skip them if not present
-OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+case $poce1 in
+   0) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   1) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   2) OUTDIR=$DIR_REST_OIS/MB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   3) OUTDIR=$DIR_REST_OIS/MB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+esac
 if [[ ! -d $OUTDIR ]]
 then
    exit 0

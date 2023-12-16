@@ -5,14 +5,8 @@
 set -euvx
 #LOG_FILE=$DIR_LOG/IC_NEMO_submission/launch_rebuild_nemo.`date +%Y%m%d%H%M`
 #exec 3>&1 1>>${LOG_FILE} 2>&1
-# all these vars defined aboce but not yet available
-#TEMPORARY
-iniy=1993
-endy=2022
-npoce=2
-# END TEMPORARY
 mkdir -p $DIR_TEMP
-for yyyy in `seq $iniy $endy`
+for yyyy in `seq $iniy_hind $endy_hind`
 do
    . $DIR_UTIL/descr_ensemble.sh $yyyy
    listfiletocheck=${SPSSystem}_${typeofrun}_IC_NEMO_list.$machine.csv
@@ -22,8 +16,7 @@ do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
       mkdir -p ${IC_NEMO_CPS_DIR}/$st
       mkdir -p ${IC_CICE_CPS_DIR}/$st
-      #for poce in `seq -w 01 $n_ic_nemo`
-      for poce in `seq -w 01 $npoce`
+      for poce in `seq -w 01 $n_ic_nemo`
       do
          if [[ -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$poce.nc ]] && [[ -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$poce.nc ]]
          then
