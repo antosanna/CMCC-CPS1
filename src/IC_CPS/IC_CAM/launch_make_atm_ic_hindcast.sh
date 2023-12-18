@@ -119,7 +119,7 @@ do
           then
              exit
           fi
-          sleep 10
+          sleep 2
           
           if [[ $debugp -eq 1 ]]
           then
