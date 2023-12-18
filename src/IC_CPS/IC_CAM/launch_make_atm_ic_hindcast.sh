@@ -50,7 +50,7 @@ fi
 tstamp="00"
 for st in `seq -w $inist 2 12`
 do
-   for yyyy in `seq $iniy $endy`
+   for yyyy in `seq $iniy 2014`
    do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
@@ -72,6 +72,13 @@ do
                 title="[CAMIC] ${CPSSYS} ERROR"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
              fi
+             continue
+          fi
+          inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
+          if [[ ! -f ${inputNEMO4CAM} ]] 
+          then
+             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputNEMO4CAM} missing!"
+             echo $body
              continue
           fi
           ppcam=`printf '%.2d' $(($pp + 1))`
