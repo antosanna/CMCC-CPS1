@@ -7,41 +7,31 @@
 
 set -euxv
 
-remote=sps-dev@zeus01.cmcc.scc
-remotedir=/data/delivery/csp/ecaccess/EDA/snapshot/00Z
-localdir=$SCRATCHDIR/DATA_ECACCESS/EDA/snapshot/00Z
-#copy EDA from Zeus
-nmax=20
-#for stm1 in `seq -w 2 2 12`
-for stm1 in 06 10
+remote=sps-dev@fdtn-zeus
+DIR_ARCHIVE1_remote=/work/csp/sps-dev/CMCC-CM/archive/
+DIR_CASES_remote=/work/csp/sps-dev/CPS/CMCC-CPS1/cases
+for st in 08 10 11
 do
    n_rsync=0
-   for yym1 in {1992..2022}
+   for yyyy in `seq $iniy_hind $endy_hind`
    do
-      if [[ $yym1 -eq 1992 ]] && [[ $stm1 -ne 12 ]]
-      then
-         continue
-      fi
-      if [[ -f $DIR_TEMP/eda_${yym1}${stm1}_done ]]
-      then
-         continue
-      fi
-      n_grib=`ssh $remote ls $remotedir/*$yym1${stm1}*.grib|wc -l`
-      if [[ $n_grib -eq 0 ]]
-      then
-          touch $DIR_TEMP/eda_${yym1}${stm1}_missing
-          continue
-      fi
-      listagrib=`ssh $remote ls $remotedir/*$yym1${stm1}*.grib`
-      for ff in $listagrib
+      lista_remote=`ssh $remote ls $DIR_CASES_remote`
+      for caso in $lista_remote
       do
-         rsync -auv ${remote}:$ff $localdir
+         is_caso_completed=`ssh $remote ls ${DIR_CASES_remote}/$caso/logs/run_moredays_${caso}_DONE| wc -l`
+         if [[ $is_caso_completed -eq 1 ]]
+         then
+            if [[ ! -f $DIR_ARCHIVE1/$caso ]]
+            then
+#               ssh sps-dev@fdtn-zeus ls $DIR_ARCHIVE1_remote/$caso 
+               rsync -auv $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
+               n_rsync=$(($n_rsync + 1))
+               if [[ $n_rsync -eq 5 ]]
+               then
+                  exit
+               fi
+            fi
+         fi
       done
-      touch $DIR_TEMP/eda_${yym1}${stm1}_done
-      n_rsync=$(($n_rsync + 1))
-      if [[ $n_rsync -ge $nmax ]]
-      then
-         exit
-      fi
    done
 done
