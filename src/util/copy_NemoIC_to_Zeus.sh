@@ -12,7 +12,8 @@ remotedir=/data/csp/sps-dev/archive/IC/NEMO_CPS1
 localdir=$IC_NEMO_CPS_DIR
 #copy nemoIC to Zeus
 nmax=5
-for st in `seq -w 2 2 12`
+#for st in `seq -w 2 2 12`
+for st in 01 02 03 04 06 09 12
 do
    n_rsync=0
    for yyyy in {1993..2022}
