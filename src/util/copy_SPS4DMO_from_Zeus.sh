@@ -26,6 +26,8 @@ do
 #               ssh sps-dev@fdtn-zeus ls $DIR_ARCHIVE1_remote/$caso 
                rsync -auv $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
+               rsync -auv $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE $remote:$DIR_ARCHIVE1_remote/
+
                n_rsync=$(($n_rsync + 1))
                if [[ $n_rsync -eq 5 ]]
                then
