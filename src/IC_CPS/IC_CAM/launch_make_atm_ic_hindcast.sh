@@ -39,6 +39,7 @@ else
 fi
 
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
+listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.xlsx
 nrun_submitted=0
 if [[ $machine == "zeus" ]]
 then
@@ -132,6 +133,26 @@ do
        fi
    done     #loop on start-month
 done     #loop on years
-title=" $machine IC CAM checklist"
-body="Updated IC CAM checklist from $machine "`date`
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
+if [[ $machine == "zeus" ]]
+then
+   title=" $machine IC CAM checklist"
+   body="Updated IC CAM checklist from $machine "`date`
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
+fi
+if [[ $machine == "juno" ]]
+then
+   set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondarclone
+   set -euvx
+   python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
+
+   if [[ -f $DIR_CHECK/$listfiletocheck_excel ]]
+   then
+      title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
+      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   fi
+   rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
+   condafunction deactivate $envcondarclone
+fi

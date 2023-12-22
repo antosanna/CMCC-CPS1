@@ -8,8 +8,8 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 # all these vars defined above but not yet available
 #TEMPORARY
-iniy=1993
-endy=2003
+iniy=2013
+endy=2014
 # END TEMPORARY
 for yyyy in `seq $iniy $endy`
 do

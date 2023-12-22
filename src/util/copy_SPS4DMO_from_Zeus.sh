@@ -18,12 +18,12 @@ do
          is_caso_completed=`ssh $remote ls ${DIR_CASES_remote}/$caso/logs/run_moredays_${caso}_DONE| wc -l`
          if [[ $is_caso_completed -eq 1 ]]
          then
-            if [[ ! -f $DIR_ARCHIVE1/$caso ]]
+            if [[ ! -d $DIR_ARCHIVE1/$caso ]]
             then
 #               ssh sps-dev@fdtn-zeus ls $DIR_ARCHIVE1_remote/$caso 
                rsync -auv $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
+               rsync -auv -remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
-               rsync -auv $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE $remote:$DIR_ARCHIVE1_remote/
 
                n_rsync=$(($n_rsync + 1))
                if [[ $n_rsync -eq 5 ]]

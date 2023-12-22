@@ -13,6 +13,11 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 typeofrun="hindcast"
 hindcasts_list=${SPSSystem}_${typeofrun}_list.csv
+hindcastlist_excel=`echo ${hindcasts_list}|rev |cut -d '.' -f2-|rev`.xlsx
+if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
+then
+  rm $DIR_CHECK/$hindcastlist_excel
+fi
 listfiletocheck="deleteme.csv"
 #copy the relative file from Zeus
 if [[ $machine == "juno" ]]
@@ -95,10 +100,22 @@ fi
 mv ${DIR_TEMP}/$listfiletocheck.tmp1 ${DIR_CHECK}/${hindcasts_list}
 rm ${DIR_TEMP}/$listfiletocheck
 
+
 if [[ $machine == "juno" ]]
 then
-   title="hindcast checklist"
-   body="Updated hindcast checklist "`date`
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/${hindcasts_list}
+   set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondarclone
+   set -euvx
+   python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_excel
+
+   if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
+   then
+      title="[CPS1 ERROR] $DIR_CHECK/$hindcastlist_excel checklist not produced"
+      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   fi
+   rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
+   condafunction deactivate $envcondarclone
 fi
 exit 0

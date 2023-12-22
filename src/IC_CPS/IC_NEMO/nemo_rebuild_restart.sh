@@ -23,8 +23,8 @@ mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 case $poce1 in
    0) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
    1) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
-   2) OUTDIR=$DIR_REST_OIS/MB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
-   3) OUTDIR=$DIR_REST_OIS/MB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   2) OUTDIR=$DIR_REST_OIS/SLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   3) OUTDIR=$DIR_REST_OIS/SLAMB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
 esac
 if [[ ! -d $OUTDIR ]]
 then

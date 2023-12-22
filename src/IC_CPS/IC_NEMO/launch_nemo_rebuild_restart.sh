@@ -10,6 +10,7 @@ for yyyy in `seq $iniy_hind $endy_hind`
 do
    . $DIR_UTIL/descr_ensemble.sh $yyyy
    listfiletocheck=${SPSSystem}_${typeofrun}_IC_NEMO_list.$machine.csv
+   listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_NEMO_list.$machine.xlsx
 #TEMPORARY
    for st in {01..12}
    do
@@ -36,7 +37,28 @@ do
       done
    done
 done
-title=" $machine IC NEMO checklist"
-body="Updated IC NEMO checklist from $machine "`date`
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
+if [[ $machine == "zeus" ]]
+then
+   title=" $machine IC NEMO checklist"
+   body="Updated IC NEMO checklist from $machine "`date`
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
+fi
+if [[ $machine == "juno" ]]
+then
+   set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondarclone
+   set -euvx
+   python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
+
+   if [[ -f $DIR_CHECK/$listfiletocheck_excel ]]
+   then
+      title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
+      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   fi     
+   rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
+   condafunction deactivate $envcondarclone
+fi
+
 
