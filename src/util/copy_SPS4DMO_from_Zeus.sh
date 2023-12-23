@@ -22,7 +22,7 @@ do
             then
 #               ssh sps-dev@fdtn-zeus ls $DIR_ARCHIVE1_remote/$caso 
                rsync -auv $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
-               rsync -auv -remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
+               rsync -auv --remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
 
                n_rsync=$(($n_rsync + 1))

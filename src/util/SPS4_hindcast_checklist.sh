@@ -109,13 +109,14 @@ then
    set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_excel
 
-   if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
+   if [[ ! -f $DIR_CHECK/$hindcastlist_excel ]]
    then
       title="[CPS1 ERROR] $DIR_CHECK/$hindcastlist_excel checklist not produced"
       body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   else
+      rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
    fi
-   rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
    condafunction deactivate $envcondarclone
 fi
 exit 0

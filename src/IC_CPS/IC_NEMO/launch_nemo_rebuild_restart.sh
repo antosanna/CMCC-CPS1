@@ -51,13 +51,14 @@ then
    set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
 
-   if [[ -f $DIR_CHECK/$listfiletocheck_excel ]]
+   if [[ ! -f $DIR_CHECK/$listfiletocheck_excel ]]
    then
       title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
       body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   fi     
-   rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
+   else
+       rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
+   fi
    condafunction deactivate $envcondarclone
 fi
 
