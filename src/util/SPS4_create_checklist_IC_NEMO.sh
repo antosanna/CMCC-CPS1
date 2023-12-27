@@ -18,15 +18,15 @@ cd $DIR_CHECK
 # Write header ---------------------------------------
 echo "start-date,IC1,IC2,IC3,IC4" > $file1
 # Write body -----------------------------------------
-if [[ $machine == "zeus" ]]
-then
-   inist=02
-   freq=2
-elif [[ $machine == "juno" ]]
-then
+#if [[ $machine == "zeus" ]]
+#then
+#   inist=02
+#   freq=2
+#elif [[ $machine == "juno" ]]
+#then
    inist=01
    freq=1
-fi
+#fi
 for st in `seq -w $inist $freq 12`
 do
    for yyyy in `seq $iniy_hind $endy_hind`
