@@ -108,14 +108,16 @@ then
    condafunction activate $envcondarclone
    set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_excel
+   cp $DIR_TEMPL/SPS4-hindcast-production-list.xlsx $DIR_CHECK
+   python $DIR_UTIL/add_sheet_to_excel.py ${DIR_CHECK}/${hindcastlist_excel} ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx
 
-   if [[ ! -f $DIR_CHECK/$hindcastlist_excel ]]
+   if [[ ! -f $DIR_CHECK/SPS4_hindcast_production_list.xlsx ]]
    then
-      title="[CPS1 ERROR] $DIR_CHECK/$hindcastlist_excel checklist not produced"
-      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
+      title="[CPS1 ERROR] $DIR_CHECK/SPS4_hindcast_production_list.xlsx checklist not produced"
+      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py or in $DIR_UTIL/add_sheet_to_excel.py"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    else
-      rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
+      rclone copy ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx my_drive:
    fi
    condafunction deactivate $envcondarclone
 fi

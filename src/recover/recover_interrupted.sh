@@ -25,7 +25,7 @@ then
    write_help
    exit
 fi
-set -eu
+set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
@@ -87,6 +87,7 @@ lista_first_month=" "
 
 caso_ignored=" "   #this one has 7 months! will be fixed by standardization
 cd $DIR_CASES/
+listofcases=sps4_199407_011
 for caso in $listofcases ; do
   if [[ $caso == ${caso_ignored} ]] ; then
      continue  
