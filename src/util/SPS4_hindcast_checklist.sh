@@ -108,7 +108,7 @@ then
    condafunction activate $envcondarclone
    set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_excel
-   cp $DIR_TEMPL/SPS4-hindcast-production-list.xlsx $DIR_CHECK
+   rsync -av $DIR_TEMPL/SPS4_hindcast_production_list_template.xlsx $DIR_CHECK/SPS4_hindcast_production_list.xlsx
    python $DIR_UTIL/add_sheet_to_excel.py ${DIR_CHECK}/${hindcastlist_excel} ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx
 
    if [[ ! -f $DIR_CHECK/SPS4_hindcast_production_list.xlsx ]]

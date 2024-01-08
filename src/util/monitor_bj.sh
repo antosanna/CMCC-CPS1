@@ -4,7 +4,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
-set -eu #vx
+set -euvx
 
 job_run=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHRUN -c yes`
 job_pen=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHPEND -c yes`

@@ -17,9 +17,13 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 typeofrun="hindcast"
 models="CAM NEMO"
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
+set -euvx
 for module in $models
 do
-   hindcastlist=${SPSSystem}_${typeofrun}_IC_${module}.${machine}.csv
+   hindcastlist=${SPSSystem}_${typeofrun}_IC_${module}_list.${machine}.csv
    hindcastlist_excel=`echo ${hindcastlist}|rev |cut -d '.' -f2-|rev`.xlsx
    if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
    then
@@ -27,10 +31,6 @@ do
    fi
 #copy the relative file from Zeus
    rsync -auv sps-dev@zeus01.cmcc.scc:/users_home/csp/sps-dev/CPS/CMCC-CPS1/checklists/$hindcastlist $DIR_CHECK/
-   set +euvx
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondarclone
-   set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcastlist} ${DIR_CHECK}/$hindcastlist_excel
 
    if [[ ! -f $DIR_CHECK/$hindcastlist_excel ]]
@@ -41,6 +41,7 @@ do
    else
       rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
    fi
-   condafunction deactivate $envcondarclone
 done
+set +euvx
+condafunction deactivate $envcondarclone
 exit 0
