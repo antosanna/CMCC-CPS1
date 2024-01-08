@@ -10,8 +10,8 @@ iniy=$iniy_hind
 endy=$endy_hind
 
 IC_CAM_CPS_DIR_REMOTE=/data/csp/sps-dev/archive/IC/CAM_CPS1/
-listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
-listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.xlsx
+listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
+listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_CAM_list.xlsx
 nrun_submitted=0
 if [[ $machine == "zeus" ]]
 then

@@ -5,6 +5,11 @@
 set -euvx
 #LOG_FILE=$DIR_LOG/IC_NEMO_submission/launch_rebuild_nemo.`date +%Y%m%d%H%M`
 #exec 3>&1 1>>${LOG_FILE} 2>&1
+if [[ $machine != "juno" ]]
+then
+   echo "NEMO ICs produced only on Juno" 
+   exit 0
+fi  
 mkdir -p $DIR_TEMP
 for yyyy in `seq $iniy_hind $endy_hind`
 do
@@ -27,39 +32,26 @@ do
             rsync -auv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck 
             continue
          fi
-         if [[ $machine == "zeus" ]]
-         then
-            continue
-         fi
          input="$yyyy $st $poce"
          $DIR_UTIL/submitcommand.sh -q s_medium -M 2000 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
          #$DIR_OCE_IC/nemo_rebuild_restart.sh $yyyy $st $poce
       done
    done
 done
-if [[ $machine == "zeus" ]]
-then
-   title=" $machine IC NEMO checklist"
-   body="Updated IC NEMO checklist from $machine "`date`
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
-fi
-if [[ $machine == "juno" ]]
-then
-   set +euvx
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondarclone
-   set -euvx
-   python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
+set -euvx
+python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
 
-   if [[ ! -f $DIR_CHECK/$listfiletocheck_excel ]]
-   then
+if [[ ! -f $DIR_CHECK/$listfiletocheck_excel ]]
+then
       title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
       body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   else
+else
        rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
-   fi
-   condafunction deactivate $envcondarclone
 fi
+condafunction deactivate $envcondarclone
 
 

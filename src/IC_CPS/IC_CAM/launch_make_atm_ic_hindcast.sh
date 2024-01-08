@@ -54,10 +54,6 @@ do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
        dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
-       if [[ $dd -eq 29 ]]
-       then
-          dd=28
-       fi
        for pp in {0..9}
        do
           
