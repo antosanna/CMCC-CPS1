@@ -46,13 +46,21 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
+nmaxens=15
 endyear=2014 #to stop in the historical run
 #iniy_hind=1999
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
    do
-      echo "YEAR $yyyy *****************************"
+       echo "YEAR $yyyy *****************************"
+       
+       #check how many members done per year
+       n_6month_done=`ls $DIR_CASES/${SPSSystem}_${yyyy}${st}_???/logs/${SPSSystem}_${yyyy}${st}_*_${nmonfore}months_done |wc -l`
+       if [[ ${n_6month_done} -ge $nmaxens ]] ; then
+          continue
+       fi
+       
        for n in `seq 1 $nrunmax`
        do
          flg_continue=0
