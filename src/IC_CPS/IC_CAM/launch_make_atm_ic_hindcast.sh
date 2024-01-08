@@ -38,18 +38,16 @@ else
    fi
 fi
 
-listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
-listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.xlsx
 nrun_submitted=0
 if [[ $machine == "zeus" ]]
 then
-   inist=2
+   inist=1
 elif [[ $machine == "juno" ]]
 then
-   inist=1
+   exit 0
 fi
 tstamp="00"
-for st in `seq -w $inist 2 12`
+for st in `seq -w $inist 12`
 do
    for yyyy in `seq $iniy 2014`
    do
@@ -75,6 +73,11 @@ do
              fi
              continue
           fi
+# check if IC was already created on Juno (up to 20240108 it could be)
+          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]] 
+          then
+             continue
+          fi
           inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
           if [[ ! -f ${inputNEMO4CAM} ]] 
           then
@@ -84,8 +87,14 @@ do
           fi
           ppcam=`printf '%.2d' $(($pp + 1))`
           casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
-          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
+          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]] 
           then
+# remove raw data from /data/delivery
+              is_file_there=`ssh sp2@zeus01.cmcc.scc ls ${inputECEDA} |wc -l`
+              if [[ $is_file_there -eq 1 ]]
+              then 
+                 ssh sp2@zeus01.cmcc.scc rm ${inputECEDA} 
+              fi
               if [[ -d $DIR_CASES/$casoIC ]]
               then
                  rm -rf $DIR_CASES/$casoIC
@@ -98,10 +107,6 @@ do
               then
                  rm -rf $WORK_CPS/$casoIC
               fi
-              LN="$(grep -n "$yyyy$st" ${DIR_CHECK}/$listfiletocheck | cut -d: -f1)"
-              table_column_id=$(($((10#$ppcam)) + 1))
-              awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
-              rsync -auv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck 
               continue
           fi  
 
@@ -133,27 +138,3 @@ do
        fi
    done     #loop on start-month
 done     #loop on years
-if [[ $machine == "zeus" ]]
-then
-   title=" $machine IC CAM checklist"
-   body="Updated IC CAM checklist from $machine "`date`
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${DIR_CHECK}/$listfiletocheck
-fi
-if [[ $machine == "juno" ]]
-then
-   set +euvx
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondarclone
-   set -euvx
-   python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
-
-   if [[ ! -f $DIR_CHECK/$listfiletocheck_excel ]]
-   then
-      title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
-      body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   else   
-      rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
-   fi
-   condafunction deactivate $envcondarclone
-fi
