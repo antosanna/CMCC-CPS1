@@ -60,6 +60,10 @@ do
        if [[ ${n_6month_done} -ge $nmaxens ]] ; then
           continue
        fi
+       np_yyyyst=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_${yyyy}${st} -c yes`
+       if [[ $((${n_6month_done} + $np_yyyyst )) -ge $nmaxens ]] ; then
+          continue
+       fi
        
        for n in `seq 1 $nrunmax`
        do
