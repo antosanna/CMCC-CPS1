@@ -70,6 +70,7 @@ do
              continue
           fi
 # check if IC was already created on Juno (up to 20240108 it could be)
+          ppcam=`printf '%.2d' $(($pp + 1))`
           if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]] 
           then
              continue
@@ -81,7 +82,6 @@ do
              echo $body
              continue
           fi
-          ppcam=`printf '%.2d' $(($pp + 1))`
           casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
           if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]] 
           then
