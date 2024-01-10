@@ -91,7 +91,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
 
     if 'depth' in atm_elem[12] and atm_elem[1] != 'mrso' :
         nc_file.createDimension('depth', len(Layer_node_depth))    
-        depth = nc_file.createVariable('depth', np.float64, ('depth',), zlib=True, complevel=6, shuffle=True, endian='little')
+        depth = nc_file.createVariable('depth', np.float64, ('depth',), zlib=True, complevel=6, shuffle=True)
         depth[:] = Layer_node_depth
         depth.units = 'm'
         depth.long_name = 'depth'
@@ -99,7 +99,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
         depth.axis = 'Z' 
         depth.positive = 'down'    
         # Create bounds
-        depth_bnds = nc_file.createVariable('depth_bnds', np.float64, ('depth','bnds'), zlib=True, complevel=6, shuffle=True, endian='little')
+        depth_bnds = nc_file.createVariable('depth_bnds', np.float64, ('depth','bnds'), zlib=True, complevel=6, shuffle=True)
         depth.bounds = 'depth_bnds'      
         depth_bnds[:,0] = ln_bnd0
         depth_bnds[:,1] = ln_bnd1
@@ -134,7 +134,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
 
     # CREATING VARIABLES
     lat = nc_file.createVariable('lat', np.float64, ('lat',),
-                                 zlib=True, complevel=6, shuffle=True, endian='little')
+                                 zlib=True, complevel=6, shuffle=True)
     lat[:] = -89.5 + (180. / len(lat)) * np.arange(len(lat))         # south pole to north pole
     lat.units = 'degrees_north'
     lat.long_name = 'latitude'
@@ -145,7 +145,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     lat.valid_max = 90.
 
     lon = nc_file.createVariable('lon', np.float64, ('lon',),
-                                 zlib=True, complevel=6, shuffle=True, endian='little')
+                                 zlib=True, complevel=6, shuffle=True)
     lon[:] = (180. / len(lat)) * np.arange(len(lon)) + 0.5           # Greenwich meridian eastward
     lon.units = 'degrees_east'
     lon.long_name = 'longitude'
@@ -156,12 +156,12 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     lon.valid_max = 360.
 
     lat_bnds = nc_file.createVariable('lat_bnds', np.float64, ('lat', 'bnds'),
-                                      zlib=True, complevel=6, shuffle=True, endian='little')
+                                      zlib=True, complevel=6, shuffle=True)
     lat_bnds[:, 0] = -90. + (180. / len(lat)) * np.arange(len(lat))
     lat_bnds[:, 1] = -89. + (180. / len(lat)) * np.arange(len(lat))
 
     lon_bnds = nc_file.createVariable('lon_bnds', np.float64, ('lon', 'bnds'),
-                                      zlib=True, complevel=6, shuffle=True, endian='little')
+                                      zlib=True, complevel=6, shuffle=True)
     lon_bnds[:, 0] = (180. / len(lat)) * np.arange(len(lon))
     lon_bnds[:, 1] = (180. / len(lat)) * np.arange(len(lon)) + 1
 
@@ -171,7 +171,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
         str_time_unit = 'hours'
 
     time = nc_file.createVariable('time', np.float64, ('leadtime',),
-                                  zlib=True, complevel=6, shuffle=True, endian='little')
+                                  zlib=True, complevel=6, shuffle=True)
     time.units = str_time_unit  + ' since ' + yy + '-' + st + '-01T00:00:00Z'
     time.long_name = 'Verification time of the forecast'
     time.standard_name = 'time'
@@ -181,12 +181,12 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
 
     if 'leadtime: point' not in atm_elem[13]:
         time_bnds = nc_file.createVariable('time_bnds', np.float64, ('leadtime', 'bnds'),
-                                       zlib=True, complevel=6, shuffle=True, endian='little')
+                                       zlib=True, complevel=6, shuffle=True)
         leadtime_bnds = nc_file.createVariable('leadtime_bnds', np.float64, ('leadtime', 'bnds'),
-                                               zlib=True, complevel=6, shuffle=True, endian='little')
+                                               zlib=True, complevel=6, shuffle=True)
 
     leadtime = nc_file.createVariable('leadtime', np.float64, ('leadtime',),
-                                      zlib=True, complevel=6, shuffle=True, endian='little')
+                                      zlib=True, complevel=6, shuffle=True)
 
     leadtime.units = str_time_unit
     leadtime.long_name = 'Time elapsed since the start of the forecast'
@@ -196,7 +196,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
         leadtime.bounds = 'leadtime_bnds'
 
     # reftime
-    reftime = nc_file.createVariable('reftime', np.float64, (), endian='little')
+    reftime = nc_file.createVariable('reftime', np.float64, ())
     reftime.long_name = 'Start date of the forecast'
     reftime.standard_name = 'forecast_reference_time'
     reftime.calendar = 'gregorian'
@@ -207,7 +207,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
 
     # realization
     realization = nc_file.createVariable('realization', 'S1', ('str31',),
-                                         zlib=True, complevel=6, shuffle=True, endian='little')
+                                         zlib=True, complevel=6, shuffle=True)
     realization.units = '1'
     realization.long_name = 'realization'
     realization.standard_name = 'realization'
@@ -217,9 +217,9 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     if atm_elem[1] == 'mrso':
         nc_file.createDimension('soildepth', 1)
         soildepth = nc_file.createVariable('soildepth', np.float64, ('lat', 'lon',),
-                                 zlib=True, complevel=6, shuffle=True, endian='little')
+                                 zlib=True, complevel=6, shuffle=True)
         soildepth_bnds = nc_file.createVariable('soildepth_bnds', np.float64, ('lat','lon','bnds'),
-                                      zlib=True, complevel=6, shuffle=True, endian='little')
+                                      zlib=True, complevel=6, shuffle=True)
         soildepth.bounds = 'soildepth_bnds'
         soildepth[:,:] = np.full((len(lat), len(lon)), Layer_node_depth[-1]) # create a constant 2D matrix with the value of the last soil layer
         soildepth.units = 'm'
@@ -319,11 +319,11 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
         print("creating 4d vars netcdf")
         ncf.createVariable(c3s_el[0], c3s_el[3], 
                            ("leadtime", "depth", "lat", "lon",),  
-                           zlib=True, complevel=6, shuffle=True, endian='little',fill_value=np.float32(1.e+20)) 
+                           zlib=True, complevel=6, shuffle=True,fill_value=np.float32(1.e+20)) 
     else:
         ncf.createVariable(c3s_el[0], c3s_el[3], 
                        ("leadtime", "lat", "lon",), 
-                       zlib=True, complevel=6, shuffle=True, endian='little',fill_value=np.float32(1.e+20))   
+                       zlib=True, complevel=6, shuffle=True,fill_value=np.float32(1.e+20))   
     # store variable 
     print(np.shape(c3s_el[0][:]))
     print(np.shape(new_var[:]))

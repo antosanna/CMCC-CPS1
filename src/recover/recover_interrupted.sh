@@ -31,7 +31,7 @@ yy_today=`date +%Y`
 
 cd $DIR_CASES/
 
-if [[ $# -ge 1 ]]
+if [[ $# -eq 1 ]]
 then
    st=${1:-$mo_today}
    yyyy=""
@@ -44,7 +44,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -393,7 +393,7 @@ exit
    
    for caso in $lista_pp_C3S
    do
-      $DIR_RECOVER/refresh_postproc_C3S.sh $caso
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
       cd $DIR_CASES/$caso
       bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       if [[ $debug -eq 1 ]] ; then break ; fi

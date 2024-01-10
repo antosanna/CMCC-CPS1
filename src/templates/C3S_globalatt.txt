@@ -1,7 +1,7 @@
        Conventions =CF-1.6 C3S-0.1
        title =CMCC seasonal forecast model output prepared for C3S
        references =The new CMCC Seasonal Prediction System, CMCC report NAN
-       source =CMCC-CM3_v20231101:  atmos: CAM(fv_0.47x0.63 L83); ocean: NEMOv4.2 (ORCA0.25_z75, 0.25x0.25L75); land: CLM(fv_0.47x0.63 L25); seaice: CICE(same spatial configuration of NEMO)
+       source =CMCC-CM3-v20231101:  atmos: CAM(fv_0.47x0.63 L83); ocean: NEMOv4.2 (ORCA0.25_z75, 0.25x0.25L75); land: CLM(fv_0.47x0.63 L25); seaice: CICE(same spatial configuration of NEMO)
        institute_id =cmcc
        institution =CMCC, Centro Euro-Mediterraneo sui Cambiamenti Climatici, Bologna, Italy
        contact =http://copernicus-support.ecmwf.int

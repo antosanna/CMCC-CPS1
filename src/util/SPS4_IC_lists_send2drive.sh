@@ -23,14 +23,17 @@ condafunction activate $envcondarclone
 set -euvx
 for module in $models
 do
-   hindcastlist=${SPSSystem}_${typeofrun}_IC_${module}_list.${machine}.csv
+   hindcastlist=${SPSSystem}_${typeofrun}_IC_${module}_list.csv
    hindcastlist_excel=`echo ${hindcastlist}|rev |cut -d '.' -f2-|rev`.xlsx
    if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
    then
      rm $DIR_CHECK/$hindcastlist_excel
    fi
 #copy the relative file from Zeus
-   rsync -auv sps-dev@zeus01.cmcc.scc:/users_home/csp/sps-dev/CPS/CMCC-CPS1/checklists/$hindcastlist $DIR_CHECK/
+   if [[ $module == "CAM" ]]
+   then
+      $DIR_UTIL/SPS4_IC_CAM_checklist.sh 
+   fi
    python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcastlist} ${DIR_CHECK}/$hindcastlist_excel
 
    if [[ ! -f $DIR_CHECK/$hindcastlist_excel ]]

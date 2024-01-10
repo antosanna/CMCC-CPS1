@@ -17,14 +17,16 @@ stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
 
 if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]] 
 then
-# get  check_run_moredays and check_pp_final from dictionary
+# get  check_run_moredays and check_pp_C3S from dictionary
    set +euvx
    . $dictionary
    set -euvx
    touch $check_run_moredays
-   if [[ ! -f $check_pp_final ]]
+   echo "exiting now: postproc_C3S to be implemented"
+   exit
+   if [[ ! -f $check_pp_C3S ]]
    then
-      ./postproc_C3S_${caso}.sh $check_pp_final
+      ./postproc_C3S_${caso}.sh 
    fi  
 fi
 

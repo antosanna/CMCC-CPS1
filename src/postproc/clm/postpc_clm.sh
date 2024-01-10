@@ -132,6 +132,7 @@ then
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx
+   
     . $DIR_UTIL/condaactivation.sh
     condafunction activate $envcondaclm
    set -euvx

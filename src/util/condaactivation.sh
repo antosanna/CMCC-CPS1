@@ -6,6 +6,10 @@ if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then
 condafunction() {
    local comm=$1
    local env=$2	
+   if [[ $env != "$envcondacm3" ]] && [[ $env != "$envcondanemo" ]]
+   then
+       . $DIR_UTIL/load_miniconda
+   fi
    if [  $comm == "activate"  ]; then
 	conda $comm $env
    elif [  $comm == "deactivate"  ]; then
@@ -17,6 +21,10 @@ elif [[ "${machine}" == "marconi" ]] ; then
 condafunction() {
    local comm=$1
    local env=$2	
+   if [[ $env != "$envcondacm3" ]] && [[ $env != "$envcondanemo" ]]
+   then
+       . $DIR_UTIL/load_miniconda
+   fi
    condaver=$(conda -V | awk '{print $2}' )
    condaver1=$(echo $condaver | cut -d '.'  -f 1)
    condaver2=$(echo $condaver | cut -d '.'  -f 2)

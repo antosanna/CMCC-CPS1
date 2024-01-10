@@ -80,7 +80,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-W 01:00 -q $ENV{serialq_m} -P $ENV{pID} -M 1000 -e logs/st_archive_%J.err -o logs/st_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-W 01:00 -q $ENV{serialq_m} -P $ENV{pID} -M 200 -e logs/st_archive_%J.err -o logs/st_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -136,7 +136,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-W 01:30 -q $ENV{serialq_m} -P $ENV{pID} -M 5000 -e logs/nemo_rebuild_%J.err -o logs/nemo_rebuild_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-W 01:30 -q $ENV{serialq_m} -P $ENV{pID} -M 3000 -e logs/nemo_rebuild_%J.err -o logs/nemo_rebuild_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -304,7 +304,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-W 06:00 -q $ENV{serialq_m} -P $ENV{pID} -M 25000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="-W 06:00 -q $ENV{serialq_m} -P $ENV{pID} -M 15000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

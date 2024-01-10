@@ -4,19 +4,14 @@
 . $DIR_UTIL/descr_ensemble.sh 1993
 set -euvx
 mkdir -p $DIR_LOG/IC_CAM
-LOG_FILE=$DIR_LOG/IC_CAM/SPS4_IC_CAM_checklist.`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
+#LOG_FILE=$DIR_LOG/IC_CAM/SPS4_IC_CAM_checklist.`date +%Y%m%d%H%M`
+#exec 3>&1 1>>${LOG_FILE} 2>&1
 iniy=$iniy_hind
 endy=$endy_hind
 
 IC_CAM_CPS_DIR_REMOTE=/data/csp/sps-dev/archive/IC/CAM_CPS1/
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
-listfiletocheck_excel=${SPSSystem}_${typeofrun}_IC_CAM_list.xlsx
 nrun_submitted=0
-if [[ $machine == "zeus" ]]
-then
-   exit 0
-fi
 tstamp="00"
 for st in `seq -w 1 12`
 do
@@ -45,18 +40,3 @@ do
 
    done     #loop on start-month
 done     #loop on years
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-set -euvx
-python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${listfiletocheck} ${DIR_CHECK}/$listfiletocheck_excel
-
-if [[ ! -f $DIR_CHECK/$listfiletocheck_excel ]]
-then
-    title="[CPS1 ERROR] $DIR_CHECK/$listfiletocheck_excel checklist not produced"
-    body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-else   
-    rclone copy ${DIR_CHECK}/$listfiletocheck_excel my_drive:
-fi
-condafunction deactivate $envcondarclone

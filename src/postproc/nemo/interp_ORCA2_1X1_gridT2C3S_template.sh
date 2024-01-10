@@ -139,7 +139,7 @@ fi
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-prefix=${GCM_name}_v${versionSPS}
+prefix=${GCM_name}-v${versionSPS}
 export fore_type=$typeofrun
 export frq="mon"
 export level="ocean2d"

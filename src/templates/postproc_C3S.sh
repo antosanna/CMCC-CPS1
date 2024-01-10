@@ -8,7 +8,6 @@
 
 set -evxu
 
-check_pp_final=$1
 caso=EXPNAME
 ic="DUMMYIC"
 
@@ -120,7 +119,7 @@ do
    then
       input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile" 
           # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1500 -j create_cam_files_${ft}_${caso} -l $DIR_LOG/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1500 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
           # ADD the reservation for serial !!!
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 8000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
@@ -184,7 +183,7 @@ chmod u-w -R $DIR_ARCHIVE/$caso/
 #***********************************************************************
 # Exit
 #***********************************************************************
-touch $check_pp_final
+touch $check_pp_C3S
 echo "Done."
 
 

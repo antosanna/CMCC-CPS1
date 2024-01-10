@@ -46,8 +46,8 @@ then
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
-      envcondarclone=rclone_CPS1
-      envcondaclm=CLM_C3S
+      envcondarclone=rclone_gdrive
+      envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=18
