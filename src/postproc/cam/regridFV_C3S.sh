@@ -1,8 +1,8 @@
 #!/bin/sh -l
-#BSUB -P 0490
-#BSUB -J test
-#BSUB -e logs/test_%J.err
-#BSUB -o logs/test_%J.out
+##BSUB -P 0490
+##BSUB -J test
+##BSUB -e logs/test_%J.err
+##BSUB -o logs/test_%J.out
 # this script can be run in debug mode but always with submitcommand
 # THIS HAS TO BE REVIEWED!!!!!!
 . ~/.bashrc
@@ -54,10 +54,10 @@ in
     h1)  export frq=6hr;;
     h2)  export frq=12hr;;
     h3)  export frq=day;;
+    h0)  export frq=fix;;
 esac
 if [ -f $outdirC3S/regridSE_C3S.ncl_${type}_${real}_ok ] 
 then
-#   cd $wkdir   TEST BECAUSE SEEMS NOT NECESSARY
    if [[ $inputFV -nt $wkdir/regridSE_C3S.ncl_${type}_${real}_ok ]]
    then
       if [[ $debug -eq 0 ]]

@@ -26,10 +26,12 @@ finalfile=$7
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
-#ic="mia nonna"
 #
+set +evxu
+. $dictionary
+set -evxu
 
-if [[ ! -f $checkfile ]]
+if [[ ! -f $check_merge_cam_files ]]
 then
    #--------------------------------------------
    # cam define mulptiplier for timestep (daily,6h,12h)
@@ -86,3 +88,4 @@ then
       fi
    fi
 fi
+touch $check_merge_cam_files

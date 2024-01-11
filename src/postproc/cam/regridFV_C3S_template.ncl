@@ -52,7 +52,6 @@ begin
 
      if (frqvar.ne."fix") then
 
-        print(var)
         if (cell_method.eq."leadtime: sum".or.cell_method.eq."leadtime: maximum (interval: 0.5 hour)".or.cell_method.eq."leadtime: minimum (interval: 0.5 hour)".or.cell_method.eq."leadtime: mean (interval: 0.5 hour)") then
            time=timein-0.5
            time@bounds = "time_bnds" ;
@@ -399,354 +398,345 @@ begin
   Opt@WgtFileName       = wgtFileName
   do k=0,dimsizes(varin)-1
     Opt@InterpMethod  ="bilinear" 
-    if(varout(k).ne."rsdt")then
-       if ( typein.eq.type(k)) then
-          global=define_att(realm(k),level(k),frq(k)) 
-          source=str_split(global@source,":")
-          ini_term=getenv("ini_term")
-          print(" ")
-          print("Output C3S field -------- "+varout(k))
-          print("type C3S field -------- "+type(k))
-          dstFileName=outDir+"/"+ini_term+"_"+realm(k)+"_"+frq(k)+"_"+level(k)+"_"+varout(k)+"_"+real+".nc"
-          print("DST:"+dstFileName)
-          if(isfilepresent(dstFileName)) then
-            system("rm "+dstFileName)
-          end if
-          setfileoption("nc","Format","NetCDF4Classic")
-          setfileoption("nc","CompressionLevel",6)
-          setfileoption("nc","preFill",False)
-          dst_file=addfile(dstFileName,"c")     
-          setfileoption(dst_file,"DefineMode",True)
+    if ( typein.eq.type(k)) then
+       global=define_att(realm(k),level(k),frq(k)) 
+       source=str_split(global@source,":")
+       ini_term=getenv("ini_term")
+       print(" ")
+       print("Output C3S field -------- "+varout(k))
+       print("type C3S field -------- "+type(k))
+       dstFileName=outDir+"/"+ini_term+"_"+realm(k)+"_"+frq(k)+"_"+level(k)+"_"+varout(k)+"_"+real+".nc"
+       print("DST:"+dstFileName)
+       if(isfilepresent(dstFileName)) then
+         system("rm "+dstFileName)
+       end if
+       setfileoption("nc","Format","NetCDF4Classic")
+       setfileoption("nc","CompressionLevel",6)
+       setfileoption("nc","preFill",False)
+       dst_file=addfile(dstFileName,"c")     
+       setfileoption(dst_file,"DefineMode",True)
    
     ;===================================================================
    ; create global attributes of the netCDF file containing regridded data
    ;===================================================================
-          fileattdef( dst_file, global )        ; copy file attributes to netCDF file
-          stat=definitions(varout(k),cell_method(k),level(k),dst_file,plev,dimsizes(plev),lat,nlat,lon,mlon,timein,nt,reftime,hcrs,realization,lon_bnds,lat_bnds,frq(k),C3S_type)
+       fileattdef( dst_file, global )        ; copy file attributes to netCDF file
+       stat=definitions(varout(k),cell_method(k),level(k),dst_file,plev,dimsizes(plev),lat,nlat,lon,mlon,timein,nt,reftime,hcrs,realization,lon_bnds,lat_bnds,frq(k),C3S_type)
    ;===================================================================
    ; predefine the coordinate dimension names and their sizes
    ;===================================================================
    ;--- Loop over all variables and predfine meta data
-          if (frq(k).eq."12hr")then
-               filevardef(dst_file,varout(k),C3S_type_var \
-                                , (/ "leadtime", "plev","lat", "lon" /)  )
-          else if(frq(k).eq."6hr".or.frq(k).eq."day")then
-               filevardef(dst_file,varout(k),C3S_type_var \
+       if (frq(k).eq."12hr")then
+            filevardef(dst_file,varout(k),C3S_type_var \
+                             , (/ "leadtime", "plev","lat", "lon" /)  )
+       else if(frq(k).eq."6hr".or.frq(k).eq."day")then
+            filevardef(dst_file,varout(k),C3S_type_var \
                                  , (/ "leadtime", "lat", "lon" /)        )
-          else
-             filevardef(dst_file,varout(k),C3S_type_var \
+       else
+          filevardef(dst_file,varout(k),C3S_type_var \
                                  , (/ "lat", "lon" /)        )
-          end if 
-          end if
+       end if 
+       end if
    
-          dumAtts = new( 1, C3S_type_var)
-          dumAtts@long_name = LongName(k)
-          dumAtts@standard_name = StandardName(k)
-          dumAtts@units = units(k)
-          dumAtts@coordinates = coordinates(k)
-          if ( cell_method(k).ne."dummy" ) then
-             dumAtts@cell_methods = cell_method(k)
-          end if
-          dumAtts@grid_mapping = "hcrs" ;
-          if(varout(k).ne."tso".and.varout(k).ne."tsl".and.varout(k).ne."sic".and.varout(k).ne."sitemptop") then
-             delete(dumAtts@_FillValue)
-          else
-             dumAtts@_FillValue=1.e+20
-             dumAtts@missing_value=1.e+20
-          end if
+       dumAtts = new( 1, C3S_type_var)
+       dumAtts@long_name = LongName(k)
+       dumAtts@standard_name = StandardName(k)
+       dumAtts@units = units(k)
+       dumAtts@coordinates = coordinates(k)
+       if ( cell_method(k).ne."dummy" ) then
+          dumAtts@cell_methods = cell_method(k)
+       end if
+       dumAtts@grid_mapping = "hcrs" ;
+       if(varout(k).ne."tso".and.varout(k).ne."tsl".and.varout(k).ne."sic".and.varout(k).ne."sitemptop") then
+          delete(dumAtts@_FillValue)
+       else
+          dumAtts@_FillValue=1.e+20
+          dumAtts@missing_value=1.e+20
+       end if
             
-          filevarattdef(dst_file, varout(k) , dumAtts)
-          delete([dumAtts])   ; may change size next iteration
+       filevarattdef(dst_file, varout(k) , dumAtts)
+       delete([dumAtts])   ; may change size next iteration
    
    ;===================================================================
    ; explicitly exit file definition mode. **NOT REQUIRED in NCL**
    ;===================================================================
-          setfileoption(dst_file,"DefineMode",False)
+       setfileoption(dst_file,"DefineMode",False)
            
    ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    ;        Write the basic and regridded data values to the predefined structures
    ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    
-          if (varout(k).ne."rlt") then
-             if (typein.ne."h2")then
-                var2regrid=conv_fac(k)*tofloat(src_file->$varin(k)$)
+       if (varout(k).ne."rlt") then
+          if (typein.ne."h2")then
+             var2regrid=conv_fac(k)*tofloat(src_file->$varin(k)$)
+          end if
+          if (typein.eq."h1")then
+             if ( varout(k).eq."tas") then
+                height=2.
+                height@valid_max = 10.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
              end if
-             if (typein.eq."h1")then
-                if ( varout(k).eq."tas") then
-                   height=2.
-                   height@valid_max = 10.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
-                end if
-                if ( varout(k).eq."tdps") then
-                   tref=src_file->TREFHT
-                   rhref=src_file->RHREFHT
+             if ( varout(k).eq."tdps") then
+                tref=src_file->TREFHT
+                rhref=src_file->RHREFHT
    ;__________________________________________________________
    ; compute dewpoint temp from t2m and rh2m
    ;__________________________________________________________
-                   var2regrid=dewtemp_trh(tref,rhref)
-                   height=2.
-                   height@valid_max = 10.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
-                end if
-                if ( varout(k).eq."uas") then
+                var2regrid=dewtemp_trh(tref,rhref)
+                height=2.
+                height@valid_max = 10.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if ( varout(k).eq."uas") then
    ;__________________________________________________________
    ; derive u10 from ubot
    ;__________________________________________________________
-                   var2regrid=u60*rapporto
-                   height=10.
-                   height@valid_max = 30.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
-                end if
-                if ( varout(k).eq."vas") then
+                var2regrid=u60*rapporto
+                height=10.
+                height@valid_max = 30.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if ( varout(k).eq."vas") then
    ;_________________________________________________________
    ; derive v10 from vbot
    ;__________________________________________________________
-                   var2regrid=v60*rapporto
-                   height=10.
-                   height@valid_max = 30.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
-                end if
-                if ( varout(k).eq."sitemptop") then
+                var2regrid=v60*rapporto
+                height=10.
+                height@valid_max = 30.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if ( varout(k).eq."sitemptop") then
    ;__________________________________________________________
    ; regrid icefrac from ne60np4 to reg1x1
    ;__________________________________________________________
-                   if(isfilepresent(wgtFileName)) then
-;                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
-                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
-                   else
-;                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
-                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
-                   end if
-   ;__________________________________________________________
-   ; define icemask as 1 where icefrac > .15
-   ;__________________________________________________________
-                   sim1x1=where(icefrac1x1.gt..15,1.,0.)
-                   ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
-                   landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
-   ;__________________________________________________________
-   ; define lsm  as 1 where landfrac > .5
-   ;__________________________________________________________
-                   lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
-                   ts1x1@_FillValue = 1.e+20
-                   ts1x1=where(lsm1x1.eq.1.,ts1x1@_FillValue,ts1x1)
-                   ts1x1=where(sim1x1.eq.0.,ts1x1@_FillValue,ts1x1)
-   ;__________________________________________________________
-   ; apply icemask to tskin
-   ;__________________________________________________________
-                   dst_file->$varout(k)$ = (/ ts1x1/)
-                else if ( varout(k).eq."tso") then
-   ;__________________________________________________________
-   ; regrid icefrac from ne60np4 to reg1x1
-   ;__________________________________________________________
-                   if(isfilepresent(wgtFileName)) then
-;                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileName,Opt)
-                      icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
-                   else
-;                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,Opt)
-                      icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
-                   end if
-   ;__________________________________________________________
-   ; define icemask as 1 where icefrac > .15
-   ;__________________________________________________________
-                   sim1x1=where(icefrac1x1.gt..15,1.,0.)
-                   landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
-   ;__________________________________________________________
-   ; define lsm  as 1 where landfrac > .5
-   ;__________________________________________________________
-                   lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
-   ;__________________________________________________________
-   ; apply icemask to tskin
-   ;__________________________________________________________
-                   ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
-;                   dst_file->after_ESMF = (/ts1x1/)
-
-                   ts1x1@_FillValue = 1.e+20
-                   ts1x1=where(icefrac1x1.gt.0.,273.15-1.8,ts1x1)
-                   ts1x1=where(landfrac1x1.gt.0.,ts1x1@_FillValue,ts1x1)
-;                   dst_file->before_poisson = (/ts1x1/)
-                   poisson_grid_fill( ts1x1, is_cyclic, guess, nscan, eps, relc, opt)
-                   ts1x1@_FillValue = 1.e+20
-                   ts1x1=where(sim1x1.eq.1.,273.15-1.8,ts1x1)
-                   ts1x1=where(lsm1x1.eq.1.,ts1x1@_FillValue,ts1x1)
-                   ts1x1(:,0:30,:)=where(ts1x1(:,0:30,:).lt.273.15-1.8,273.15-1.8,ts1x1(:,0:30,:))
-                   ts1x1@_FillValue = 1.e+20
-                   dst_file->tso = (/ts1x1/)
-                else if ( varout(k).eq."tsl") then
-                   if(isfilepresent(wgtFileName)) then
-                      landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
-                   else
-                      landfrac1x1=ESMF_regrid(src_file->LANDFRAC,Opt)
-                   end if
-   ;__________________________________________________________
-   ; define lsm  as 1 where landfrac > .5
-   ;__________________________________________________________
-                   lsm1x1small=where(landfrac1x1.gt.0.8,1.,0.)
-                   lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
-                   ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
-                   outvar=ts1x1*lsm1x1small
-                   outvar@_FillValue = 1.e+20
-                   outvar=where(outvar.eq.0.,outvar@_FillValue,outvar)
-                   poisson_grid_fill( outvar, is_cyclic, guess, nscan, eps, relc, opt)
-                   outvar=outvar*lsm1x1
-                   outvar@_FillValue = 1.e+20
-                   outvar=where(outvar.eq.0.,outvar@_FillValue,outvar)
-                   dst_file->$varout(k)$ = (/ outvar/)
-                else if ( varout(k).eq."clt") then
-                   if(any(var2regrid.lt.-1.e-12))  then
-                       print("clt contains one or more values lower than -1.e-12, cannot continue.")
-                       exit
-                   end if
-                   if(isfilepresent(wgtFileName)) then
-                      tmpclt = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
-                   else
-                      tmpclt = (/ ESMF_regrid(var2regrid,Opt) /)
-                   end if
-                   tmpclt=where(tmpclt.lt.0.,0.,tmpclt)
-                   dst_file->$varout(k)$ = (/ tmpclt/)
-                   delete(tmpclt)
-   ;__________________________________________________________
-                else 
-                   print("variabile "+varout(k))
-                   if(isfilepresent(wgtFileName)) then
-                      dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
-                   else
-                      dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
-                   end if
-                end if
-                end if
-                end if
-                end if
-             else if(typein.eq."h0")then
                 if(isfilepresent(wgtFileName)) then
-                   var1x1= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
+                   icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
                 else
-                   var1x1= ESMF_regrid(var2regrid,Opt)
+                   icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
                 end if
-                if(varout(k).eq."orog" )then
-                   dst_file->$varout(k)$ = var1x1/9.18
-                else if(varout(k).eq."sftlf" )then
-                   dst_file->$varout(k)$ = var1x1
+   ;__________________________________________________________
+   ; define icemask as 1 where icefrac > .15
+   ;__________________________________________________________
+                sim1x1=where(icefrac1x1.gt..15,1.,0.)
+                ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
+                landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
+   ;__________________________________________________________
+   ; define lsm  as 1 where landfrac > .5
+   ;__________________________________________________________
+                lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
+                ts1x1@_FillValue = 1.e+20
+                ts1x1=where(lsm1x1.eq.1.,ts1x1@_FillValue,ts1x1)
+                ts1x1=where(sim1x1.eq.0.,ts1x1@_FillValue,ts1x1)
+   ;__________________________________________________________
+   ; apply icemask to tskin
+   ;__________________________________________________________
+                dst_file->$varout(k)$ = (/ ts1x1/)
+             else if ( varout(k).eq."tso") then
+   ;__________________________________________________________
+   ; regrid icefrac from ne60np4 to reg1x1
+   ;__________________________________________________________
+                if(isfilepresent(wgtFileName)) then
+                   icefrac1x1=ESMF_regrid_with_weights(src_file->ICEFRAC,wgtFileNameCons,OptCons)
+                else
+                   icefrac1x1=ESMF_regrid(src_file->ICEFRAC,OptCons)
                 end if
+   ;__________________________________________________________
+   ; define icemask as 1 where icefrac > .15
+   ;__________________________________________________________
+                sim1x1=where(icefrac1x1.gt..15,1.,0.)
+                landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
+   ;__________________________________________________________
+   ; define lsm  as 1 where landfrac > .5
+   ;__________________________________________________________
+                lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
+   ;__________________________________________________________
+   ; apply icemask to tskin
+   ;__________________________________________________________
+                ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
+
+                ts1x1@_FillValue = 1.e+20
+                ts1x1=where(icefrac1x1.gt.0.,273.15-1.8,ts1x1)
+                ts1x1=where(landfrac1x1.gt.0.,ts1x1@_FillValue,ts1x1)
+                poisson_grid_fill( ts1x1, is_cyclic, guess, nscan, eps, relc, opt)
+                ts1x1@_FillValue = 1.e+20
+                ts1x1=where(sim1x1.eq.1.,273.15-1.8,ts1x1)
+                ts1x1=where(lsm1x1.eq.1.,ts1x1@_FillValue,ts1x1)
+                ts1x1(:,0:30,:)=where(ts1x1(:,0:30,:).lt.273.15-1.8,273.15-1.8,ts1x1(:,0:30,:))
+                ts1x1@_FillValue = 1.e+20
+                dst_file->tso = (/ts1x1/)
+             else if ( varout(k).eq."tsl") then
+                if(isfilepresent(wgtFileName)) then
+                   landfrac1x1=ESMF_regrid_with_weights(src_file->LANDFRAC,wgtFileName,Opt)
+                else
+                   landfrac1x1=ESMF_regrid(src_file->LANDFRAC,Opt)
                 end if
-             else if(typein.eq."h2")then
+   ;__________________________________________________________
+   ; define lsm  as 1 where landfrac > .5
+   ;__________________________________________________________
+                lsm1x1small=where(landfrac1x1.gt.0.8,1.,0.)
+                lsm1x1=where(landfrac1x1.gt.0.5,1.,0.)
+                ts1x1=ESMF_regrid_with_weights(src_file->TS,wgtFileName,Opt)
+                outvar=ts1x1*lsm1x1small
+                outvar@_FillValue = 1.e+20
+                outvar=where(outvar.eq.0.,outvar@_FillValue,outvar)
+                poisson_grid_fill( outvar, is_cyclic, guess, nscan, eps, relc, opt)
+                outvar=outvar*lsm1x1
+                outvar@_FillValue = 1.e+20
+                outvar=where(outvar.eq.0.,outvar@_FillValue,outvar)
+                dst_file->$varout(k)$ = (/ outvar/)
+             else if ( varout(k).eq."clt") then
+                if(any(var2regrid.lt.-1.e-12))  then
+                    print("clt contains one or more values lower than -1.e-12, cannot continue.")
+                    exit
+                end if
+                if(isfilepresent(wgtFileName)) then
+                   tmpclt = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
+                else
+                   tmpclt = (/ ESMF_regrid(var2regrid,Opt) /)
+                end if
+                tmpclt=where(tmpclt.lt.0.,0.,tmpclt)
+                dst_file->$varout(k)$ = (/ tmpclt/)
+                delete(tmpclt)
+   ;__________________________________________________________
+             else 
+                if(isfilepresent(wgtFileName)) then
+                   dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
+                else
+                   dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
+                end if
+             end if
+             end if
+             end if
+             end if
+          else if(typein.eq."h0")then
+             if(isfilepresent(wgtFileName)) then
+                var1x1= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
+             else
+                var1x1= ESMF_regrid(var2regrid,Opt)
+             end if
+             if(varout(k).eq."orog" )then
+                dst_file->$varout(k)$ = var1x1/9.18
+             else if(varout(k).eq."sftlf" )then
+                dst_file->$varout(k)$ = var1x1
+             end if
+             end if
+          else if(typein.eq."h2")then
 ; varin T, Q, U...
 ; read the first pressure level defined through string variable levstr
 ; e.g. T1000, Q1000, U1000 ...
-                varlevin=varin(k)+levstr(0)
-                var2regrid=conv_fac(k)*tofloat(src_file->$varlevin$)
-                if(isfilepresent(wgtFileName)) then
-                   var1x1= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
-                else
-                   var1x1= ESMF_regrid(var2regrid,Opt)
-                end if
-                dim2d=dimsizes(var1x1)
+             varlevin=varin(k)+levstr(0)
+             var2regrid=conv_fac(k)*tofloat(src_file->$varlevin$)
+             if(isfilepresent(wgtFileName)) then
+                var1x1= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
+             else
+                var1x1= ESMF_regrid(var2regrid,Opt)
+             end if
+             dim2d=dimsizes(var1x1)
 ; define the output variable on plev required by C3S
-                var3d=new((/dim2d(0),nlev,dim2d(1),dim2d(2)/),C3S_type_var)
+             var3d=new((/dim2d(0),nlev,dim2d(1),dim2d(2)/),C3S_type_var)
 ; assign the first level
-                var3d(:,0,:,:)=var1x1
+             var3d(:,0,:,:)=var1x1
 ; now progres with other levels
-                do il=1,nlev-1
-                   varlevin=varin(k)+levstr(il)
-                   var2regrid=conv_fac(k)*tofloat(src_file->$varlevin$)
-                   var3d(:,il,:,:)= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
-                end do
-                dst_file->$varout(k)$ = var3d
-                delete(var2regrid)
+             do il=1,nlev-1
+                varlevin=varin(k)+levstr(il)
+                var2regrid=conv_fac(k)*tofloat(src_file->$varlevin$)
+                var3d(:,il,:,:)= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
+             end do
+             dst_file->$varout(k)$ = var3d
+             delete(var2regrid)
    ;         frqin.eq."day"
-             else if(typein.eq."h3")then
-                if ( varout(k).eq."wsgmax") then
-                   height=10.
-                   height@valid_max = 30.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
+          else if(typein.eq."h3")then
+             if ( varout(k).eq."wsgmax") then
+                height=10.
+                height@valid_max = 30.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if ( varout(k).eq."tasmax") then
+                height=2.
+                height@valid_max = 10.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if ( varout(k).eq."tasmin") then
+                height=2.
+                height@valid_max = 10.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+             end if
+             if (varout(k).eq."lweprsn") then
+                var2regrid=(src_file->PRECSL*conv_fac(k)+src_file->PRECSC*conv_fac(k))
+                var2regrid=where(var2regrid.lt.0.,0.,var2regrid)
+                Opt@InterpMethod  ="conserve"
+             end if
+             if (varout(k).eq."lwepr") then
+                if(any(var2regrid.lt.-0.005))  then
+                    print("lwepr contains one or more values lower than -5mm/day, cannot continue.")
+                    exit
                 end if
-                if ( varout(k).eq."tasmax") then
-                   height=2.
-                   height@valid_max = 10.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
+                var2regrid=where(var2regrid.lt.0.,0.,var2regrid)
+                Opt@InterpMethod  ="conserve"
+             end if
+             if ( varout(k).eq."sic" ) then
+                if(isfilepresent(wgtFileName)) then
+                   icefrac1x1=ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons)        
+                else
+                   icefrac1x1=ESMF_regrid(var2regrid,OptCons)        
                 end if
-                if ( varout(k).eq."tasmin") then
-                   height=2.
-                   height@valid_max = 10.
-                   filevardef(dst_file, "height", C3S_type, "ncl_scalar")
-                   filevarattdef(dst_file,"height" ,height)           
-                   dst_file->height = (/ height/)
-                end if
-                if (varout(k).eq."lweprsn") then
-                   var2regrid=(src_file->PRECSL*conv_fac(k)+src_file->PRECSC*conv_fac(k))
-                   var2regrid=where(var2regrid.lt.0.,0.,var2regrid)
-                   Opt@InterpMethod  ="conserve"
-                end if
-                if (varout(k).eq."lwepr") then
-                   if(any(var2regrid.lt.-0.005))  then
-                       print("lwepr contains one or more values lower than -5mm/day, cannot continue.")
-                       exit
-                   end if
-                   var2regrid=where(var2regrid.lt.0.,0.,var2regrid)
-                   Opt@InterpMethod  ="conserve"
-                end if
-                if ( varout(k).eq."sic" ) then
-                   if(isfilepresent(wgtFileName)) then
-                      icefrac1x1=ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons)        
-                   else
-                      icefrac1x1=ESMF_regrid(var2regrid,OptCons)        
-                   end if
-                   delete(var2regrid)
+                delete(var2regrid)
    ;__________________________________________________________
    ; read lsm binary from repogrid
    ;__________________________________________________________
-                   lsmFileName=getenv("lsmFileName")
-                   lsm_file=addfile(lsmFileName,"r")
-                   landseamask=lsm_file->lsmC3S_SPS4(0,:,:) 
-                   icefrac1x1@_FillValue = 1.e+20
-                   ndims=dimsizes(icefrac1x1)
-                   do it=0,ndims(0)-1
-                      icefrac1x1(it,:,:)=where(landseamask(:,:).eq.1.,icefrac1x1@_FillValue,icefrac1x1(it,:,:))
-                   end do
-                   dst_file->$varout(k)$ =(/icefrac1x1/)
-                else if (varout(k).eq."lweprc".or.varout(k).eq."lwepr".or.varout(k).eq."lweprsn") then
-                   if(isfilepresent(wgtFileName)) then
-                      tmp = (/ ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons) /)
-                   else
-                      tmp = (/ ESMF_regrid(var2regrid,OptCons) /)
-                   end if
-                   tmp=where(tmp.lt.0.,0.,tmp)
-                   dst_file->$varout(k)$ =(/tmp/)
-                else    ; all other h2 vars but sic
-                   if(isfilepresent(wgtFileName)) then
-                      dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
-                   else
-                      dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
-                   end if
-                   delete(var2regrid)
+                lsmFileName=getenv("lsmFileName")
+                lsm_file=addfile(lsmFileName,"r")
+                landseamask=lsm_file->lsmC3S_SPS4(0,:,:) 
+                icefrac1x1@_FillValue = 1.e+20
+                ndims=dimsizes(icefrac1x1)
+                do it=0,ndims(0)-1
+                   icefrac1x1(it,:,:)=where(landseamask(:,:).eq.1.,icefrac1x1@_FillValue,icefrac1x1(it,:,:))
+                end do
+                dst_file->$varout(k)$ =(/icefrac1x1/)
+             else if (varout(k).eq."lweprc".or.varout(k).eq."lwepr".or.varout(k).eq."lweprsn") then
+                if(isfilepresent(wgtFileName)) then
+                   tmp = (/ ESMF_regrid_with_weights(var2regrid,wgtFileNameCons,OptCons) /)
+                else
+                   tmp = (/ ESMF_regrid(var2regrid,OptCons) /)
                 end if
+                tmp=where(tmp.lt.0.,0.,tmp)
+                dst_file->$varout(k)$ =(/tmp/)
+             else    
+                if(isfilepresent(wgtFileName)) then
+                   dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
+                else
+                   dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
                 end if
-             end if   ;if on output frq h1
-             end if   ;if on output frq h3
-             end if   ;if on output frq h2
-             end if   ;if on output frq h0
-          else   ; rlt
-              var2regrid=conv_fac(k)*(src_file->FSNTOA-src_file->FSNT+src_file->FLNT)
-              if(isfilepresent(wgtFileName)) then
-                 dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
-              else
-                 dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
-              end if
-              delete(var2regrid)
-          end if
-       end if   ;if on selected frequency typein
-    end if   ;if not rsdt
+                delete(var2regrid)
+             end if
+             end if
+          end if   ;if on output frq h1
+          end if   ;if on output frq h3
+          end if   ;if on output frq h2
+          end if   ;if on output frq h0
+       else   ; rlt
+           var2regrid=conv_fac(k)*(src_file->FSNTOA-src_file->FSNT+src_file->FLNT)
+           if(isfilepresent(wgtFileName)) then
+              dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
+           else
+              dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
+           end if
+           delete(var2regrid)
+       end if
+    end if   ;if on selected frequency typein
   end do
 ; touch file to state that the process is correctly finished
   checkfile=getenv("checkfile")

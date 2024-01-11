@@ -11,6 +11,9 @@ check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
 check_submitnotificate=$DIR_LOG/$typeofrun/$yyyy$st/${caso}_submittingnotificate
 
+#--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
+check_merge_cam_files=$DIR_CASES/$caso/logs/${caso}_merge_cam_files_DONE
+
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive_moredays
 check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE
 check_run_moredays=${CASEROOT}/logs/run_moredays_${caso}_DONE

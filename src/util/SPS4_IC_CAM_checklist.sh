@@ -19,15 +19,9 @@ do
    do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
-       dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
-       if [[ $dd -eq 29 ]]
-       then
-          dd=28
-       fi
        for pp in {0..9}
        do
-          
-          ppcam=$(($pp + 1))
+          ppcam=`printf '%.2d' $(($pp + 1))`   
           file_exists=`ssh sps-dev@zeus01.cmcc.scc ls $IC_CAM_CPS_DIR_REMOTE/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc |wc -l`
           file_exists_juno=`ls $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc |wc -l`
           if [[ $file_exists -eq 1 ]] || [[ $file_exists_juno -eq 1 ]]
@@ -37,6 +31,6 @@ do
               awk -v r=$LN -v c=$table_column_id -v val='DONE' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_CHECK}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
               rsync -auv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_CHECK}/$listfiletocheck 
           fi  
-
+       done
    done     #loop on start-month
 done     #loop on years
