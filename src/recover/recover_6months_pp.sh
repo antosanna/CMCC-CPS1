@@ -49,7 +49,7 @@ do
             if [[ ! -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc ]]
             then
                title="[ERROR CPS1]-unrecoverable error in nemo_rebuild"
-               message="Merging Nemo domains underwent an unrecoverable error for ${curryear}${currmon}!!. Output ${frq}_${curryear}${currmon}*grid_${grd} not present. Stop now case $caso!!"
+               message="Merging Nemo domains underwent an unrecoverable error for ${curryear}${currmon}!!. Output ${frq}_${curryear}${currmon}*grid_${grd} not present. Stop now case $CASE!!"
                $DIR_UTIL/sendmail.sh -t $title -M $message -e $mymail
                exit
             fi
