@@ -132,14 +132,12 @@ export outfile=$wkdir/${EquTfile}
 ncl $wkdir/mergedomain$curryear$currmon.ncl
 echo "ended mergedomain$curryear$currmon.ncl "`date`
 nt=`cdo -ntime $wkdir/${EquTfile}`
-stat=$?
-if [ $stat -eq 0 ]
+if [ -f $outfile ]
 then
    rootname=`basename $outfile |rev |cut -d '.' -f1 --complement|rev`
    $compress $EquTfile $outdir/${rootname}.zip.nc
    ncatted -O -a ic,global,a,c,"$ic" $outdir/${rootname}.zip.nc
-   stat=$?
-   if [ $stat -eq 0 ]
+   if [ -f $outdir/${rootname}.zip.nc ]
    then
       rm $EquTfile
       rm $outdir/${caso}_1d_${curryear}${currmon}01_${finaldate}_grid_EquT_T_0*.nc

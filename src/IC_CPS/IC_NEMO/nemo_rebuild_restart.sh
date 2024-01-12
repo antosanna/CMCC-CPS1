@@ -58,8 +58,7 @@ then
    done
    
    mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $TMPNEMOREST/${rootname}
-   stat=$?
-   if [[ $stat -eq 0 ]]
+   if [[ -f $TMPNEMOREST/${rootname}.nc ]]
    then
      # remove DELAY_fwb from OIS restarts
      ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc

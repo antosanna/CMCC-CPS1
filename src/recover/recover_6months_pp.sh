@@ -46,19 +46,24 @@ do
                fi
             fi
             continue
+            if [[ ! -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc ]]
+            then
+               title="[ERROR CPS1]-unrecoverable error in nemo_rebuild"
+               message="Merging Nemo domains underwent an unrecoverable error for ${curryear}${currmon}!!. Output ${frq}_${curryear}${currmon}*grid_${grd} not present. Stop now case $caso!!"
+               $DIR_UTIL/sendmail.sh -t $title -M $message -e $mymail
+               exit
+            fi
          fi
    # this should be independent from expID and general
          data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
    # VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
          mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
-         stat=$?
    # if correctly merged remove single files
-         if [[ $stat -eq 0 ]]
+         if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc ]]
          then
             rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
             $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
-            statzip=$?
-            if [[ $statzip -eq 0 ]]
+            if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc ]]
             then
                 rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc
             fi 
@@ -83,8 +88,7 @@ do
          headscalarfile=`echo $finalfile|sed 's/_0000.nc//g'`
          mv $finalfile $headscalarfile.nc
          $compress $headscalarfile.nc $headscalarfile.zip.nc
-         statzip=$?
-         if [[ $statzip -eq 0 ]]
+         if [[ -f $headscalarfile.zip.nc ]]
          then
              rm $headscalarfile.nc
          fi

@@ -74,10 +74,8 @@ do
    sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
    chmod 744 ensemble4_${yyyy}${st}_${ens}.sh
    ./ensemble4_${yyyy}${st}_${ens}.sh
-   if [ $? -eq 0 ]; then
-       subm_cnt=$(( $subm_cnt + 1 ))
-       listacasisubmitted+="$caso "
-   fi
+   subm_cnt=$(( $subm_cnt + 1 ))
+   listacasisubmitted+="$caso "
 
 done
 

@@ -12,15 +12,15 @@ set -euvx
 function Count_files()
 {
    ic=$1
-   n_lnd=`ls $DIR_ARCHIVE/CASO/lnd/hist/CASO* | grep "clm2.h0"| grep zip | wc -l`
+   n_lnd=`ls $DIR_ARCHIVE/CASO/lnd/hist/CASO*.nc | grep "clm2.h0"| grep zip | wc -l`
 # EquT are already zip; Tglobal will be by interp_ORCA2_1X1_gridT2C3S.sh
-   n1d_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO* | grep "1d_"  | wc -l`
-   n1m_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO* | grep "_1m_" | grep "grid_[TUVW]" |wc -l`
-   nptr_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO* | grep "_ptr" |wc -l`
-   nsca_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO* | grep "_sca" |wc -l`
-   n_ice=`ls $DIR_ARCHIVE/CASO/ice/hist/CASO* | wc -l`
-   n_rof=`ls $DIR_ARCHIVE/CASO/rof/hist/CASO*zip* | wc -l`
-   n_atm=`ls $DIR_ARCHIVE/CASO/atm/hist/CASO* | grep cam.h0| grep zip | wc -l`
+   n1d_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "1d_"  | wc -l`
+   n1m_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "_1m_" | grep "grid_[TUVW]" |wc -l`
+   nptr_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "_ptr" |wc -l`
+   nsca_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "_sca" |wc -l`
+   n_ice=`ls $DIR_ARCHIVE/CASO/ice/hist/CASO*.nc | wc -l`
+   n_rof=`ls $DIR_ARCHIVE/CASO/rof/hist/CASO*zip*.nc | wc -l`
+   n_atm=`ls $DIR_ARCHIVE/CASO/atm/hist/CASO*.nc | grep cam.h0| grep zip | wc -l`
 # EquT are already zip; Tglobal will be by interp_ORCA2_1X1_gridT2C3S.sh
    if [ $n_lnd -ne $nmonfore ] || [ $n_ice  -ne $nmonfore ] || [ $n_rof -ne $nmonfore ] || [ $n_atm -ne $nmonfore ] || [ $n1d_ocn -ne $(($nmonfore * 2)) ] || [ $n1m_ocn -ne $(($nmonfore * 4)) ] || [ $nptr_ocn -ne $nmonfore ] || [ $nsca_ocn -ne $nmonfore ]
    then

@@ -112,8 +112,6 @@ then
 
       # Interpolation phase
       # create interpolated file in ./reg1x1 dir
-#     replaced by ncremap because to demanding in terms of computing time
-#     ncl /users_home/csp/mb16318/SPS/SPS4/postproc/CLM/regridFV_1x1_CLM.ncl
       vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
       ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
    
@@ -141,8 +139,6 @@ then
    python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
-# remove catted product
-#      rm $CLM_OUTPUT_FV 
 # intermidiate product
 #      rm ${DIROUT_REG1x1}/${rootname}.reg1x1.nc
 #   else
