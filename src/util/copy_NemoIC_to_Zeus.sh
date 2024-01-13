@@ -15,7 +15,7 @@ do
    n_rsync=0
    for yyyy in {1993..2022}
    do
-      if [[ -f $DIR_TEMP/nemo_${yyyy}${st}_done ]]
+      if [[ -f $DIR_TEMP/nemoIC_${yyyy}${st}_done ]]
       then
          continue
       fi

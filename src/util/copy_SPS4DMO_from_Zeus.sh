@@ -5,7 +5,7 @@
 set -euxv
 
 cnt_this_script_running=$(ps -u ${operational_user} -f |grep copy_SPS4DMO_from_Zeus.sh| grep -v $$|wc -l)
-if [[ $cnt_this_script_running -gt 1 ]]
+if [[ $cnt_this_script_running -gt 2 ]]
 then
    echo "already running"
    exit

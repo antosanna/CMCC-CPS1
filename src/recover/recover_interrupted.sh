@@ -39,6 +39,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh 1993
 elif [[ $# -eq 2 ]]
 then
+   st=${1:-$mo_today}
    yyyy=${2:-$yy_today}
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
