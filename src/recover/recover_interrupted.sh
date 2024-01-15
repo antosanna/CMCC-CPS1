@@ -45,7 +45,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -85,7 +85,7 @@ lista_moredays=" "
 lista_first_month=" "
 #lista_pp_C3S_cam_or_clm=" "
 
-
+listofcases="sps4_200211_016 sps4_200211_008"
 caso_ignored="sps4_199711_011"  #unstability in NEMO - to be checked 
 cd $DIR_CASES/
 for caso in $listofcases ; do

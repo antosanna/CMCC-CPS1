@@ -70,11 +70,11 @@
           <field field_ref="woce"         name="wo"      long_name="Sea Water Vertical Velocity" unit="m s-1"  />
        	</file>
 
-        <file id="file15" name_suffix="_grid_ptr" description="diaptr variables" enabled=".true." >
+        <file id="file15" type="one_file" name_suffix="_grid_ptr" description="diaptr variables" enabled=".true." >
           <field field_ref="sophtvtr" name="hfbasin" long_name="Northward Ocean Heat Transport" unit="W" grid_ref="grid_ptr_T_2D" > @sophtvtr * 1e15 </field>
           <field field_ref="zomsf"    name="msftyz" long_name="Meridional Stream-Function : All basins" unit="kg s-1" grid_ref="grid_ptr_W_3D"> @zomsf * 1e6 *$rau0 </field> 
         </file>
-        <file id="file16" name_suffix="_scalar" description="scalar variables" enabled=".true." >
+        <file id="file16" type="one_file" name_suffix="_scalar" description="scalar variables" enabled=".true." >
           <field field_ref="voltot"   name="volo"      long_name="Sea Water Volume"   unit="m3" /> 
           <field field_ref="sshsteric"   name="zostoga"   long_name="Global Average Thermosteric Sea Level Change" unit="m" /> 
         </file> 
