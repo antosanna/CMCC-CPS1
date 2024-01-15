@@ -46,4 +46,4 @@ check_IC_CICE_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
 check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.nemo_rebuild4cmcc-cm
-check_nemo_rebuild=$DIR_CASES/$caso/logs/nemo_rebuild_${curryear}${currmon}_done
+check_nemo_rebuild=$CASEROOT/logs/nemo_rebuild_${curryear}${currmon}_done

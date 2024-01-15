@@ -28,7 +28,7 @@ do
 # add your frequencies and grids. The script skip them if not present
    for frq in 1m 1d
    do
-      for grd in T U V W ptr
+      for grd in T U V W 
       do
          nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|wc -l`
          if [[ $nfile -eq 0 ]]
@@ -45,18 +45,17 @@ do
             rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
          fi
       done
-      for grd in scalar
+      for grd in scalar ptr
       do
-         nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc|wc -l`
+         nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc|wc -l`
          if [[ $nfile -eq 0 ]]
          then
             continue
          fi
-         listarm=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0???.nc|grep -v $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
-         finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
-         scalarfile=`echo $finalfile|sed 's/_0000.nc/.nc/g'`
-         mv $finalfile $scalarfile
-         rm $listarm
+         finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc`
+         zipfinalfile=`echo $finalfile|sed 's/.nc/.zip.nc/g'`
+         $compress $finalfile $zipfinalfile
+         rm $finalfile
       done
    done
 done
