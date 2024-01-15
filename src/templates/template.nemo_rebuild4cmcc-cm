@@ -36,6 +36,12 @@ for frq in 1m 1d
 do
    for grd in T U V W ptr
    do
+# from 20240115 ptr is stored as one_file 
+      if [[ -f `echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc` ]]
+      then
+         headptr=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc|rev|cut -d '.' -f2-|rev`
+         $compress $headptr.nc $headptr.zip.nc
+      fi
       nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
       then
@@ -57,6 +63,12 @@ do
    done
    for grd in scalar
    do
+      if [[ -f `echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc` ]]
+      then
+         headscalarfile=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc|rev|cut -d '.' -f2-|rev`
+         $compress $headscalarfile.nc $headscalarfile.zip.nc
+      fi
+# until 20240115 scalar was erroneously stored as multiple files 
       nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
       then
