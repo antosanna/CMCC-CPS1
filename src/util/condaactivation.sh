@@ -6,9 +6,17 @@ if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then
 condafunction() {
    local comm=$1
    local env=$2	
-   if [[ $env != "$envcondacm3" ]] && [[ $env != "$envcondanemo" ]]
+   if [[ $env != "$envcondacm3" ]] 
    then
        . $DIR_UTIL/load_miniconda
+       if [[ $env == "$envcondanemo" ]] 
+       then
+          if [[ $machine == "zeus" ]]
+          then
+             module load intel20.1
+          fi
+          module load $mpilib4py_nemo_rebuild
+       fi
    fi
    if [  $comm == "activate"  ]; then
 	conda $comm $env

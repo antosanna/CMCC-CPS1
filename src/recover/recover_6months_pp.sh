@@ -14,7 +14,11 @@ NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
 N=`$DIR_UTIL/max_prime_factor.sh $NTASK`
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
-conda activate $envcondanemo
+
+set +euxv
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondanemo
+set -euvx    # keep this instruction after conda activation
 yyyy=`echo $CASE|cut -d '_' -f2|cut -c 1-4`
 st=`echo $CASE|cut -d '_' -f2|cut -c 5-6`
 yyyystdd=$yyyy${st}15
@@ -61,7 +65,7 @@ do
    # this should be independent from expID and general
          data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
    # VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
-         mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
+         $mpirun4py_nemo_rebuild -n $N python $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
    # if correctly merged remove single files
          if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc ]]
          then
@@ -168,5 +172,7 @@ do
    echo "-----------postproc_monthly_${CASE}.sh COMPLETED-------- "`date`
    touch  $check_pp_monthly
 done
+set +euvx
+condafunction deactivate $envcondanemo
 
 exit 0

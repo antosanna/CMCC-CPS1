@@ -39,6 +39,7 @@ if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
    MYCESMDATAROOT=/data/$DIVISION/$USER/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
+   envcondanemo=nemo_rebuild
    if [[ $machine == "juno" ]]
    then
       operational_user=cp1
@@ -46,10 +47,11 @@ then
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
+      mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
+      mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondarclone=rclone_gdrive
       envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
-      envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       maxnumbertosubmit=18
       maxnumberguarantee=14
       env_workflow_tag=cmcc
@@ -63,19 +65,14 @@ then
       operational_user=sps-dev
       maxnumbertosubmit=10
       maxnumberguarantee=6
+      mpilib4py_nemo_rebuild=impi20.1/19.7.217
+      mpirun4py_nemo_rebuild=mpirun
       envcondaclm=/work/csp/sp1/anaconda3/envs/CMOR_5
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
-      envcondanemo=/users_home/csp/as34319/.conda/envs/nemo_rebuild
       env_workflow_tag=cmcc
    fi
 # TEMPORARY +
-   if [[ $machine == "zeus" ]]
-   then
-      DIR_NEMO_REBUILD=/users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src
-   elif [[ $machine == "juno" ]]
-   then
-      DIR_NEMO_REBUILD=/users_home/csp/as34319/NEMO_REBUILD/py_nemo_rebuild/src/py_nemo_rebuild
-   fi
+   DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 # TEMPORARY -
    WORK=/work/$DIVISION/$USER/
    WORK1=/work/$DIVISION/$operational_user/

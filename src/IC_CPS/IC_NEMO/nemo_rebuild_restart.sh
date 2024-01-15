@@ -9,8 +9,8 @@ then
    echo "we cannot run this script here because files are in Juno"
    exit
 fi
-set -v
-conda activate $envcondanemo
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondanemo
 set -euvx    # keep this instruction after conda activation
 #INPUT:
 yyyy=$1
@@ -57,7 +57,7 @@ then
       rsync -auv $ff .
    done
    
-   mpirun -n $N python -m mpi4py $DIR_NEMO_REBUILD/nemo_rebuild.py -i $TMPNEMOREST/${rootname}
+   $mpirun4py_nemo_rebuild -n $N python $DIR_NEMO_REBUILD/nemo_rebuild.py -i $TMPNEMOREST/${rootname}
    if [[ -f $TMPNEMOREST/${rootname}.nc ]]
    then
      # remove DELAY_fwb from OIS restarts
@@ -76,3 +76,5 @@ then
        done
    fi
 fi
+set +euvx
+condafunction deactivate $envcondanemo
