@@ -3,19 +3,20 @@
 #BSUB -J test
 #BSUB -e logs/test_%J.err
 #BSUB -o logs/test_%J.out
-#BSUB -M 1000
+#BSUB -M 10000
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_ncl
 set -euvx
 
 #==================================================
-export inputFV=/work/csp/cp1//CMCC-CM/archive/sps4_199305_006/atm/hist/sps4_199305_006.cam.h3.1993-05.zip.nc
-caso=sps4_199305_006
-export outdirC3S=/work/csp/cp1//scratch/ANTO/sps4_199305_006
+caso=sps4_199305_003
+#original file /work/csp/$USER/scratch/ANTO/regrid_w100/$caso.cam.h1.1993-05-01-00000.nc
+export inputFV=/work/csp/$USER/scratch/ANTO/regrid_w100/$caso.cam.h1.1993-05.nc
+export outdirC3S=/work/csp/$USER//scratch/ANTO/$caso
 wkdir=$outdirC3S
 mkdir -p $outdirC3S
-export type=h3 
+export type=h1 
 check_regridC3S_type="ok.txt"
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
@@ -38,10 +39,11 @@ export dstGridName=$REPOGRID/dstGrd_${outputgrid}.nc
 export wgtFileName=$REPOGRID/CAMFV05_2_${outputgrid}_bilinear_C3S.nc
 export wgtFileNameCons=$REPOGRID/CAMFV05_2_${outputgrid}_conserve_C3S.nc
 export lsmFileName=$REPOGRID/SPS4_C3S_LSM.nc
+export alphaFileName=/work/csp/mh31123/scratch/Wind100/Data_alpha/alpha_185days/mean_alpha/mean_alpha_${st}.nc
 export version=$versionSPS
 export real="r"${ens}"i00p00"
 export last_term="_"${real}".nc"
-export C3Stable="$here/C3S_table_SOLIN.txt"
+export C3Stable="$here/C3S_table.txt"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
 export GCM_and_version=${GCM_name}-v${version}
 export ini_term=cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100

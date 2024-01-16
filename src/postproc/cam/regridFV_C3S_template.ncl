@@ -605,12 +605,56 @@ begin
                 dst_file->$varout(k)$ = (/ tmpclt/)
                 delete(tmpclt)
    ;__________________________________________________________
+             else if ( varout(k).eq."uas100") then
+   ;__________________________________________________________
+   ; derive u100 from ubot
+   ;__________________________________________________________
+                alphaFileName=getenv("alphaFileName")
+                alpha_file=addfile(alphaFileName,"r")
+                alpha_clim=alpha_file->alpha
+                printMinMax(alpha_clim,0)
+                var2regrid=u60*rapporto
+                printMinMax(var2regrid,0)
+                height=100.
+                height@valid_max = 300.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+                if(isfilepresent(wgtFileName)) then
+                   u100 = ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) *(100/10)^(alpha_clim)
+                else
+                   u100 = ESMF_regrid(var2regrid,Opt)*(100/10)^(alpha_clim)
+                end if
+                dst_file->$varout(k)$ = (/u100/)
+             else if ( varout(k).eq."vas100") then
+   ;__________________________________________________________
+   ; derive v100 from vbot
+   ;__________________________________________________________
+                alphaFileName=getenv("alphaFileName")
+                alpha_file=addfile(alphaFileName,"r")
+                alpha_clim=alpha_file->alpha
+                printMinMax(alpha_clim,0)
+                var2regrid=v60*rapporto
+                printMinMax(var2regrid,0)
+                height=100.
+                height@valid_max = 300.
+                filevardef(dst_file, "height", C3S_type, "ncl_scalar")
+                filevarattdef(dst_file,"height" ,height)           
+                dst_file->height = (/ height/)
+                if(isfilepresent(wgtFileName)) then
+                   v100 = ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) *(100/10)^(alpha_clim)
+                else
+                   v100 = ESMF_regrid(var2regrid,Opt)*(100/10)^(alpha_clim)
+                end if
+                dst_file->$varout(k)$ = (/v100/)
              else 
                 if(isfilepresent(wgtFileName)) then
                    dst_file->$varout(k)$ = (/ ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt) /)
                 else
                    dst_file->$varout(k)$ = (/ ESMF_regrid(var2regrid,Opt) /)
                 end if
+             end if
+             end if
              end if
              end if
              end if
