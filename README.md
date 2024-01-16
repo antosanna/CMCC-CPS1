@@ -8,6 +8,8 @@ conda environments needed
       envcondarclone=rclone_gdrive
       envcondaclm=postprc_CLM_C3S
       envcondacm3=cmcc-cm_py39
-      envcondanemo=
+      envcondanemo=py_nemo_rebuild
       envcondachecker=
+
+-download of $REPOGRID from Juno machine
 
