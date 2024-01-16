@@ -16,8 +16,7 @@ cd $CASEROOT
 cd $CASEROOT
 NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
 # this is the number of parallel postprocessing you want to set
-# NTASK MUST BE A MULTIPLE OF N!!!
-N=`$DIR_UTIL/max_prime_factor.sh $NTASK`
+N=1
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
 curryear=1993
