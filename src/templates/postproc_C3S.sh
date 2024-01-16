@@ -168,6 +168,7 @@ then
 fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED
+chmod u+w -R $DIR_ARCHIVE/$caso/
 rm $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc
 rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
 rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
