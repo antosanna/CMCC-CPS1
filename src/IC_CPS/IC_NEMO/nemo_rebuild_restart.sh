@@ -46,8 +46,7 @@ mkdir -p $TMPNEMOREST
 listaf=`ls $OUTDIR/*_restart_0???.nc`
 nf=`ls $OUTDIR/*_restart_0???.nc|wc -l`
 rootname=`basename $OUTDIR/*_restart_0000.nc|rev|cut -d '_' -f2-|rev`
-# find maximum divider
-N=`$DIR_UTIL/max_prime_factor.sh $nf`
+N=1
  
 if [[ ! -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc ]]
 then

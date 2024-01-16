@@ -20,7 +20,7 @@ ft=$2
 
 yyyy=$3
 st=$4
-wkdir=$5
+wkdir_clm=$5
 finalfile=$6
 checkfile=$7
 

@@ -22,9 +22,6 @@ then
    . $dictionary
    set -euvx
    touch $check_run_moredays
-   chmod u-w -R $DIR_ARCHIVE/$caso/
-   echo "exiting now: postproc_C3S to be implemented"
-   exit
    if [[ ! -f $check_pp_C3S ]]
    then
       ./postproc_C3S_${caso}.sh 
