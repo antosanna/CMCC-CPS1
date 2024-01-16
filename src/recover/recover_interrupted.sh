@@ -31,6 +31,8 @@ yy_today=`date +%Y`
 
 cd $DIR_CASES/
 
+. ${DIR_UTIL}/descr_ensemble.sh 1993
+listofcases="sps4_200411_023 sps4_200411_028 sps4_200411_029 sps4_200511_005 sps4_200511_007 sps4_200511_008 sps4_200511_009"
 if [[ $# -eq 1 ]]
 then
    st=${1:-$mo_today}
@@ -85,7 +87,6 @@ lista_moredays=" "
 lista_first_month=" "
 #lista_pp_C3S_cam_or_clm=" "
 
-listofcases="sps4_200211_016 sps4_200211_008"
 caso_ignored="sps4_199711_011"  #unstability in NEMO - to be checked 
 cd $DIR_CASES/
 for caso in $listofcases ; do
