@@ -33,7 +33,8 @@ cd $DIR_CASES/
 
 . ${DIR_UTIL}/descr_ensemble.sh 1993
 #listofcases="sps4_200505_012 sps4_200505_016 sps4_200505_018 sps4_200505_020 sps4_200505_023 sps4_200505_025 sps4_200505_027 sps4_200505_028"
-listofcases="sps4_200605_001 sps4_200605_004" 
+listofcases="sps4_200105_021 sps4_200105_022 sps4_200105_024 sps4_200305_009 sps4_200305_012 sps4_200305_013 sps4_200305_015 sps4_200305_018 sps4_200305_019 sps4_200305_021 sps4_200305_024 sps4_200405_001 sps4_200405_002 sps4_200405_003 sps4_200405_004 sps4_200405_008 sps4_200405_009"
+
 if [[ $# -eq 1 ]]
 then
    st=${1:-$mo_today}
@@ -48,7 +49,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=2 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 

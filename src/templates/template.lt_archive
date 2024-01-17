@@ -78,8 +78,8 @@ then
    mkdir -p ${DIR_TEMP}/$caso
    sed -e 's:DIRTEMP:'${DIR_TEMP}/$caso':g' $DIR_TEMPL/user_nl_nemo_moredays > $DIR_CASES/$caso/user_nl_nemo
 set +euvx
-   conda deactivate 
-   conda activate $envcondacm3
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondacm3
 set -euvx
    ./case.submit
    exit

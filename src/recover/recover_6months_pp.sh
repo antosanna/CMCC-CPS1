@@ -109,6 +109,10 @@ do
    done
    touch $check_nemo_rebuild
 done
+set +euvx
+condafunction deactivate $envcondanemo
+condafunction activate $envcondacm3
+set -euvx
 
 echo "-----------STARTING ${CASE}.postproc monthly CESM-------- "`date`
 cd $DIR_CASES/${CASE}
@@ -176,7 +180,5 @@ do
    echo "-----------postproc_monthly_${CASE}.sh COMPLETED-------- "`date`
    touch  $check_pp_monthly
 done
-set +euvx
-condafunction deactivate $envcondanemo
 
 exit 0
