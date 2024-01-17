@@ -17,7 +17,8 @@ listacasisubmitted=()
 
 #listcases="${SPSSystem}_200311_016" 
 #listcases="${SPSSystem}_200011_016" 
-#listcases="${SPSSystem}_200111_016 ${SPSSystem}_200311_017 ${SPSSystem}_200511_030 ${SPSSystem}_200611_004"
+#listcases="${SPSSystem}_200611_004"
+listcases="${SPSSystem}_200111_016 ${SPSSystem}_200311_017 ${SPSSystem}_200511_030"
 if [ "$casefromoutside" != "" ]
 then
   listcases=$casefromoutside
