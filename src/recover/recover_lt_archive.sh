@@ -39,7 +39,7 @@ do
 # to refresh lt_achive from template
   ./case.setup --reset
   ./xmlchange BUILD_COMPLETE=TRUE
-  bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out  < .case.lt_archive
+  bsub -W 06:00 -q s_medium -P 0490 -M 15000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out  < .case.lt_archive
   
 done
 

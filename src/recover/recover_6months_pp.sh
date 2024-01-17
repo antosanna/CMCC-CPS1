@@ -87,6 +87,10 @@ do
                ff=`basename $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc`
                ffzip=`echo $ff|rev|cut -d '.' -f2-|rev`
                $compress  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ff  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ffzip.zip.nc
+               if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ffzip.zip.nc ]]
+               then
+                   rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ff
+               fi 
             fi
             continue
          fi

@@ -32,7 +32,8 @@ yy_today=`date +%Y`
 cd $DIR_CASES/
 
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases="sps4_200505_012 sps4_200505_016 sps4_200505_018 sps4_200505_020 sps4_200505_023 sps4_200505_025 sps4_200505_027 sps4_200505_028"
+#listofcases="sps4_200505_012 sps4_200505_016 sps4_200505_018 sps4_200505_020 sps4_200505_023 sps4_200505_025 sps4_200505_027 sps4_200505_028"
+listofcases="sps4_200511_013"
 if [[ $# -eq 1 ]]
 then
    st=${1:-$mo_today}
