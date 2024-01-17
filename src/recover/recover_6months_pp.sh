@@ -38,6 +38,7 @@ do
          if [[ $nfile -ne 0 ]] && [[ $grd == "ptr" ]]
          then
             rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_ptr_0???.nc
+            continue
          fi
          if [[ $nfile -eq 0 ]]
          then
