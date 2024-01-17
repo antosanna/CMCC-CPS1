@@ -136,7 +136,7 @@ done
 # now wait that all of the ft files have been regridded
 while `true`
 do
-   if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 3 ]]
+   if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
    then
       break
    fi
