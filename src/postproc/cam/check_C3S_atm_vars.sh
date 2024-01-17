@@ -53,7 +53,7 @@ then
    #-------------------------------------------------------------
       if [ ! -f *${var}_*${real}.nc ]
       then
-         body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridSEne60_C3S.sh "
+         body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridFV_C3S.sh "
          title="[C3S] ${CPSSYS} forecast ERROR"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
          exit

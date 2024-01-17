@@ -15,7 +15,9 @@ dateymdhms=`date +%Y%m%d%H%M%S`
 subm_cnt=0
 listacasisubmitted=() 
 
-listcases="${SPSSystem}_199908_008"
+#listcases="${SPSSystem}_200311_016" 
+#listcases="${SPSSystem}_200011_016" 
+#listcases="${SPSSystem}_200111_016 ${SPSSystem}_200311_017 ${SPSSystem}_200511_030 ${SPSSystem}_200611_004"
 if [ "$casefromoutside" != "" ]
 then
   listcases=$casefromoutside
@@ -27,7 +29,12 @@ do
    st=`echo $caso|cut -d '_' -f2|cut -c5-6`
    ens=`echo $caso|cut -d '_' -f3`
    n1=$((10#$ens))
-   n2=$(($nrunmax + 1))
+   n2=$((${nmax4modify_trip} + 1))
+
+   #the line used to modify the IC will be kept to 40($nmax4modify_trip) instead of $nrunmax in hindcast in order to avoid the risk
+   #of running twice the same members for the startdates initially launched with 40 members, which have potentially run already 
+   #some members between 31 and 40
+   #in forecast $nmax4modify_trip will be equal to $nrunmax
 
    while `true`
    do
