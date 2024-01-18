@@ -25,16 +25,13 @@ then
    write_help
    exit
 fi
-set -euxv
+set -eu
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
 cd $DIR_CASES/
 
-. ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases="sps4_199505_011 sps4_200405_010 sps4_200405_026 sps4_200405_028 sps4_200405_029 sps4_200505_003"
-
-if [[ $# -eq 1 ]]
+if [[ $# -ge 1 ]]
 then
    st=${1:-$mo_today}
    yyyy=""
@@ -42,7 +39,6 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh 1993
 elif [[ $# -eq 2 ]]
 then
-   st=${1:-$mo_today}
    yyyy=${2:-$yy_today}
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -88,7 +84,10 @@ lista_moredays=" "
 lista_first_month=" "
 #lista_pp_C3S_cam_or_clm=" "
 
-caso_ignored="sps4_199711_011"  #unstability in NEMO - to be checked 
+
+caso_ignored=sps4_199407_009   #this one has 7 months! will be fixed by standardization
+#listofcases="sps4_199507_018 sps4_199507_028 sps4_199507_030 sps4_199507_031  sps4_199607_010 sps4_199607_011 sps4_199607_012 sps4_199607_015 sps4_199607_016 sps4_199607_023 sps4_199607_031 sps4_199607_032 sps4_199607_033 sps4_199607_036 sps4_199607_037 sps4_199607_040 sps4_199707_001 sps4_199707_004 sps4_199707_007 sps4_199707_008 sps4_199707_010 sps4_199707_012"
+listofcases="sps4_199707_016 sps4_199707_017 sps4_199707_018 sps4_199707_020"
 cd $DIR_CASES/
 for caso in $listofcases ; do
   if [[ $caso == ${caso_ignored} ]] ; then
@@ -378,7 +377,6 @@ caso=""
          continue
       fi
       $DIR_RECOVER/refresh_all_scripts.sh $caso
-      $DIR_RECOVER/recover_6months_pp.sh $caso
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -396,7 +394,7 @@ exit
    
    for caso in $lista_pp_C3S
    do
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
+      $DIR_RECOVER/refresh_postproc_C3S.sh $caso
       cd $DIR_CASES/$caso
       bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       if [[ $debug -eq 1 ]] ; then break ; fi

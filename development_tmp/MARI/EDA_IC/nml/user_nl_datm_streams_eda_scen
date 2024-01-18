@@ -1,0 +1,1062 @@
+!------------------------------------------------------------------------
+! This file is used to modify datm.streams.xml generated in $RUNDIR
+! Entries should have the form
+!  <streamname>:<stream_variable>= <new stream_value> (NO Quotes!!!)
+! The following are accepted values for a stream named foo
+!  foo:meshfile = character string
+!  foo:datafiles = comma separated string of full pathnames (e.g. file1,file2,file3...)
+!  foo:datavars = comma separated string of field pairs  (e.g. foo foobar,foo2 foobar2...)
+!  foo:taxmode = one of [cycle, extend, limit]
+!  foo:tintalgo = one of [lower,upper,nearest,linear,coszen]
+!  foo:readmode = single (only suported mode right now)
+!  foo:mapalgo = one of [bilinear,redist,nn,consf,consd,none]
+!  foo:dtlimit = real (1.5 is default)
+!  foo:year_first = integer
+!  foo:year_last = integer
+!  foo:year_align = integer
+!  foo:vectors = null or the names of the vector fields in the model (i.e. Sa_u:Sa_v)
+!  foo:lev_dimname: = one of [null,name of level dimenion name]
+!  foo:offset = integer
+! As an example:
+!   foo:year_first = 1950
+! would change the stream year_first stream_entry to 1950 for the foo stream block
+! NOTE: multi-line inputs are enabled by adding a \ at the end of the line
+! As an emaple:
+! foo:datafiles=foo1,foo2, \
+!     foo3
+! Will yield the following new entry for datafiles in stream foo
+!   <datafiles>
+!      <file>foo1</file>
+!      <file>foo2</file>
+!      <file>foo3</file>
+!   </datafiles>
+!------------------------------------------------------------------------
+presaero.hist:datafiles=/data/inputs/CESM/inputdata/atm/cam/chem/trop_mozart_aero/aero/aerosoldep_WACCM.ensmean_monthly_hist_1849-2015_0.9x1.25_CMIP6_c180926.nc
+presaero.hist:taxmode=cycle
+presaero.hist:tintalgo=linear
+presaero.hist:readmode=single
+presaero.hist:mapalgo=bilinear
+presaero.hist:dtlimit=1.5
+presaero.hist:year_first=2015
+presaero.hist:year_last=2039
+presaero.hist:year_align=2015
+presaero.hist:vectors=null
+presaero.hist:lev_dimname=null
+presaero.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+presaero.hist:datavars=  BCDEPWET   Faxa_bcphiwet,\
+      BCPHODRY   Faxa_bcphodry,\
+      BCPHIDRY   Faxa_bcphidry,\
+      OCDEPWET   Faxa_ocphiwet,\
+      OCPHIDRY   Faxa_ocphidry,\
+      OCPHODRY   Faxa_ocphodry,\
+      DSTX01WD   Faxa_dstwet1,\
+      DSTX01DD   Faxa_dstdry1,\
+      DSTX02WD   Faxa_dstwet2,\
+      DSTX02DD   Faxa_dstdry2,\
+      DSTX03WD   Faxa_dstwet3,\
+      DSTX03DD   Faxa_dstdry3,\
+      DSTX04WD   Faxa_dstwet4,\
+      DSTX04DD   Faxa_dstdry4
+presaero.hist:offset=0
+
+
+CLMGSWP3v1.Solar:taxmode=cycle
+CLMGSWP3v1.Solar:tintalgo=coszen
+CLMGSWP3v1.Solar:readmode=single
+CLMGSWP3v1.Solar:mapalgo=bilinear
+CLMGSWP3v1.Solar:dtlimit=1.5
+CLMGSWP3v1.Solar:year_first=2015
+CLMGSWP3v1.Solar:year_last=2014
+CLMGSWP3v1.Solar:year_align=2015
+CLMGSWP3v1.Solar:vectors=null
+CLMGSWP3v1.Solar:lev_dimname=null
+CLMGSWP3v1.Solar:meshfile=/data/inputs/CESM/inputdata/atm/datm7/atm_forcing.datm7.GSWP3.0.5d.v1.c170516/clmforc.GSWP3.c2011.0.5x0.5.TPQWL.SCRIP.210520_ESMFmesh.nc
+CLMGSWP3v1.Solar:datafiles= /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2015-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2016-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2017-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2018-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2019-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2020-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2021-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2022-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2023-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2024-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2025-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2026-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2027-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2028-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2029-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2030-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2031-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2032-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2033-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2034-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2035-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2036-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2037-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2038-12.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-01.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-02.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-03.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-04.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-05.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-06.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-07.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-08.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-09.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-10.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-11.nc,\
+                     /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Solar/clmforc.EDAMEMBER.0.5d.Solr.2039-12.nc
+
+CLMGSWP3v1.Solar:datavars=FSDS     Faxa_swdn
+CLMGSWP3v1.Solar:offset=0
+
+
+CLMGSWP3v1.Precip:taxmode=cycle
+CLMGSWP3v1.Precip:tintalgo=nearest
+CLMGSWP3v1.Precip:readmode=single
+CLMGSWP3v1.Precip:mapalgo=bilinear
+CLMGSWP3v1.Precip:dtlimit=1.5
+CLMGSWP3v1.Precip:year_first=2015
+CLMGSWP3v1.Precip:year_last=2014
+CLMGSWP3v1.Precip:year_align=2015
+CLMGSWP3v1.Precip:vectors=null
+CLMGSWP3v1.Precip:lev_dimname=null
+CLMGSWP3v1.Precip:meshfile=/data/inputs/CESM/inputdata/atm/datm7/atm_forcing.datm7.GSWP3.0.5d.v1.c170516/clmforc.GSWP3.c2011.0.5x0.5.TPQWL.SCRIP.210520_ESMFmesh.nc
+CLMGSWP3v1.Precip:datafiles= /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2015-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2016-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2017-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2018-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2019-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2020-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2021-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2022-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2023-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2024-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2025-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2026-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2027-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2028-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2029-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2030-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2031-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2032-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2033-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2034-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2035-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2036-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2037-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2038-12.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-01.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-02.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-03.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-04.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-05.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-06.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-07.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-08.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-09.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-10.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-11.nc,\
+                             /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/Precip/clmforc.EDAMEMBER.0.5d.Prec.2039-12.nc
+
+CLMGSWP3v1.Precip:datavars=PRECTmms Faxa_precn
+CLMGSWP3v1.Precip:offset=0
+
+
+CLMGSWP3v1.TPQW:taxmode=cycle
+CLMGSWP3v1.TPQW:tintalgo=linear
+CLMGSWP3v1.TPQW:readmode=single
+CLMGSWP3v1.TPQW:mapalgo=bilinear
+CLMGSWP3v1.TPQW:dtlimit=1.5
+CLMGSWP3v1.TPQW:year_first=2015
+CLMGSWP3v1.TPQW:year_last=2039
+CLMGSWP3v1.TPQW:year_align=2015
+CLMGSWP3v1.TPQW:vectors=null
+CLMGSWP3v1.TPQW:lev_dimname=null
+CLMGSWP3v1.TPQW:meshfile=/data/inputs/CESM/inputdata/atm/datm7/atm_forcing.datm7.GSWP3.0.5d.v1.c170516/clmforc.GSWP3.c2011.0.5x0.5.TPQWL.SCRIP.210520_ESMFmesh.nc
+CLMGSWP3v1.TPQW:datafiles= /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2015-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2016-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2017-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2018-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2019-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2020-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2021-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2022-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2023-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2024-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2025-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2026-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2027-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2028-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2029-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2030-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2031-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2032-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2033-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2034-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2035-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2036-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2037-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2038-12.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-01.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-02.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-03.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-04.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-05.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-06.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-07.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-08.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-09.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-10.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-11.nc,\
+                           /data/csp/cp1/CMCC-CPS1/inputs/FORC4CLM/EDA_nMEMBER/TPHWL/clmforc.EDAMEMBER.0.5d.TPQWL.2039-12.nc
+
+CLMGSWP3v1.TPQW:datavars=TBOT     Sa_tbot,\
+      WIND     Sa_wind,\
+      QBOT     Sa_shum,\
+      PSRF     Sa_pbot
+CLMGSWP3v1.TPQW:offset=0
+
+
+presndep.hist:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_b.e21.BWHIST.f09_g17.CMIP6-historical-WACCM.ensmean_1849-2015_monthly_0.9x1.25_c180926.nc
+presndep.hist:taxmode=cycle
+presndep.hist:tintalgo=linear
+presndep.hist:readmode=single
+presndep.hist:mapalgo=bilinear
+presndep.hist:dtlimit=1.5
+presndep.hist:year_first=2015
+presndep.hist:year_last=2039
+presndep.hist:year_align=2015
+presndep.hist:vectors=null
+presndep.hist:lev_dimname=null
+presndep.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+presndep.hist:datavars=NDEP_NHx_month    Faxa_ndep_nhx,\
+          NDEP_NOy_month    Faxa_ndep_noy
+presndep.hist:offset=0
+
+preso3.hist:datafiles=/data/inputs/CESM/inputdata/cdeps/datm/ozone/O3_surface.f09_g17.CMIP6-historical-WACCM.001.monthly.185001-201412.nc
+preso3.hist:taxmode=cycle
+preso3.hist:tintalgo=linear
+preso3.hist:readmode=single
+preso3.hist:mapalgo=bilinear
+preso3.hist:dtlimit=1.5
+preso3.hist:year_first=2015
+preso3.hist:year_last=2039
+preso3.hist:year_align=2015
+preso3.hist:vectors=null
+preso3.hist:lev_dimname=null
+preso3.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+preso3.hist:datavars= O3  Sa_o3
+preso3.hist:offset=0
+
+
+co2tseries.20tr:datafiles=/data/inputs/CESM/inputdata/atm/datm7/CO2/fco2_datm_global_simyr_1750-2014_CMIP6_c180929.nc
+co2tseries.20tr:taxmode=extend
+co2tseries.20tr:tintalgo=linear
+co2tseries.20tr:readmode=single
+co2tseries.20tr:mapalgo=none
+co2tseries.20tr:dtlimit=1.e30
+co2tseries.20tr:year_first=2015
+co2tseries.20tr:year_last=2039
+co2tseries.20tr:year_align=2015
+co2tseries.20tr:vectors=null
+co2tseries.20tr:lev_dimname=null
+co2tseries.20tr:meshfile=none
+co2tseries.20tr:datavars=CO2   Sa_co2diag
+co2tseries.20tr:offset=0
+
+
+
