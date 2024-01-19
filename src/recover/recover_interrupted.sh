@@ -10,9 +10,15 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
-#######################################################################################################
+##########################################################################################################################
 ### THE SCRIPT IS NOT EXAUSTIVE!!! 
-#######################################################################################################
+#
+#   In case of interruption during st_archive, this procedure will recognize the case as interrupted
+#   runtime. As a result, it can happen that the case of interest will run 7 months.
+#   In this case the C3S postprocessing has to be run offline, because the number of output will be greater than expected
+#   and check_6months_output_in_archive.sh will raise an error
+#
+##########################################################################################################################
 
 function write_help
 {
@@ -48,7 +54,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=0 #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
