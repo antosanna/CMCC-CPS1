@@ -279,15 +279,18 @@ then
 fi
 
 
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-set -euvx
-python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-rclone copy ${filexls} my_drive:
-set +euvx
-condafunction deactivate $envcondarclone
-set -euvx
+if [[ $machine != "zeus" ]]
+then
+   set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondarclone
+   set -euvx
+   python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+   rclone copy ${filexls} my_drive:
+   set +euvx
+   condafunction deactivate $envcondarclone
+   set -euvx
+fi
 
 if [[ $debug -eq 2 ]]
 then
