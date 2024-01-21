@@ -282,7 +282,7 @@ then
         Cases with error in meta: $lista_redometa_error \n 
         Cases with error in spike: $lista_redofindspike_error \n 
         More info in the log files in ${DIR_LOG}/CHECKER/$yyyy$st"
-  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
   exit 1
 fi
 

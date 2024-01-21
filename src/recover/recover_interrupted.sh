@@ -38,7 +38,7 @@ yy_today=`date +%Y`
 cd $DIR_CASES/
 
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases="sps4_200007* sps4_200107* sps4_200207*"
+listofcases="sps4_200207*"
 
 if [[ $# -eq 1 ]]
 then
@@ -54,7 +54,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -84,6 +84,9 @@ cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 
 
+filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover_list.${machine}.`date +%Y%m%d%H`.csv
+filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
+echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
 ### INITIALIZE LISTS
 lista_lt_archive=" "    
 lista_resubmit=" "
@@ -211,41 +214,80 @@ then
    echo "$lista_lt_archive"
    echo ""
    echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing "
-   echo "$lista_moredays"
    echo ""
+   echo "$lista_moredays"
+   for caso in $lista_moredays
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,-,-,-,-,$caso,- " >> $filecsv
+   done
 fi
 if [[ "$lista_resubmit" != " " ]]
 then
    echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted "
    echo "$lista_resubmit"
    echo ""
+   for caso in $lista_resubmit
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,$caso,-,-,-,-,- " >> $filecsv
+   done
 fi
 if [[ "$lista_first_month" != " " ]]
 then
    echo "Cases interrupted during first month"
    echo "$lista_first_month" 
    echo ""
+   for caso in $lista_first_month
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,-,-,-,-,-,$caso " >> $filecsv
+   done
 fi
 if [[ "$lista_regrid_ice" != " " ]]
 then
    echo "Cases with missing regrid ice"
    echo "$lista_regrid_ice" 
    echo ""
+   for caso in $lista_regrid_ice
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,-,$caso,-,-,-,- " >> $filecsv
+   done
 fi
 if [[ "$lista_regrid_oce" != " " ]]
 then
    echo "Cases with missing regridoce"
    echo "$lista_regrid_oce" 
    echo ""
+   for caso in $lista_regrid_oce
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,-,-,$caso,-,-,- " >> $filecsv
+   done
 fi
 if [[ "$lista_pp_C3S" != " " ]]
 then
    echo "Cases with interrupted postproc_C3S.sh TEMPORARY DISABLED"
    echo "$lista_pp_C3S" 
    echo ""
-#   echo " from which $lista_pp_C3S_cam_or_clm "
+   for caso in $lista_pp_C3S
+   do
+# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+      echo "-,-,-,-,$caso,-,- " >> $filecsv
+   done
 fi
 
+
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
+set -euvx
+python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+rclone copy ${filexls} my_drive:
+set +euvx
+condafunction deactivate $envcondarclone
+set -euvx
 
 if [[ $debug -eq 2 ]]
 then

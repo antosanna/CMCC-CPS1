@@ -69,7 +69,7 @@ then
 # otherwise just send informative email
          body="$inputFV newer than $wkdir/regridSE_C3S.ncl_${type}_${real}_ok"
          title="[C3S] ${CPSSYS} forecast warning "
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       fi
    fi    
 fi    
@@ -89,7 +89,7 @@ else
    touch ${check_regridC3S_type}_ERROR
    body="regridFV_C3S.ncl anomalously exited for start-date ${yyyy}${st}, file type $type and member $real "
    title="[C3S] ${CPSSYS} forecast ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
    exit
 fi
 echo "$0 completed"

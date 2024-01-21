@@ -91,8 +91,9 @@ then
 #      rm $input3d
 else
    title="[CAMIC] ${CPSSYS} warning"
-   body="$scriptregrid did not complete correctly "
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   body="$scriptregrid did not complete correctly for $input3d"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   exit 1
 fi
 # the script produces check files for vertical interpolation $output_check
 # put them in $WORK_IC4CAM

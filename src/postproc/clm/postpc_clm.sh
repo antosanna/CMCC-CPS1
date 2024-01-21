@@ -145,7 +145,7 @@ then
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       exit 1
    fi  
    
@@ -165,7 +165,7 @@ else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postpcclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
    
 fi
 
@@ -183,9 +183,11 @@ set -euvx
 if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $check_qa_start ]
 then
 # TEMPORARY UNTIL IMPLEMENTATION OF CHECKER
-   body="Temporary exit in $DIR_POST/clm/postpc_clm.sh before $DIR_C3S/checker_and_archive.sh until the implementation of the checker has been done"
+   body="$caso exited for temporary exit in $DIR_POST/clm/postpc_clm.sh before $DIR_C3S/checker_and_archive.sh until the implementation of the checker has been done"
    title="[CPS1] warning! $caso exiting before $DIR_C3S/checker_and_archive.s"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   echo $body >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
+   echo "" >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
    exit
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi

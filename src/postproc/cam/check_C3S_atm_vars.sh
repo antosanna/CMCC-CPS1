@@ -55,7 +55,9 @@ then
       then
          body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridFV_C3S.sh "
          title="[C3S] ${CPSSYS} forecast ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+         echo $body >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
+         echo "" >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
          exit
       fi  
    done
@@ -84,9 +86,9 @@ set -euvx
 if [ $allC3S -eq $nfieldsC3S ] && [ ! -f $check_qa_start ]
 then
 # TEMPORARY UNTIL IMPLEMENTATION OF CHECKER
-   body="Temporary exit in $DIR_POST/cam/check_C3S_atm_vars.sh until the implementation of the checker has been done"
+   body="$caso exited for temporary exit in $DIR_POST/cam/check_C3S_atm_vars.sh until the implementation of the checker has been done"
    title="[CPS1] warning! $caso exiting before $DIR_C3S/checker_and_archive.sh"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
    exit
  ###!! TO BE ADDED SERIAL RESERVATION
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"

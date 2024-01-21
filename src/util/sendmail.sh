@@ -70,11 +70,14 @@ then
       then
          startdate="missing_startdate"
       fi
+      if [[ ${startdate:0:4} -lt 2024 ]]
+      then
+         typeofrun="hindcast"
+      fi
       dirrep=$startdate
-      mkdir -p ${DIR_REP}/$dirrep
-      echo "${message}" >> ${DIR_REP}/$dirrep/report_${SPSsystem}_${startdate}
-      echo "`date` " >> ${DIR_REP}/$dirrep/report_${SPSsystem}_${startdate}
-      echo " " >> ${DIR_REP}/$dirrep/report_${SPSsystem}_${startdate}
+      mkdir -p ${DIR_LOG}/$typeofrun
+      echo "${message}" >> ${DIR_LOG}/$typeofrun/report_${SPSSystem}.`date +%Y%m%d`
+      echo " " >> ${DIR_LOG}/$typeofrun/report_${SPSSystem}.`date +%Y%m%d`
       if [ "$report" = "only" ]
       then
          exit
@@ -120,8 +123,9 @@ then
       startdate="missing_startdate"
     fi
     dirrep=$startdate
-    mkdir -p ${DIR_REP}/$dirrep
-    echo "${message}" >> ${DIR_REP}/$dirrep/report_SPS3_${startdate}
+    mkdir -p ${DIR_LOG}/$typeofrun
+    echo "${message}" >> ${DIR_LOG}/$typeofrun/report_${SPSSystem}.`date +%Y%m%d`
+    echo "" >> ${DIR_LOG}/$typeofrun/report_${SPSSystem}.`date +%Y%m%d`
 
     if [ "$report" = "only" ]
     then
