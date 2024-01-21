@@ -41,7 +41,7 @@ else
    outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
    check_postclm=$6
-   checkfile=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+   check_qa_start=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
    wkdir=$8
    running=${9-:0}  # 0 in operational mode
 fi
@@ -175,8 +175,18 @@ allC3S=`ls *${pp}i00p00.nc|wc -l`
 member=$pp
 mkdir -p $DIR_CASES/$caso/logs
 # IF ALL VARS HAVE BEEN COMPUTED QUALITY-CHECK
-if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $checkfile ]
+#check_qa_start=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+# get from $dictionary
+set +euvx
+. $dictionary
+set -euvx
+if [ $allC3S -eq $nfieldsC3S ]  && [ ! -f $check_qa_start ]
 then
+# TEMPORARY UNTIL IMPLEMENTATION OF CHECKER
+   body="Temporary exit in $DIR_POST/clm/postpc_clm.sh before $DIR_C3S/checker_and_archive.sh until the implementation of the checker has been done"
+   title="[CPS1] warning! $caso exiting before $DIR_C3S/checker_and_archive.s"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+   exit
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi
 echo "$0 completed"

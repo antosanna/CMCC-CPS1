@@ -76,8 +76,18 @@ allC3S=`ls *${real}.nc|wc -l`
 #-------------------------------------------------------------
 mkdir -p $DIR_CASES/$caso/logs/
 # if not already launched
-if [ $allC3S -eq $nfieldsC3S ] && [ ! -f $checkfile ]
+#check_qa_start=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+#get from dictionary
+set +euvx
+. $dictionary
+set -euvx
+if [ $allC3S -eq $nfieldsC3S ] && [ ! -f $check_qa_start ]
 then
+# TEMPORARY UNTIL IMPLEMENTATION OF CHECKER
+   body="Temporary exit in $DIR_POST/cam/check_C3S_atm_vars.sh until the implementation of the checker has been done"
+   title="[CPS1] warning! $caso exiting before $DIR_C3S/checker_and_archive.sh"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+   exit
  ###!! TO BE ADDED SERIAL RESERVATION
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi

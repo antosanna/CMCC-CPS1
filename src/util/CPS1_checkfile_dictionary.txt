@@ -4,6 +4,9 @@ listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
 
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
 check_qa_start=$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
+# this above also in $DIR_POST/cam/check_C3S_atm_vars.sh 
+# in $DIR_POST/clm/postpc_clm.sh 
+# and $DIR_C3S/checker_and_archive.sh
 check_postclm=$DIR_CASES/$caso/logs/${caso}_clm_C3SDONE
 check_all_camC3S_done=$DIR_CASES/$caso/logs/${caso}_all_cam_C3SDONE
 check_regridC3S_type=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_cam_regrid_C3S
