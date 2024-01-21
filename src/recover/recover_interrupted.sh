@@ -84,9 +84,9 @@ cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 
 
-filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover_list.${machine}.`date +%Y%m%d%H`.csv
+filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${debug}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
-echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
 ### INITIALIZE LISTS
 lista_lt_archive=" "    
 lista_resubmit=" "
