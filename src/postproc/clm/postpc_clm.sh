@@ -185,9 +185,7 @@ then
 # TEMPORARY UNTIL IMPLEMENTATION OF CHECKER
    body="$caso exited for temporary exit in $DIR_POST/clm/postpc_clm.sh before $DIR_C3S/checker_and_archive.sh until the implementation of the checker has been done"
    title="[CPS1] warning! $caso exiting before $DIR_C3S/checker_and_archive.s"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-   echo $body >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
-   echo "" >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
    exit
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j checker_and_archive_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s checker_and_archive.sh -i "$member $outdirC3S $startdate $caso"
 fi

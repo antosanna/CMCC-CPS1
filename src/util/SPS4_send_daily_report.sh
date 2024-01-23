@@ -20,7 +20,7 @@ set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 set -euvx
-rclone copy ${DIR_LOG}/report_${SPSSystem}.${machine}.`date +%Y%m%d` my_drive:SPS4_REPORTS/
+rclone copy ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d` my_drive:SPS4_REPORTS/
 set +euvx
 condafunction deactivate $envcondarclone
 exit 0
