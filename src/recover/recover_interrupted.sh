@@ -218,8 +218,8 @@ then
    echo "$lista_moredays"
    for caso in $lista_moredays
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
-      echo "-,-,-,-,-,$caso,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+      echo "-,-,$caso,-,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_resubmit" != " " ]]
@@ -229,7 +229,7 @@ then
    echo ""
    for caso in $lista_resubmit
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
       echo "-,$caso,-,-,-,-,- " >> $filecsv
    done
 fi
@@ -240,8 +240,8 @@ then
    echo ""
    for caso in $lista_first_month
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
-      echo "-,-,-,-,-,-,$caso " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+      echo "$caso,-,-,-,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_regrid_ice" != " " ]]
@@ -251,8 +251,8 @@ then
    echo ""
    for caso in $lista_regrid_ice
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
-      echo "-,-,$caso,-,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+      echo "-,-,-,-,$caso,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_regrid_oce" != " " ]]
@@ -262,8 +262,8 @@ then
    echo ""
    for caso in $lista_regrid_oce
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
-      echo "-,-,-,$caso,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+      echo "-,-,-,-,-,$caso,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_pp_C3S" != " " ]]
@@ -273,8 +273,8 @@ then
    echo ""
    for caso in $lista_pp_C3S
    do
-# echo "lt_archive,resubmit,regrid_ice,regrid_oce,postproc C3S,moredays,first month" > $filecsv
-      echo "-,-,-,-,$caso,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+      echo "-,-,-,-,-,-,$caso " >> $filecsv
    done
 fi
 
