@@ -97,7 +97,7 @@ then
    ${listacasisubmitted[@]} \n
    "
    title="RECOVER SPIKE JOBS RE-SUBMITTED"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
    echo "Done."
 fi

@@ -38,7 +38,7 @@ yy_today=`date +%Y`
 cd $DIR_CASES/
 
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases="sps4_200207*"
+listofcases="sps4_200011_016 sps4_200911_010 sps4_200911_017 sps4_200911_018 sps4_200911_019 sps4_200911_027 sps4_200911_028 sps4_201011_003"
 
 if [[ $# -eq 1 ]]
 then
@@ -54,7 +54,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 

@@ -146,7 +146,7 @@ then
       title="${CPSSYS} forecast ERROR"
       body="not all diagnostics ok for nmf ${nmf} $yyyy$st. Exiting $DIR_DIAG//plot_forecast_all_vars.sh"
 
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi
 else
@@ -155,7 +155,7 @@ else
    then
       title="${CPSSYS} forecast ERROR"
       body="not all diagnostics ok for lead ${l} $yyyy$st. Exiting $DIR_DIAG/plot_forecast_all_vars.sh"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 
       exit 1
    fi
@@ -171,7 +171,7 @@ if [[ $? -ne 0 ]]
 then
    title="${CPSSYS} forecast ERROR"
    body="pdf file not produced by script $0"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    exit 1
 fi
 
@@ -180,5 +180,5 @@ body="Dear Silvio e Stefano, \n you will find attached the diagnostics for $nrun
 
 app="${pldir}/${yyyy}${st}_${pdfflag}.pdf"
 
-${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -c $mymail -a $app
+${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -c $mymail -a $app -r "$typeofrun" -s $yyyy$st
 

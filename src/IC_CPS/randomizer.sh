@@ -71,11 +71,11 @@ do
    
             body="Using bkup as IC for perturbation $poce" 
             title="[NEMOIC] ${CPSSYS} forecast notification"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
          else
             body="Nemo IC for perturbation $poce not available" 
             title="[NEMOIC] ${CPSSYS} forecast warning"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
          fi 
       elif [[ ! -f $iceic ]]
       then
@@ -89,12 +89,12 @@ do
             ln -sf $bk_oceic $oceic
             body="Using bkup as IC for perturbation $poce" 
             title="[NEMOIC] ${CPSSYS} forecast notification"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
             icsoce+=" $poce"
          else
             body="Nemo IC for perturbation $poce not available" 
             title="[NEMOIC] ${CPSSYS} forecast warning"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
          fi 
       else
          if [[ `whoami` == $operational_user ]] ; then 
@@ -175,7 +175,7 @@ do
          ln -sf $bk_rtmic $rtmic
          body="Using $bk_lndic and $bk_rtmic as IC for perturbation $clmic" 
          title="[CLMIC] ${CPSSYS} forecast notification"
-         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r "yes" -s $yyyy$st
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r "$typeofrun" -s $yyyy$st
          if [[ $typeofrun == "forecast" ]]
          then
             icslnd+=" $clmic"
@@ -183,7 +183,7 @@ do
       else
          body="Not available IC for perturbation $clmic" 
          title="[CLMIC] ${CPSSYS} forecast warning"
-         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       fi
    else
       if [[ `whoami` == $operational_user ]] ; then 
@@ -226,12 +226,12 @@ do
          ln -sf $IC_CAM_SPS_DIR/$st/${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.nc
          body="Using ${CPSSYS}.cam.i.${yyyy}${st}.$atmic.bkup.nc as IC for perturbation $atmic" 
          title="[CAMIC] ${CPSSYS} forecast notification"
-         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
          icsatm+=" $atmic" 
       else
          body="Not available IC for perturbation $atmic" 
          title="[CAMIC] ${CPSSYS} forecast warning"
-         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r "yes" -s $yyyy$st
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r "$typeofrun" -s $yyyy$st
       fi
    else
       if [[ `whoami` == $operational_user ]] ; then 
@@ -264,7 +264,7 @@ then
          total number $totpert.\n
          EXITING $IC_SPS35/randomizer.sh"
       title="[${CPSSYS}IC] ${CPSSYS} forecast warning"
-      $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi
    exit 0
@@ -274,7 +274,7 @@ else
       NEMO: $icsoce \n
       CLM: $icslnd"
    title="[${CPSSYS}IC] ${CPSSYS} forecast notification"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 # if enough IC to generate triplette_done.txt create $checkfileok
    touch $checkfileok
 fi
@@ -374,7 +374,7 @@ if [ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]; then
 tar -cvf $yyyy${st}_scripts_CINECA.tar *
 body="Starting scripts dispach to CINECA" 
 title="${CPSSYS} forecast notification"
-$DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+$DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
  
 # FILE SYSTEM DEPENDENT
 # create backup_machine directory (not necessary (since installer should had created it) but safer) 

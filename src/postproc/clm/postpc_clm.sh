@@ -145,7 +145,7 @@ then
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi  
    
@@ -165,7 +165,7 @@ else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postpcclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    
 fi
 

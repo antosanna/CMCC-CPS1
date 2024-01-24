@@ -80,5 +80,5 @@ done
 dos2unix $outputfile
 title="${CPSSYS} forecast notification"
 body="List of backup IC on Zeus and CINECA. (Original output file $outputfile. Reference script $0)" 
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $outputfile 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $outputfile -r $typeofrun -s $yyyy$st
 echo "That's all Folks"

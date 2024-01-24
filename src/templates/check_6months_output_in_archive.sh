@@ -41,7 +41,7 @@ function Count_files()
            rof expected $nmonfore, got $n_rof in $DIR_ARCHIVE/CASO/rof/hist, \n
            YOU MUST RESUBMIT THE CASE"
            title="${CPSSYS} $typeofrun ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s YYYYMM
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s YYYYMM
        fi
    else
        ret=0

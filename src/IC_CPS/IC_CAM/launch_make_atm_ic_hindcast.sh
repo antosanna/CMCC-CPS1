@@ -65,7 +65,7 @@ do
              if [[ $typeofrun == "forecast" ]]
              then
                 title="[CAMIC] ${CPSSYS} ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
              fi
              continue
           fi

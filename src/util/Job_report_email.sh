@@ -27,5 +27,12 @@ if [ $LSB_JOBEXIT_STAT -ne 0  ] ; then
     then
        title="${CPSSYS} log_checker ERROR" 
     fi
-    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$message" -t "$title" 
+    datajob=`echo $LSB_JOBNAME |grep `date +%Y%m``
+    if [[ $datajob == "" ]];then
+       runtype="hindcast"
+    else
+       runtype="forecast"
+       startdate=`date +%Y%m`
+    fi
+    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$message" -t "$title" -r "$runtype" -s $startdate
 fi

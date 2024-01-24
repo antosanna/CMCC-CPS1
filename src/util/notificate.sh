@@ -544,7 +544,7 @@ else
   fi # end doplot
 fi # end $notif_type if statement
 
-${DIR_UTIL}/sendmail.sh -m $machine -c $ccmail -e $mymail -M "$composedmessage" -t "$title" -a "$attachment"
+${DIR_UTIL}/sendmail.sh -m $machine -c $ccmail -e $mymail -M "$composedmessage" -t "$title" -a "$attachment" -r $typeofrun -s $yyyy$st
 
 
 exit 0

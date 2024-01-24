@@ -54,11 +54,11 @@ do
       then
          title="ERROR in SIE clim computation"
          body="Something wrong with $LSB_JOBNAME script in $DIR_DIAG. "
-         ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       else
          title="SIE clim correctly computed for $st"
          body="script $LSB_JOBNAME. Now rsync to /work/csp/sp1/CESMDATAROOT/C3S_clim_1993_2016/cice/SIE_NH (from user sp1)"
-         ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       fi
    fi
 done

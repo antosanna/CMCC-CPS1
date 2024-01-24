@@ -55,7 +55,7 @@ then
       then
          body="$var C3S from CAM missing for case $caso. Exiting $DIR_POST/cam/regridFV_C3S.sh "
          title="[C3S] ${CPSSYS} forecast ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
          echo $body >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
          echo "" >> $DIR_LOG/$typeofrun/report.`date +%Y%m$d`
          exit

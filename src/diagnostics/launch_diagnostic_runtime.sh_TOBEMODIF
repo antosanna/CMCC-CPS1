@@ -160,7 +160,7 @@ set -euvx
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month"
       title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    fi
 else
    echo "Already run for first_month_${yyyy}${st}"
@@ -193,7 +193,7 @@ set -euvx
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0"
       title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    fi
 else
    echo "Already run for lead0_${yyyy}${st}"
@@ -227,7 +227,7 @@ set -euvx
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead $debug"
       title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    fi
 else
    echo "Already run for lead1_${yyyy}${st}"

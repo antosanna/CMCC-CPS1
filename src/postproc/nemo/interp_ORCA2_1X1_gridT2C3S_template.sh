@@ -45,7 +45,7 @@ if [[ ! -z $arr1 ]];then
    body="Stop $DIR_UTIL/mv_case2_archive.sh for case ${caso} mandatory_dirs in $DIR_ARCHIVE/${caso} are more than csvdir defined in ${archive_size_stats_file}"
    echo $body
    title="${CPSSYS} ERROR - mv_case2archive.sh ${caso} "
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    exit 1
 fi
 size_error=0
@@ -182,7 +182,7 @@ do
       title="${CPSSYS} forecast ERROR"
       body="C3S ocean file $C3Sfile for variable not produced for case ${caso}. 
             Script is ${DIR_POST}/nemo/$scriptname"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi
 done  

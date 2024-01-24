@@ -102,7 +102,7 @@ then
          body="$startdate forecast completed. \n
                           Now submitting submit_tar_and_push.sh"
          title="${SPSSYS} $startdate FORECAST COMPLETED"
-	 ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+	 ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 	 ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_l -t "6" -r $sla_serialID -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st"
       fi  
    fi  

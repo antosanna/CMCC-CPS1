@@ -66,22 +66,14 @@ if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
 then
    if [ ! -z $report ]
    then
-      if [ -z ${startdate} ]
-      then
-         startdate="missing_startdate"
-      fi
-      if [[ ${startdate:0:4} -lt 2024 ]]
-      then
-         typeofrun="hindcast"
-      fi
-      dirrep=$startdate
-      mkdir -p ${DIR_LOG}/report/$typeofrun
-      echo "${message}" >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      echo " " >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
       if [ "$report" = "only" ]
       then
          exit
       fi
+      runtype=$report
+      mkdir -p ${DIR_LOG}/report/$runtype
+      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
+      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
    fi
 
    if [ ! -z $bcc ]
@@ -118,23 +110,14 @@ then
   message=${message//'\n'/<br>}
   if [ ! -z $report ]
   then
-    if [ -z ${startdate} ]
-    then
-      startdate="missing_startdate"
-    fi
-      if [[ ${startdate:0:4} -lt 2024 ]]
+      if [ "$report" = "only" ]
       then
-         typeofrun="hindcast"
+         exit
       fi
-    dirrep=$startdate
-    mkdir -p ${DIR_LOG}/report/$typeofrun
-    echo "${message}" >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-    echo "" >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-
-    if [ "$report" = "only" ]
-    then
-      exit
-    fi
+      runtype=$report
+      mkdir -p ${DIR_LOG}/report/$runtype
+      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
+      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
   fi
 
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT

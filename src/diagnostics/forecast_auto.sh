@@ -101,7 +101,7 @@ if [ ! -f $checkfile ]
 then
    body="$DIR_DIAG/ncl/season_lead_glo_2cat.ncl not correctly ended for $var ${yyyy}${st}"
    title="[diags] ${SPSSYS} forecast error"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    exit 1
 fi
 
