@@ -76,8 +76,8 @@ then
       fi
       dirrep=$startdate
       mkdir -p ${DIR_LOG}/report/$typeofrun
-      echo "${message}" >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`
-      echo " " >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`
+      echo "${message}" >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
+      echo " " >> ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
       if [ "$report" = "only" ]
       then
          exit
