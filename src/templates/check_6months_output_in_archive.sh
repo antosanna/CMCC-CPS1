@@ -49,10 +49,7 @@ function Count_files()
    echo $ret
    
 }
-ens=`echo CASO|cut -d '_' -f 3|cut -c 2-3`
 
-resty=`date -d YYYYMM01' + '$nmonfore' month' +%Y`
-restm=`date -d YYYYMM01' + '$nmonfore' month' +%m`
 
 #---------------------------------------
 # check that all the files for internal purposes have been 

@@ -20,6 +20,7 @@ set -euvx
 member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 startdate=$yyyy$st
 ppp=`echo $caso|cut -d '_' -f 3 `
+ens=`echo $ppp|cut -c2,3` 
 
 # SECTION FORECAST TO BE TESTED
 set +euvx
@@ -50,10 +51,25 @@ then
 fi
 # END OF FORECAST SECTION
 
+
+
+
 # get check_qa_start from dictionary
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
+
+# get   check_oceregrid from dictionary
+if [[ ! -f $check_oceregrid ]]
+then
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
+
+fi
+# get   check_iceregrid from dictionary
+if [ ! -f $check_iceregrid ]
+then
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
+fi 
 
 #***********************************************************************
 # Standardization for CLM 
@@ -168,22 +184,31 @@ then
 fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED
-rm $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc
-rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
-rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
-rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
-rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc
-rm $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc
+if [[ `ls $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc |wc -l` -ge 1 ]] ; then
+   rm $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc
+fi
+if [[ `ls  $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc |wc -l` -ge 1 ]] ; then
+   rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
+fi
+if [[ `ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc |wc -l` -ge 1 ]] ; then
+   rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
+fi
+if [[ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc |wc -l` -ge 1 ]] ; then
+  rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
+fi
+if [[ `ls  $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc |wc -l` -ge 1 ]] ; then
+   rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc
+fi
+if [[ `ls $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc |wc -l` -ge 1 ]] ; then
+   rm $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc
+fi
 if [[ -d $DIR_TEMP/$caso ]]
 then
    rm -rf $DIR_TEMP/$caso
 fi
 chmod u-w -R $DIR_ARCHIVE/$caso/
 
-#***********************************************************************
-# Exit
-#***********************************************************************
-touch $check_pp_C3S
+#touch $check_pp_C3S
 echo "Done."
 
 

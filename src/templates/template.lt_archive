@@ -48,25 +48,7 @@ if [[ $nmonthsrun -eq $nmonfore ]] && [[ $stop_op == "nmonths" ]]
 then
 
    ./check_6months_output_in_archive_${caso}.sh 
-#interp_ORCA2_1X1_gridT2C3S.sh
-   outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
-   mkdir -p $outdirC3S
-   running=0   # 0 if running; 1 if off-line
-# check if already done (for recovery)
-   set +euvx
-   . $dictionary
-   set -euvx
-   if [[ ! -f $check_oceregrid ]]
-   then
 
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
-
-   fi
-# get   check_iceregrid from dictionary
-   if [ ! -f $check_iceregrid ]
-   then
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
-   fi
 # now modify the environment to run the extra $nmoredays days to get $fixsimdays
    ./xmlchange STOP_OPTION="ndays" 
    dif=`${DIR_UTIL}/days_in_forecast.sh -y $yyyy -m $st -l true | tail -1`
