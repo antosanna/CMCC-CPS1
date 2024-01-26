@@ -26,10 +26,11 @@ do
          then
             if [[ ! -f $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE ]]
             then
+               ssh $remote chmod -R a+x $DIR_ARCHIVE1_remote/$caso
                rsync -auv $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                rsync -auv --remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
-               chmod -R u-w $DIR_ARCHIVE1/$caso
+               chmod -R a-w $DIR_ARCHIVE1/$caso
                n_rsync=$(($n_rsync + 1))
                if [[ $n_rsync -eq 5 ]]
                then

@@ -54,7 +54,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 

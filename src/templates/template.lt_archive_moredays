@@ -22,7 +22,7 @@ then
    . $dictionary
    set -euvx
    touch $check_run_moredays
-   if [[ ! -f $check_pp_C3S ]]
+   if [[ ! -f $check_pp_C3S ]] && [[ $machine == "juno" ]]
    then
       ./postproc_C3S_${caso}.sh 
    fi  
