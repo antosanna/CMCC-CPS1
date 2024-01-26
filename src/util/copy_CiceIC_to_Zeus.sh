@@ -4,36 +4,41 @@
 
 set -euxv
 
-remote=sps-dev@zeus01.cmcc.scc
+remote=sps-dev@fdtn-zeus
 remotedir=/data/csp/sps-dev/archive/IC/CICE_CPS1
 localdir=$IC_CICE_CPS_DIR
 #copy ciceIC to Zeus
 nmax=20
-for st in `seq -w 2 2 12`
+for st in 01 02 03 04 06 09 12
 do
    n_rsync=0
    for yyyy in {1993..2022}
    do
-      if [[ -f $DIR_TEMP/ciceIC_${yyyy}${st}_done ]]
-      then
-         continue
-      fi
-      n_IC=`ls $localdir/$st/*$yyyy-${st}*.nc|wc -l`
-      if [[ $n_IC -eq 0 ]]
-      then
-          touch $DIR_TEMP/ciceIC_${yyyy}${st}_missing
-          continue
-      fi
-      listaIC=`ls $localdir/$st/*$yyyy-${st}*.nc`
-      for ff in $listaIC
+      for pp in `seq -w 01 04` 
       do
+         flag_miss=$DIR_TEMP/ciceIC_${yyyy}${st}_${pp}_missing
+         flag_done=$DIR_TEMP/ciceIC_${yyyy}${st}_${pp}_done 
+         if [[ -f ${flag_done} ]]
+         then
+            continue
+         fi
+         n_IC=`ls $localdir/$st/*$yyyy-${st}*.$pp.nc|wc -l`
+         if [[ $n_IC -eq 0 ]]
+         then
+             touch ${flag_miss}
+             continue
+         fi
+         ff=`ls $localdir/$st/*$yyyy-${st}*.$pp.nc`
          rsync -auv $ff ${remote}:$remotedir/$st
+         touch ${flag_done}
+         if [[ -f ${flag_miss} ]] ; then 
+           rm ${flag_miss}
+         fi
+         n_rsync=$(($n_rsync + 1))
+         if [[ $n_rsync -ge $nmax ]]
+         then
+           exit
+         fi
       done
-      touch $DIR_TEMP/ciceIC_${yyyy}${st}_done
-      n_rsync=$(($n_rsync + 1))
-      if [[ $n_rsync -ge $nmax ]]
-      then
-         exit
-      fi
    done
 done

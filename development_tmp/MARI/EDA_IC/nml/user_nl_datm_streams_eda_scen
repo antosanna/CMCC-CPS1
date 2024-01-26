@@ -31,7 +31,7 @@
 !      <file>foo3</file>
 !   </datafiles>
 !------------------------------------------------------------------------
-presaero.hist:datafiles=/data/inputs/CESM/inputdata/atm/cam/chem/trop_mozart_aero/aero/aerosoldep_WACCM.ensmean_monthly_hist_1849-2015_0.9x1.25_CMIP6_c180926.nc
+presaero.hist:datafiles=/data/inputs/CESM/inputdata/atm/cam/chem/trop_mozart_aero/aero/aerodep_clm_SSP585_b.e21.BSSP585cmip6.f09_g17.CMIP6-SSP5-8.5.001_2014-2101_monthly_0.9x1.25_c190419.nc
 presaero.hist:taxmode=cycle
 presaero.hist:tintalgo=linear
 presaero.hist:readmode=single
@@ -1011,7 +1011,7 @@ CLMGSWP3v1.TPQW:datavars=TBOT     Sa_tbot,\
 CLMGSWP3v1.TPQW:offset=0
 
 
-presndep.hist:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_b.e21.BWHIST.f09_g17.CMIP6-historical-WACCM.ensmean_1849-2015_monthly_0.9x1.25_c180926.nc
+presndep.hist:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_SSP585_b.e21.BWSSP585cmip6.f09_g17.CMIP6-SSP5-8.5-WACCM.001_2014-2101_monthly_0.9x1.25_c190211.nc
 presndep.hist:taxmode=cycle
 presndep.hist:tintalgo=linear
 presndep.hist:readmode=single
@@ -1027,7 +1027,7 @@ presndep.hist:datavars=NDEP_NHx_month    Faxa_ndep_nhx,\
           NDEP_NOy_month    Faxa_ndep_noy
 presndep.hist:offset=0
 
-preso3.hist:datafiles=/data/inputs/CESM/inputdata/cdeps/datm/ozone/O3_surface.f09_g17.CMIP6-historical-WACCM.001.monthly.185001-201412.nc
+preso3.hist:datafiles=/data/inputs/CESM/inputdata/cdeps/datm/ozone/O3_surface.f09_g17.CMIP6-SSP5-8.5-WACCM.001.monthly.201501-210012.nc
 preso3.hist:taxmode=cycle
 preso3.hist:tintalgo=linear
 preso3.hist:readmode=single
@@ -1043,7 +1043,7 @@ preso3.hist:datavars= O3  Sa_o3
 preso3.hist:offset=0
 
 
-co2tseries.20tr:datafiles=/data/inputs/CESM/inputdata/atm/datm7/CO2/fco2_datm_global_simyr_1750-2014_CMIP6_c180929.nc
+co2tseries.20tr:datafiles=/data/inputs/CESM/inputdata/atm/datm7/CO2/fco2_datm_globalSSP5-8.5__simyr_2014-2501_CMIP6_c190506.nc
 co2tseries.20tr:taxmode=extend
 co2tseries.20tr:tintalgo=linear
 co2tseries.20tr:readmode=single

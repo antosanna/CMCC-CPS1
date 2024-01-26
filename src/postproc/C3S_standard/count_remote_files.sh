@@ -1,0 +1,2 @@
+cd $HOME
+ls -l

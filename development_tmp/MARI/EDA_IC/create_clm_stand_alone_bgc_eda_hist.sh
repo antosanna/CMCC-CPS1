@@ -6,8 +6,8 @@
 set -euvx
 
 script_dir=/users_home/csp/$USER/CPS/CMCC-CPS1/development_tmp/MARI/EDA_IC
-refcase="cm3_lndHIST_bgc_NoSnAg_eda${member}_spinup1960"
-caze="cm3_lndHIST_bgc_NoSnAg_eda${member}_HIST_TEST"
+refcase="cm3_lndHIST_bgc_NoSnAg_eda${member}_cyc1960"
+caze="cm3_lndHIST_bgc_NoSnAg_eda${member}_hist"
 if [[ -d $DIR_CASES/$caze ]] ; then
   rm -rf $DIR_CASES/$caze
 fi
@@ -27,6 +27,7 @@ user_mod=dp16116
 sed 's/MEMBER/'$member'/g' $script_dir/nml/user_nl_datm_streams_eda_hist > $DIR_CASES/$caze/user_nl_datm_streams
 #to deactivate reset_snow
 sed 's/reset_snow/!reset_snow/g' $script_dir/nml/user_nl_clm_NoSnAg > $DIR_CASES/$caze/user_nl_clm
+
 cp -p $script_dir/nml/user_nl_hydros $DIR_CASES/$caze
 
 cd ${DIR_CASES}/$caze
