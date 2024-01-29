@@ -1,25 +1,22 @@
 #!/bin/sh -l
-#BSUB  -J launch_create_eda
-#BSUB  -q s_long
-#BSUB  -o logs/launch_create_eda.out.%J  
-#BSUB  -e logs/launch_create_eda.err.%J  
-#BSUB  -P 0490
+#launched with submitcommand by $DIR_LND_IC/launch_edaFORC_4hindcast.sh
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 set -euvx
-script_dir=$DIR_LND_IC
 log_dir=${DIR_LOG}/IC_CLM
-# create files with last analysis data
 mkdir -p ${log_dir}
-yy=1960
+
+##SETUP for HINDCAST
+yy=2023
 mm=01
 
-finalyy="1969"
+finalyy="2023"
 finalmm="12"
 
 debug=0
 backup=0
+#tag for eda member (1, 2, 3)
 n=$1
 while [[ ${yy}${mm} -le $finalyy$finalmm ]] ; do
 
@@ -40,12 +37,12 @@ while [[ ${yy}${mm} -le $finalyy$finalmm ]] ; do
          echo "advancing without recomputing"
          continue
       fi
-      . ${script_dir}/create_edaFORC.sh $yy $mm $n $backup $checkfile $debug
+      . ${DIR_LND_IC}/create_edaFORC.sh $yy $mm $n $backup $checkfile $debug
     if [[ ! -f $checkfile ]]
     then
        body="CLM ICs: Forcing files from EDA member $n data NOT created
           generating scripts:
-          ${script_dir}/create_edaFORC.sh "
+          ${DIR_LND_IC}/create_edaFORC.sh "
        title="[CLMIC] ${CPSSYS} forecast ERROR"
        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
     else

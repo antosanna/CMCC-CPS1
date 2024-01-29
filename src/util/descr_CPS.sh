@@ -43,7 +43,8 @@ then
    if [[ $machine == "juno" ]]
    then
       operational_user=cp1
-      pID=0490 #Juno
+#      pID=0490 #Juno
+      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
@@ -58,7 +59,8 @@ then
       DIR_REST_OIS=/work/csp/aspect/CESM2/rea_archive/
    elif [[ $machine == "zeus" ]]
    then
-      pID=0574 #zeus
+#      pID=0574 #zeus
+      pID=0438 #zeus
       nnodes_SC=120
       cores_per_node=36
       cores_per_run=720
@@ -332,6 +334,8 @@ DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
 WORK_C3S=$DIR_ARCHIVE_C3S
 # ####### WORK DIRS FOR ICs
 WORKDIR_LAND=$WORK/WORK_LAND_IC
+# ####### REPO for EDA forcing - 3hourly for CLM
+forcDIReda=${MYCESMDATAROOT}/CMCC-${CPSSYS}/inputs/FORC4CLM
 # ######## ICs_CAM
 IC_CPS_guess=$WORK/CPS/CMCC-${CPSSYS}/IC_CPS_guess
 WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM

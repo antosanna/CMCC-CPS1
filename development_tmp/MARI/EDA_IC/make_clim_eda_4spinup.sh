@@ -13,11 +13,13 @@ set +euxv
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_cdo
+. ${DIR_UTIL}/load_nco
+. ${DIR_UTIL}/load_ncl
 set -euxv
 
 member=$1  #eda member tag
 WORKDIR_LAND=$SCRATCHDIR/WORK_LAND_IC
-script_dir=`pwd`
+script_dir=${DIR_LND_IC}
 mkdir -p $WORKDIR_LAND
 
 #################################

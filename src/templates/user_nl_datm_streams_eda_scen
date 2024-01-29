@@ -31,19 +31,19 @@
 !      <file>foo3</file>
 !   </datafiles>
 !------------------------------------------------------------------------
-presaero.hist:datafiles=/data/inputs/CESM/inputdata/atm/cam/chem/trop_mozart_aero/aero/aerodep_clm_SSP585_b.e21.BSSP585cmip6.f09_g17.CMIP6-SSP5-8.5.001_2014-2101_monthly_0.9x1.25_c190419.nc
-presaero.hist:taxmode=cycle
-presaero.hist:tintalgo=linear
-presaero.hist:readmode=single
-presaero.hist:mapalgo=bilinear
-presaero.hist:dtlimit=1.5
-presaero.hist:year_first=2015
-presaero.hist:year_last=2030
-presaero.hist:year_align=2015
-presaero.hist:vectors=null
-presaero.hist:lev_dimname=null
-presaero.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
-presaero.hist:datavars=  BCDEPWET   Faxa_bcphiwet,\
+presaero.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/atm/cam/chem/trop_mozart_aero/aero/aerodep_clm_SSP585_b.e21.BSSP585cmip6.f09_g17.CMIP6-SSP5-8.5.001_2014-2101_monthly_0.9x1.25_c190419.nc
+presaero.SSP5-8.5:taxmode=cycle
+presaero.SSP5-8.5:tintalgo=linear
+presaero.SSP5-8.5:readmode=single
+presaero.SSP5-8.5:mapalgo=bilinear
+presaero.SSP5-8.5:dtlimit=1.5
+presaero.SSP5-8.5:year_first=2015
+presaero.SSP5-8.5:year_last=2030
+presaero.SSP5-8.5:year_align=2015
+presaero.SSP5-8.5:vectors=null
+presaero.SSP5-8.5:lev_dimname=null
+presaero.SSP5-8.5:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+presaero.SSP5-8.5:datavars=  BCDEPWET   Faxa_bcphiwet,\
       BCPHODRY   Faxa_bcphodry,\
       BCPHIDRY   Faxa_bcphidry,\
       OCDEPWET   Faxa_ocphiwet,\
@@ -57,7 +57,7 @@ presaero.hist:datavars=  BCDEPWET   Faxa_bcphiwet,\
       DSTX03DD   Faxa_dstdry3,\
       DSTX04WD   Faxa_dstwet4,\
       DSTX04DD   Faxa_dstdry4
-presaero.hist:offset=0
+presaero.SSP5-8.5:offset=0
 
 
 CLMGSWP3v1.Solar:taxmode=cycle
@@ -66,7 +66,7 @@ CLMGSWP3v1.Solar:readmode=single
 CLMGSWP3v1.Solar:mapalgo=bilinear
 CLMGSWP3v1.Solar:dtlimit=1.5
 CLMGSWP3v1.Solar:year_first=2015
-CLMGSWP3v1.Solar:year_last=2014
+CLMGSWP3v1.Solar:year_last=2030
 CLMGSWP3v1.Solar:year_align=2015
 CLMGSWP3v1.Solar:vectors=null
 CLMGSWP3v1.Solar:lev_dimname=null
@@ -274,7 +274,7 @@ CLMGSWP3v1.Precip:readmode=single
 CLMGSWP3v1.Precip:mapalgo=bilinear
 CLMGSWP3v1.Precip:dtlimit=1.5
 CLMGSWP3v1.Precip:year_first=2015
-CLMGSWP3v1.Precip:year_last=2014
+CLMGSWP3v1.Precip:year_last=2030
 CLMGSWP3v1.Precip:year_align=2015
 CLMGSWP3v1.Precip:vectors=null
 CLMGSWP3v1.Precip:lev_dimname=null
@@ -687,52 +687,52 @@ CLMGSWP3v1.TPQW:datavars=TBOT     Sa_tbot,\
 CLMGSWP3v1.TPQW:offset=0
 
 
-presndep.hist:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_SSP585_b.e21.BWSSP585cmip6.f09_g17.CMIP6-SSP5-8.5-WACCM.001_2014-2101_monthly_0.9x1.25_c190211.nc
-presndep.hist:taxmode=cycle
-presndep.hist:tintalgo=linear
-presndep.hist:readmode=single
-presndep.hist:mapalgo=bilinear
-presndep.hist:dtlimit=1.5
-presndep.hist:year_first=2015
-presndep.hist:year_last=2030
-presndep.hist:year_align=2015
-presndep.hist:vectors=null
-presndep.hist:lev_dimname=null
-presndep.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
-presndep.hist:datavars=NDEP_NHx_month    Faxa_ndep_nhx,\
+presndep.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_SSP585_b.e21.BWSSP585cmip6.f09_g17.CMIP6-SSP5-8.5-WACCM.001_2014-2101_monthly_0.9x1.25_c190211.nc
+presndep.SSP5-8.5:taxmode=cycle
+presndep.SSP5-8.5:tintalgo=linear
+presndep.SSP5-8.5:readmode=single
+presndep.SSP5-8.5:mapalgo=bilinear
+presndep.SSP5-8.5:dtlimit=1.5
+presndep.SSP5-8.5:year_first=2015
+presndep.SSP5-8.5:year_last=2030
+presndep.SSP5-8.5:year_align=2015
+presndep.SSP5-8.5:vectors=null
+presndep.SSP5-8.5:lev_dimname=null
+presndep.SSP5-8.5:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+presndep.SSP5-8.5:datavars=NDEP_NHx_month    Faxa_ndep_nhx,\
           NDEP_NOy_month    Faxa_ndep_noy
-presndep.hist:offset=0
+presndep.SSP5-8.5:offset=0
 
-preso3.hist:datafiles=/data/inputs/CESM/inputdata/cdeps/datm/ozone/O3_surface.f09_g17.CMIP6-SSP5-8.5-WACCM.001.monthly.201501-210012.nc
-preso3.hist:taxmode=cycle
-preso3.hist:tintalgo=linear
-preso3.hist:readmode=single
-preso3.hist:mapalgo=bilinear
-preso3.hist:dtlimit=1.5
-preso3.hist:year_first=2015
-preso3.hist:year_last=2030
-preso3.hist:year_align=2015
-preso3.hist:vectors=null
-preso3.hist:lev_dimname=null
-preso3.hist:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
-preso3.hist:datavars= O3  Sa_o3
-preso3.hist:offset=0
+preso3.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/cdeps/datm/ozone/O3_surface.f09_g17.CMIP6-SSP5-8.5-WACCM.001.monthly.201501-210012.nc
+preso3.SSP5-8.5:taxmode=cycle
+preso3.SSP5-8.5:tintalgo=linear
+preso3.SSP5-8.5:readmode=single
+preso3.SSP5-8.5:mapalgo=bilinear
+preso3.SSP5-8.5:dtlimit=1.5
+preso3.SSP5-8.5:year_first=2015
+preso3.SSP5-8.5:year_last=2030
+preso3.SSP5-8.5:year_align=2015
+preso3.SSP5-8.5:vectors=null
+preso3.SSP5-8.5:lev_dimname=null
+preso3.SSP5-8.5:meshfile=/data/inputs/CESM/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+preso3.SSP5-8.5:datavars= O3  Sa_o3
+preso3.SSP5-8.5:offset=0
 
 
-co2tseries.20tr:datafiles=/data/inputs/CESM/inputdata/atm/datm7/CO2/fco2_datm_globalSSP5-8.5__simyr_2014-2501_CMIP6_c190506.nc
-co2tseries.20tr:taxmode=extend
-co2tseries.20tr:tintalgo=linear
-co2tseries.20tr:readmode=single
-co2tseries.20tr:mapalgo=none
-co2tseries.20tr:dtlimit=1.e30
-co2tseries.20tr:year_first=2015
-co2tseries.20tr:year_last=2030
-co2tseries.20tr:year_align=2015
-co2tseries.20tr:vectors=null
-co2tseries.20tr:lev_dimname=null
-co2tseries.20tr:meshfile=none
-co2tseries.20tr:datavars=CO2   Sa_co2diag
-co2tseries.20tr:offset=0
+co2tseries.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/atm/datm7/CO2/fco2_datm_globalSSP5-8.5__simyr_2014-2501_CMIP6_c190506.nc
+co2tseries.SSP5-8.5:taxmode=extend
+co2tseries.SSP5-8.5:tintalgo=linear
+co2tseries.SSP5-8.5:readmode=single
+co2tseries.SSP5-8.5:mapalgo=none
+co2tseries.SSP5-8.5:dtlimit=1.e30
+co2tseries.SSP5-8.5:year_first=2015
+co2tseries.SSP5-8.5:year_last=2030
+co2tseries.SSP5-8.5:year_align=2015
+co2tseries.SSP5-8.5:vectors=null
+co2tseries.SSP5-8.5:lev_dimname=null
+co2tseries.SSP5-8.5:meshfile=none
+co2tseries.SSP5-8.5:datavars=CO2   Sa_co2diag
+co2tseries.SSP5-8.5:offset=0
 
 
 

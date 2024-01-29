@@ -2,8 +2,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 set -euvx
-set -euvx
-LOG_FILE=$DIR_LOG/tests/launch_mv_IC_2ICDIR_CLM.`date +%Y%m%d%H%M`
+LOG_FILE=$DIR_LOG/IC_CLM/launch_mv_IC_2ICDIR_CLM.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 # all these vars defined above but not yet available

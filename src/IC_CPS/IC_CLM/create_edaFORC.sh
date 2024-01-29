@@ -30,6 +30,8 @@ set +euxv
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_cdo
+. ${DIR_UTIL}/load_nco
+. ${DIR_UTIL}/load_ncl
 set -euxv
 
 debug=${6:-0}
@@ -45,14 +47,13 @@ checkfile=$5
 
 
 ####definition to be checked/included in descr_CPS.sh
-forcDIReda=$SCRATCHDIR/EDA_n$member
-mkdir -p $forcDIReda
-forcDIReda_bkup=$forcDIReda
+forcDIReda_ens=${forcDIReda}/EDA_n$member
+mkdir -p ${forcDIReda_ens}
+forcDIReda_bkup=${forcDIReda_ens}
 WORKDIR_LAND=$SCRATCHDIR/WORK_LAND_IC
 mkdir -p ${WORKDIR_LAND}
-REPOSITORY=$SCRATCHDIR/files4CPS1
-mymail=marianna.benassi@cmcc.it
-freq_forcings=8
+REPOSITORY=$MYCESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}
+freq_forcings=8 #3hourly -> 8 per day
 #------------------------------------------------
 #-------------------------------------------------------------
 # Set time variables
@@ -74,16 +75,16 @@ set -euvx
 
 if [[ $backup -eq 0 ]]  #operational
 then
-  forcDIR=$forcDIReda
+  forcDIR=${forcDIReda_ens}
   wdir=workdir_eda${member}
-  jobname=launch_EDA${member}
+  jobname=launch_create_edaFORC_${member}
   preffix="clmforc.EDA${member}.0.5d"
   title_tag="[CLMIC]"
 elif [[ $backup -eq 1 ]]  #backup mode
 then
   forcDIR=$forcDIReda_bkup
   wdir=workdir_eda${member}_bkup
-  jobname=launch_EDA${member}_bkup
+  jobname=launch_create_edaFORC_${member}_bkup
   preffix="clmforc.EDA${member}.bk.0.5d"
   title_tag="[CLMIC-backup]"
 elif [[ $backup -gt 1 ]]  #backup mode
@@ -97,7 +98,7 @@ fi
 
 if [ $debug -eq 1 ]
 then
-   forcDIR=$SCRATCHDIR/developSPS3.5/inputdata/atm/datm7/sps3.5_atm_forcing.datm7.EDA.0.5d
+   forcDIR=$SCRATCHDIR/forc4CLM_eda${member}
    if [ ! -d $forcDIR ]
    then
        echo "Missing folder $forcDIR. Note that you are in debug mode."
@@ -361,7 +362,7 @@ do
       #------------------------------------------------
       # bilinear interpolation to template grid
       #------------------------------------------------
-      cdo remapbil,$REPOSITORY/targetgrid $var.gauss.${yr}-${mo}_n${member}_tstep.nc $var.${yr}-${mo}_n${member}_grid.nc
+      cdo remapbil,$REPOGRID/targetgrid $var.gauss.${yr}-${mo}_n${member}_tstep.nc $var.${yr}-${mo}_n${member}_grid.nc
       #rm $var.gauss.${yr}-${mo}_n${member}_tstep.nc
       #------------------------------------------------
       # ensure correct longitudes
@@ -475,9 +476,6 @@ export outfile=temp.${yr}-${mo}_n${member}.nc
 #------------------------------------------------
 # copy the reference file !!!! TO BE UPDATED
 #------------------------------------------------
-#export templateTPQWL=$REPOSITORY/templates4CLM/clmforc.cruncep.V4.c2011.0.5d.TPQWL.1901-${mo}.nc
-#export templatePREC=$REPOSITORY/templates4CLM/clmforc.cruncep.V4.c2011.0.5d.Prec.1901-${mo}.nc
-#export templateSOLR=$REPOSITORY/templates4CLM/clmforc.cruncep.V4.c2011.0.5d.Solr.1901-${mo}.nc
 export templateTPQWL=$REPOSITORY/templates4CLM/TPHWL/clmforc.GSWP3.c2011.0.5x0.5.TPQWL.1901-${mo}.nc
 export templatePREC=$REPOSITORY/templates4CLM/Precip/clmforc.GSWP3.c2011.0.5x0.5.Prec.1901-${mo}.nc
 export templateSOLR=$REPOSITORY/templates4CLM/Solar/clmforc.GSWP3.c2011.0.5x0.5.Solr.1901-${mo}.nc
@@ -780,4 +778,7 @@ mv ${preffix}.Prec.$yr-$mo.nc $forcDIR/Precip/
 mv ${preffix}.Solr.$yr-$mo.nc  $forcDIR/Solar/
 mv ${preffix}.TPQWL.$yr-$mo.nc $forcDIR/TPHWL/
 
+chmod a+x $forcDIR/Precip/${preffix}.Prec.$yr-$mo.nc
+chmod a+x $forcDIR/Solar/${preffix}.Solr.$yr-$mo.nc
+chmod a+x $forcDIR/TPHWL/${preffix}.TPQWL.$yr-$mo.nc
 touch $checkfile
