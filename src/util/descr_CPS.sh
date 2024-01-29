@@ -43,8 +43,8 @@ then
    if [[ $machine == "juno" ]]
    then
       operational_user=cp1
-#      pID=0490 #Juno
-      pID=0438 #Juno
+      pID=0490 #Juno
+#      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
@@ -59,8 +59,8 @@ then
       DIR_REST_OIS=/work/csp/aspect/CESM2/rea_archive/
    elif [[ $machine == "zeus" ]]
    then
-#      pID=0574 #zeus
-      pID=0438 #zeus
+      pID=0574 #zeus
+      #pID=0438 #zeus
       nnodes_SC=120
       cores_per_node=36
       cores_per_run=720

@@ -687,7 +687,7 @@ CLMGSWP3v1.TPQW:datavars=TBOT     Sa_tbot,\
 CLMGSWP3v1.TPQW:offset=0
 
 
-presndep.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_SSP585_b.e21.BWSSP585cmip6.f09_g17.CMIP6-SSP5-8.5-WACCM.001_2014-2101_monthly_0.9x1.25_c190211.nc
+presndep.SSP5-8.5:datafiles=/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP5-8.5-WACCM_1849-2101_monthly_c191007.nc
 presndep.SSP5-8.5:taxmode=cycle
 presndep.SSP5-8.5:tintalgo=linear
 presndep.SSP5-8.5:readmode=single
