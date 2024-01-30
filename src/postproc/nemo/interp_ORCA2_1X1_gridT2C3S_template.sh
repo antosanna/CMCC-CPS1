@@ -96,7 +96,6 @@ EOF
 }
 
 
-# get check_archive_oce_ok from dictionary
 ens=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary

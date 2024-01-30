@@ -17,7 +17,6 @@ set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 #
-member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 startdate=$yyyy$st
 ppp=`echo $caso|cut -d '_' -f 3 `
 ens=`echo $ppp|cut -c2,3` 
@@ -120,48 +119,69 @@ fi
 wkdir_cam=$SCRATCHDIR/regrid_C3S/CAM/$caso
 mkdir -p ${wkdir_cam}
 #get check_all_camC3S_done from dictionary
-filetyp="h0 h1 h2 h3"
-for ft in $filetyp
-do
-#get check_regridC3S_type from dictionary
-   if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
-   then
-# meaning that preproc files have been done by create_cam_files.sh
-# and regridded by regridFV_C3S.sh
-      continue
-   fi
-   finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
-   if [[ ! -f $finalfile ]]
-   then
-      input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile" 
-          # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
-          # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 15000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
-   else
-# meaning that preproc files have been done by create_cam_files.sh
-# so submit without dependency
-      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
-          # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 15000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
-   fi
-         
-done
-
-# now wait that all of the ft files have been regridded
+if [[ ! -f $check_all_camC3S_done ]]
+then
+   filetyp="h0 h1 h2 h3"
+   for ft in $filetyp
+   do
+   #get check_regridC3S_type from dictionary
+      if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
+      then
+   # meaning that preproc files have been done by create_cam_files.sh
+   # and regridded by regridFV_C3S.sh
+         continue
+      fi
+      finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+      if [[ ! -f $finalfile ]]
+      then
+         input="$caso $ft $yyyy $st $ens ${wkdir_cam} $finalfile" 
+             # ADD the reservation for serial !!!
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
+             # ADD the reservation for serial !!!
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 15000 -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      else
+   # meaning that preproc files have been done by create_cam_files.sh
+   # so submit without dependency
+         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
+             # ADD the reservation for serial !!!
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 15000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      fi
+            
+   done
+   
+   # now wait that all of the ft files have been regridded
+   while `true`
+   do
+      if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
+      then
+         touch $check_all_camC3S_done
+         break
+      fi
+      sleep 60
+   done
+fi # if on $check_all_camC3S_done 
 while `true`
 do
-   if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
+   if [[ -f $check_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
    then
       break
    fi
    sleep 60
 done
-input="$ft $caso $outdirC3S $check_all_camC3S_done $check_qa_start"
-          # ADD the reservation for serial !!!
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 1000 -j check_C3S_atm_vars_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s check_C3S_atm_vars.sh -i "$input"
-
+touch $check_pp_C3S
+real="r"${ens}"i00p00"
+#this should be redundant after $check_pp_C3S but we keep it
+allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
+if [[ $allC3S -eq $nfieldsC3S ]] 
+then
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$ens $outdirC3S $startdate $caso"
+else
+   body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the neumber of postprocessed files is $allC3S instead of required $nfieldsC3S"
+   title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+   exit 1
+fi
 #***********************************************************************
 # checkout the list
 #***********************************************************************
@@ -208,9 +228,7 @@ then
 fi
 chmod u-w -R $DIR_ARCHIVE/$caso/
 
-#touch $check_pp_C3S
 echo "Done."
-
 
 exit 0
 
