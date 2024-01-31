@@ -7,8 +7,8 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 # all these vars defined above but not yet available
 #TEMPORARY
-iniy=2013
-endy=2014
+iniy=2015
+endy=2022
 # END TEMPORARY
 for yyyy in `seq $iniy $endy`
 do
@@ -20,8 +20,7 @@ do
       for plnd in `seq -w 1 ${n_ic_clm}`
       do  
          input="$yyyy $st $plnd"
-         $DIR_UTIL/submitcommand.sh -q s_short -M 2000 -s  mv_IC_2ICDIR.hindcast.sh -i "$input" -d $DIR_LND_IC -j mv_IC_2ICDIR_${yyyy}${st}_${plnd} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
+         $DIR_UTIL/submitcommand.sh -q s_short -M 200 -s  mv_IC_2ICDIR.hindcast.sh -i "$input" -d $DIR_LND_IC -j mv_IC_2ICDIR_${yyyy}${st}_${plnd} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
       done
    done
 done
-~                             

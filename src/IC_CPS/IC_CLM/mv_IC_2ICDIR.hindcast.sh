@@ -14,7 +14,7 @@ pp=`printf '%.2d' $((10#$ppland))`
 if [[ $yyyy -lt $yyyySCEN ]] ; then
     clm_case=cm3_lndHIST_bgc_NoSnAg_eda${ppland}_hist
 else
-    if [[ $yyy -eq $yyyySCEN ]] && [[ $st -eq 01 ]] ; then
+    if [[ $yyyy -eq $yyyySCEN ]] && [[ $st -eq 01 ]] ; then
         clm_case=cm3_lndHIST_bgc_NoSnAg_eda${ppland}_hist
     else
         clm_case=cm3_lndSSP5-8.5_bgc_NoSnAg_eda${ppland}_scen
