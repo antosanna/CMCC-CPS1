@@ -73,9 +73,8 @@ then
       envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
       env_workflow_tag=cmcc
    fi
-# TEMPORARY +
+   MYCESMDATAROOT1=/data/$DIVISION/$operational_user/
    DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
-# TEMPORARY -
    WORK=/work/$DIVISION/$USER/
    WORK1=/work/$DIVISION/$operational_user/
 #   S_apprun=??? #SERIAL_sps35 Zeus
@@ -318,6 +317,7 @@ DIR_OCE_IC=$IC_CPS/IC_NEMO
 DIR_LND_IC=$IC_CPS/IC_CLM
 #REPOSITORY=$MYCESMDATAROOT/CMCC-${CPSSYS}/inputs/files4${CPSSYS}
 REPOGRID=$MYCESMDATAROOT/CMCC-${CPSSYS}/regrid_files
+REPOGRID1=$MYCESMDATAROOT1/CMCC-${CPSSYS}/regrid_files
 DIR_EXE=$DIR_ROOT/executables_cesm
 DIR_EXE1=$DIR_ROOT1/executables_cesm
 DIR_REP=$DIR_LOG/reports
