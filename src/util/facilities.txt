@@ -2,5 +2,8 @@ FACILITIES FOR SPS4
 
 monitor_st <st>
 monitor_run.sps4
+$DIR_UTIL/check_CamIC
+$DIR_UTIL/check_oceIC
+$DIR_UTIL/check_ClmIC
 
 
