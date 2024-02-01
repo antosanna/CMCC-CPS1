@@ -31,7 +31,7 @@ DPSSystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2015
 refcaseHIST=${CPSSYS}_HIST_reference
-refcaseSCEN=${CPSSYS}_SCEN_reference
+refcaseSCEN=${CPSSYS}_SSP585_reference
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

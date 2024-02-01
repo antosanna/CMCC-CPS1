@@ -4,10 +4,20 @@
 
 set -eu
 
-for st in `seq -w 1 12`
+stlist=`seq -w 1 12`
+ylist=`seq 1993 2022`
+if [[ $# -eq 1 ]]
+then
+   stlist=$1
+fi
+if [[ $# -eq 2 ]]
+then
+   stlist=$1
+   ylist=$2
+fi
+for st in $stlist
 do
-   n_rsync=0
-   for yyyy in {1993..2022}
+   for yyyy in $ylist
    do
       n_IC_local=`ls $IC_NEMO_CPS_DIR/$st/*$yyyy-${st}*.nc 2>/dev/null|wc -l`
       n_IC_CICE_local=`ls $IC_CICE_CPS_DIR/$st/*$yyyy-${st}*.nc 2>/dev/null|wc -l`
