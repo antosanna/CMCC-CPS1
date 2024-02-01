@@ -268,7 +268,7 @@ then
 fi
 if [[ "$lista_pp_C3S" != " " ]]
 then
-   echo "Cases with interrupted postproc_C3S.sh TEMPORARY DISABLED"
+   echo "Cases with interrupted postproc_C3S.sh"
    echo "$lista_pp_C3S" 
    echo ""
    for caso in $lista_pp_C3S
