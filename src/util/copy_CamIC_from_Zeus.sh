@@ -20,6 +20,12 @@ do
       then
          continue
       fi
+      n_IC_local=`ls $IC_CAM_CPS_DIR/$st/*$yyyy-${st}*.nc|wc -l`
+      if [[ $n_IC_local -eq 10 ]]
+      then
+          touch ${flag_done}
+          continue
+      fi
       n_IC=`ssh $remote ls $remotedir/$st/*$yyyy-${st}*.nc|wc -l`
       if [[ $n_IC -ne 10 ]]
       then

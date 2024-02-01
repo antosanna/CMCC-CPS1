@@ -66,12 +66,12 @@ if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
 then
    if [ ! -z $report ]
    then
+      runtype=$report
+      mkdir -p ${DIR_LOG}/report/$runtype
+      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
+      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
       if [ "$report" = "only" ]
       then
-         runtype=$report
-         mkdir -p ${DIR_LOG}/report/$runtype
-         echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-         echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
          exit
       fi
    fi
