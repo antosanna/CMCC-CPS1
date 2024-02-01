@@ -94,6 +94,13 @@ sed -i '/inithist/d' user_nl_cam
 echo "ncdata='$ncdata'">>user_nl_cam
 echo "inithist='ENDOFRUN'">>user_nl_cam
 
+#----------------------------------------------------------
+# CLM  add use_init_interp = .true. IF SCENARIO
+#----------------------------------------------------------
+if [[ $yyyy -ge $yyyySCEN ]]
+then
+   echo "use_init_interp = .true." >>user_nl_clm
+fi
 #
 echo "timestep = $((86400 / $ncpl))"
 echo "vertical levels 83"
