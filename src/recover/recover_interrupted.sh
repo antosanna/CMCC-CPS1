@@ -38,7 +38,7 @@ yy_today=`date +%Y`
 cd $DIR_CASES/
 
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases="sps4_199905_012 sps4_200805_030 sps4_200905_009 sps4_199905_001 sps4_199905_002 sps4_199905_004 sps4_199905_006 sps4_199905_008 sps4_199905_010 sps4_199905_011 sps4_200305_020 sps4_200605_014 sps4_200605_015 sps4_200605_025 sps4_200705_002 sps4_200705_008 sps4_200705_012 sps4_200705_013 sps4_200705_016 sps4_200705_017 sps4_200805_004 sps4_200805_005 sps4_200805_006 sps4_200805_008 sps4_200805_009 sps4_200805_011 sps4_200805_012 sps4_200805_022 sps4_200805_024" 
+listofcases=`ls -d sps4_200?07_0??`
 
 if [[ $# -eq 1 ]]
 then
@@ -54,7 +54,7 @@ then
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 fi
 
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -286,7 +286,7 @@ then
    condafunction activate $envcondarclone
    set -euvx
    python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-   rclone copy ${filexls} my_drive:
+   rclone copy ${filexls} my_drive:recover
    set +euvx
    condafunction deactivate $envcondarclone
    set -euvx
