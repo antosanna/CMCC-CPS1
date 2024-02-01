@@ -1,0 +1,32 @@
+#!/bin/sh -l
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -eu
+
+stlist=`seq -w 1 12`
+ylist=`seq 1993 2022`
+if [[ $# -eq 1 ]]
+then
+   stlist=$1
+fi
+if [[ $# -eq 2 ]]
+then
+   stlist=$1
+   ylist=$2
+fi
+for st in $stlist
+do
+   echo "$st hindcast done"
+   for yyyy in $ylist
+   do
+      n_done=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0??.transfer_from_Zeus_DONE 2>/dev/null|wc -l`
+      n_done_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0??/logs/*6months_done 2>/dev/null|wc -l`
+      if [[ $(($n_done + $n_done_juno)) -ne 0 ]]
+      then
+          echo "$yyyy$st done number $(($n_done + $n_done_juno))"
+      fi
+   done
+   echo ""
+   read -p "Press enter to continue"
+done
