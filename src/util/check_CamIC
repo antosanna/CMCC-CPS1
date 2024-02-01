@@ -1,0 +1,22 @@
+#!/bin/sh -l
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -eu
+
+for st in `seq -w 1 12`
+do
+   n_rsync=0
+   for yyyy in {1993..2022}
+   do
+      n_IC_local=`ls $IC_CAM_CPS_DIR/$st/*$yyyy-${st}*.nc 2>/dev/null|wc -l`
+      if [[ $n_IC_local -eq 10 ]]
+      then
+          echo "$yyyy$st ready"
+      else
+          echo "$yyyy$st incomplete" $n_IC_local
+      fi
+   done
+   echo ""
+   read -p "Press enter to continue"
+done
