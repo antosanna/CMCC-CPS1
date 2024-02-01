@@ -4,6 +4,7 @@
 if [[ $machine == "juno" ]]
 then
    module load intel-2021.6.0/ncl/6.6.2-p2sqo
+   export NCARG_COLORMAPS=$HOME/ncl/colormaps:$NCARG_ROOT/lib/ncarg/colormaps
 else
    :
 fi
