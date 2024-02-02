@@ -67,15 +67,15 @@ cdo smooth9 ${WORK_IC4CAM}/${inp}.tmp.smooth.nc ${WORK_IC4CAM}/${inp}.nc
 rm -f ${WORK_IC4CAM}/${inp}.tmp.nc ${WORK_IC4CAM}/${inp}.tmp.smooth.nc
 export input3d=${WORK_IC4CAM}/${inp}.nc
 export output_check=$WORK_IC4CAM/${inp}.tmp2.nc
-export wgt_file=$REPOGRID/EDA2FV0.47x0.63_L83.nc
-export wgt_file_slon=$REPOGRID/EDA2FV0.47x0.63_L83_slon.nc
-export wgt_file_slat=$REPOGRID/EDA2FV0.47x0.63_L83_slat.nc
-export src_grid_file=$REPOGRID/src_grid_file.nc
-export dst_grid_file=$REPOGRID/dst_grid_file.nc
-export src_grid_file1=$REPOGRID/src_grid_file_slon.nc
-export dst_grid_file1=$REPOGRID/dst_grid_file_slon.nc
-export src_grid_file2=$REPOGRID/src_grid_file_slat.nc
-export dst_grid_file2=$REPOGRID/dst_grid_file_slat.nc
+export wgt_file=$REPOGRID1/EDA2FV0.47x0.63_L83.nc
+export wgt_file_slon=$REPOGRID1/EDA2FV0.47x0.63_L83_slon.nc
+export wgt_file_slat=$REPOGRID1/EDA2FV0.47x0.63_L83_slat.nc
+export src_grid_file=$REPOGRID1/src_grid_file.nc
+export dst_grid_file=$REPOGRID1/dst_grid_file.nc
+export src_grid_file1=$REPOGRID1/src_grid_file_slon.nc
+export dst_grid_file1=$REPOGRID1/dst_grid_file_slon.nc
+export src_grid_file2=$REPOGRID1/src_grid_file_slat.nc
+export dst_grid_file2=$REPOGRID1/dst_grid_file_slat.nc
 scriptregrid=$SCRATCHDIR/EDA2CAM_regrid/$yyyy${st}_${pp}/regrid_ERA5_to_FV0.47x0.63_L83_${yyyy}${st}_${pp}.ncl
 mkdir -p $SCRATCHDIR/EDA2CAM_regrid/$yyyy${st}_${pp}/
 sleep 2
