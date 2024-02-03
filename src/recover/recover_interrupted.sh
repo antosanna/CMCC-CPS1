@@ -35,33 +35,40 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
+         #set to 1 the second time you run in order to process only one case for category
+         #set to 0 to run all interrupted identified
+
+
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh 1993
+set -euvx
+
 cd $DIR_CASES/
 
-. ${DIR_UTIL}/descr_ensemble.sh 1993
-listofcases=`ls -d sps4_200?07_0??`
+listofcases=`ls -d sps4_199?10_0??`
 
 if [[ $# -eq 1 ]]
 then
    st=${1:-$mo_today}
    yyyy=""
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
+set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
+set -euvx
 elif [[ $# -eq 2 ]]
 then
    st=${1:-$mo_today}
    yyyy=${2:-$yy_today}
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
+set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
 fi
-
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
-         #set to 1 the second time you run in order to process only one case for category
-         #set to 0 to run all interrupted identified
-
-
 
 LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
+echo "SPANNING $listofcases"
 
 #st=03       #start month
 #yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
@@ -86,16 +93,13 @@ cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 
 filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${debug}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
-echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
+echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
 ### INITIALIZE LISTS
 lista_lt_archive=" "    
 lista_resubmit=" "
-lista_regrid_ice=" "
-lista_regrid_oce=" "
 lista_pp_C3S=" "
 lista_moredays=" "
 lista_first_month=" "
-#lista_pp_C3S_cam_or_clm=" "
 
 caso_ignored="sps4_199711_011"  #unstability in NEMO - to be checked 
 cd $DIR_CASES/
@@ -172,32 +176,36 @@ for caso in $listofcases ; do
      fi
   fi
 # aggiungere un check su nemo_rebuild e postproc_monthly prima di check_6month
+# THIS SECTION MUST BE RUN ONLY ON JUNO BECAUSE C3S ARE PRODUCED ONLY THERE\# FOR A MATTER OF CONSISTENCY
+  if [[ $machine == "juno" ]]
+  then
 
-  if [[ -f $check_6months_done ]] && [[ ! -f $check_iceregrid ]] 
-  then
-     cnt_regrid_ice=$(($cnt_regrid_ice + 1))
-     lista_regrid_ice+=" $caso"
-  fi
-  if [[ -f $check_6months_done ]] && [[ ! -f $check_oceregrid ]] 
-  then
-     cnt_regrid_oce=$(($cnt_regrid_oce + 1))
-     lista_regrid_oce+=" $caso"
-  fi
+
+     if [[ -f $check_6months_done ]] && [[ ! -f $check_iceregrid ]] 
+     then
+        cnt_regrid_ice=$(($cnt_regrid_ice + 1))
+        lista_pp_C3S+=" $caso"
+     fi
+     if [[ -f $check_6months_done ]] && [[ ! -f $check_oceregrid ]] 
+     then
+        cnt_regrid_oce=$(($cnt_regrid_oce + 1))
+        lista_pp_C3S+=" $caso"
+     fi
      
 # meaning that the 185 day-run has been completed but last pp (C3S regrid) has not.
-  if [[ -f $check_run_moredays ]]
-  then
-     if [[ ! -f $check_pp_C3S ]] 
+     if [[ -f $check_run_moredays ]]
      then
-        cnt_pp_C3S=$(($cnt_pp_C3S + 1))
-        lista_pp_C3S+=" $caso"
-     else
-        if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]]
+        if [[ ! -f $check_pp_C3S ]] 
         then
            cnt_pp_C3S=$(($cnt_pp_C3S + 1))
            lista_pp_C3S+=" $caso"
-#           lista_pp_C3S_cam_or_clm+=" $caso"
-         fi
+        else
+           if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]]
+           then
+              cnt_pp_C3S=$(($cnt_pp_C3S + 1))
+              lista_pp_C3S+=" $caso"
+            fi
+        fi
      fi
   fi
 #               checkin_qa=`ls $DIR_CASES/$caso/logs/qa_started_${yyyy}${st}_0${member}_ok | wc -l`
@@ -218,8 +226,8 @@ then
    echo "$lista_moredays"
    for caso in $lista_moredays
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "-,-,$caso,-,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
+      echo "-,-,$caso,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_resubmit" != " " ]]
@@ -229,8 +237,8 @@ then
    echo ""
    for caso in $lista_resubmit
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "-,$caso,-,-,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
+      echo "-,$caso,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_first_month" != " " ]]
@@ -240,30 +248,8 @@ then
    echo ""
    for caso in $lista_first_month
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "$caso,-,-,-,-,-,- " >> $filecsv
-   done
-fi
-if [[ "$lista_regrid_ice" != " " ]]
-then
-   echo "Cases with missing regrid ice"
-   echo "$lista_regrid_ice" 
-   echo ""
-   for caso in $lista_regrid_ice
-   do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "-,-,-,-,$caso,-,- " >> $filecsv
-   done
-fi
-if [[ "$lista_regrid_oce" != " " ]]
-then
-   echo "Cases with missing regridoce"
-   echo "$lista_regrid_oce" 
-   echo ""
-   for caso in $lista_regrid_oce
-   do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "-,-,-,-,-,$caso,- " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
+      echo "$caso,-,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_pp_C3S" != " " ]]
@@ -273,8 +259,8 @@ then
    echo ""
    for caso in $lista_pp_C3S
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,regrid_ice,regrid_oce,postproc C3S" > $filecsv
-      echo "-,-,-,-,-,-,$caso " >> $filecsv
+#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
+      echo "-,-,-,-,$caso " >> $filecsv
    done
 fi
 
@@ -394,55 +380,21 @@ caso=""
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
    
-# resubmit interp_cice
-   if [[ $cnt_regrid_ice -ne 0 ]] ; then
-      echo "RESUBMIT interp_cice FOR THE FOLLOWING CASES"
-      echo "$lista_regrid_ice"
-      echo ""
-   fi
    
-   for caso in $lista_regrid_ice
-   do
-      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
-      if [[ $isrunning -ne 0 ]]
-      then
-         continue
-      fi
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh
-      
-      if [[ $debug -eq 1 ]] ; then break ; fi
-   done
-   
-# resubmit interp_ORCA
-   if [[ $cnt_regrid_oce -ne 0 ]] ; then
-      echo "RESUBMIT interp_ORCA FOR THE FOLLOWING CASES"
-      echo "$lista_regrid_oce"
-      echo ""
-   fi
-   
-   for caso in $lista_regrid_oce
-   do
-      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
-      if [[ $isrunning -ne 0 ]]
-      then
-         continue
-      fi
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
-      $DIR_RECOVER/recover_6months_pp.sh $caso
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh
-      
-      if [[ $debug -eq 1 ]] ; then break ; fi
-   done
-   
-   
-#TEMPORARY UNTIL WE FIX THE PYTHON ISSUE ON JUNO
-exit
 # resubmit lt_archive_moredays
    if [[ $cnt_pp_C3S -ne 0 ]] ; then
       echo "RESUBMIT .case.lt_archive_moredays FOR THE FOLLOWING CASES"
       echo "$lista_pp_C3S"
       echo ""
+      if [[ $cnt_regrid_ice -ne 0 ]] ; then
+         echo "$cnt_regrid_ice cases for failure in interp_cice"
+         echo ""
+      fi
+   
+      if [[ $cnt_regrid_oce -ne 0 ]] ; then
+         echo "$cnt_regrid_oce cases for failure in interp_ORCA"
+         echo ""
+      fi
    fi
    
    for caso in $lista_pp_C3S
@@ -455,6 +407,7 @@ exit
    
    
 fi   
+#TEMPORARY DISABLED
 exit
 
 if [[ $debug -eq 0 ]] ; then
