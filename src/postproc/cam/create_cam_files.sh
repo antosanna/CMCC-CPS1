@@ -20,7 +20,7 @@ ft=$2
 
 yyyy=$3
 st=$4
-ens=$5
+member=$5
 wkdir=$6
 finalfile=$7
 

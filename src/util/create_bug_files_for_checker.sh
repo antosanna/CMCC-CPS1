@@ -29,19 +29,19 @@ cd $wdir
 templatedir=/data/csp/sp1/archive/CESM/${SPSSYS}/C3S_template
 yyyy=2000
 st=10
-ens=01
+member=01
 
 #copy original files to $wdir
 # tasmax and sic for testing spikes
-ftasmax="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_day_surface_tasmax_r${ens}i00p00.nc"
+ftasmax="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_day_surface_tasmax_r${member}i00p00.nc"
 rsync -auv $templatedir/$ftasmax $wdir/$ftasmax
-fsic="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_seaIce_day_surface_sic_r${ens}i00p00.nc"
+fsic="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_seaIce_day_surface_sic_r${member}i00p00.nc"
 rsync -auv $templatedir/$fsic $wdir/$fsic
 # Now insert errors in the test file to verify the tests:
 ncap2 -O -s 'tasmax(9,170,170:175)=500' $wdir/$ftasmax $wdir/$ftasmax # 5 spikes
 
 # Various variables to test general checks
-fzg="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_12hr_pressure_zg_r${ens}i00p00.nc"
+fzg="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_12hr_pressure_zg_r${member}i00p00.nc"
 rsync -auv $templatedir/$fzg $wdir/$fzg
 # Insert consistency errors
 ncap2 -O -s 'zg[1,10,:,:]=0' $wdir/$fzg $wdir/$fzg										# 1 time 1 level is all 0
@@ -53,12 +53,12 @@ ncap2 -O -s 'zg[1,2,100,100]=-8000' $wdir/$fzg $wdir/$fzg 		# 1 point smaller th
 ncap2 -O -s 'zg[:,3,:,:]=100' $wdir/$fzg $wdir/$fzg 								# 1 level has std=0 over time
 
 # Add other types of vars
-#flwee="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_day_surface_lwee_r${ens}i00p00.nc"
+#flwee="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_day_surface_lwee_r${member}i00p00.nc"
 #rsync -auv $templatedir/$flwee $wdir/$flwee 
-#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_6hr_surface_psl_r${ens}i00p00.nc"
-#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_6hr_surface_tsl_r${ens}i00p00.nc"
-#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_day_soil_mrlsl_r${ens}i00p00.nc"
-#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_ocean_6hr_surface_tso_r${ens}i00p00.nc"
+#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_atmos_6hr_surface_psl_r${member}i00p00.nc"
+#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_6hr_surface_tsl_r${member}i00p00.nc"
+#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_land_day_soil_mrlsl_r${member}i00p00.nc"
+#file2append="cmcc_CMCC-CM2-v20191201_hindcast_S${yyyy}${st}0100_ocean_6hr_surface_tso_r${member}i00p00.nc"
 #fsos="cmcc_CMCC-CM2-v20191201_hindcast_S2000100100_ocean_mon_ocean2d_sos_r01i00p00.nc"
 #rsync -auv $templatedir/$fsos $wdir/$fsos 
 

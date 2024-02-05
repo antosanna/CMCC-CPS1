@@ -26,8 +26,8 @@ check_6months_done=$DIR_CASES/$caso/logs/${caso}_${nmonfore}months_done
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive
 check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
-check_iceregrid=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${ens}i00p00_ok
-check_oceregrid=$outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_r${ens}i00p00_ok
+check_iceregrid=$outdirC3S/interp_cice2C3S_through_nemo.ncl_r${member}i00p00_ok
+check_oceregrid=$outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_r${member}i00p00_ok
 
 #--#-- touchfiles defined in $DIR_ATM_IC/launch_make_atm_ic_hindcast.sh
 check_IC_CAMguess=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done
@@ -41,3 +41,6 @@ check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.nemo_rebuild4cmcc-cm
 check_nemo_rebuild=$CASEROOT/logs/nemo_rebuild_${curryear}${currmon}_done
+
+#--#-- touchfiles defined in $DIR_C3S/C3Schecker.sh
+checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${member}

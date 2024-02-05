@@ -77,8 +77,8 @@ do
       
       for member in $alljobsonqueue ; do
         caso=`echo $member |cut -d '.' -f2`
-        ens=`echo $caso |cut -d '_' -f3|cut -c 2-3`
-        ens3=`echo $caso |cut -d '_' -f3|cut -c 1-3`
+        member=`echo $caso |cut -d '_' -f3|cut -c 2-3`
+        ens=`echo $caso |cut -d '_' -f3|cut -c 1-3`
       # Get job status (RUN, PEND, nil)
         job_status="nil"
         job_id=""
@@ -110,7 +110,7 @@ do
         C3S_ok="NONE"
         if [ -d ${WORK_C3S}/$start_date ]
         then
-           nC3S=$(ls -1 ${WORK_C3S}/$start_date/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*r${ens}i00p00.nc 2>/dev/null | wc -l)
+           nC3S=$(ls -1 ${WORK_C3S}/$start_date/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*r${member}i00p00.nc 2>/dev/null | wc -l)
            if [ $nC3S -eq $nfieldsC3S ]
            then 
                if [ `ls ${WORK_C3S}/$start_date/meta_checker_ok_* | wc -l` -eq $nfieldsC3S ] && [ `ls ${WORK_C3S}/$start_date/qa_checker_ok_* | wc -l` -eq $nfieldsC3S ] && [ `ls ${WORK_C3S}/$start_date/tmpl_checker_ok_0*|wc -l` -eq $nfieldsC3S ]
@@ -184,12 +184,12 @@ do
       
       # Postprocessing 
         #MB/AB 2/7---> is this final postpc (i.e. postpc_clm)? or also the l_archive (job_name=$caso.postpc) ?
-        #${id}  is not defined...is it the member tag? in this case ens3 has been defined as the full (3digits) member tag.
+        #${id}  is not defined...is it the member tag? in this case ens has been defined as the full (3digits) member tag.
    
-        postpc_string=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3}`
+        postpc_string=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens}`
         if [ $? -eq 0 ] ; then
-          postpc=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3} -i yes`
-          postpc_nr=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens3} -c yes`
+          postpc=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens} -i yes`
+          postpc_nr=`${DIR_UTIL}/findjobs.sh -m ${machine} -N lt_archive.${SPSSystem}_${start_date}_${ens} -c yes`
           if [ $postpc_nr -gt 1 ]; then
             postpc=$postpc_nr
           fi

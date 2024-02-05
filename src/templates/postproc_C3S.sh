@@ -18,8 +18,8 @@ set +euvx
 set -euvx
 #
 startdate=$yyyy$st
-ppp=`echo $caso|cut -d '_' -f 3 `
-ens=`echo $ppp|cut -c2,3` 
+ens=`echo $caso|cut -d '_' -f 3 `
+member=`echo $ens|cut -c2,3` 
 
 # SECTION FORECAST TO BE TESTED
 set +euvx
@@ -95,7 +95,7 @@ then
         
 
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
@@ -104,7 +104,7 @@ then
     # so submit without dependency
         
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ppp $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    fi
@@ -140,7 +140,7 @@ then
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       if [[ ! -f $finalfile ]]
       then
-         input="$caso $ft $yyyy $st $ens ${wkdir_cam} $finalfile" 
+         input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile" 
              # ADD the reservation for serial !!!
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
          input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
@@ -176,12 +176,12 @@ do
    sleep 60
 done
 touch $check_pp_C3S
-real="r"${ens}"i00p00"
+real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$ens $outdirC3S $startdate $caso"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $caso"
 else
    body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the neumber of postprocessed files is $allC3S instead of required $nfieldsC3S"
    title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"

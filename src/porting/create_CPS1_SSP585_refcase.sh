@@ -3,7 +3,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
-caso=${CPSSYS}_RCP8_reference
+caso=${CPSSYS}_SSP585_reference
 
 if [[ -d $DIR_CASES/$caso ]]
 then
@@ -11,7 +11,7 @@ then
 fi
 
 conda activate $envcondacm3
-$DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset RCP8_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
+$DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset SSP585_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
 
 cd $DIR_CASES/$caso
 

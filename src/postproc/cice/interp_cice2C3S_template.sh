@@ -12,8 +12,8 @@ INPUT=${DIR_ARCHIVE}/CASO/ice/hist
 
 
 set -exv
-ens=`echo CASO|cut -d '_' -f3|cut -c 2,3`
-export real="r"${ens}"i00p00"
+member=`echo CASO|cut -d '_' -f3|cut -c 2,3`
+export real="r"${member}"i00p00"
 export st=`echo CASO|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
 set +evxu

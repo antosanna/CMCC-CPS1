@@ -18,7 +18,7 @@ currmon=`printf '%.2d' $mese`
 cd $CASEROOT
 #get case name and cores dedicated to ocean model from xml files
 caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
-ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
+member=`echo $caso|cut -d '_' -f3|cut -c 2-3`
 resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
 
 yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`

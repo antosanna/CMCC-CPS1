@@ -31,9 +31,9 @@ fi
 # gather DMO nemo files in all possible directories
 ARCHIVE1=$DIR_ARCHIVE
 cnt=0
-for ens in `seq -w 01 $nrunmax`
+for ens in `seq -w 001 $nrunmax`
 do
-   caso=${SPSSystem}_${yyyy}${st}_0${ens}
+   caso=${SPSSystem}_${yyyy}${st}_${ens}
    for var in sss sst
    do
       if [ -f $outdir/${caso}_${var}_series.nc ]

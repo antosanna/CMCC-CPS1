@@ -19,7 +19,7 @@ export type=$5
 check_regridC3S_type=$6 
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-ens=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
+member=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
 
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
@@ -40,7 +40,7 @@ export wgtFileNameCons=$REPOGRID/CAMFV05_2_${outputgrid}_conserve_C3S.nc
 export lsmFileName=$REPOGRID/SPS4_C3S_LSM.nc
 export alphaFileName=$REPOGRID/alpha_100m_wind/mean_alpha_${st}.nc
 export version=$versionSPS
-export real="r"${ens}"i00p00"
+export real="r"${member}"i00p00"
 export last_term="_"${real}".nc"
 export C3Stable="$DIR_POST/cam/C3S_table.txt"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"

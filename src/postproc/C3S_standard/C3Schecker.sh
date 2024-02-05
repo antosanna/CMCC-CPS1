@@ -32,12 +32,12 @@ st=`echo "${startdate}" | cut -c5-6`
 if [ ! -f $outdirC3S/qa_checker_ok_0${member} ] 
 then
 # if not already launched
-   ${DIR_C3S}/launch_c3s_qa_checker_1member.sh $startdate $member $check_qa_start $outdirC3S
+   ${DIR_C3S}/launch_c3s_qa_checker_1ens.sh $startdate $member $check_qa_start $outdirC3S
 fi
 # others checkers 
 if [ ! -f $outdirC3S/meta_checker_ok_0${member} ] 
 then
-   ${DIR_C3S}/c3s_metadata_checker_1member.sh $startdate $member $outdirC3S
+   ${DIR_C3S}/c3s_metadata_checker_1ens.sh $startdate $member $outdirC3S
 fi
 if [ ! -f $outdirC3S/tmpl_checker_ok_0${member} ]
 then
@@ -53,8 +53,9 @@ cd $outdirC3S
 
 if [ -f $outdirC3S/meta_checker_ok_0${member} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${member} ] && [ -f $outdirC3S/tmpl_checker_ok_0${member} ] && [ -f $outdirC3S/qa_checker_ok_0${member} ] #&& [ -f $outdirC3S/findspikes_c3s_ok_0${member} ]
 then
-   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate
-   checkfile_daily=$FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${member}
+   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
+# the following is defined in $dictionary
+#   checkfile_daily=$FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${member}
    if [ ! -f ${checkfile_daily} ] || [[ $debug -eq 0 ]]
    then
       ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member $checkfile_daily $outdirC3S

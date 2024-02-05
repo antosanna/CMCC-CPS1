@@ -35,7 +35,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -46,7 +46,7 @@ set -euvx
 
 cd $DIR_CASES/
 
-listofcases=`ls -d sps4_199?10_0??`
+listofcases=`ls -d sps4_200?07_0??`
 
 if [[ $# -eq 1 ]]
 then
@@ -109,7 +109,7 @@ for caso in $listofcases ; do
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-  ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
+  member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
   outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
@@ -304,7 +304,7 @@ caso=""
       $DIR_RECOVER/refresh_all_scripts.sh $caso
       st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
       yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-      ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+      member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 
       CASEROOT=$DIR_CASES/$caso/
       outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
@@ -364,7 +364,7 @@ caso=""
      
       st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
       yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-      ens=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
+      member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
       CASEROOT=$DIR_CASES/$caso/
       outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/

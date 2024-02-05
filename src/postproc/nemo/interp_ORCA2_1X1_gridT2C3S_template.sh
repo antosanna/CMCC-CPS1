@@ -96,13 +96,13 @@ EOF
 }
 
 
-ens=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
+member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary
 set -euvx
 export check_oceregrid
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
-export real="r"${ens}"i00p00"
+export real="r"${member}"i00p00"
 export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
@@ -175,7 +175,7 @@ do
 done } < $C3S_table_ocean2d
 for v in ${varout[@]}
 do 
-   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${ens}i00p00.nc
+   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc
    if [ ! -f $C3Sfile ]
    then
       title="${CPSSYS} forecast ERROR"

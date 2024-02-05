@@ -12,13 +12,13 @@ set -euvx
 
 echo "enter fix_timesteps_C3S.sh"
 startdate=$1
-ens=$2
+member=$2
 outdirC3S=$3
 
 #
 cd $outdirC3S
 out=6hr
-lista6h=`ls *6hr*_r${ens}i00p00.nc`
+lista6h=`ls *6hr*_r${member}i00p00.nc`
 nout=`expr $fixsimdays \* 4`
 for file in $lista6h
 do
@@ -34,7 +34,7 @@ do
       fi
 done
 out=12hr
-lista12h=`ls *12hr*_r${ens}i00p00.nc`
+lista12h=`ls *12hr*_r${member}i00p00.nc`
 nout=`expr $fixsimdays \* 2`
 for file in $lista12h
 do
@@ -51,7 +51,7 @@ do
 done
 # daily cam files are 20 = 18 (atmos) + lwee (surface) + sic (seaIce)
 out=day
-listaday=`ls *atmos*day*_r${ens}i00p00.nc *day*lwee*_r${ens}i00p00.nc *seaIce_day*sic*_r${ens}i00p00.nc`
+listaday=`ls *atmos*day*_r${member}i00p00.nc *day*lwee*_r${member}i00p00.nc *seaIce_day*sic*_r${member}i00p00.nc`
 nout=$fixsimdays
 for file in $listaday
 do
