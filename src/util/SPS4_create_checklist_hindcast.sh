@@ -17,15 +17,11 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 members_nr=$nrunmax
 
 file1=${SPSSystem}_${typeofrun}_list.csv
-file2=${typeofrun}_submission.csv
 
 # Check if for writing ----------------------------------
 # Check if for writing ----------------------------------
 # Check if for writing ----------------------------------
 
-# move to work flag. If active (default) place file in work
-mvtowork1=1
-mvtowork2=1
 
 # check if file doesn't exist, disabilitate move to work
 mkdir -p $DIR_CHECK
@@ -36,13 +32,11 @@ cd $DIR_CHECK
 # NOW WRITE ------------------------------------------
 
 echo " file1 will be written in $file1"
-echo " file2 will be written in $file2"
 
 
 # Write header ---------------------------------------
 echo "CASO,month1,month2,month3,month4,month5,month6,days,C3S,archive" > $file1
 echo "TOTAL DONE,--,--,--,--,--,--,--,--,--" >> $file1
-echo "CASO,SUBM_FLAG" > $file2
 # Write body -----------------------------------------
 for st in {01..12}
 do
@@ -54,7 +48,6 @@ do
 
          # write body
          echo "$caso,--,--,--,--,--,--,--,--,--" >> $file1
-         echo "$caso,0" >> $file2
          
       done
    done

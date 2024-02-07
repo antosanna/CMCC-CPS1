@@ -113,6 +113,14 @@ output=${CPSSYS}.EDAcam.i.${ppcam}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc
 ncdataSPS=$IC_CPS_guess/CAM/$st/$output
 refdir_refcase_rest=$DIR_REST_INI/$caso
 mkdir -p $refdir_refcase_rest
+
+#!!!!!!
+#remove 29 for leap years
+#!!!!!!
+if [[ $mmIC == "02" ]] && [[ $dd == "29" ]] ; then
+   dd="28"
+fi
+
 #NEMO
 link_oceic=${refcase_rest}_${yyIC}$mmIC${dd}_restart.nc
 ln -sf $oceic $refdir_refcase_rest/$link_oceic

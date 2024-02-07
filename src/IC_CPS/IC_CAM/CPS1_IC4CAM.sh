@@ -31,6 +31,7 @@ startdate=$yyyy${st}01
 # --------------------------------------------
 # NOW REMOVE 29/2 AS STARTDATE  (CAM CALENDAR NOLEAP)
 # --------------------------------------------
+#redundant but kept for safety!
 if [ $((10#$mmin)) -eq 2 ] && [ $ddin -eq 29 ]
 then
    ddin=28
