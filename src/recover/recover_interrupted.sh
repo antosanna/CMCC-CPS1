@@ -46,7 +46,8 @@ set -euvx
 
 cd $DIR_CASES/
 
-listofcases=`ls -d sps4_200?07_0??`
+listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
+#`ls -d sps4_200?07_0??`
 
 if [[ $# -eq 1 ]]
 then

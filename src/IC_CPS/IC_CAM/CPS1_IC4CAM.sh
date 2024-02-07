@@ -28,6 +28,16 @@ st=${12}
 refdate_rest=$yyin-$mmin-01 
 startdate=$yyyy${st}01
 #------------------------------------------------------------
+# --------------------------------------------
+# NOW REMOVE 29/2 AS STARTDATE  (CAM CALENDAR NOLEAP)
+# --------------------------------------------
+if [ $((10#$mmin)) -eq 2 ] && [ $ddin -eq 29 ]
+then
+   ddin=28
+fi
+# --------------------------------------------
+# NOW REMOVE 29/2 AS STARTDATE  (CAM CALENDAR NOLEAP)  -
+# --------------------------------------------
 
 diff=`${DIR_UTIL}/datediff.sh $startdate $yyin$mmin$ddin`
 #
@@ -94,13 +104,6 @@ sed -i '/inithist/d' user_nl_cam
 echo "ncdata='$ncdata'">>user_nl_cam
 echo "inithist='ENDOFRUN'">>user_nl_cam
 
-#----------------------------------------------------------
-# CLM  add use_init_interp = .true. IF SCENARIO
-#----------------------------------------------------------
-if [[ $yyyy -ge $yyyySCEN ]]
-then
-   echo "use_init_interp = .true." >>user_nl_clm
-fi
 #
 echo "timestep = $((86400 / $ncpl))"
 echo "vertical levels 83"

@@ -44,3 +44,6 @@ check_nemo_rebuild=$CASEROOT/logs/nemo_rebuild_${curryear}${currmon}_done
 
 #--#-- touchfiles defined in $DIR_C3S/C3Schecker.sh
 checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${member}
+
+#--#-- touchfiles defined in $DIR_C3S/C3S_daily_mean.sh
+checkfile_daily_done=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/C3S_daily_mean_2d_${member}_done

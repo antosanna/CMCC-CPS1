@@ -18,7 +18,7 @@ do
    n_rsync=0
    for yyyy in `seq $iniy_hind $endy_hind`
    do
-      lista_remote=`ssh $remote ls -d $DIR_CASES_remote/${SPSSystem}_${yyyy}${st}_??? |rev|cut -d '/' -f1| rev`
+      lista_remote=`ssh $remote ls -d ${DIR_ARCHIVE1_remote}/${SPSSystem}_${yyyy}${st}_??? |rev|cut -d '/' -f1| rev`
       for caso in $lista_remote
       do
          is_caso_completed=`ssh $remote ls ${DIR_CASES_remote}/$caso/logs/run_moredays_${caso}_DONE| wc -l`
@@ -31,11 +31,11 @@ do
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
                chmod -R a-w $DIR_ARCHIVE1/$caso
 exit
-               n_rsync=$(($n_rsync + 1))
-               if [[ $n_rsync -eq 5 ]]
-               then
-                  exit
-               fi
+#               n_rsync=$(($n_rsync + 1))
+#               if [[ $n_rsync -eq 5 ]]
+#               then
+#                  exit
+#               fi
 #            fi
          fi
       done

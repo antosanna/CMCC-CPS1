@@ -13,9 +13,7 @@ st=$1
 yyyy=$2
 #NEW 202103 -
 member=$3
-#NEW 202103 + new input
-checkfile=$4
-#NEW 202103 -
+#checkfile_daily from $dictionary
 set +euxv
 # load correct descriptor
 . $DIR_UTIL/descr_ensemble.sh $yyyy
@@ -29,8 +27,7 @@ mkdir -p $outdir
 wkdir=$WORK_SPS3/wk_C3S_daily/$yyyy$st/
 # this is the dir where C3S files are at the end of a forecast
 
-#checkfile=flag at the end of qa_checker of C3S daily outputs
-#checkfile=$wkdir/qa_checker_daily_ok_${member} in $dictionary
+#checkfile=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${member} in $dictionary
    
 if [ ! -f $checkfile_daily ]
 then
@@ -64,7 +61,7 @@ then
             continue 
          fi          
 # do the daily mean
-         $DIR_C3S/C3S_daily_mean.sh $member $wkdir $yyyy$st $outdir $checkfile "$daylist"
+         $DIR_C3S/C3S_daily_mean.sh $member $wkdir $yyyy$st $outdir "$daylist"
    fi
    if [ $debug -ne 0 ]
    then
