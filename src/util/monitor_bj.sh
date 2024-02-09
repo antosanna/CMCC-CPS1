@@ -11,12 +11,12 @@ job_pen=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHPEND -c
 
 if [[ $job_run -lt $maxnumberguarantee ]] 
 then
-   if [[ `date +%A` == "Thursday" ]] && [[ $((10#`date +%H`)) -lt 11 ]] && [[ $((10#`date +%H`)) -gt 4 ]]
+   if [[ `date +%A` == "Thursday" ]] && [[ $((10#`date +%H`)) -lt 18 ]] && [[ $((10#`date +%H`)) -gt 4 ]]
    then
-      echo "On Thursday `date` jobs running $job_run instead of $maxnumberguarantee"
+      echo "On Thursday `date` jobs running $job_run instead of $maxnumberguarantee" >$SCRATCHDIR/CPS/CMCC-CPS1/check_production/job_running_Thursday.`date +%Y%m%d%H`
       exit
    else
-      echo "`date` Jobs running $job_run instead of $maxnumberguarantee"
+      echo "On `date` jobs running $job_run instead of $maxnumberguarantee" >$SCRATCHDIR/CPS/CMCC-CPS1/check_production/job_running.`date +%Y%m%d%H`
       title="[SPS4 HINDCASTS] $machine WARNING!!! less then expected jobs"
       body="Found $job_run job running instead of the expected $maxnumberguarantee \n
  and $job_pen job pending \n

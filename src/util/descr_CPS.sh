@@ -193,6 +193,7 @@ then
 elif [[ "$machine" == "leonardo" ]]
 then
    operational_user=`whoami`
+   MYCESMDATAROOT=$CESMDATAROOT
    DIR_CESM=$HOME/CMCC-CM/
    BATCHRUN="RUN"
    BATCHPEND="PEND"

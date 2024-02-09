@@ -24,8 +24,8 @@ do
          is_caso_completed=`ssh $remote ls ${DIR_CASES_remote}/$caso/logs/run_moredays_${caso}_DONE| wc -l`
          if [[ $is_caso_completed -eq 1 ]]
          then
-#            if [[ ! -f $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE ]]
-#            then
+            if [[ ! -f $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE ]]
+            then
                ssh $remote chmod -R a+wx $DIR_ARCHIVE1_remote/$caso
                rsync -auv --remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
                touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
@@ -36,7 +36,7 @@ exit
 #               then
 #                  exit
 #               fi
-#            fi
+            fi
          fi
       done
    done
