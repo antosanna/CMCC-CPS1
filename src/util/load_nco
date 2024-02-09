@@ -19,7 +19,7 @@ elif [[ "${machine}" == "juno" ]] ; then
   export compress='ncks -O -L 4 -4 --no_abc'
   export compressC3S='ncks -Oh -L 4 -7 --no_abc'
 # to decompress/uncompress ncks -O -6
-elif [[ "${machine}" == "marconi" ]] ; then 
+elif [[ "${machine}" == "leonardo" ]] ; then 
   export MANPATH="/usr/local/share/man"
   source /etc/profile.d/modules.sh
   module purge

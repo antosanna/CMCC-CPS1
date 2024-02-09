@@ -105,25 +105,25 @@ then
 fi
 
 # marconi
-if [  "$machine" = "marconi" ]
+if [  "$machine" = "leonardo" ]
 then
-  message=${message//'\n'/<br>}
-  if [ ! -z $report ]
-  then
-      if [ "$report" = "only" ]
-      then
-         exit
-      fi
+   message=${message//'\n'/<br>}
+   if [ ! -z $report ]
+   then
       runtype=$report
       mkdir -p ${DIR_LOG}/report/$runtype
       echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
       echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-  fi
+      if [ "$report" = "only" ]
+      then
+         exit
+      fi
+   fi
 
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT
-  if [[ $title == *"SPS3.5"* ]]; then
-    oldString="SPS3.5"
-    newString="SPS3.5 - $machine BACKUP"
+  if [[ $title == *"CPS1"* ]]; then
+    oldString="CPS1"
+    newString="CPS1 - $machine BACKUP"
     title=$(echo "${title/$oldString/$newString}")
   else
     title+=" - $machine BACKUP"

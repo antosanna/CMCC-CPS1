@@ -36,7 +36,7 @@ then
   isjobup=`bjobs -w | grep ${input} | wc -l`
    command="bkill "
 
-elif [[ "${machine}" == "marconi" ]] 
+elif [[ "${machine}" == "leonardo" ]] 
 then
   set -evx
   isjobup=0

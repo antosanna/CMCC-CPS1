@@ -443,7 +443,7 @@ then
 fi 
 #end definitions for Juno
 #now marconi
-if [[ "$machine" == "marconi" ]]
+if [[ "$machine" == "leonardo" ]]
 then
   unset SLURM_MEM_PER_CPU
   set -vx
