@@ -6,7 +6,7 @@
 . $DIR_UTIL/load_nco
 
 
-export ic=`cat $DIR_CASES/CASO/logs/ic_CASO.txt`
+export ic=ICs
 export outdirC3S=OUTDIRC3S
 INPUT=${DIR_ARCHIVE}/CASO/ice/hist
 

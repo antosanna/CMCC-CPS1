@@ -35,7 +35,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -46,8 +46,8 @@ set -euvx
 
 cd $DIR_CASES/
 
-listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
-#`ls -d sps4_200?07_0??`
+#listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
+listofcases=`ls -d sps4_200?07_0??`
 
 if [[ $# -eq 1 ]]
 then
@@ -118,6 +118,14 @@ for caso in $listofcases ; do
   . $dictionary
   set -eu
 
+# check if directory is writable (we remove  writing permission after postproc_C3S)
+# this reduce the list to be checked on Juno
+  iscompleted=`ls -altr $DIR_ARCHIVE1|grep $caso|cut -c 3`
+  if [[ $iscompleted == "-" ]]
+  then
+     echo "skip this $caso because completed"
+     continue
+  fi
 ### check if there are dependency never satisfied to be killed
   set +e
   listajobs=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -i 'yes' `

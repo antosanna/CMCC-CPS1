@@ -51,9 +51,6 @@ fi
 # END OF FORECAST SECTION
 
 
-
-
-# get check_qa_start from dictionary
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
@@ -89,13 +86,13 @@ then
    if [[ ! -f $finalfile_clm ]]
    then
 
-        input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} $check_postclm"
+        input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} $check_postclm $ic"
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
         
 
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm ${wkdir_clm} $ic"  
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
@@ -104,7 +101,7 @@ then
     # so submit without dependency
         
         echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm $check_qa_start ${wkdir_clm} 0"  #0 means done while running (1 if from archive)
+        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm ${wkdir_clm} $ic" 
         # ADD the reservation for serial !!!
         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    fi
@@ -151,7 +148,7 @@ then
    # so submit without dependency
          input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft ${check_regridC3S_type}_${ft}"
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 15000 -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       fi
             
    done

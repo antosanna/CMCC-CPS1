@@ -23,9 +23,11 @@ st=$4
 member=$5
 wkdir=$6
 finalfile=$7
+ic=$8
 
+set +evxu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-ic=`cat $DIR_CASES/${caso}/logs/ic_${caso}.txt`
+set -evxu
 #
 set +evxu
 . $dictionary

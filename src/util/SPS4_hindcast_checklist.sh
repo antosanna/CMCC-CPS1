@@ -42,7 +42,8 @@ for mach in ${remote_mach_list} ; do
      
      zeus)  case_dir=/work/csp/sps-dev/CPS/CMCC-CPS1/cases 
             arch_dir=/work/csp/sps-dev/CMCC-CM/archive 
-            remote=sps-dev@zeus01.cmcc.scc ;;
+            remote_user=sps-dev
+            remote=${remote_user}@zeus01.cmcc.scc ;;
 
    esac
 
@@ -89,7 +90,12 @@ for mach in ${remote_mach_list} ; do
 
                mv -f $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
        fi
-       if [[ `ssh $remote ls $check_pp_C3S |wc -l` -eq 1 ]]
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# THIS SECTION IS COMMENTED BECAUSE WE DECIDED TO RUN THE POSTPROC FOR C3S 
+# COMPLETELY ON JUNO MACHINE FOR CONSISTENCY REASONS
+
+       remote_check_pp_C3S=$(echo "${check_pp_C3S/cp1/$remote_user}")
+       if [[ `ssh $remote ls $remote_check_pp_C3S |wc -l` -eq 1 ]]
        then
                # assign a value with -val selecting a row with -v and a column with -c
                awk -v r=$LN -v c=$table_column_id_ndays -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
@@ -98,6 +104,7 @@ for mach in ${remote_mach_list} ; do
 
                mv -f $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
        fi
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   
     done #listofcases
 

@@ -30,8 +30,8 @@ then
    mkdir -p $OUTDIR
    outdirC3S=$SCRATCHDIR/test_clm
    mkdir -p $outdirC3S
-   running=1
    DIR_LOG=/users_home/csp/mb16318/SPS/SPS4/postproc/CLM/logs
+   ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
 else
 
 #"$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
@@ -41,14 +41,12 @@ else
    outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
    check_postclm=$6
-   check_qa_start=$7 #$DIR_CASES/$caso/logs/qa_started_${startdate}_0${member}_ok
-   wkdir=$8
-   running=${9-:0}  # 0 in operational mode
+   wkdir=$7
+   ic=${8}  # 0 in operational mode
 fi
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
 pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
-ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
 
 #**********************************************************
 # Load vars depending on hindcast/forecast
@@ -157,10 +155,6 @@ then
 
    echo "postpc_clm.sh DONE"
    touch ${check_postclm}
-   #if [ $running -eq 1 ]  # 0 if running; 1 if off-line
-   #then
-   #   rm $OUTDIR/$caso.clm2.*
-   #fi  
 else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postpcclm} exists. If you want to recomputed first delete it"

@@ -25,9 +25,9 @@ else
    n_ic_clm=5
    n_ic_nemo=9
    nrunmax=55      # 40 number of realizations you want to produce
-   nrunC3Sfore=40  # 40 number of realizations required to C3S forecast
+   nrunC3Sfore=50  # 40 number of realizations required to C3S forecast
    nmax4modify_trip=$nrunmax #line from which modify_triplette acts
-   typeofrun="hindcast"
+   typeofrun="forecast"
    debug_push=1    # if 0 you are going to send results to ECMWF
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY +
    export apprun=cps            #THESE COULD BE MODIFIED

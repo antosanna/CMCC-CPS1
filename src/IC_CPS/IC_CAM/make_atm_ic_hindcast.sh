@@ -1,9 +1,4 @@
 #!/bin/sh -l
-#BSUB -J IC_CAM
-#BSUB -e /work/csp/sps-dev/CPS/CMCC-CPS1/logs/IC_CAM/IC_CAM_%J.err
-#BSUB -o /work/csp/sps-dev/CPS/CMCC-CPS1/logs/IC_CAM/IC_CAM_%J.out
-#BSUB -P 0516
-#BSUB -M 100
 
 # load variables from descriptor
 set +euvx

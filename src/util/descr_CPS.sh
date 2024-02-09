@@ -10,9 +10,9 @@ mymail=sp1@cmcc.it
 #   machine="marconi"
 #elif [[ $ncheck -ne 0 ]]
 #then
-if [[ -n `echo $PS1|grep marconi` ]]
+if [[ -n `echo $PS1|grep leonardo` ]]
 then
-   machine="marconi"
+   machine="leonardo"
 elif [[ -n `echo $PS1|grep juno` ]]
 then
    machine="juno"
@@ -37,6 +37,7 @@ refcaseSCEN=${CPSSYS}_SSP585_reference
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
+   DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
    MYCESMDATAROOT=/data/$DIVISION/$USER/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
    envcondanemo=nemo_rebuild
@@ -189,80 +190,62 @@ then
 #   clm_clim_dir=${DIR_CLIM}/CLM_restart
 
 # ######## MARCONI SECTION
-elif [[ "$machine" == "marconi" ]]
+elif [[ "$machine" == "leonardo" ]]
 then
-    operational_user=`whoami`
+   operational_user=`whoami`
+   DIR_CESM=$HOME/CMCC-CM/
    BATCHRUN="RUN"
    BATCHPEND="PEND"
 #    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
-#    pID=1234
-#    apprun=dummy
-#    S_apprun=dummy
-#    slaID=s_met_cmcc_p
-#    sla_serialID=s_met_cmcc_s
-#    BATCHRUN="RUNNING"
-#    nmb_nemo_domains=336
-#    serialq_s=skl_usr_dbg
-#    serialq_m=skl_usr_dbg
-#    serialq_l=skl_usr_dbg
-#    parallelq_s=skl_usr_prod
-#    parallelq_m=skl_usr_prod
-#    parallelq_l=skl_usr_prod
-#    serialq_push=bdw_all_serial
-#    serial_test=bdw_all_serial
-# #THESE ARE DEFINED TO BE USED ONLY BY submitcommand.sh in  Juno
-# #   time_limit_serialq_m_min=`bqueues -l $serialq_m|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
-# #   time_limit_serialq_m=$((time_limit_serialq_m_min / 60 )) ##RUNLIMIT TIME IN hours
-# #   time_limit_parallelq_s_min=`bqueues -l $parallelq_s|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
-# #   time_limit_parallelq_s=$((time_limit_parallelq_s_min / 60 )) ##RUNLIMIT TIME IN hours
-# #   time_limit_parallelq_m=$((time_limit_parallelq_m_min / 60 )) ##RUNLIMIT TIME IN hours
-# #   time_limit_parallelq_l_min=`bqueues -l $parallelq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
-# #   time_limit_parallelq_l=$((time_limit_parallelq_l_min / 60 )) ##RUNLIMIT TIME IN hours
-# #   time_limit_serialq_l_min=`bqueues -l $serialq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
-# #   time_limit_serialq_l=$((time_limit_serialq_l_min / 60 )) ##RUNLIMIT TIME IN hours
-#    WORK=/marconi_work/CMCC_Copernic/
-#    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup
-#    pushdir=$WORK/push
-#    SCRATCHDIR1=$WORK/scratch
-#    SCRATCHDIR=$WORK/scratch
-    FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
-#    FINALARCHIVE1=$FINALARCHIVE
-#    FINALARCHC3S1=$FINALARCHIVE/daily
-#    FINALARCHC3S=$FINALARCHC3S1
-#    OCNARCHIVE=$WORK/data/ocn${CPSSYS}/
-#    DATA_ARCHIVE1=$WORK/data/archive
+   pID=1234
+   apprun=dummy
+   S_apprun=dummy
+   slaID=s_met_cmcc_p
+   sla_serialID=s_met_cmcc_s
+   nmb_nemo_domains=336
+   serialq_s=skl_usr_dbg
+   serialq_m=skl_usr_dbg
+   serialq_l=skl_usr_dbg
+   parallelq_s=skl_usr_prod
+   parallelq_m=skl_usr_prod
+   parallelq_l=skl_usr_prod
+   serialq_push=bdw_all_serial
+   serial_test=bdw_all_serial
+#    WORK=/marconi_work/CMCC_Copernic/  is environment var in leonardo
+#    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
+#    pushdir=$WORK/push to be defined
+    SCRATCHDIR1=$WORK/scratch
+    SCRATCHDIR=$WORK/scratch
+    DIR_ARCHIVE1=$WORK/CMCC-CM/archive
+    FINALARCHC3S1=$WORK/CMCC-CM/archive_C3Sdaily
+    FINALARCHC3S=$FINALARCHC3S1
 # #TO BE DEFINED +
 #    pushdirapec=$SCRATCHDIR1
 #    dirdataNOAA=$SCRATCHDIR1
 #    WOIS=$SCRATCHDIR1
 #    DATA_ECACCESS=$SCRATCHDIR1
-# #TO BE DEFINED -
-#    DIR_ROOT=$HOME/SPS/CMCC-${CPSSYS}
-#    DIR_ROOT1=$DIR_ROOT
-#    OUTDIR_DIAG=$WORK/diagnostics
-# # THIS SHOULD NOT BE DEFINED +  here is meant as dummy
-#    DIR_WEB=$SCRATCHDIR1
-# # THIS SHOULD NOT BE DEFINED -
 #    DIR_CLIM=$CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
-#    DIR_ARCHIVE1=$WORK/CESM/archive
-#    DIR_FORE_ANOM=$WORK/CMCC-${CPSSYS}/forecast_anom
+# #TO BE DEFINED -
+    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
+    DIR_ROOT1=$DIR_ROOT
+    OUTDIR_DIAG=$WORK/diagnostics
+    DIR_FORE_ANOM=$WORK/CMCC-${CPSSYS}/forecast_anom
 # ######## ICs_CLM
-#    IC_CLM_CPS_DIR1=$DATA_ARCHIVE1/IC/CLM_${CPSSYS}/
-#    IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
+    IC_CLM_CPS_DIR1=$SCRATCHDIR1/IC/CLM_${CPSSYS}/
+    IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
 # ######## ICs_NEMO
-#    IC_NEMO_CPS_DIR1=$DATA_ARCHIVE1/IC/NEMO_${CPSSYS}/
-#    IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
+    IC_NEMO_CPS_DIR1=$SCRATCHDIR1/IC/NEMO_${CPSSYS}/
+    IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
 # ######## ICs_CAM
-#    IC_CAM_CPS_DIR1=$DATA_ARCHIVE1/IC/CAM_${CPSSYS}/
-#    IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
-#    WORK_C3S1=$DIR_ARCHIVE1/C3S
-#    if [ $(whoami) == ${operational_user} ]; then
-#      	ecmwfmail=$mymail
-# 	     ccmail=$mymail
-# 	     hsmmail=$mymail
-#    fi
-#    CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
-#    PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
+    IC_CAM_CPS_DIR1=$SCRATCHDIR1/IC/CAM_${CPSSYS}/
+    IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
+    WORK_C3S1=$DIR_ARCHIVE1/C3S
+    WORK_C3S=$WORK_C3S1
+   	ecmwfmail=$mymail
+    ccmail=$mymail
+    hsmmail=$mymail
+    CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
+    PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
 fi
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
@@ -297,7 +280,6 @@ freq_forcings=8
 # # DIRS to be set
 # #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DIR_CHECK_IC_NEMO=$SCRATCHDIR/check_newICs_nemo/
-DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
 DIR_SRC=$DIR_ROOT/src
 DIR_CHECK=$DIR_ROOT/checklists
 # DIR_TEST_SUITE=$DIR_SRC/test_suite
