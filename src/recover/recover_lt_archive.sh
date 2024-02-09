@@ -39,8 +39,12 @@ do
 # to refresh lt_achive from template
   ./case.setup --reset
   ./xmlchange BUILD_COMPLETE=TRUE
-  bsub -W 06:00 -q s_medium -P 0490 -M 15000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out  < .case.lt_archive
-  
+# must be done in two steps
+  tmp=`./preview_run |grep .case.lt_archive`
+  cmd=`echo $tmp|awk '{$1=$2=$3=""; print $0}' `
+# cmd should be equal to the following line
+  #bsub -W 06:00 -q s_medium -P 0490 -M 15000 -e logs/lt_archive_%J.err -o logs/lt_archive_%J.out  < .case.lt_archive
+  eval $cmd 
 done
 
 exit 0

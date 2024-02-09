@@ -1,10 +1,4 @@
 #!/bin/sh -l 
-#BSUB -J test_postproc_final_cam
-#BSUB -e /work/csp/cp1/CPS/CMCC-CPS1/logs/tests/test_postproc_final_cam_%J.err
-#BSUB -o /work/csp/cp1/CPS/CMCC-CPS1/logs/tests/test_postproc_final_cam_%J.out
-#BSUB -P 0490
-#BSUB -M 10000
-#BSUB -q s_medium
 
 # load variables from descriptor
 . $HOME/.bashrc
