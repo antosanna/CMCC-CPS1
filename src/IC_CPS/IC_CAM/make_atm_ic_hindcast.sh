@@ -107,6 +107,12 @@ ICfile=$IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc
 output=${CPSSYS}.EDAcam.i.${ppcam}.${yyIC}-${mmIC}-${dd}_${tstamp}.nc 
 ncdataSPS=$IC_CPS_guess/CAM/$st/$output
 refdir_refcase_rest=$DIR_REST_INI/$caso
+
+#to avoid ambiguities due to old submission
+if [[ -d ${refdir_refcase_rest} ]] ; then
+   rm -rf ${refdir_refcase_rest}
+fi
+
 mkdir -p $refdir_refcase_rest
 
 #!!!!!!
