@@ -76,8 +76,6 @@ then
    fi
    MYCESMDATAROOT1=/data/$DIVISION/$operational_user/
    DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
-   WORK=/work/$DIVISION/$USER/
-   WORK1=/work/$DIVISION/$operational_user/
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
@@ -112,8 +110,6 @@ then
    then
      	pushdir=/data/products/C3S/$(whoami)/push/
    fi
-   SCRATCHDIR1=/work/csp/${operational_user}/scratch
-   SCRATCHDIR=$WORK/scratch
    DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
    DIR_TEMP_NEMOPLOT=$SCRATCHDIR/nemo_timeseries
    DIR_TEMP_CICEPLOT=$SCRATCHDIR/SIE
@@ -126,8 +122,8 @@ then
 #      FINALARCHC3S=$SCRATCHDIR/Seasonal/${CPSSYS}/daily_postpc
 #   fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
-   DATA_ARCHIVE=/data/csp/$USER/archive
-   DATA_ARCHIVE1=/data/csp/${operational_user}/archive
+   DATA_ARCHIVE=/data/$DIVISION/$USER/archive
+   DATA_ARCHIVE1=/data/$DIVISION/${operational_user}/archive
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
    DIR_ROOT1=/users_home/csp/${operational_user}/CPS/CMCC-${CPSSYS}
@@ -137,8 +133,14 @@ then
 #   DIR_WEB=/data/products/C3S/sp2/webpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
 #   DIR_FORE_ANOM=/work/csp/${operational_user}/CMCC-${CPSSYS}/forecast_anom
-   DIR_ARCHIVE1=/work/csp/${operational_user}/CMCC-CM/archive
+   WORK=/work/$DIVISION/$USER/
+   WORK1=/work/$DIVISION/$operational_user/
+   WORK_CPS=${WORK}/CMCC-CM/
+   WORK_CPS1=${WORK1}/CMCC-CM/
    DIR_ARCHIVE=$WORK_CPS/archive
+   DIR_ARCHIVE1=${WORK_CPS1}/archive
+   SCRATCHDIR1=${WORK1}/scratch
+   SCRATCHDIR=$WORK/scratch
 ######## ICs_CLM Juno
    IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
    IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
@@ -212,14 +214,18 @@ then
    parallelq_l=dcgp_usr_prod
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
-#    WORK=/marconi_work/CMCC_Copernic/  is environment var in leonardo
+   WORK=/marconi_work/CMCC_Copernic_4/  #is environment var in leonardo
+   WORK1=$WORK
+   WORK_CPS=${WORK}/CMCC-CM/
+   WORK_CPS1=${WORK_CPS1}
+   DIR_ARCHIVE=$WORK/archive
+   DIR_ARCHIVE1=$DIR_ARCHIVE
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
-    SCRATCHDIR1=$WORK/scratch
     SCRATCHDIR=$WORK/scratch
-    DIR_ARCHIVE1=$WORK/CMCC-CM/archive
-    FINALARCHC3S1=$WORK/CMCC-CM/archive_C3Sdaily
-    FINALARCHC3S=$FINALARCHC3S1
+    SCRATCHDIR1=$SCRATCHDIR
+    FINALARCHC3S=$WORK_CPS/archive_C3Sdaily
+    FINALARCHC3S1=$FINALARCHC3S
 # #TO BE DEFINED +
 #    pushdirapec=$SCRATCHDIR1
 #    dirdataNOAA=$SCRATCHDIR1

@@ -11,6 +11,7 @@ job_pen=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_ -a $BATCHPEND -c
 
 if [[ $job_run -lt $maxnumberguarantee ]] 
 then
+   mkdir -p $SCRATCHDIR/CPS/CMCC-CPS1/check_production
    if [[ `date +%A` == "Thursday" ]] && [[ $((10#`date +%H`)) -lt 18 ]] && [[ $((10#`date +%H`)) -gt 4 ]]
    then
       echo "On Thursday `date` jobs running $job_run instead of $maxnumberguarantee" >$SCRATCHDIR/CPS/CMCC-CPS1/check_production/job_running_Thursday.`date +%Y%m%d%H`

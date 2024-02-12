@@ -23,24 +23,14 @@ refdir_refcase_rest=${9}
 refcase_rest=${10}
 yyyy=${11}
 st=${12}
+diff=${13}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 refdate_rest=$yyin-$mmin-01 
 startdate=$yyyy${st}01
-#------------------------------------------------------------
-# --------------------------------------------
-# NOW REMOVE 29/2 AS STARTDATE  (CAM CALENDAR NOLEAP)
-# --------------------------------------------
-#redundant but kept for safety!
-if [ $((10#$mmin)) -eq 2 ] && [ $ddin -eq 29 ]
-then
-   ddin=28
-fi
-# --------------------------------------------
-# NOW REMOVE 29/2 AS STARTDATE  (CAM CALENDAR NOLEAP)  -
-# --------------------------------------------
 
 diff=`${DIR_UTIL}/datediff.sh $startdate $yyin$mmin$ddin`
+
 #
 
 if [[ $yyyy -ge $yyyySCEN ]]

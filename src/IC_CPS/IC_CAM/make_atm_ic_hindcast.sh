@@ -115,8 +115,11 @@ fi
 
 mkdir -p $refdir_refcase_rest
 
+diff=`${DIR_UTIL}/datediff.sh $startdate $yyIC$mmIC$dd`
 #!!!!!!
-#remove 29 for leap years
+#remove 29 for leap years but diff must be computed on the real calendar 
+#to cmpute the effective difference
+#dd from now on is the model calendar (no-leap)
 #!!!!!!
 if [[ $mmIC == "02" ]] && [[ $dd == "29" ]] ; then
    dd="28"
@@ -139,7 +142,7 @@ ln -sf $rofic $refdir_refcase_rest/$link_rofic
 echo $link_rofic >$refdir_refcase_rest/rpointer.hydros
 #SET TIMESTEP
 ncpl=192
-input="$yyIC $mmIC $dd $ppcam $caso $ncpl $ncdataSPS $ICfile $refdir_refcase_rest $refcase_rest $yyyy $st"
+input="$yyIC $mmIC $dd $ppcam $caso $ncpl $ncdataSPS $ICfile $refdir_refcase_rest $refcase_rest $yyyy $st $diff"
 mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
 ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -j ${caso}_launch -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -d ${DIR_ATM_IC} -s ${CPSSYS}_IC4CAM.sh -i "$input"
 exit
