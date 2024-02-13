@@ -10,7 +10,10 @@ localdir=$IC_NEMO_CPS_DIR
 #copy nemoIC to Zeus
 nmax=10
 #for st in `seq -w 2 2 12`
-for st in 01 02 03 04 06 09 12
+#for st in 01 02 03 04 06 09 12
+#order modified to follow the operational production
+list_startdate="12 01 02 03 04 06 09" 
+for st in ${list_startdate}
 do
    n_rsync=0
    for yyyy in {1993..2022}

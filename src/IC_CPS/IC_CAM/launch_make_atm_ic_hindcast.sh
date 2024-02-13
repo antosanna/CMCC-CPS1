@@ -14,14 +14,15 @@ debugy=0   # if 1 do only one year
 totcores_SC=$(($nnodes_SC*$cores_per_node))
 #np_clim=`${DIR_UTIL}/findjobs.sh -m $machine -n run.cm3_cam122 -c yes`
 np_clim=0
-# removed from c3s2
+## removed from c3s2
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 if [ $np_clim -eq 0 ]
 then
    echo "go on with hindcast submission"
-   tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
+   tobesubmitted=10
+   #tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
 else
-# this is temporary and holds only for Juno but is harmless on Zeus
+## this is temporary and holds only for Juno but is harmless on Zeus
    ncoresclim=1296
    if [ $np_all -ne 0 ]
    then
@@ -47,7 +48,9 @@ then
    exit 0
 fi
 tstamp="00"
-for st in `seq -w $inist 12`
+#for st in `seq -w $inist 12`
+list_startdate="12 01 02 03 04 05 06 07 08 09 10 11"
+for st in $list_startdate
 do
    for yyyy in `seq $iniy 2014`
    do

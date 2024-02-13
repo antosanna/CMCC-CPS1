@@ -9,7 +9,8 @@ remotedir=/data/csp/sps-dev/archive/IC/CAM_CPS1
 localdir=$IC_CAM_CPS_DIR
 #copy camIC from Zeus to Juno
 nmax=20
-for st in `seq -w 1 12`
+list_startdate="12 01 02 03 04 05 06 07 08 09 10 11"
+for st in ${list_startdate}
 do
    n_rsync=0
    for yyyy in {1993..2022}
