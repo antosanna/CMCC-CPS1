@@ -47,8 +47,8 @@ fi
 cat /dev/null >> $fname
 echo "date is `date`" >> $fname
 echo "Filesystem Size  Used  Avail Use%" >> $fname
-gpfsrepquota -f /work/csp | grep $operational_user >> $fname
-gpfsrepquota -f /data/csp | grep $operational_user >> $fname
+gpfsrepquota -f /work/$DIVISION | grep $operational_user >> $fname
+gpfsrepquota -f /data/$DIVISION | grep $operational_user >> $fname
 
 echo "$0 Done with output in $fname"
 exit 0

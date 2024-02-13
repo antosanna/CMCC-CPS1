@@ -215,21 +215,21 @@ then
          then
             if [[ "$prev3" != "None" ]]
             then
-               command+=' -w "done('$prev') && done('$prev2') && done('$prev3')"'
+               command+=' -ti -w "done('$prev') && done('$prev2') && done('$prev3')"'
             else
-               command+=' -w "done('$prev') && done('$prev2')"'
+               command+=' -ti -w "done('$prev') && done('$prev2')"'
             fi
          else
-            command+=' -w "done('$prev')"'
+            command+=' -ti -w "done('$prev')"'
          fi
       fi
       if [[ "$exited" != "None" ]] 
       then
-         command+=' -w "exit('$exited')"'
+         command+=' -ti -w "exit('$exited')"'
       fi
       if [[ "$exited" != "None" ]] && [[ "$exited2" != "None" ]]
       then
-         command+=' -w "exit('$exited') || exit('$exited2')"'
+         command+=' -ti -w "exit('$exited') || exit('$exited2')"'
       fi
       if [[ "$mem" != "None" ]]
       then
@@ -363,18 +363,23 @@ then
       then
          if [[ "$prev2" != "None" ]]
          then
-            command+=' -w "done('$prev') && done('$prev2')"'
+            if [[ "$prev3" != "None" ]]
+            then
+               command+=' -ti -w "done('$prev') && done('$prev2') && done('$prev3')"'
+            else
+               command+=' -ti -w "done('$prev') && done('$prev2')"'
+            fi
          else
-            command+=' -w "done('$prev')"'
+            command+=' -ti -w "done('$prev')"'
          fi
       fi
       if [[ "$exited" != "None" ]] 
       then
-         command+=' -w "exit('$exited')"'
+         command+=' -ti -w "exit('$exited')"'
       fi
       if [[ "$exited" != "None" ]] && [[ "$exited2" != "None" ]]
       then
-         command+=' -w "exit('$exited') || exit('$exited2')"'
+         command+=' -ti -w "exit('$exited') || exit('$exited2')"'
       fi
       if [[ "$mem" != "None" ]]
       then

@@ -63,10 +63,6 @@ $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$
 mkdir -p $DIR_CASES/$caso/logs
 cd $DIR_CASES/$caso
 #----------------------------------------------------------
-# Copy env_workflow_IC_cam.xml_juno from DIR_TEMPL in $caso
-# and set the proper SLA to the file.xml
-#!!!!!! NON ANCORA IMPLEMENTATA
-#----------------------------------------------------------
 #----------------------------------------------------------
 # DA FARE
 # Copy log_cheker from DIR_TEMPL in $caso
@@ -83,6 +79,7 @@ cd $DIR_CASES/$caso
 # this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
 #----------------------------------------------------------
 rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${env_workflow_tag} env_workflow.xml
+rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} env_batch.xml
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE

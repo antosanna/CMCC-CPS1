@@ -35,7 +35,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=1  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -49,32 +49,35 @@ cd $DIR_CASES/
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
 listofcases=`ls -d sps4_200?07_0??`
 
-if [[ $# -eq 1 ]]
+debug=0
+if [[ $# -ge 1 ]]
 then
-   st=${1:-$mo_today}
-   yyyy=""
+   debug=${1}
+set +euvx
+   . ${DIR_UTIL}/descr_ensemble.sh 1993
+set -euvx
+fi
+if [[ $# -ge 2 ]]
+then
+   st=${2:-$mo_today}
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
 set -euvx
-elif [[ $# -eq 2 ]]
+fi
+if [[ $# -ge 3 ]]
 then
-   st=${1:-$mo_today}
-   yyyy=${2:-$yy_today}
+   yyyy=${3:-$yy_today}
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 fi
 
-LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
+#now the script runs from crontab with submitcommand.sh
+#LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
+#exec 3>&1 1>>${LOG_FILE} 2>&1
 echo "SPANNING $listofcases"
-
-#st=03       #start month
-#yyyy="2006" #set for selecting only 1 year, otherwise if the string is empty "" it will search in all years of $st
-
-
 
 
 ###LIST OF CASES YOU WANT TO PROCESS or PROCESS ENTIRE START-DATE
@@ -126,19 +129,10 @@ for caso in $listofcases ; do
      echo "skip this $caso because completed"
      continue
   fi
-### check if there are dependency never satisfied to be killed
-  set +e
-  listajobs=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -i 'yes' `
-  for proc in $listajobs ; do
-      ndep=`${DIR_UTIL}/findjobs.sh -m $machine -p $proc`
-      if [[ "$ndep" != "" ]] ; then
-         ${DIR_UTIL}/killjobs.sh -m $machine -i $proc
-         sleep 60
-      fi
-  done
-  set -e
 ### check that case is not running, if running skip
+  echo "starting findjobs "`date`
   ns=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
+  echo "end of findjobs "`date`
   if [[ $ns -gt 0 ]]
   then
       continue
@@ -274,6 +268,7 @@ then
 fi
 
 
+echo "starting conversion with python "`date`
 if [[ $machine != "zeus" ]]
 then
    set +euvx
@@ -286,6 +281,7 @@ then
    condafunction deactivate $envcondarclone
    set -euvx
 fi
+echo "end of conversion with python "`date`
 
 if [[ $debug -eq 2 ]]
 then

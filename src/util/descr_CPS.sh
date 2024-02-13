@@ -126,7 +126,7 @@ then
    DATA_ARCHIVE1=/data/$DIVISION/${operational_user}/archive
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
-   DIR_ROOT1=/users_home/csp/${operational_user}/CPS/CMCC-${CPSSYS}
+   DIR_ROOT1=/users_home/$DIVISION/${operational_user}/CPS/CMCC-${CPSSYS}
    DIR_CPS=$DIR_ROOT/src/scripts_oper
    DIR_RECOVER=$DIR_ROOT/src/recover
 #   OUTDIR_DIAG=/work/csp/sp2/${CPSSYS}/
@@ -171,13 +171,13 @@ then
 # TEMPORARY
    if [[ $machine == "juno" ]]
    then
-      DATA_ECACCESS=/work/csp/cp1/scratch/DATA_ECACCESS
+      DATA_ECACCESS=/work/$DIVISION/cp1/scratch/DATA_ECACCESS
    elif [[ $machine == "zeus" ]]
    then
-      DATA_ECACCESS=/data/delivery/csp/ecaccess/
+      DATA_ECACCESS=/data/delivery/$DIVISION/ecaccess/
    fi
-   WORK_C3S1=/work/csp/$operational_user/CESM/archive/C3S/
-#   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
+   WORK_C3S1=/work/$DIVISION/$operational_user/CESM/archive/C3S/
+#   WORK_C3Shind=/data/$DIVISION/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
@@ -295,10 +295,9 @@ dictionary=$DIR_UTIL/CPS1_checkfile_dictionary.txt
 DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
-DIR_LOG1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/logs
-DIR_LOG=/work/csp/$USER/CPS/CMCC-${CPSSYS}/logs
-#DIR_REST_INI=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/restart_ini ???
-DIR_REST_INI=/work/csp/$USER/CPS/CMCC-${CPSSYS}/restart_ini
+DIR_LOG1=/work/$DIVISION/$operational_user/CPS/CMCC-${CPSSYS}/logs
+DIR_LOG=/work/$DIVISION/$USER/CPS/CMCC-${CPSSYS}/logs
+DIR_REST_INI=/work/$DIVISION/$USER/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
@@ -317,8 +316,8 @@ WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
 DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
-DIR_SUBM_SCRIPTS1=/work/csp/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
-DIR_SUBM_SCRIPTS=/work/csp/$USER/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_SUBM_SCRIPTS1=/work/$DIVISION/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_SUBM_SCRIPTS=/work/$DIVISION/$USER/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
 WORK_C3S=$DIR_ARCHIVE_C3S
