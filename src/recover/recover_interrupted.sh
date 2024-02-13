@@ -35,7 +35,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=0  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -49,7 +49,6 @@ cd $DIR_CASES/
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
 listofcases=`ls -d sps4_200?07_0??`
 
-debug=0
 if [[ $# -ge 1 ]]
 then
    debug=${1}
@@ -73,7 +72,21 @@ set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 fi
-
+if [[ `echo -n $debug|wc -c` -ne 1 ]]
+then
+   echo "first input should be debug=0/1/2"
+   exit
+fi
+if [[ `echo -n $st|wc -c` -ne 2 ]]
+then
+   echo "second input should be st 2 digits"
+   exit
+fi
+if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
+then
+   echo "third input should be yyyy 4 digits"
+   exit
+fi
 #now the script runs from crontab with submitcommand.sh
 #LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
 #exec 3>&1 1>>${LOG_FILE} 2>&1

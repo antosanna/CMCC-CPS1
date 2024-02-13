@@ -153,7 +153,7 @@ ncl ${DIR_POST}/nemo/$scriptname
 echo "---------------------------------------------"
 echo "executed $scriptname "`date`
 echo "---------------------------------------------"
-if [ ! -f $outdirC3S/interp_ORCA2_1X1_gridT2C3S.ncl_${real}_ok ]
+if [ ! -f $check_oceregrid ]
 then
     title="[C3S] ${CPSSYS} forecast ERROR"
     body="ERROR in standardization of ocean files for case ${caso}. 

@@ -57,6 +57,14 @@ in
     h3)  export frq=day;;
     h0)  export frq=fix;;
 esac
+if [[ $type == "h3" ]]
+then
+   isSOLINin=`ncdump -h $inputFV|grep SOLIN|wc -l`
+   if [[ $isSOLINin -eq 0 ]]
+   then
+       export C3Stable="$DIR_POST/cam/C3S_table_noSOLIN.txt"
+   fi
+fi
 if [ -f $outdirC3S/regridSE_C3S.ncl_${type}_${real}_ok ] 
 then
    if [[ $inputFV -nt $wkdir/regridSE_C3S.ncl_${type}_${real}_ok ]]
