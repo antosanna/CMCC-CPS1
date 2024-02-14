@@ -10,6 +10,8 @@ mymail=sp1@cmcc.it
 #   machine="marconi"
 #elif [[ $ncheck -ne 0 ]]
 #then
+cmd_IC_pull_from_remote='sftp -P 20022  -i .ssh/id_ed25519 cineca_cps@dtn01.cmcc.it'
+cmd_IC_pull_from_remote_resume='sftp -a -P 20022  -i .ssh/id_ed25519 cineca_cps@dtn01.cmcc.it'
 if [[ -n `echo $PS1|grep leonardo` ]]
 then
    machine="leonardo"
