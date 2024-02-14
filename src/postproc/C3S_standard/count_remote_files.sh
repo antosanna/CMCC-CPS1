@@ -1,2 +1,2 @@
 cd $HOME
-ls -l
+echo `ls -l |wc -l`
