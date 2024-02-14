@@ -47,7 +47,7 @@ set -euvx
 cd $DIR_CASES/
 
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
-listofcases=`ls -d sps4_200?07_0??`
+#listofcases=`ls -d sps4_200?07_0??`
 
 if [[ $# -ge 1 ]]
 then
@@ -283,8 +283,8 @@ fi
 
 
 echo "starting conversion with python "`date`
-if [[ $machine != "zeus" ]]
-then
+#if [[ $machine != "zeus" ]]
+#then
    set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
@@ -294,7 +294,7 @@ then
    set +euvx
    condafunction deactivate $envcondarclone
    set -euvx
-fi
+#fi
 echo "end of conversion with python "`date`
 
 if [[ $debug -eq 2 ]]

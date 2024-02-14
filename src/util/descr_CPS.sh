@@ -41,6 +41,7 @@ then
    MYCESMDATAROOT=/data/$DIVISION/$USER/
    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
    envcondanemo=nemo_rebuild
+   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]]
    then
       operational_user=cp1
@@ -51,7 +52,6 @@ then
       cores_per_run=288
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondarclone=rclone_gdrive
       envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       maxnumbertosubmit=18
