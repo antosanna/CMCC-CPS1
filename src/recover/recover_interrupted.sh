@@ -270,6 +270,7 @@ then
 fi
 if [[ "$lista_pp_C3S" != " " ]]
 then
+   lista_pp_C3S=$(echo $lista_pp_C3S | tr ' ' '\n' | sort -u)
    echo "Cases with interrupted postproc_C3S.sh"
    echo "$lista_pp_C3S" 
    echo ""
