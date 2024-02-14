@@ -24,7 +24,9 @@ resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
 yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 
+set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
+set -euvx
 
 # get check_pp_monthly from dictionary
 set +euvx

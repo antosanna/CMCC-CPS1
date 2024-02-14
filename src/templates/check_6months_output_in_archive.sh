@@ -5,8 +5,10 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 
+caso=CASO
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh YYYY
+. $dictionary
 set -euvx
 
 function Count_files()
@@ -41,7 +43,7 @@ function Count_files()
            rof expected $nmonfore, got $n_rof in $DIR_ARCHIVE/CASO/rof/hist, \n
            YOU MUST RESUBMIT THE CASE"
            title="${CPSSYS} $typeofrun ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s YYYYMM
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s YYYYmese
        fi
    else
        ret=0

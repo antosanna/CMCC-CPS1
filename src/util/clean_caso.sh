@@ -47,28 +47,9 @@ if [ -d $DIR_ARCHIVE_C3S/$startdate ] ; then
                rm -f cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.nc
          fi
          # if exist some c3s logs files remove them (c3s logs with ok)
-         if [ $(ls -1 *r${member}i00p00_ok | wc -l ) -gt 0 ]; then
-            rm -f *r${member}i00p00_ok
-         fi
-         # if exist some c3s logs files remove them (qa,meta,tmpl logs)
-         if [ $(ls -1 *_ok_0${member} | wc -l ) -gt 0 ]; then
-            rm -f *_ok_0${member}
-         fi
-         # if exist some c3s logs files remove them c*m_C3SDONE
-         if [ $(ls -1 ${caso}_c*m_C3SDONE | wc -l ) -gt 0 ]; then
-            rm -f ${caso}_c*m_C3SDONE 
+         if [[ -d $SCRATCHDIR/regrid_C3S/$caso ]]
+         then
+            rm -fr $SCRATCHDIR/regrid_C3S/$caso
          fi
 fi # end 7)
-#  8) remove ${caso}_DMO_arch_ok checkfile
-checkfile_mvcase=`ls $DIR_LOG/${typeofrun}/$yyyy$st/${caso}_DMO_arch_ok | wc -l`
-if [[ $checkfile_mvcase -ne 0 ]]
-then
-   rm $DIR_LOG/${typeofrun}/$yyyy$st/${caso}_DMO_arch_ok
-fi 
-# 9) remove ${caso}_homelog_arch_ok
-homelog=$DIR_LOG/$typeofrun/$yyyy$st/${caso}_homelog_arch_ok
-if [[ `ls ${homelog}* |wc -l` -ne 0 ]]
-then
-   rm ${homelog}*
-fi
 

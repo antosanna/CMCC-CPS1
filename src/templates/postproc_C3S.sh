@@ -56,14 +56,14 @@ outdirC3S=${WORK_C3S}/$yyyy$st/
 mkdir -p $outdirC3S
 
 # get   check_oceregrid from dictionary
-mkdir -p $SCRATCHDIR/regrid_C3S/NEMO/$caso
+mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
     ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
 
 fi
 # get   check_iceregrid from dictionary
-mkdir -p $SCRATCHDIR/regrid_C3S/CICE/$caso
+mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
 if [ ! -f $check_iceregrid ]
 then
     ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
@@ -72,7 +72,7 @@ fi
 #***********************************************************************
 # Standardization for CLM 
 #***********************************************************************
-wkdir_clm=$SCRATCHDIR/regrid_C3S/CLM/$caso
+wkdir_clm=$SCRATCHDIR/regrid_C3S/$caso/CLM
 mkdir -p ${wkdir_clm}
 # get check_postclm  from dictionary
 
@@ -115,7 +115,7 @@ fi
 #***********************************************************************
 # Standardization for CAM 
 #***********************************************************************
-wkdir_cam=$SCRATCHDIR/regrid_C3S/CAM/$caso
+wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
 mkdir -p ${wkdir_cam}
 #get check_all_camC3S_done from dictionary
 if [[ ! -f $check_all_camC3S_done ]]
@@ -240,6 +240,11 @@ then
    rm -rf $DIR_TEMP/$caso
 fi
 chmod u-w -R $DIR_ARCHIVE/$caso/
+#
+if [[ -d $SCRATCHDIR/regrid_C3S/$caso ]]
+then
+   rm -rf $SCRATCHDIR/regrid_C3S/$caso
+fi
 
 echo "Done."
 

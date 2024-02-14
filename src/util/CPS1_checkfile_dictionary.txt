@@ -3,16 +3,18 @@ listfileIC_NEMO=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
 
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
-check_postclm=$SCRATCHDIR/regrid_C3S/CLM/$caso/${caso}_clm_C3SDONE
-check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_all_cam_C3SDONE
-check_regridC3S_type=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_cam_regrid_C3S
+check_postclm=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_clm_C3SDONE
+check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SDONE
+check_regridC3S_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_cam_regrid_C3S
 check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
 check_submitnotificate=$DIR_LOG/$typeofrun/$yyyy$st/${caso}_submittingnotificate
-check_merge_cam_files=$SCRATCHDIR/regrid_C3S/CAM/$caso/${caso}_merge_cam_files_DONE
+check_merge_cam_files=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_merge_cam_files_DONE
+check_iceregrid=$SCRATCHDIR/regrid_C3S/$caso/CICE/interp_cice2C3S_through_nemo.ncl_r${member}i00p00_ok
+check_oceregrid=$SCRATCHDIR/regrid_C3S/$caso/NEMO/interp_ORCA2_1X1_gridT2C3S.ncl_r${member}i00p00_ok
 
 #--#-- touchfiles defined in $DIR_POST/cam/regridC3S.sh
-check_ncl_regrid_type=$wkdir/regridSE_C3S.ncl_${type}_${real}_ok
+check_ncl_regrid_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/regridSE_C3S.ncl_${type}_${real}_ok
 check_no_SOLIN=$outdirC3S/no_SOLIN_in_${caso}
 # the above is used also in postproc_C3S.sh
 
@@ -29,8 +31,6 @@ check_6months_done=$DIR_CASES/$caso/logs/${caso}_${nmonfore}months_done
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive
 check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
-check_iceregrid=$SCRATCHDIR/regrid_C3S/CICE/interp_cice2C3S_through_nemo.ncl_r${member}i00p00_ok
-check_oceregrid=$SCRATCHDIR/regrid_C3S/NEMO/interp_ORCA2_1X1_gridT2C3S.ncl_r${member}i00p00_ok
 
 #--#-- touchfiles defined in $DIR_ATM_IC/launch_make_atm_ic_hindcast.sh
 check_IC_CAMguess=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done

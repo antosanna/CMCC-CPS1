@@ -34,7 +34,7 @@ fi
 
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow
-sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/MM/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
+sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
 sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
