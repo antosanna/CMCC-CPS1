@@ -24,6 +24,10 @@ do
    for remotecase in $listofcases
    do 
 
+      if [[ -f $dir_cases_remote/$caso/logs/postproc_C3S_${caso}_DONE ]]
+      then
+         continue
+      fi
       $DIR_UTIL/postproc_C3S_from_remote.sh $remotecase $dir_cases_remote
       if [[ $debug -eq 1 ]]
       then

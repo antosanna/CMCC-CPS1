@@ -24,6 +24,7 @@ member=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
+
 startdate=$yyyy$st
 export fore_type=$typeofrun
 export yyyytoday=`date +%Y`
@@ -47,6 +48,11 @@ export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
 export GCM_and_version=${GCM_name}-v${version}
 export ini_term=cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100
 
+set +euvx
+. $dictionary
+set -euvx
+#check_ncl_regrid_type=$wkdir/regridSE_C3S.ncl_${type}_${real}_ok
+#check_no_SOLIN=$outdirC3S/no_SOLIN_in_${caso} 
 #----------------------------------------
 # INPUT TO BE REGRIDDED
 #----------------------------------------
@@ -63,19 +69,20 @@ then
    if [[ $isSOLINin -eq 0 ]]
    then
        export C3Stable="$DIR_POST/cam/C3S_table_noSOLIN.txt"
+       touch $check_no_SOLIN
    fi
 fi
-if [ -f $outdirC3S/regridSE_C3S.ncl_${type}_${real}_ok ] 
+if [[ -f $check_ncl_regrid_type ]]
 then
-   if [[ $inputFV -nt $wkdir/regridSE_C3S.ncl_${type}_${real}_ok ]]
+   if [[ $inputFV -nt $check_ncl_regrid_type ]]
    then
       if [[ $debug -eq 0 ]]
       then
 # in operational mode rm to recompute
-         rm $wkdir/regridSE_C3S.ncl_${type}_${real}_ok
+         rm $check_ncl_regrid_type
       else
 # otherwise just send informative email
-         body="$inputFV newer than $wkdir/regridSE_C3S.ncl_${type}_${real}_ok"
+         body="$inputFV newer than $check_ncl_regrid_type"
          title="[C3S] ${CPSSYS} forecast warning "
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       fi

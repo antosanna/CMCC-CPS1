@@ -170,10 +170,17 @@ if [[ $allC3S -eq $nfieldsC3S ]]
 then
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $caso"
 else
-   body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the neumber of postprocessed files is $allC3S instead of required $nfieldsC3S"
-   title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-   exit 1
+   if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $outdirC3S/no_SOLIN_in_${caso} ]]
+   then
+      body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the case $caso does not contain SOLIN. Must be created"
+      title="[CPS1] ERROR! postproc_C3S.sh exiting before no SOLIN in $caso"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      exit 2
+   else
+      body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the number of postprocessed files is $allC3S instead of required $nfieldsC3S"
+      title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      exit 1
 fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED
