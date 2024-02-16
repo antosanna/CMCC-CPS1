@@ -131,7 +131,7 @@ EOF1
 
 cat > user_nl_clm << EOF2
 flanduse_timeseries = '\$DIN_LOC_ROOT/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_SSP5-8.5_16pfts_Irrig_CMIP6_simyr1850-2100_c231218.nc'
-fsurdat = '\$DIN_LOC_ROOT/lnd/clm2/surfdata_map/surfdata_0.47x0.63_16pfts_Irrig_CMIP6_simyr1850_c170919.nc'
+fsurdat = '\$DIN_LOC_ROOT/lnd/clm2/surfdata_map/surfdata_0.47x0.63_SSP5-8.5_16pfts_Irrig_CMIP6_simyr1850_c231218.nc'
 hist_empty_htapes=.true.
 hist_mfilt = 1,365,1460,365
 hist_nhtfrq = 0, -24,-6,-24,

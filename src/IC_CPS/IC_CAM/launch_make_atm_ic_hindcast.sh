@@ -52,7 +52,7 @@ tstamp="00"
 list_startdate="12 01 02 03 04 05 06 07 08 09 10 11"
 for st in $list_startdate
 do
-   for yyyy in `seq $iniy 2014`
+   for yyyy in `seq $iniy 2020`
    do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month

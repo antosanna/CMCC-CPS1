@@ -16,7 +16,6 @@ caso=$2
 export outdirC3S=$3
 wkdir=$4
 export type=$5 
-check_regridC3S_type=$6 
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 member=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
@@ -89,19 +88,20 @@ then
    fi    
 fi    
 # if check file does not exist run the ncl script
-if [ ! -f ${check_regridC3S_type}_DONE ] 
+mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CAM
+if [ ! -f ${check_regridC3S_type}_${type}_DONE ] 
 then
-   export checkfile=${check_regridC3S_type}_DONE
+   export checkfile=${check_regridC3S_type}_${type}_DONE
    cp $DIR_POST/cam/regridFV_C3S_template.ncl $wkdir/regridFV_C3S.$type.ncl
    sed -i "s/TYPEIN/$type/g;s/MEMBER/$real/g;s/FRQIN/$frq/g" $wkdir/regridFV_C3S.$type.ncl
    ncl $wkdir/regridFV_C3S.$type.ncl
 fi
-if [ -f ${check_regridC3S_type}_DONE ]
+if [ -f ${check_regridC3S_type}_${type}_DONE ]
 then
    echo "regridFV_C3S.ncl completed successfully for $type and $real"
 else
 # if check file does not exist send ERROR email
-   touch ${check_regridC3S_type}_ERROR
+   touch ${check_regridC3S_type}_${type}_ERROR
    body="regridFV_C3S.ncl anomalously exited for start-date ${yyyy}${st}, file type $type and member $real "
    title="[C3S] ${CPSSYS} forecast ERROR"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st

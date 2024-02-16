@@ -35,7 +35,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
+debug=1  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -44,10 +44,16 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh 1993
 set -euvx
 
+if [[ $# -eq 0 ]]
+then
+  LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
+  exec 3>&1 1>>${LOG_FILE} 2>&1
+fi
+
 cd $DIR_CASES/
 
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
-#listofcases=`ls -d sps4_200?07_0??`
+listofcases=sps4_200807_014
 
 if [[ $# -ge 1 ]]
 then
@@ -59,6 +65,11 @@ fi
 if [[ $# -ge 2 ]]
 then
    st=${2:-$mo_today}
+   if [[ `echo -n $st|wc -c` -ne 2 ]]
+   then
+      echo "second input should be st 2 digits"
+      exit
+   fi
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
@@ -67,6 +78,11 @@ fi
 if [[ $# -ge 3 ]]
 then
    yyyy=${3:-$yy_today}
+   if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
+   then
+      echo "third input should be yyyy 4 digits"
+      exit
+   fi
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -77,19 +93,7 @@ then
    echo "first input should be debug=0/1/2"
    exit
 fi
-if [[ `echo -n $st|wc -c` -ne 2 ]]
-then
-   echo "second input should be st 2 digits"
-   exit
-fi
-if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
-then
-   echo "third input should be yyyy 4 digits"
-   exit
-fi
 #now the script runs from crontab with submitcommand.sh
-#LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
-#exec 3>&1 1>>${LOG_FILE} 2>&1
 echo "SPANNING $listofcases"
 
 
@@ -110,7 +114,7 @@ cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 
 filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${debug}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
-echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
+echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
 ### INITIALIZE LISTS
 lista_lt_archive=" "    
 lista_resubmit=" "
@@ -118,10 +122,10 @@ lista_pp_C3S=" "
 lista_moredays=" "
 lista_first_month=" "
 
-caso_ignored="sps4_199711_011"  #unstability in NEMO - to be checked 
+lista_caso_ignored="sps4_199711_011 sps4_200207_020"  #unstability in NEMO - to be checked 
 cd $DIR_CASES/
 for caso in $listofcases ; do
-  if [[ $caso == ${caso_ignored} ]] ; then
+  if [[ $lista_caso_ignored == *"$caso"* ]] ; then
      continue  
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
@@ -132,7 +136,7 @@ for caso in $listofcases ; do
   outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
   set +uevx
   . $dictionary
-  set -eu
+  set -euvx
 
 # check if directory is writable (we remove  writing permission after postproc_C3S)
 # this reduce the list to be checked on Juno
@@ -160,7 +164,6 @@ for caso in $listofcases ; do
 
   cd $DIR_CASES/$caso/
    
-#  num_months_done=`ls $DIR_CASES/$caso/logs/postproc_monthly_??????_done|wc -l`
   if [[ ! -f $check_run_moredays ]]
   then
 
@@ -190,40 +193,31 @@ for caso in $listofcases ; do
            cnt_moredays=$(($cnt_moredays + 1))
         fi
      fi
-  fi
-# aggiungere un check su nemo_rebuild e postproc_monthly prima di check_6month
-# THIS SECTION MUST BE RUN ONLY ON JUNO BECAUSE C3S ARE PRODUCED ONLY THERE\# FOR A MATTER OF CONSISTENCY
-  if [[ $machine == "juno" ]]
-  then
-
-
-     if [[ -f $check_6months_done ]] && [[ ! -f $check_iceregrid ]] 
+  else
+     # THIS SECTION MUST BE RUN ONLY ON JUNO BECAUSE C3S ARE PRODUCED ONLY THERE\# FOR A MATTER OF CONSISTENCY
+     if [[ $machine == "juno" ]]
      then
-        cnt_regrid_ice=$(($cnt_regrid_ice + 1))
-        lista_pp_C3S+=" $caso"
-     fi
-     if [[ -f $check_6months_done ]] && [[ ! -f $check_oceregrid ]] 
-     then
-        cnt_regrid_oce=$(($cnt_regrid_oce + 1))
-        lista_pp_C3S+=" $caso"
-     fi
-     
-# meaning that the 185 day-run has been completed but last pp (C3S regrid) has not.
-     if [[ -f $check_run_moredays ]]
-     then
+        # meaning that the 185 day-run has been completed but last pp (C3S regrid) has not.
         if [[ ! -f $check_pp_C3S ]] 
         then
            cnt_pp_C3S=$(($cnt_pp_C3S + 1))
            lista_pp_C3S+=" $caso"
         else
-           if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]]
-           then
+            if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
+            then
               cnt_pp_C3S=$(($cnt_pp_C3S + 1))
               lista_pp_C3S+=" $caso"
+              if  [[ ! -f $check_oceregrid ]] 
+              then 
+                  cnt_regrid_oce=$(($cnt_regrid_oce + 1))
+              elif [[ ! -f $check_iceregrid ]] 
+              then
+                 cnt_regrid_ice=$(($cnt_regrid_ice + 1))
+              fi
             fi
         fi
-     fi
-  fi
+     fi #juno
+  fi #if moredays
 #               checkin_qa=`ls $DIR_CASES/$caso/logs/qa_started_${yyyy}${st}_0${member}_ok | wc -l`
 #               checkout_all=`ls $DIR_ARCHIVE/C3S/$yyyy$st/all_checkers_ok_0${member} | wc -l`
 #               checkfile_daily=`ls $FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${member} | wc -l`
@@ -242,8 +236,8 @@ then
    echo "$lista_moredays"
    for caso in $lista_moredays
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
-      echo "-,-,$caso,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
+      echo "-,-,$caso,- " >> $filecsv
    done
 fi
 if [[ "$lista_resubmit" != " " ]]
@@ -253,8 +247,8 @@ then
    echo ""
    for caso in $lista_resubmit
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
-      echo "-,$caso,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
+      echo "-,$caso,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_first_month" != " " ]]
@@ -264,8 +258,8 @@ then
    echo ""
    for caso in $lista_first_month
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
-      echo "$caso,-,-,-,- " >> $filecsv
+#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
+      echo "$caso,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_pp_C3S" != " " ]]
@@ -276,8 +270,8 @@ then
    echo ""
    for caso in $lista_pp_C3S
    do
-#echo "first month,resubmit,lt_archive,lt_archive_moredays,postproc C3S" > $filecsv
-      echo "-,-,-,-,$caso " >> $filecsv
+#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
+      echo "-,-,-,$caso " >> $filecsv
    done
 fi
 
@@ -307,10 +301,10 @@ fi
 if [[ $debug -ne 2 ]] ; then
     
    echo "NOW PROCESSING THE INTERRUPTED CASES"
-set +eu
+set +euv
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
-set -eu
+set -euvx
 caso=""
 # first month
    if [[ $cnt_first_month -ne 0 ]] ; then
@@ -329,7 +323,7 @@ caso=""
       outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
       set +uevx
       . $dictionary
-      set -eu
+      set -euvx
       cd ${DIR_CASES}/$caso
 # workaround in order to keep the syntax highlights correct (case is a shell command)
       command="case.submit"
@@ -389,7 +383,7 @@ caso=""
       outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
       set +uevx
       . $dictionary
-      set -eu
+      set -euvx
       cd ${DIR_CASES}/$caso
       command="case.submit"
       echo $command

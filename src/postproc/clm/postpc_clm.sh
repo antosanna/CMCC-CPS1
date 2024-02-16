@@ -20,6 +20,7 @@ ifexistdelete() {
 # Input 
 #*************************************************************************
 debug=0
+mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
 #
 #
 if [ $debug -eq 1 ]

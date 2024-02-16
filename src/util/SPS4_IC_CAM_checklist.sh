@@ -15,7 +15,7 @@ nrun_submitted=0
 tstamp="00"
 for st in `seq -w 1 12`
 do
-   for yyyy in `seq $iniy 2014`
+   for yyyy in `seq $iniy 2020`
    do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month

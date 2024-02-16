@@ -14,6 +14,18 @@ then
 fi
 # Input **********************
 stlist=$1
+
+#max number of ens member to be submitted per startdate
+#to advance with the diagnostic it has been decided to run first
+#a reduced ensemble over all the timeseries 
+nmaxens=${2:-${nrunmax}}
+
+#if by mistake the input is greater than $nrunmax (30) 
+#nrunmax is restored
+if [[ $nmaxens -gt ${nrunmax} ]] ; then
+   nmaxens=${nrunmax}
+fi
+
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 if [ $np_all -lt $maxnumbertosubmit ]
 then
