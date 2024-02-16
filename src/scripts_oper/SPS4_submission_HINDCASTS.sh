@@ -58,7 +58,6 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-nmaxens=15
 endyear=2014 #to stop in the historical run
 #iniy_hind=1999
 for st in $stlist
