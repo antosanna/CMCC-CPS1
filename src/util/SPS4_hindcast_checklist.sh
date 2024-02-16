@@ -14,9 +14,14 @@ mkdir -p $DIR_LOG/hindcast/
 typeofrun="hindcast"
 hindcasts_list=${SPSSystem}_${typeofrun}_list.csv
 hindcastlist_excel=`echo ${hindcasts_list}|rev |cut -d '.' -f2-|rev`.xlsx
+hindcastlist_htm=`echo ${hindcasts_list}|rev |cut -d '.' -f2-|rev`.htm
 if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
 then
   rm $DIR_CHECK/$hindcastlist_excel
+fi
+if [[ -f $DIR_CHECK/$hindcastlist_htm ]]
+then
+  rm $DIR_CHECK/$hindcastlist_htm
 fi
 listfiletocheck="deleteme.csv"
 #copy the relative file from Zeus
@@ -186,6 +191,7 @@ set -euvx
 python $DIR_UTIL/convert_csv2xls.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_excel
 rsync -av $DIR_TEMPL/SPS4_hindcast_production_list_template.xlsx $DIR_CHECK/SPS4_hindcast_production_list.xlsx
 python $DIR_UTIL/add_sheet_to_excel.py ${DIR_CHECK}/${hindcastlist_excel} ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx
+python $DIR_UTIL/convert_csv2htm.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/$hindcastlist_htm
 
 if [[ ! -f $DIR_CHECK/SPS4_hindcast_production_list.xlsx ]]
 then
