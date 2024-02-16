@@ -216,7 +216,7 @@ then
    parallelq_l=dcgp_usr_prod
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
-   WORK=/marconi_work/CMCC_Copernic_4/  #is environment var in leonardo
+   WORK=/leonardo_work/CMCC_Copernic_4/  #is environment var in leonardo
    WORK1=$WORK
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK_CPS1}
@@ -245,6 +245,9 @@ then
 # ######## ICs_NEMO
     IC_NEMO_CPS_DIR1=$SCRATCHDIR1/IC/NEMO_${CPSSYS}/
     IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
+# ######## ICs_CICe
+    IC_CICE_CPS_DIR1=$SCRATCHDIR1/IC/CICE_${CPSSYS}/
+    IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
 # ######## ICs_CAM
     IC_CAM_CPS_DIR1=$SCRATCHDIR1/IC/CAM_${CPSSYS}/
     IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
