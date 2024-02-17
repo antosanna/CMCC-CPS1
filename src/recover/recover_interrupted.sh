@@ -122,7 +122,11 @@ lista_pp_C3S=" "
 lista_moredays=" "
 lista_first_month=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020"  #unstability in NEMO - to be checked 
+lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025"  
+#sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
+#sps4_200207_020 (juno) - NaN in field Sl_t
+#sps4_199910_025 (zeus) - h2osoi_ice sign negative
+
 cd $DIR_CASES/
 for caso in $listofcases ; do
   if [[ $lista_caso_ignored == *"$caso"* ]] ; then
