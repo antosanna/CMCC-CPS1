@@ -22,7 +22,7 @@
 
 function write_help
 {
-  echo "Use: recover_interrupted.sh [<st>] [<yyyy>]"
+  echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
   echo "     (if hindcast only st else also yyyy)"
 }
 #set -euxv
@@ -44,11 +44,22 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh 1993
 set -euvx
 
+#flag introduced to prevent double submission
+#touched at the beginning of the execution and removed at the end
+check_recover_running=${DIR_LOG}/$typeofrun/recover_interrupted_running
+if [[ -f ${check_recover_running} ]] ; then
+   echo "recover_interrupted is already running"
+   exit
+fi
+
+touch ${check_recover_running}
+
 if [[ $# -eq 0 ]]
 then
   LOG_FILE=$DIR_LOG/$typeofrun/recover_interrupted_debug${debug}_`date +%Y%m%d%H%M`
   exec 3>&1 1>>${LOG_FILE} 2>&1
 fi
+
 
 cd $DIR_CASES/
 
@@ -68,6 +79,9 @@ then
    if [[ `echo -n $st|wc -c` -ne 2 ]]
    then
       echo "second input should be st 2 digits"
+      if [[ -f ${check_recover_running} ]] ; then
+         rm ${check_recover_running}
+      fi
       exit
    fi
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
@@ -81,6 +95,9 @@ then
    if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
    then
       echo "third input should be yyyy 4 digits"
+      if [[ -f ${check_recover_running} ]] ; then
+         rm ${check_recover_running}
+      fi 
       exit
    fi
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
@@ -91,6 +108,9 @@ fi
 if [[ `echo -n $debug|wc -c` -ne 1 ]]
 then
    echo "first input should be debug=0/1/2"
+   if [[ -f ${check_recover_running} ]] ; then
+         rm ${check_recover_running}
+   fi 
    exit
 fi
 #now the script runs from crontab with submitcommand.sh
@@ -424,9 +444,13 @@ caso=""
    
    
 fi   
-#TEMPORARY DISABLED
+if [[ -f ${check_recover_running} ]] ; then
+   rm ${check_recover_running}
+fi 
+
 exit
 
+#TEMPORARY DISABLED
 if [[ $debug -eq 0 ]] ; then
   # third input optional: if present do not print the list of running/pending jobs
   doplot=1
@@ -443,4 +467,8 @@ if [[ $debug -eq 0 ]] ; then
   attachment=$SCRATCHDIR/$st/$pdffile
   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Monitor forecast after recover attached" -t "${CPSSYS} notification" -a "$attachment"
 fi
+if [[ -f ${check_recover_running} ]] ; then
+    rm ${check_recover_running}
+fi 
+
 exit 0

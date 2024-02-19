@@ -58,7 +58,7 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2014 #to stop in the historical run
+endyear=2020 #to allow for scenario up to the IC we have retrieved
 #iniy_hind=1999
 for st in $stlist
 do
