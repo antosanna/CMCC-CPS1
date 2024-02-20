@@ -14,6 +14,8 @@ set -euxv
 dateymdhms=`date +%Y%m%d%H%M%S`
 subm_cnt=0
 listacasisubmitted=() 
+clean_cnt=0
+listacasicleaned=() 
 
 #listcases="${SPSSystem}_200311_016" 
 #listcases="${SPSSystem}_200011_016" 
@@ -62,7 +64,17 @@ do
    line1script=`echo $line1 | awk '{print $3" "$1" "$2}'`
    line2=`cat triplette.random.${yyyy}${st}.txt | head -n${n2} | tail -1`
    line2script=`echo $line2 | awk '{print $3" "$1" "$2}'`
- 
+   
+   #line2 is the order of tirplette file ($1 - lnd, $2 - oce, $3 - atm)
+   #line2script is the order of submission script (atm, lnd, oce)
+   #retrieveing tag of new ICs to check for their presence
+   ppatmnew=`echo $line2 | awk '{print $3}'`
+   pplndnew=`echo $line2 | awk '{print $1}'`
+   ppocenew=`echo $line2 | awk '{print $2}'`     
+   ppatmnew2d=`printf '%.2d' $ppatmnew`
+   pplndnew2d=`printf '%.2d' $pplndnew`
+   ppocenew2d=`printf '%.2d' $ppocenew`  
+
    echo $n1" line1: "$line1" line1script: "$line1script 
    echo $n2" line2: "$line2" line2script: "$line2script 
 
@@ -82,11 +94,37 @@ do
    fi
    sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
    chmod 744 ensemble4_${yyyy}${st}_${ens}.sh
-   ./ensemble4_${yyyy}${st}_${ens}.sh
-   subm_cnt=$(( $subm_cnt + 1 ))
-   listacasisubmitted+="$caso "
+  
+   #now everything is ready to submit the modified triplette caso, before submission check for presence of ICs
+   clmICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
+   rofICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
+   atmICfile=${IC_CAM_CPS_DIR}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${ppatmnew2d}.nc
+   nemoICfile=${IC_NEMO_CPS_DIR}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
+   iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
+   if [[ -f $clmICfile ]] && [[ -f $rofICfile ]] && [[ -f $atmICfile ]] && [[ -f $nemoICfile ]] && [[ -f $iceICfile ]] ; then  
+     
+      #if all the ICs are present resubmit the case
+      ./ensemble4_${yyyy}${st}_${ens}.sh
+      subm_cnt=$(( $subm_cnt + 1 ))
+      listacasisubmitted+="$caso "
+   else
+      #otherwise clean_caso so that the automatic procedure for hindcast submission will resubmit it as soon as the ICs are ready
+      . ${DIR_UTIL}/clean_caso.sh $caso
+      clean_cnt=$(( $clean_cnt + 1 ))
+      listacasicleaned+="$caso "
+   fi
 
 done
+
+if [ "$listacasicleaned" != "" ]
+then
+   body="In ${dateymdhms} cleaned ${clean_cnt} cases that aborted after changing tripletta, but not resubmitted because of missing ICs: \n
+   \n
+   ${listacasicleaned[@]} \n
+   "
+   title="[$CPSSYS] warning - jobs cleaned by modify_triplette.sh"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+fi
 
 # ***************************************************
 # Email and exit
@@ -97,7 +135,7 @@ then
    \n
    ${listacasisubmitted[@]} \n
    "
-   title="RECOVER SPIKE JOBS RE-SUBMITTED"
+   title="RECOVER JOBS RE-SUBMITTED"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
    echo "Done."
