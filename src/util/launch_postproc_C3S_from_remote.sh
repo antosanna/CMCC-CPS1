@@ -21,15 +21,21 @@ do
    mkdir -p $dir_cases_remote
    listofcases=`ls *transfer_from_${mach}_DONE|cut -d '.' -f1`
    echo "SPANNING $listofcases"
+   nsubmit=0
    for remotecase in $listofcases
    do 
 
-      if [[ -f $dir_cases_remote/$caso/logs/postproc_C3S_${caso}_DONE ]]
+      if [[ -f $dir_cases_remote/$remotecase/logs/postproc_C3S_${remotecase}_DONE ]]
       then
          continue
       fi
       $DIR_UTIL/postproc_C3S_from_remote.sh $remotecase $dir_cases_remote
       if [[ $debug -eq 1 ]]
+      then
+         exit
+      fi
+      nsubmit=$(($nsubmit + 1))
+      if [[ $nsubmit -eq 10 ]]
       then
          exit
       fi

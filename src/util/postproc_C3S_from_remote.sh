@@ -20,9 +20,6 @@ startdate=$yyyy$st
 ens=`echo $caso|cut -d '_' -f 3 `
 member=`echo $ens|cut -c2,3` 
 
-set +euvx
-. $dictionary
-set -euvx
 
 chmod -R u+w $DIR_ARCHIVE/$caso
 ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1`
@@ -30,6 +27,9 @@ ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic
 # get check_qa_start from dictionary
 # directory creation
 outdirC3S=${WORK_C3S}/$yyyy$st/
+set +euvx
+. $dictionary
+set -euvx
 mkdir -p $outdirC3S
 mkdir -p $dir_cases_remote/$caso/logs
 
@@ -44,7 +44,7 @@ then
 fi
 # get   check_iceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
-if [ ! -f $check_iceregrid ]
+if [[ ! -f $check_iceregrid ]]
 then
    sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $dir_cases_remote/$caso/interp_cice2C3S_${caso}.sh
    chmod u+x $dir_cases_remote/$caso/interp_cice2C3S_${caso}.sh
@@ -181,6 +181,7 @@ else
       title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
       exit 1
+   fi
 fi
 # now rm file not necessary for archiving
 # NOT SURE WE NEED

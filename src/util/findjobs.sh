@@ -64,6 +64,10 @@ while getopts ":m:q:n:N:a:c:r:i:d:H:M:W:Y:J:p:" o; do
     esac
 done
 
+if [[ $# = 0 ]]
+then
+   usage
+fi
 if [[ "$machine" == "None" ]]
 then
    usage
@@ -93,7 +97,7 @@ then
    fi
    if [[ "$printjobname" != "None" ]]
    then
-      command+=" |awk '{print \$2}'"
+      command+=" |awk '{print \$7}'|grep $printjobname"
    fi
    if [[ "$stat" != "None" ]]
    then

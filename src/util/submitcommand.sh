@@ -6,6 +6,10 @@
 set -eu
 usage() { echo "Usage: $0 [-m <machine string >] [-q <queue string>] [-s <scriptname string >] [-j <jobname string >] [-d <scriptdir string >] [-l <logdir string >] [-i <input string OPTIONAL>] [-R <cores in the same node OPTIONAL BUT REQUIRES ntask>] [-f <is this the model? OPTIONAL>] [-p <previousjob string OPTIONAL>] [-w <second previousjob string OPTIONAL>] [-e <previousjobi-exited string OPTIONAL>] [-f <previousjob-exited string OPTIONAL>] [-Z <no arg string OPTIONAL>] [-M <memory integer OPTIONAL >] [-P <partition string OPTIONAL>] [-Q <qos string OPTIONAL>] [-r <reservation string OPTIONAL>] [-n <ntask string OPTIONAL>] [-t <duration string OPTIONAL>] [-S <quality of service string OPTIONAL>] [-E <string to require exlusivity of nodesOPTIONAL >] [-B <starting-time string OPTIONAL (format yyyy:mm:dd:hh:mm)>]" 1>&2; exit 1; }
 
+if [[ $# -eq 0 ]]
+then
+   usage
+fi
 # Initialize arguments
 # Reason: in the SPS3 version of this script, the arguments are empty string, and "test -z" command is used. This prevents the use of "set -u" option.
 starttime="None"

@@ -18,6 +18,10 @@ while getopts ":m:i:" o; do
     esac
 done
 
+if [ $# -eq 0 ]
+then
+   usage
+fi
 if [ -z $machine ]
 then
    usage
