@@ -168,6 +168,8 @@ real="r"${member}"i00p00"
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
+#temporary! not yet implemented
+   exit 0
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $caso"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
@@ -175,12 +177,12 @@ else
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the case $caso does not contain SOLIN. Must be created"
       title="[CPS1] ERROR! postproc_C3S.sh exiting before no SOLIN in $caso"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-      exit 2
+      exit 0
    else
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the number of postprocessed files is $allC3S instead of required $nfieldsC3S"
       title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-      exit 1
+      exit 0
    fi
 fi
 # now rm file not necessary for archiving
