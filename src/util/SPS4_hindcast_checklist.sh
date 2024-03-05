@@ -47,6 +47,7 @@ for mach in ${remote_mach_list} ; do
      zeus)  case_dir=/work/csp/sps-dev/CPS/CMCC-CPS1/cases 
             arch_dir=/work/csp/sps-dev/CMCC-CM/archive 
             remote_user=sps-dev
+            DIR_CASES_remote=$(echo "${DIR_CASES/cases/cases_from_Zeus}")
             remote=${remote_user}@zeus01.cmcc.scc ;;
 
    esac
@@ -56,6 +57,7 @@ for mach in ${remote_mach_list} ; do
    for st in $remote_st_list
    do
       n_listofcases=`ssh $remote ls -d ${arch_dir}/${SPSSystem}_[12][0-9][0-9][0-9]${st}_0??|wc -l`  
+# meaning that the case has started but not yet completed a single month
       if [[ $n_listofcases -eq 0 ]]
       then
          continue
@@ -64,84 +66,89 @@ for mach in ${remote_mach_list} ; do
      
       for casename in $listofcases 
       do 
-          caso=`basename $casename` 
-          LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
-          if [[ -f $DIR_ARCHIVE/$caso.transfer_from_Zeus_DONE ]]
-          then
-             for i in `seq 1 $(($nmonfore + 1))`
-             do
+         caso=`basename $casename` 
 # calc position of the ith-column inside csv table
-                table_column_id=$(($i + 1))
-# assign a value with -val selecting a row with -v and a column with -c
-                awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
-
-# add 1 second wait to be sure the file has been modified
-                sleep 1
-
-                mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
+         LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
+# check if already trasnferred
+         if [[ -f $DIR_ARCHIVE/$caso.transfer_from_Zeus_DONE ]]
+         then
 #ADD CHECK FOR POSTPROCC3S DONE ON JUNO
-
-             done
-# add 1 second wait to be sure the file has been modified
-             continue
-          fi
-          CASEROOT=${case_dir}/$caso   # for $check_run_moredays
-          set +euvx
-          . $dictionary     #fixed
-          set -euvx
-       # find line number
-          if [[ `ssh $remote ls $check_run_moredays |wc -l` -eq 1 ]]
-          then
-             for i in `seq 1 $(($nmonfore + 1))`
-             do
-# calc position of the ith-column inside csv table
-                table_column_id=$(($i + 1))
+            check_pp_C3S_from_remote=$DIR_CASES_remote/$caso/logs/postproc_C3S_${caso}_DONE
+# check if postproc C3S done
+            if [[ -f $check_pp_C3S_from_remote ]]
+            then
+               for i in `seq 1 $(($nmonfore + 2))`
+               do
+                  table_column_id=$(($i + 1))
 # assign a value with -val selecting a row with -v and a column with -c
-                awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+                  awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 
 # add 1 second wait to be sure the file has been modified
-                sleep 1
+                  sleep 1
+   
+                  mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
 
-                mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
-
-             done
-          else
-             ndone=`ssh $remote ls ${case_dir}/$caso/logs/postproc_monthly_??????_done|wc -l` 
-             if [[ $ndone -eq 0 ]]
-             then
-                continue
-             fi
-
-             for i in `seq 1 $ndone`
-             do
-# calc position of the ith-column inside csv table
-                table_column_id=$(($i + 1))
+               done
+            else
+# if transferred for sure completed so the 6 months plus moredays
+               for i in `seq 1 $(($nmonfore + 1))`
+               do
+# position of the ith-column inside csv table
+                  table_column_id=$(($i + 1))
 # assign a value with -val selecting a row with -v and a column with -c
-                awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+                  awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 
 # add 1 second wait to be sure the file has been modified
-                sleep 1
+                  sleep 1
 
-                mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
+                  mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
 
-             done
-# get  check_run_moredays from dictionary
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# THIS SECTION IS COMMENTED BECAUSE WE DECIDED TO RUN THE POSTPROC FOR C3S 
-# COMPLETELY ON JUNO MACHINE FOR CONSISTENCY REASONS
-
-#       remote_check_pp_C3S=$(echo "${check_pp_C3S/cp1/$remote_user}")
-#       if [[ `ssh $remote ls $remote_check_pp_C3S |wc -l` -eq 1 ]]
-#       then
-               # assign a value with -val selecting a row with -v and a column with -c
-#               awk -v r=$LN -v c=$table_column_id_ndays -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+               done
 # add 1 second wait to be sure the file has been modified
-#               sleep 1
+               continue
+            fi    # end if [[ -f $check_pp_C3S_from_remote ]]
+         fi    # end if already trasnferred
+         CASEROOT=${case_dir}/$caso   # for $check_run_moredays
+         set +euvx
+         . $dictionary     #fixed
+         set -euvx
+# not yet trasnferred but completed
+         if [[ `ssh $remote ls $check_run_moredays |wc -l` -eq 1 ]]
+         then
+            for i in `seq 1 $(($nmonfore + 1))`
+            do
+# position of the ith-column inside csv table
+               table_column_id=$(($i + 1))
+# assign a value with -val selecting a row with -v and a column with -c
+               awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
 
-#               mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
-#       fi
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-          fi
+# add 1 second wait to be sure the file has been modified
+               sleep 1
+
+               mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
+
+            done
+         else
+            ndone=`ssh $remote ls ${case_dir}/$caso/logs/postproc_monthly_??????_done|wc -l` 
+            if [[ $ndone -eq 0 ]]
+            then
+               continue
+            fi
+
+            for i in `seq 1 $ndone`
+            do
+# position of the ith-column inside csv table
+               table_column_id=$(($i + 1))
+# assign a value with -val selecting a row with -v and a column with -c
+               awk -v r=$LN -v c=$table_column_id -v val='1' 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
+
+# add 1 second wait to be sure the file has been modified
+               sleep 1
+
+               mv $DIR_TEMP/$listfiletocheck.tmp1 ${DIR_TEMP}/$listfiletocheck
+
+            done
+         fi # if `ssh $remote ls $check_run_moredays |wc -l` -eq 1 
        done #listofcases
   
     done #st
@@ -236,18 +243,19 @@ done #st running
 for col in {2..9}
 do
    n_completed=0
-   list_completed=`tail -n +3 ${DIR_CHECK}/${hindcasts_list}|cut -d ',' -f$table_column_id_ndays`
+   list_completed=`tail -n +3 ${DIR_CHECK}/${hindcasts_list}|cut -d ',' -f$col`
    for ll in $list_completed
    do
-      if [[ "$ll" != "--" ]]
+      if [[ "$ll" != "0" ]]
       then
          n_completed=$(($n_completed + $ll))
       fi
    done
    awk -v r=2 -v c=$col -v val="$n_completed" 'BEGIN{FS=OFS=","} NR==r{$c=val} 1' ${DIR_TEMP}/$listfiletocheck > $DIR_TEMP/$listfiletocheck.tmp1
    sleep 1
-   mv ${DIR_TEMP}/$listfiletocheck.tmp1 ${DIR_CHECK}/${hindcasts_list}
+   mv ${DIR_TEMP}/$listfiletocheck.tmp1 ${DIR_TEMP}/${listfiletocheck}
 done
+mv ${DIR_TEMP}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
 # store the results in a file flagged by date
 cp -p ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/${hindcasts_list}.`date +%Y%m%d%H`
 # remove working temporary file
@@ -264,7 +272,7 @@ python $DIR_UTIL/convert_csv2htm.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/
 sed -i '/border/a </thead>' ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a </tr>' ${DIR_CHECK}/$hindcastlist_htm
 today=`date`
-sed -i "/border/a <th colspan="10">currente status $today</th>" ${DIR_CHECK}/$hindcastlist_htm
+sed -i "/border/a <th colspan="9">currente status $today</th>" ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a <tr style="text-align: center;">' ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a <thead>' ${DIR_CHECK}/$hindcastlist_htm
 
