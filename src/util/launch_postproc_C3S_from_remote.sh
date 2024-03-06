@@ -14,7 +14,7 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 here=$PWD
 cd $DIR_ARCHIVE/
 
-debug=1
+debug=0
 for mach in "Zeus"
 do
    dir_cases_remote=/work/$DIVISION/$USER/CPS/CMCC-CPS1/cases_from_${mach}
