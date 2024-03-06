@@ -109,7 +109,7 @@ do
       listacasisubmitted+="$caso "
    else
       #otherwise clean_caso so that the automatic procedure for hindcast submission will resubmit it as soon as the ICs are ready
-      . ${DIR_UTIL}/clean_caso.sh $caso
+      ${DIR_UTIL}/clean_caso.sh $caso
       clean_cnt=$(( $clean_cnt + 1 ))
       listacasicleaned+="$caso "
    fi

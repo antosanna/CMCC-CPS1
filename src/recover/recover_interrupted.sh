@@ -130,22 +130,27 @@ cnt_regrid_ice=0    # CASES WITH MISSING REGRID_CICE
 cnt_regrid_oce=0    # CASES WITH MISSING REGRID_ORCA
 cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
-
+cnt_st_archive=0     #CASES INTERRUPTED DURING ST_ARCHIVE
 
 filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${debug}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
-echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
+echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
 ### INITIALIZE LISTS
 lista_lt_archive=" "    
 lista_resubmit=" "
 lista_pp_C3S=" "
 lista_moredays=" "
 lista_first_month=" "
+lista_st_archive=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025"  
+lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
+#sps4_200610_012 (zeus) - h2osoi_ice sign negative
+#sps4_200910_025 (zeus) - NaN in field Sl_t
+#sps4_201010_013 (zeus) - h2osoi_ice sign negative
+#sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
 
 cd $DIR_CASES/
 for caso in $listofcases ; do
@@ -196,25 +201,31 @@ for caso in $listofcases ; do
         cnt_first_month=$(($cnt_first_month + 1))
         lista_first_month+=" $caso"
      else
-        cnt_lt_archive=$(($cnt_lt_archive + 1))
-        lista_lt_archive+=" $caso"
+        is_starch=`ls -ltr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
+        if [[ ${is_starch} -eq 1 ]] ; then
+           cnt_st_archive=$(($cnt_st_archive + 1))
+           lista_st_archive+=" $caso"
+        else
+           cnt_lt_archive=$(($cnt_lt_archive + 1))
+           lista_lt_archive+=" $caso"
 #get last restart directory month
-        cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+           cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 #compute num of months run nmonthsrun
-        if [[ $((10#$cmm)) -gt $((10#$st)) ]]
-        then
-          nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
-        else
-          nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
-        fi
-# if not all of the $nmonfore have been done resubmit run.$caso
-        if [[ $nmonthsrun -lt $nmonfore ]] 
-        then
-           cnt_resubmit=$(($cnt_resubmit + 1))
-           lista_resubmit+=" $caso"
-        else
-           lista_moredays+=" $caso"
-           cnt_moredays=$(($cnt_moredays + 1))
+           if [[ $((10#$cmm)) -gt $((10#$st)) ]]
+           then
+               nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
+           else
+               nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
+           fi
+           # if not all of the $nmonfore have been done resubmit run.$caso
+           if [[ $nmonthsrun -lt $nmonfore ]] 
+           then
+              cnt_resubmit=$(($cnt_resubmit + 1))
+              lista_resubmit+=" $caso"
+           else
+              lista_moredays+=" $caso"
+              cnt_moredays=$(($cnt_moredays + 1))
+           fi
         fi
      fi
   else
@@ -260,8 +271,8 @@ then
    echo "$lista_moredays"
    for caso in $lista_moredays
    do
-#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
-      echo "-,-,$caso,- " >> $filecsv
+#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" 
+      echo "-,-,-,$caso,- " >> $filecsv
    done
 fi
 if [[ "$lista_resubmit" != " " ]]
@@ -271,8 +282,8 @@ then
    echo ""
    for caso in $lista_resubmit
    do
-#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
-      echo "-,$caso,-,- " >> $filecsv
+#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" 
+      echo "-,$caso,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_first_month" != " " ]]
@@ -282,10 +293,26 @@ then
    echo ""
    for caso in $lista_first_month
    do
-#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
-      echo "$caso,-,-,- " >> $filecsv
+
+#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" 
+
+      echo "$caso,-,-,-,- " >> $filecsv
    done
 fi
+if [[ "$lista_st_archive" != " " ]]
+then
+   echo "Cases interrupted during st_archive"
+   echo "$lista_st_archive" 
+   echo ""
+   for caso in $lista_st_archive
+   do  
+
+#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" 
+
+      echo "-,-,$caso,-,- " >> $filecsv
+   done
+fi
+
 if [[ "$lista_pp_C3S" != " " ]]
 then
    lista_pp_C3S=$(echo $lista_pp_C3S | tr ' ' '\n' | sort -u)
@@ -294,8 +321,9 @@ then
    echo ""
    for caso in $lista_pp_C3S
    do
-#echo "first month,resubmit,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
-      echo "-,-,-,$caso " >> $filecsv
+
+#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" 
+      echo "-,-,-,-,$caso " >> $filecsv
    done
 fi
 
@@ -338,23 +366,56 @@ caso=""
    fi
    for caso in $lista_first_month
    do
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
-      st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-      yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-      member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 
-      CASEROOT=$DIR_CASES/$caso/
-      outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
-      set +uevx
-      . $dictionary
-      set -euvx
-      cd ${DIR_CASES}/$caso
+      domodify=0
+      isrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| wc -l`
+      if [[ $isrunlog -ge 1 ]] 
+      then
+          #take the last one
+          lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
+          if [[ "$ismoderr" != "" ]]  
+          then
+             domodify=1
+          fi
+      fi
+      if [[ $domodify -eq 1 ]] 
+      then      
+               #numerical failure of the model (instability, conservation check failure etc)
+               #we change ICs with modify_triplette
+               st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+               yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+               log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
+               mkdir -p $log_dir_modify  #probably redundant
+               while `true`
+               do
+                  #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
+                  np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
+                  if [[ $np -eq 0 ]]
+                  then
+                      ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                      break
+                  fi
+                  sleep 60
+               done
+      else
+               $DIR_RECOVER/refresh_all_scripts.sh $caso
+               st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+               yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+               member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+
+               CASEROOT=$DIR_CASES/$caso/
+               outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+               set +uevx
+               . $dictionary
+               set -euvx
+               cd ${DIR_CASES}/$caso
 # workaround in order to keep the syntax highlights correct (case is a shell command)
-      command="case.submit"
-      echo $command
-      ./$command
-      echo "$command done"
-
+               command="case.submit"
+               echo $command
+                ./$command
+               echo "$command done"
+      fi
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
 # lt_archive
@@ -363,7 +424,6 @@ caso=""
       echo "$lista_moredays"
       echo ""
    fi
-   
    for caso in $lista_moredays 
    do
       $DIR_RECOVER/refresh_all_scripts.sh $caso
@@ -379,7 +439,23 @@ caso=""
       
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
-   
+  
+# st_archive
+   if [[ $cnt_st_archive -ne 0 ]] ; then
+      echo "RELAUNCH st_archive FOR CASES:"
+      echo "$lista_st_archive"
+      echo ""
+   fi
+   for caso in $lista_st_archive
+   do
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
+
+      cd $DIR_CASES/$caso
+      $DIR_RECOVER/recover_st_archive.sh $caso
+
+      if [[ $debug -eq 1 ]] ; then break ; fi
+   done
+ 
 # resubmit monthly run
    if [[ $cnt_resubmit -ne 0 ]] ; then
       echo "RESUBMIT FOLLOWING CASES FROM THEIR $DIR_CASES/CASO:"
@@ -390,30 +466,59 @@ caso=""
    for caso in ${lista_resubmit}
    do 
       echo "going to relaunch case $caso"
-      #to avoid refresh of templates while lt_archive is running from previous list (lista_resubmit is a subset of lista_lt_archive)
-      #$DIR_RECOVER/refresh_all_scripts.sh $caso
-      isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n lt_archive.${caso} -c yes`
-      if [[ $isrunning -eq 0 ]]
-      then
-         $DIR_RECOVER/refresh_all_scripts.sh $caso
-         $DIR_RECOVER/recover_lt_archive.sh $caso
-      fi   
-     
-      st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-      yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-      member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
- 
-      CASEROOT=$DIR_CASES/$caso/
-      outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
-      set +uevx
-      . $dictionary
-      set -euvx
-      cd ${DIR_CASES}/$caso
-      command="case.submit"
-      echo $command
-      ./$command
-      echo "$command done"
 
+      domodify=0
+      isrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| wc -l`
+      if [[ $isrunlog -ge 1 ]]
+      then
+          #take the last one
+          lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
+          if [[ "$ismoderr" != "" ]]
+          then
+             domodify=1
+          fi
+      fi
+
+      if [[ $domodify -eq 1 ]]
+      then
+          echo "$caso facing some numerical issue, going to modify triplette" 
+          #numerical failure of the model (instability, conservation check failure etc)
+          #we change ICs with modify_triplette
+          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+          log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
+          mkdir -p $log_dir_modify  #probably redundant
+          while `true`
+          do
+               #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
+               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
+               if [[ $np -eq 0 ]]
+               then
+                   ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                   break
+               fi
+               sleep 60
+          done
+      else
+          echo "going to resubmit $caso from last restart in run directory" 
+          $DIR_RECOVER/refresh_all_scripts.sh $caso
+          $DIR_RECOVER/recover_lt_archive.sh $caso
+          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+          member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+          CASEROOT=$DIR_CASES/$caso/
+          outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+          set +uevx
+          . $dictionary
+          set -euvx
+          cd ${DIR_CASES}/$caso
+# workaround in order to keep the syntax highlights correct (case is a shell command)
+          command="case.submit"
+          echo $command
+          ./$command
+          echo "$command done"
+      fi
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
    
