@@ -16,6 +16,12 @@ then
 else
    listofcases=$1
 fi
+
+set +euv
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondacm3
+set -euvx
+
 for caso in $listofcases 
 do
   if [[ ! -d $DIR_CASES/$caso ]] ; then

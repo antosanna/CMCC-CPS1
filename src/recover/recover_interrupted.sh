@@ -143,7 +143,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
+lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_201010_015"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
@@ -151,7 +151,7 @@ lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_
 #sps4_200910_025 (zeus) - NaN in field Sl_t
 #sps4_201010_013 (zeus) - h2osoi_ice sign negative
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
-
+#sps4_201010_015 (zeus) - as the one above
 cd $DIR_CASES/
 for caso in $listofcases ; do
   if [[ $lista_caso_ignored == *"$caso"* ]] ; then
@@ -373,8 +373,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
-          if [[ "$ismoderr" != "" ]]  
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
+          if [[ $ismoderr -ne 0 ]]  
           then
              domodify=1
           fi
@@ -473,8 +473,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
-          if [[ "$ismoderr" != "" ]]
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
+          if [[ $ismoderr -ne 0 ]]
           then
              domodify=1
           fi
