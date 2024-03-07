@@ -35,19 +35,19 @@ echo " file1 will be written in $file1"
 
 
 # Write header ---------------------------------------
-echo "CASO,month1,month2,month3,month4,month5,month6,days,C3S,archive" > $file1
-echo "TOTAL DONE,--,--,--,--,--,--,--,--,--" >> $file1
+echo "CASO,month1,month2,month3,month4,month5,month6,days,C3S,QC" > $file1
+echo "TOTAL DONE,0,0,0,0,0,0,0,0,0" >> $file1
 # Write body -----------------------------------------
 for st in {01..12}
 do
    for yyyy in `seq $iniy_hind $endy_hind`
    do
-      for ens in `seq -w 001 $nrunmax`
+      for ens in `seq -w 001 $(($nrunmax + 10))`
       do
          caso=${SPSSystem}_${yyyy}${st}_${ens}
 
          # write body
-         echo "$caso,--,--,--,--,--,--,--,--,--" >> $file1
+         echo "$caso,0,0,0,0,0,0,0,0,0" >> $file1
          
       done
    done

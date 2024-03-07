@@ -105,7 +105,7 @@ for mach in ${remote_mach_list} ; do
 
                done
 # add 1 second wait to be sure the file has been modified
-               continue
+#               continue
             fi    # end if [[ -f $check_pp_C3S_from_remote ]]
          fi    # end if already trasnferred
          CASEROOT=${case_dir}/$caso   # for $check_run_moredays
@@ -240,7 +240,7 @@ do
 done #st running
 
 # now compute total n_complete
-for col in {2..9}
+for col in {2..10}
 do
    n_completed=0
    list_completed=`tail -n +3 ${DIR_CHECK}/${hindcasts_list}|cut -d ',' -f$col`
@@ -255,7 +255,8 @@ do
    sleep 1
    mv ${DIR_TEMP}/$listfiletocheck.tmp1 ${DIR_TEMP}/${listfiletocheck}
 done
-mv ${DIR_TEMP}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
+cp ${DIR_TEMP}/$listfiletocheck ${DIR_TEMP}/${listfiletocheck}.`date +%Y%m%d%H`
+nv ${DIR_TEMP}/$listfiletocheck ${DIR_CHECK}/${hindcasts_list}
 # store the results in a file flagged by date
 cp -p ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/${hindcasts_list}.`date +%Y%m%d%H`
 # remove working temporary file
@@ -272,7 +273,7 @@ python $DIR_UTIL/convert_csv2htm.py ${DIR_CHECK}/${hindcasts_list} ${DIR_CHECK}/
 sed -i '/border/a </thead>' ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a </tr>' ${DIR_CHECK}/$hindcastlist_htm
 today=`date`
-sed -i "/border/a <th colspan="9">currente status $today</th>" ${DIR_CHECK}/$hindcastlist_htm
+sed -i "/border/a <th colspan="10">currente status $today</th>" ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a <tr style="text-align: center;">' ${DIR_CHECK}/$hindcastlist_htm
 sed -i '/border/a <thead>' ${DIR_CHECK}/$hindcastlist_htm
 

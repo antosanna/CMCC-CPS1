@@ -63,13 +63,7 @@ cd $DIR_CASES/$caso
 
 if [[ $USER == "$operational_user" ]]
 then
-   if [[ $machine == "juno" ]]
-   then
-# this will load an env_work_flow without SC to allow for the completion of ASPECT decadal 40th member 20240226
-      rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_noSC $DIR_CASES/$caso/env_workflow.xml
-   else
-      rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
-   fi
+   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
    rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
