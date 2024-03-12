@@ -12,7 +12,7 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 if [[ $# -eq 0 ]]
 then
-   listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
+   listofcases="sps4_199412_009"
 else
    listofcases=$1
 fi

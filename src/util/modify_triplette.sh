@@ -116,7 +116,7 @@ do
 
 done
 
-if [ "$listacasicleaned" != "" ]
+if [[ ${clean_cnt} -ne 0 ]]
 then
    body="In ${dateymdhms} cleaned ${clean_cnt} cases that aborted after changing tripletta, but not resubmitted because of missing ICs: \n
    \n
