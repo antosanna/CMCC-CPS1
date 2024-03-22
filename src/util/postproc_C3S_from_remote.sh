@@ -141,6 +141,7 @@ then
    done
    
    # now wait that all of the ft files have been regridded
+   ic1=0
    while `true`
    do
       if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
@@ -150,8 +151,14 @@ then
          break
       fi
       sleep 60
+      ic1=$(($ic1 + 1))
+      if [[ $ic1 -eq 10 ]]
+      then
+         echo " condition 1 never satisfied"
+      fi
    done
 fi # if on $check_all_camC3S_done 
+ic2=0
 while `true`
 do
 #   if [[ -f $check_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
@@ -160,6 +167,11 @@ do
       break
    fi
    sleep 60
+   ic2=$(($ic2 + 1))
+   if [[ $ic2 -eq 10 ]]
+   then
+      echo " condition 2 never satisfied"
+   fi
 done
 #touch $check_pp_C3S
 touch $dir_cases_remote/$caso/logs/postproc_C3S_${caso}_DONE

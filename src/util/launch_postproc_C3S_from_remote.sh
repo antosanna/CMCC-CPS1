@@ -12,9 +12,14 @@ LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_from_remote.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 here=$PWD
+if [[ -f $DIR_TEMP/launch_postproc_C3S_from_remote_on ]]
+then
+   exit
+fi
+touch $DIR_TEMP/launch_postproc_C3S_from_remote_on
 cd $DIR_ARCHIVE/
 
-debug=0
+debug=1
 for mach in "Zeus"
 do
    dir_cases_remote=/work/$DIVISION/$USER/CPS/CMCC-CPS1/cases_from_${mach}
@@ -42,3 +47,4 @@ do
   
    done
 done 
+rm $DIR_TEMP/launch_postproc_C3S_from_remote_on
