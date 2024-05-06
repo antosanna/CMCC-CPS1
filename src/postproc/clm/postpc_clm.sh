@@ -36,14 +36,15 @@ then
 else
 
 #"$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
-   CLM_OUTPUT_FV=$1 
+   CLM_OUTPUT_FV=$1
    ppp=$2
    startdate=$3
    outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
    check_postclm=$6
    wkdir=$7
-   ic=${8}  # 0 in operational mode
+   ic=${8}  
+   ftype=${9} #h1 or h3 currently
 fi
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
@@ -58,8 +59,7 @@ set -uexv
 
 #file name:$caso.clm2.$ft.$yyyy-$st.zip.nc
 
-type=h1
-landcase="clm2.${type}"
+landcase="clm2.${ftype}"
 rootname=${caso}.${landcase}.zip
 
 #**********************************************************
@@ -81,40 +81,46 @@ then
 
 # Define all input and output files
    export CLM_OUTPUT_REG1x1=${DIROUT_REG1x1}/${rootname}.reg1x1.nc
-   
+    
+   cd ${DIROUT_REG1x1}  
    if [[ $debug -ne 0 ]] && [[ -f $CLM_OUTPUT_REG1x1 ]]
    then
       echo "file already regridded"
    else
-      # NCO phase - Create new variables - 4 steps
-      # (I) H2OSOI
-      # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
-      cd ${DIROUT_REG1x1}  
-      ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
-      mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
+      if [[ $ftype == "h1" ]] ; then
+        # NCO phase - Create new variables - 4 steps
+        # (I) H2OSOI
+        # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
+        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+        mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
    
-      # (II) SNOW
-      ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${rootname}.nc_tmp_RHOSNO
-      mv ${rootname}.nc_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
+        # (II) SNOW
+        ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${rootname}.nc_tmp_RHOSNO
+        mv ${rootname}.nc_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
    
-      # (III) Remove extra vars
-      ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${rootname}.nc_tmp_rm
-      rm ${rootname}.tmp_RHOSNO.nc
+        # (III) Remove extra vars
+        ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${rootname}.nc_tmp_rm
+        rm ${rootname}.tmp_RHOSNO.nc
    	
-      # (IV) Change variable attributes
-      ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${rootname}.nc_tmp_rm	
-      ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${rootname}.nc_tmp_rm	
+        # (IV) Change variable attributes
+        ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${rootname}.nc_tmp_rm	
+        ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${rootname}.nc_tmp_rm	
    
-      ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${rootname}.nc_tmp_rm	
-      ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${rootname}.nc_tmp_rm	
-      export interp_input=${rootname}.nc_tmp_rm
+        ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${rootname}.nc_tmp_rm	
+        ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${rootname}.nc_tmp_rm	
+        export interp_input=${rootname}.nc_tmp_rm
 
-      # Interpolation phase
-      # create interpolated file in ./reg1x1 dir
-      vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
-      ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
-   
-
+        # Interpolation phase
+        # create interpolated file in ./reg1x1 dir
+        vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
+        ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
+    elif [[ $ftype == "h3" ]] ; then
+        inputfname=`basename ${CLM_OUTPUT_FV}` 
+        rsync -auv ${CLM_OUTPUT_FV} ${DIROUT_REG1x1} 
+        export interp_input=${inputfname}
+        vars=FSNO
+        ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
+     fi
    fi
    
 # remove intermidiate output files
@@ -134,8 +140,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   
-   python clm_standardize2c3s.py $startdate $ppp $type $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2c3s.py $startdate $ppp $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # intermidiate product

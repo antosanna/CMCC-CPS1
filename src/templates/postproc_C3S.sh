@@ -76,37 +76,46 @@ wkdir_clm=$SCRATCHDIR/regrid_C3S/$caso/CLM
 mkdir -p ${wkdir_clm}
 # get check_postclm  from dictionary
 
-if [[ ! -f $check_postclm ]]
+if [[ ! -f $check_all_postclm ]]
 then
   
    cd ${wkdir_clm}
-   ft="h1"
-   case $ft in
-       h1 ) mult=1 ;; # for land h1 is daily, multiplier=1
-   esac
-   finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
-   if [[ ! -f $finalfile_clm ]]
-   then
+   filetyp="h1 h3"
+   for ft in $filetyp ; do
 
-        input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} $check_postclm $ic"
-        # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
-        
+      case $ft in
+          h1 ) mult=1 ;; # for land h1 is daily, multiplier=1
+          h3 ) mult=1 ;; # for land h3 is daily, multiplier=1
+      esac
+      flag_for_type=${check_postclm_type}_${ft}_DONE
+      finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+      if [[ ! -f $finalfile_clm ]]
+      then
+            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic"
+            # ADD the reservation for serial !!!
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
 
-        echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm ${wkdir_clm} $ic"  
-        # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
-
-   else
-    # meaning that preproc files have been done by create_clm_files.sh
-    # so submit without dependency
-        
-        echo "start of postpc_clm "`date`
-        input="${finalfile_clm} $ens $startdate $outdirC3S $caso $check_postclm ${wkdir_clm} $ic" 
-        # ADD the reservation for serial !!!
-        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
-   fi
+           echo "start of postpc_clm "`date`
+           input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $fc"  
+           # ADD the reservation for serial !!!
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+      else
+           echo "start of postpc_clm "`date`
+           input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $fc"
+           # ADD the reservation for serial !!!
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+      fi
+    done 
+    while `true`
+    do
+       if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 2 ]]
+       then
+          touch ${check_all_postclm}
+          break
+       fi  
+       sleep 60
+    done   
+ 
 fi
 
 
@@ -168,7 +177,7 @@ then
 fi # if on $check_all_camC3S_done 
 while `true`
 do
-   if [[ -f $check_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
+   if [[ -f $check_all_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
    then
       break
    fi

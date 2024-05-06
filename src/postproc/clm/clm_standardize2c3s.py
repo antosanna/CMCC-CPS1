@@ -463,8 +463,9 @@ if __name__ == '__main__':
 
     # WARNING ! any whitespace in clmC3Stable counts !!!
     clmC3Stable_file = pd.read_csv(clmC3Stable,sep=',', header=None)
+    clmC3Stable_ftyp = clmC3Stable_file.loc[clmC3Stable_file.iloc[:, 14] == h_type]
     # Set NaN to empty list entry
-    C3S_table_lst = clmC3Stable_file.fillna('').values.tolist()
+    C3S_table_lst = clmC3Stable_ftyp.fillna('').values.tolist()
 
     #H2OSNO come in [mm] from CLM
 
@@ -477,7 +478,7 @@ if __name__ == '__main__':
         full_logdir=logdir +'/'+forecast_t+'/'+ startdate
         createdir(full_logdir)
  
-        f = open( full_logdir+ '/clm_postpc_C3S_' + ensemble + '.log', 'w')
+        f = open( full_logdir+ '/clm_postpc_C3S_' + ensemble + '_'+ h_type +'.log', 'w')
         sys.stdout = f
 
     # input file to be analyzed

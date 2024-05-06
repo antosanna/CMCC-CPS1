@@ -3,9 +3,10 @@ listfileIC_NEMO=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
 
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
-check_postclm=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_clm_C3SDONE
+check_all_postclm=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_all_clm_C3SDONE
 check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SDONE
 check_regridC3S_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_cam_regrid_C3S
+check_postclm_type=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_clm_regrid_C3S
 check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
 check_submitnotificate=$DIR_LOG/$typeofrun/$yyyy$st/${caso}_submittingnotificate
