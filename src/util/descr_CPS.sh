@@ -81,6 +81,7 @@ then
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
+   BATCHUNKNOWN="UNKN"
    BATCHRUN="RUN"
    BATCHPEND="PEND"
    nmb_nemo_domains=279
@@ -173,7 +174,7 @@ then
 # TEMPORARY
    if [[ $machine == "juno" ]]
    then
-      DATA_ECACCESS=/work/$DIVISION/cp1/scratch/DATA_ECACCESS
+      DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "zeus" ]]
    then
       DATA_ECACCESS=/data/delivery/$DIVISION/ecaccess/

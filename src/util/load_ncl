@@ -1,4 +1,4 @@
-#!/bin/sh l
+#!/bin/sh -l
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 if [[ $machine == "juno" ]]

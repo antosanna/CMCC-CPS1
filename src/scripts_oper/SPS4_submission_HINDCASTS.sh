@@ -6,11 +6,26 @@
 
 set -evx
 
+# check if there is another job submitted by crontab with the same name
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
 if [ $np -gt 1 ]
 then
-   echo "there is one SPS4_main_hc already running! Exiting now!"
-   exit
+# if so check if it is correctly running
+   ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -a $BATCHUNKNOWN -i yes`
+   if [[ -n $ID_unknown ]]
+   then
+# in the remote case that the job already on queue is in unknown status 
+# kill it
+      $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
+# it often occurs that if a job is in unknown status others too are in the same.
+      title="WARNING!!! HINDCAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
+      body="Check if other jobs are in unknown status too!!"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+   else
+# otherwise exit
+      echo "there is one SPS4_main_hc already running! Exiting now!"
+      exit
+   fi
 fi
 # Input **********************
 stlist=$1
@@ -58,8 +73,8 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2020 #to allow for scenario up to the IC we have retrieved
-#iniy_hind=1999
+endyear=2021 #to allow for scenario up to the IC we have retrieved
+iniy_hind=2012
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
