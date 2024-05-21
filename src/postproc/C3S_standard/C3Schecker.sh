@@ -6,10 +6,9 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
-member=$1
+real=$1
 outdirC3S=$2
 startdate=$3
-caso=$4
 
 yyyy=`echo ${startdate:0:4}`
 set +uexv
@@ -23,44 +22,59 @@ cd $outdirC3S   #can be redundant
 set +euvx
 . $dictionary
 set -euvx
-mkdir -p $DIR_CASES/$caso/logs
 
 st=`echo "${startdate}" | cut -c5-6`
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
-if [ ! -f $outdirC3S/qa_checker_ok_0${member} ] 
+dir_log_checker=$SCRATCHDIR/C3Schecker/$typeofrun/$real/
+# try and do it everytime (if too slow add the exception)
+if [[ -d $dir_log_checker ]]
 then
+   rm -rf $dir_log_checker
+fi
+mkdir -p $dir_log_checker
+#if [ ! -f $outdirC3S/qa_checker_ok_0${real} ] 
+#then
 # if not already launched
-   ${DIR_C3S}/launch_c3s_qa_checker_1ens.sh $startdate $member $outdirC3S
-fi
+#   ${DIR_C3S}/launch_c3s_qa_checker_1ens.sh $startdate $real $outdirC3S
+#fi
 # others checkers 
-if [ ! -f $outdirC3S/meta_checker_ok_0${member} ] 
-then
-   ${DIR_C3S}/c3s_metadata_checker_1ens.sh $startdate $member $outdirC3S
-fi
-if [ ! -f $outdirC3S/tmpl_checker_ok_0${member} ]
-then
-   ${DIR_C3S}/launch_c3s_tmpl_checker.sh $startdate $member $outdirC3S
-fi
+# try and do it everytime (if too slow add the exception)
+#if [ ! -f $check_c3s_meta_ok ] 
+#then
+${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
+#fi
 
 # BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
-if [ ! -f $outdirC3S/dmoc3s_checker_ok_0${member} ]
-then 
-			${DIR_C3S}/launch_checkdmoC3S-pdf-chain.sh $startdate $member $outdirC3S
-fi
-cd $outdirC3S
+#if [ ! -f $outdirC3S/dmoc3s_checker_ok_0${real} ]
+#then 
+#			${DIR_C3S}/launch_checkdmoC3S-pdf-chain.sh $startdate $real $outdirC3S
+#fi
+#cd $outdirC3S
 
-if [ -f $outdirC3S/meta_checker_ok_0${member} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${member} ] && [ -f $outdirC3S/tmpl_checker_ok_0${member} ] && [ -f $outdirC3S/qa_checker_ok_0${member} ] #&& [ -f $outdirC3S/findspikes_c3s_ok_0${member} ]
+if [ -f $check_c3s_meta_ok ] 
 then
+   title="C3S ${c3s_checker_cmd} ok for member $real"
+   body="C3S ${c3s_checker_cmd} ok for member $real"
+ 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+else
+   title="[C3S ERROR] ${c3s_checker_cmd} KO for member $real"
+   body="C3S ${c3s_checker_cmd} Ko for member $real"
+ 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+   exit
+   
+fi
+exit
+if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
    mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
 # the following is defined in $dictionary
-#   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${member}
+#   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${real}
    if [ ! -f ${checkfile_daily} ] || [[ $debug -eq 0 ]]
    then
-      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
+      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $real 
    fi
-   touch $check_allchecksC3S$member
+   touch $check_allchecksC3S$real
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
 if [ $allcheckersok -ge $nrunC3Sfore ] 

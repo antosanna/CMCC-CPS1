@@ -39,7 +39,7 @@ do
 # to refresh lt_achive from template
   ./case.setup --reset
   ./xmlchange BUILD_COMPLETE=TRUE
-  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 15000 -j lt_archive -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
+  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
 done
 
 exit 0

@@ -14,6 +14,10 @@ check_merge_cam_files=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_merge_cam_files_D
 check_iceregrid=$SCRATCHDIR/regrid_C3S/$caso/CICE/interp_cice2C3S_through_nemo.ncl_r${member}i00p00_ok
 check_oceregrid=$SCRATCHDIR/regrid_C3S/$caso/NEMO/interp_ORCA2_1X1_gridT2C3S.ncl_r${member}i00p00_ok
 
+#--#-- touchfiles defined in $DIR_C3S/C3Schecker.sh
+check_c3s_meta_ok=$SCRATCHDIR/C3Schecker/$typeofrun/$real/${c3s_checker_cmd}/${real}_c3s_meta_ok
+check_c3s_meta_err=$SCRATCHDIR/C3Schecker/$typeofrun/$real/${c3s_checker_cmd}/${real}_c3s_meta_err
+
 #--#-- touchfiles defined in $DIR_POST/cam/regridC3S.sh
 check_ncl_regrid_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/regridSE_C3S.ncl_${type}_${real}_ok
 check_no_SOLIN=$outdirC3S/no_SOLIN_in_${caso}

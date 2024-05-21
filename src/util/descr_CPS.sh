@@ -28,12 +28,14 @@ else
    echo "MACHINE UNKNOWN!! EXITING NOW!!"
    exit -1
 fi
+c3s_checker_cmd=c3s-nc-checker
 SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2015
 refcaseHIST=${CPSSYS}_HIST_reference
 refcaseSCEN=${CPSSYS}_SSP585_reference
+envcondac3schecker=c3s-nc-checker
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -273,7 +275,7 @@ fixsimdays=185  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
  natm3d=5    # number of required fields for C3S 3d atmospheric
- nfieldsC3S=55    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
+ nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components + snowfrac
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"

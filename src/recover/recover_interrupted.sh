@@ -66,6 +66,7 @@ cd $DIR_CASES/
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
 listofcases=sps4_200807_014
 
+listofcases="sps4_201211_007 sps4_201211_008 sps4_201211_009 sps4_201211_010 sps4_201211_011 sps4_201211_012 sps4_201211_013 sps4_201211_014 sps4_201211_015 sps4_201211_016 sps4_201211_017"
 if [[ $# -ge 1 ]]
 then
    debug=${1}
@@ -240,7 +241,7 @@ for caso in $listofcases ; do
            cnt_pp_C3S=$(($cnt_pp_C3S + 1))
            lista_pp_C3S+=" $caso"
         else
-            if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
+            if [[ ! -f ${check_all_postclm} ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
             then
               cnt_pp_C3S=$(($cnt_pp_C3S + 1))
               lista_pp_C3S+=" $caso"
