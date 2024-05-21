@@ -11,6 +11,8 @@ then
    exit
 fi
 remote=sps-dev@fdtn-zeus
+DIR_ARCHIVE1=/work/cmcc/cp1/CMCC-CM/archive/
+DIR_ARCHIVE1_old=/work/csp/cp1/CMCC-CM/archive/
 DIR_ARCHIVE1_remote=/work/csp/sps-dev/CMCC-CM/archive/
 DIR_CASES_remote=/work/csp/sps-dev/CPS/CMCC-CPS1/cases
 for st in 08 10 11
@@ -26,16 +28,14 @@ do
          then
             if [[ ! -f $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE ]]
             then
-               ssh $remote chmod -R a+wx $DIR_ARCHIVE1_remote/$caso
-               rsync -auv --remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
-               touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
-               chmod -R a-w $DIR_ARCHIVE1/$caso
-exit
-#               n_rsync=$(($n_rsync + 1))
-#               if [[ $n_rsync -eq 5 ]]
-#               then
-#                  exit
-#               fi
+               if [[ ! -f $DIR_ARCHIVE1_old/$caso.transfer_from_Zeus_DONE ]]
+               then
+                  ssh $remote chmod -R a+wx $DIR_ARCHIVE1_remote/$caso
+                  rsync -auv --remove-source-files $remote:$DIR_ARCHIVE1_remote/$caso $DIR_ARCHIVE1
+                  touch $DIR_ARCHIVE1/$caso.transfer_from_Zeus_DONE
+                  chmod -R a-w $DIR_ARCHIVE1/$caso
+                  exit
+               fi
             fi
          fi
       done
