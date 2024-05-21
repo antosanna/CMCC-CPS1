@@ -49,10 +49,10 @@ then
 fi
 tstamp="00"
 #for st in `seq -w $inist 12`
-list_startdate="12 10 11 01 02 03 04 05 06 07 08 09"
+list_startdate="10 11 12 01 02 03 04 05 06 07 08 09"
 for st in $list_startdate
 do
-   for yyyy in `seq $iniy 2020`
+   for yyyy in `seq $iniy 2022`
    do
        yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
        mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
