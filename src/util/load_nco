@@ -20,27 +20,8 @@ elif [[ "${machine}" == "juno" ]] ; then
   export compressC3S='ncks -Oh -L 4 -7 --no_abc'
 # to decompress/uncompress ncks -O -6
 elif [[ "${machine}" == "leonardo" ]] ; then 
-  export MANPATH="/usr/local/share/man"
-  source /etc/profile.d/modules.sh
-  module purge
-  module purge
-  module load zlib/1.2.8--gnu--6.1.0
-  module load szip/2.1--gnu--6.1.0
-  module load intel/pe-xe-2018--binary
-  module load hdf5/1.10.4--intel--pe-xe-2018--binary
-  module load netcdf/4.6.1--intel--pe-xe-2018--binary
-  module load netcdff/4.4.4--intel--pe-xe-2018--binary
-  module load profile/advanced
-  # ncl (need netcdf before and hdf5,szip,zlib,intel)
-  module load udunits/2.2.28--intel--pe-xe-2018--binary
-  module load ncl/6.6.2--intel--pe-xe-2018--binary
-  module load mkl/2018--binary  
-
-  module load eccodes/2.13.0
-  
-  module load nco/4.8.1
-  module load cdo/1.9.7
-   
+  . $DIR_UTIL/condafunction.sh
+  condafunction activate env_tools  
   export compress='ncks -O -L 4 -4'
 
   export MANPATH="/usr/local/share/man"

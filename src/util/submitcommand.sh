@@ -457,6 +457,7 @@ then
   unset SLURM_MEM_PER_CPU
   set -vx
   command='sbatch --export=NONE'
+#  command='sbatch --export=all'
   if [[ "$basic" == "None"  ]]
   then
     # sbatch CMCC_Copern20 with resrervation
@@ -495,9 +496,9 @@ then
     if [[ "$qos" != "None" ]]
     then
     # sbatch CMCC_Copern20 with reservation
-      command+=' --qos=$qos --account=CMCC_Copernic_3  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail'
+      command+=' --qos=$qos --account=CMCC_Copernic_4  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail'
     else
-      command="sbatch --account=CMCC_Copernic_3 --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail"
+      command="sbatch --account=CMCC_Copernic_4 --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail"
     fi
 
     # (--nice decrease priority, positive value of nice decrease)

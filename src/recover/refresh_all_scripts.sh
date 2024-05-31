@@ -1,10 +1,14 @@
 #!/bin/sh -l
 
 # load variables from descriptor
+set +euvx
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-
+#. $DIR_UTIL/condaactivation.sh
+#condafunction activate $envcondacm3
 set -euvx
+echo "your conda environment is $CONDA_DEFAULT_ENV "
+
 #----------------------------------------------------------
 # get from the parent script start-date and perturbations
 #----------------------------------------------------------
@@ -12,7 +16,9 @@ caso=$1
 yyyy=`echo $1|cut -d '_' -f2|cut -c 1-4`
 st=`echo $1|cut -d '_' -f2|cut -c 5-6`
 
+set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
 
 ic=`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`
 
@@ -22,6 +28,10 @@ cd $DIR_CASES/$caso
 #----------------------------------------------------------
 
 rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+if [[ `ls env_mach_specific.xml |wc -l` -ne 0 ]]
+then
+   echo "env_mach_specific is here "`ls env_mach_specific.xml`
+fi
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE

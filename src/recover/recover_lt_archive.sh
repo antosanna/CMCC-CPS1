@@ -4,7 +4,6 @@
 #-----------------------------------------------------------------------
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/load_nco
 
 set -euxv
 mkdir -p $DIR_LOG/hindcast/recover
@@ -12,7 +11,6 @@ LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 dorelaunch=0
-#listofcases="sps4_199307_002 sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
 if [[ $# -eq 0 ]]
 then
    listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
@@ -37,9 +35,16 @@ do
   chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
   cd $DIR_CASES/$caso
 # to refresh lt_achive from template
-  ./case.setup --reset
+#ANTO
+#module unload bzip2 libbsd lz4 pkgconf parallel-netcdf zlib-ng
+#if [[ $machine == "leonardo" ]]
+#then
+#   module use -p $modpath
+#fi
+#ANTO-
+#  ./case.setup --reset
   ./xmlchange BUILD_COMPLETE=TRUE
-  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
+  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 15000 -j lt_archive -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
 done
 
 exit 0

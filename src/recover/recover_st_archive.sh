@@ -12,16 +12,10 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 if [[ $# -eq 0 ]]
 then
-   listofcases="sps4_199412_009"
+   listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
 else
    listofcases=$1
 fi
-
-set +euv
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondacm3
-set -euvx
-
 for caso in $listofcases 
 do
   if [[ ! -d $DIR_CASES/$caso ]] ; then
@@ -45,7 +39,13 @@ do
        #in order to relaunch st_archive with the right syntax, we keep the command as appear in preview_run (for portability)
        cmd=`./preview_run |grep case.st_archive|tail -1`
        #this is needed to remove the dependency from model run
-       cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
+       if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
+       then
+          cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
+       elif [[ $machine == "leonardo" ]] 
+       then
+          cmd_nodep="$(echo "${cmd/"--dependency=afterok:0"/}")"
+       fi
        eval ${cmd_nodep}
 
        #${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "1" -M 200 -j st_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s case.st_archive 

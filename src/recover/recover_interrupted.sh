@@ -11,6 +11,9 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 ##########################################################################################################################
+# SUBMISSION COMMAND!!!!!
+#
+#
 ### THE SCRIPT IS NOT EXAUSTIVE!!! 
 #
 #   In case of interruption during st_archive, this procedure will recognize the case as interrupted
@@ -24,6 +27,12 @@ function write_help
 {
   echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
   echo "     (if hindcast only st else also yyyy)"
+  echo ""
+  echo "SUBMISSION COMMAND:"
+  echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_${stmain}_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"\$dbg \$stmain\""
+  echo ""
+  echo "CAVEAT"
+  echo "First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
 }
 #set -euxv
 if [[ "$1" == "-h" ]]
@@ -64,9 +73,8 @@ fi
 cd $DIR_CASES/
 
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
-listofcases=sps4_200807_014
+listofcases=sps4_199605_003
 
-listofcases="sps4_201211_007 sps4_201211_008 sps4_201211_009 sps4_201211_010 sps4_201211_011 sps4_201211_012 sps4_201211_013 sps4_201211_014 sps4_201211_015 sps4_201211_016 sps4_201211_017"
 if [[ $# -ge 1 ]]
 then
    debug=${1}
@@ -144,7 +152,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_201010_015 sps4_199412_029 sps4_199612_019"  
+lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
@@ -152,8 +160,6 @@ lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_
 #sps4_200910_025 (zeus) - NaN in field Sl_t
 #sps4_201010_013 (zeus) - h2osoi_ice sign negative
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
-#sps4_201010_015 (zeus) - as the one above
-#sps4_199412_029, sps4_199612_019 st_archive UKN on queue - left to be recovered as test
 
 cd $DIR_CASES/
 for caso in $listofcases ; do
@@ -241,7 +247,7 @@ for caso in $listofcases ; do
            cnt_pp_C3S=$(($cnt_pp_C3S + 1))
            lista_pp_C3S+=" $caso"
         else
-            if [[ ! -f ${check_all_postclm} ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
+            if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
             then
               cnt_pp_C3S=$(($cnt_pp_C3S + 1))
               lista_pp_C3S+=" $caso"
@@ -331,9 +337,9 @@ then
 fi
 
 
-echo "starting conversion with python "`date`
-#if [[ $machine != "zeus" ]]
-#then
+if [[ $machine != "leonardo" ]]
+then
+   echo "starting conversion with python on CMCC machines (NOT YET IMPLEMENTED ON Leonardo) "`date`
    set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
@@ -343,8 +349,10 @@ echo "starting conversion with python "`date`
    set +euvx
    condafunction deactivate $envcondarclone
    set -euvx
-#fi
-echo "end of conversion with python "`date`
+   echo "end of conversion with python on CMCC machines "`date`
+else
+   echo "skippin conversion with python (NOT YET IMPLEMENTED ON Leonardo) "`date`
+fi
 
 if [[ $debug -eq 2 ]]
 then
@@ -376,8 +384,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
-          if [[ $ismoderr -ne 0 ]]  
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
+          if [[ "$ismoderr" != "" ]]  
           then
              domodify=1
           fi
@@ -476,8 +484,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
-          if [[ $ismoderr -ne 0 ]]
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
+          if [[ "$ismoderr" != "" ]]
           then
              domodify=1
           fi
@@ -546,7 +554,8 @@ caso=""
    do
       $DIR_RECOVER/refresh_all_scripts.sh $caso
       cd $DIR_CASES/$caso
-      bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
+#      bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
    

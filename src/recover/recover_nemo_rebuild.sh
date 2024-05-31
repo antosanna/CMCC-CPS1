@@ -8,7 +8,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
-CASE=sps4_199307_003
+CASE=sps4_199605_003
 CASEROOT=$DIR_CASES/$CASE
 cd $CASEROOT
 #
@@ -20,11 +20,13 @@ N=1
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
 curryear=1993
+module purge 
+module purge 
 set +euvx 
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondanemo
 set -euvx    # keep this instruction after conda activation
-for currmon in 07 08 09 10 11 
+for currmon in 05
 do
    
 # add your frequencies and grids. The script skip them if not present
@@ -40,6 +42,7 @@ do
    # this should be independent from expID and general
          data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
    # VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
+# possibly not working on Leonardo for it has to be run on the compute node
          $mpirun4py_nemo_rebuild -n $N python $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
    # if correctly merged remove single files
          if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc ]] 

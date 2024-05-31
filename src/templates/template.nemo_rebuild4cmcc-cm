@@ -27,7 +27,13 @@ N=1
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
 set +euvx
+if [[ $machine == "leonardo" ]]
+then
+   module purge
+   module purge
+fi
 . $DIR_UTIL/condaactivation.sh 
+condafunction deactivate $envcondacm3
 condafunction activate $envcondanemo
 set -euvx
 # add your frequencies and grids. The script skip them if not present
@@ -97,3 +103,4 @@ set -euvx
 touch $check_nemo_rebuild
 set +euvx
 condafunction deactivate $envcondanemo
+condafunction activate $envcondacm3

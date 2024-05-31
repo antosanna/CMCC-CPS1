@@ -4,9 +4,8 @@
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
 CASEROOT={{ caseroot }}
-cd $CASEROOT
-DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
 # go to archive logdir to read last atm.log and get curryear and currmon
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
 cd $DOUT_S_ROOT/logs
 gunzip `ls -1tr atm.log.* |tail -1`
 logCAM=`ls -1tr atm.log.* |tail -1`

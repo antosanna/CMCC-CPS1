@@ -1,8 +1,22 @@
 #!/bin/sh -l
-
+# THIS MUT BE RUN ON COMPUTE-NODE
+# once the executable has been produced check that all the dependencies are resolved with ldd cesm.exe
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
+if [[ $machine == "leonardo" ]]
+then
+   echo "This script must be executed on compute node"
+   echo "Are you on compute node? [y/n]"
+   read answer
+   if [[ $answer == "y" ]]
+   then
+      echo "go on"
+   else
+      echo "login to compute node first"
+      exit
+   fi
+fi 
 caso=${CPSSYS}_HIST_reference
 
 if [[ -d $DIR_CASES/$caso ]]
@@ -10,11 +24,20 @@ then
    rm -rf $DIR_CASES/$caso
 fi
 
+# activate the conda env needed by CIME
 conda activate $envcondacm3
+
+#load modules in leonardo
+if [[ $machine == "leonardo" ]]
+then
+   module use -p $modpath
+fi
+
 $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
 
 cd $DIR_CASES/$caso
 
+# set to days for debug purposes; then modified in the op-chain
 ./xmlchange STOP_OPTION=ndays
 if [[ $machine == "zeus" ]]
 then
@@ -33,6 +56,17 @@ then
    ./xmlchange NTASKS_ROF=-4
    ./xmlchange NTASKS_LND=-4
    ./xmlchange PIO_STRIDE=18
+elif [[ $machine == "leonardo" ]]
+then
+# hardcoded because we cannot use the entire node (112 cores) due to
+# memory issues (we will ask 3 nodes)
+   ./xmlchange NTASKS_ATM=288
+   ./xmlchange NTASKS_CPL=288
+   ./xmlchange NTASKS_OCN=279
+   ./xmlchange NTASKS_ICE=288
+   ./xmlchange NTASKS_ROF=288
+   ./xmlchange NTASKS_LND=288
+   ./xmlchange PIO_STRIDE=-99
 fi
 ./xmlchange NTASKS_WAV=1
 ./xmlchange NTASKS_GLC=1
@@ -48,7 +82,7 @@ fi
 ./xmlchange PROJECT=0490
 ./xmlchange STOP_N=1
 ./xmlchange RUN_TYPE=hybrid
-./xmlchange --force --subgroup case.run JOB_QUEUE=p_long
+./xmlchange --force --subgroup case.run JOB_QUEUE=$parallelq_l
 ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=08:00
 
 ./case.setup --reset
@@ -169,3 +203,5 @@ f_strairy = "m"
 EOF3
 
 ./case.build
+cp $WORK/CMCC-CM/$caso/bld/cesm.exe $DIR_EXE/cesm.exe.${CPSSYS}_${machine}
+ln -sf $DIR_EXE/cesm.exe.${CPSSYS}_${machine} $DIR_EXE/cesm.exe.${CPSSYS}

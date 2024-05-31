@@ -50,8 +50,10 @@ $DIR_UTIL/clean_caso.sh $caso
 # NEW TO RESPECT ORIGINAL STRUCTURE -
 # we prefer clone to newcase with usermods_dir because in the first case the case tree is built also without case.build and we do not wnat to build the case because we are going to use always the same executable
 # refcase changes with scenario but the executable must not
-$DIR_CESM/cime/scripts/create_clone -case $DIR_CASES/$caso -clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+set +euvx
+$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
 
+set -euvx
 #----------------------------------------------------------
 mkdir -p $DIR_CASES/$caso/logs
 echo "$ic" > $DIR_CASES/$caso/logs/ic_${caso}.txt
