@@ -59,40 +59,22 @@ do
        dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
        for pp in {0..9}
        do
-          
-          inputECEDA=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${tstamp}.grib
-          if [[ ! -f ${inputECEDA} ]] 
-          then
-             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputECEDA} missing!"
-             echo $body
-             if [[ $typeofrun == "forecast" ]]
-             then
-                title="[CAMIC] ${CPSSYS} ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-             fi
-             continue
-          fi
-# check if IC was already created on Juno (up to 20240108 it could be)
+
+          # check if IC was already created on Juno (up to 20240108 it could be)
           ppcam=`printf '%.2d' $(($pp + 1))`
-          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]] 
+          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]]
           then
              continue
           fi
-          inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
-          if [[ ! -f ${inputNEMO4CAM} ]] 
-          then
-             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputNEMO4CAM} missing!"
-             echo $body
-             continue
-          fi
+
           casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
-          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]] 
+          if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
           then
 # remove raw data from /data/delivery
               is_file_there=`ssh sp2@zeus01.cmcc.scc ls ${inputECEDA} |wc -l`
               if [[ $is_file_there -eq 1 ]]
-              then 
-                 ssh sp2@zeus01.cmcc.scc rm ${inputECEDA} 
+              then
+                 ssh sp2@zeus01.cmcc.scc rm ${inputECEDA}
               fi
               if [[ -d $DIR_CASES/$casoIC ]]
               then
@@ -107,7 +89,27 @@ do
                  rm -rf $WORK_CPS/$casoIC
               fi
               continue
-          fi  
+          fi
+
+          inputECEDA=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${tstamp}.grib
+          if [[ ! -f ${inputECEDA} ]] 
+          then
+             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputECEDA} missing!"
+             echo $body
+#             if [[ $typeofrun == "forecast" ]]
+#             then
+                title="[CAMIC] ${CPSSYS} ERROR"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+#             fi
+             continue
+          fi
+          inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
+          if [[ ! -f ${inputNEMO4CAM} ]] 
+          then
+             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputNEMO4CAM} missing!"
+             echo $body
+             continue
+          fi
 
 #         get check_IC_CAMguess from dictionary
           set +euvx
