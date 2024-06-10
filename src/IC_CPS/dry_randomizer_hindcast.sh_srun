@@ -6,22 +6,25 @@
 #***************************************
 # load variables from descriptor
 
+
+mkdir -p $DIR_SUBM_SCRIPTS
 set -evxu
 ntot=$nrunmax
 mkdir -p $TRIP_DIR
-for yyyy in `seq $iniy_hind $endy_hind`
-do
-   for st in {01..12} 
+#for yyyy in `seq $iniy_hind $endy_hind`
+for yyyy in `seq -w 2008 2009` 
+do 
+   for st in "05"
    do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
       mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts
       mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA
 
-      for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
+      #for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
    
-      for i in `seq -w 01 $n_ic_clm` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
+      #for i in `seq -w 01 $n_ic_clm` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
 
-      for i in `seq -w 01 $n_ic_cam` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/atm.ics.$yyyy$st
+      #for i in `seq -w 01 $n_ic_cam` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/atm.ics.$yyyy$st
 
 #---------------------------------------------
 # CHECK THAT YOU HAVE ENOUGH ICs TO RUN THE ENSEMBLE WITH $nrunmax MEMBERS
@@ -87,6 +90,25 @@ EOF1
       #crea analogo per CINECA + (dopo il fcst di marzo aggiungere le code di MARCONI!!!)
       # ATTENZIONE! I LOG SU CINECA VENGONO PRODOTTI RUN_TIME QUINDI NON POSSONO ESSERE SCRITTI SU UNA DIRECTORY NON ANCORA ESISTENTE, LA DIR LOGS DEL CASO VA CREATA prima
 
+         cat > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh << EOF2
+#!/bin/sh -l
+. \$HOME/.bashrc
+. \$DIR_UTIL/descr_CPS.sh
+set -euvx
+cd \$DIR_LOG
+mkdir -p $typeofrun/$yyyy${st}
+cd \$DIR_CASES
+mkdir -p $caso/logs
+
+mkdir -p $SCRATCHDIR/cases_${st}
+sed -e "s/YYYY/${yyyy}/g;s/STDATE/$st/g;s/PATM/$pp/g;s/PLAND/$ppland/g;s/POCE/$poce/g;s/NRUN/$nrun/g;" $DIR_CPS/create_caso_leonardo.sh > $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
+chmod u+x $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
+srun -c16 -A ${account_name} -p dcgp_usr_prod -t 0:30:00 $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
+
+
+EOF2
+         chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+#crea analogo per CINECA -
          nrun=`expr $nrun + 1`
          cd $DIR_CPS 
       done  # loop over ensemble members
@@ -98,7 +120,7 @@ EOF1
          cp $TRIP_DIR/triplette.random.$yyyy$st.txt .
       fi
       tar -cvf $yyyy${st}_scripts_CINECA.tar *
-      mkdir -p $DIR_SUBM_SCRIPTS/backup_machine/$st/$yyyy${st}_scripts
-      mv $yyyy${st}_scripts_CINECA.tar $DIR_SUBM_SCRIPTS/backup_machine/$st/$yyyy${st}_scripts
+      mkdir -p $DIR_SUBM_SCRIPTS/backup_machine
+      mv $yyyy${st}_scripts_CINECA.tar $DIR_SUBM_SCRIPTS/backup_machine/
    done   #loop on start-date months
 done   #loop on hindcast years

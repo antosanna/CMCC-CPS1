@@ -38,7 +38,7 @@ $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM
 cd $DIR_CASES/$caso
 
 # set to days for debug purposes; then modified in the op-chain
-./xmlchange STOP_OPTION=ndays
+./xmlchange STOP_OPTION=nmonths
 if [[ $machine == "zeus" ]]
 then
    ./xmlchange NTASKS_ATM=-20
@@ -87,7 +87,6 @@ fi
 
 ./case.setup --reset
 ./case.setup
-
 
 cat > user_nl_cam << EOF1
 inithist = 'NONE'

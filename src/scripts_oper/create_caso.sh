@@ -26,6 +26,11 @@ then
    flag_test=0
 fi
 
+if [[ $machine == "leonardo" ]]
+then
+   module use -p $modpath
+fi
+
 if [ $yyyy -ge $yyyySCEN ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period

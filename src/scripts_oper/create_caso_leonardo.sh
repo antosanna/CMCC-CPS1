@@ -8,7 +8,8 @@ set -euvx
 #----------------------------------------------------------
 # get from the parent script start-date and perturbations
 #----------------------------------------------------------
-module use -p $modpth
+module use -p $modpath
+yyyy=YYYY
 st=STDATE
 pp=`printf '%.2d' PATM`            # CAM perturbation 2 digits
 ppland=`printf '%.2d' PLAND`

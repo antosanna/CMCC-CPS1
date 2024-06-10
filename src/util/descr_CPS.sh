@@ -77,7 +77,6 @@ then
    envcondarclone=rclone_gdrive
    DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
    MYCESMDATAROOT1=/data/$DIVISION/$operational_user/
-   DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
@@ -195,12 +194,14 @@ then
 elif [[ "$machine" == "leonardo" ]]
 then
    qos="None"
+   maxnumbertosubmit=120
    env_workflow_tag=leonardo
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
    MYCESMDATAROOT1=$MYCESMDATAROOT
    DIR_CESM=$HOME/CMCC-CM/
-   envcondacm3=cmcc-cm_test   #cmcc-cm_py does not exist
+   account_name=CMCC_Copernic_4
+   envcondacm3=cmcc-cm_py
    BATCHRUN="RUN"
    BATCHPEND="PEND"
 #    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
@@ -269,6 +270,7 @@ fi
 # forecastday="02" # FORECAST starts the second of the month
 # endforecastday="08" # late FORECAST end 
 # n_notif=6
+DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
 nmonfore=6      # number of forecast months
 fixsimdays=185  # total number of simulation days

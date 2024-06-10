@@ -8,6 +8,8 @@ set -evx
 
 # check if there is another job submitted by crontab with the same name
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
+echo "testo ok"
+exit
 if [ $np -gt 1 ]
 then
 # if so check if it is correctly running

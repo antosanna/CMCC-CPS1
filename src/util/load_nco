@@ -20,7 +20,7 @@ elif [[ "${machine}" == "juno" ]] ; then
   export compressC3S='ncks -Oh -L 4 -7 --no_abc'
 # to decompress/uncompress ncks -O -6
 elif [[ "${machine}" == "leonardo" ]] ; then 
-  . $DIR_UTIL/condafunction.sh
+  . $DIR_UTIL/condaactivation.sh
   condafunction activate env_tools  
   export compress='ncks -O -L 4 -4'
 

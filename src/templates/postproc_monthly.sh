@@ -4,7 +4,6 @@
 #-----------------------------------------------------------------------
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/load_nco
 
 set -euxv
 check_pp_monthly=$1
@@ -20,6 +19,11 @@ curryear=`grep 'Current date' $logCAM |awk '{print $7}'`
 gzip $logCAM
 currmon=`printf '%.2d' $mese`
 cd $DIR_CASES/EXPNAME
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+
+#all xmlquery called before loading nco env (in CINECA the conda for nco gives conflicts in xmlquery)
+. ${DIR_UTIL}/load_nco
 
 #-----------------------------------------------------------------------
 # check presence of TMAX spikes
@@ -123,8 +127,6 @@ if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
    rm -rf $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000
 fi
 # now rebuild EquT from NEMO
-yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
-st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 if [[ `ls $DOUT_S_ROOT/ocn/hist/EXPNAME_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
 then
    $DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist

@@ -3,6 +3,20 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
+if [[ $machine == "leonardo" ]]
+then
+   echo "This script must be executed on compute node"
+   echo "Are you on compute node? [y/n]"
+   read answer
+   if [[ $answer == "y" ]]
+   then
+      echo "go on"
+   else
+      echo "login to compute node first"
+      exit
+   fi  
+fi 
+
 caso=${CPSSYS}_SSP585_reference
 
 if [[ -d $DIR_CASES/$caso ]]

@@ -49,6 +49,6 @@ elif [[ "${machine}" == "marconi" ]] ; then
      exit 1
   fi
 elif [[ "${machine}" == "leonardo" ]] ; then 
-    . $DIR_UTIL/condafunction.sh   
+    . $DIR_UTIL/condaactivation.sh
     condafunction activate env_tools
 fi
