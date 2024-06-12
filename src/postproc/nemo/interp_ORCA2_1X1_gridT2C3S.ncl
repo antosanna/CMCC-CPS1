@@ -23,12 +23,16 @@ begin
     lat@bounds="lat_bnds"
     lat@valid_max = 90.d
     lat@valid_min = -90.d
+    lat@axis = "Y" 
+    lat@standard_name = "latitude"
     filevarattdef(ncdf,"lat"  ,lat)                     ; copy lat attributes
 
     filevardef(ncdf, "lon"  ,C3S_type,getvardims(lon))           
     lon@bounds="lon_bnds"
     lon@valid_max = 360.d
     lon@valid_min = 0.d
+    lon@axis = "X" 
+    lon@standard_name = "longitude"
     filevarattdef(ncdf,"lon"  ,lon)                     ; copy lon attributes
 
     filevardef(ncdf, "realization", typeof(realization), "str31")
@@ -140,8 +144,10 @@ begin
     lsm=lsm+1.
     lsm=where(lsm.eq.2.,0.,lsm)
     lat=lsmfile->lat
+    delete(lat@_FillValue)
     nlat=dimsizes(lat)
     lon=lsmfile->lon
+    delete(lon@_FillValue)
     nlon=dimsizes(lon)
 
    ;--- Define accessory vars required by C3S 
@@ -323,7 +329,6 @@ begin
   outdir=getenv("outdirC3S")
   system("/bin/rm -f "+outdir+"/interp_ORCA2_1X1_gridT2C3S.ncl_"+real+"_ok")
   print("this is the output dir "+outdir)
-  first=0
   do i=0,nv-1
        if (model(i).eq."nemo") then
 

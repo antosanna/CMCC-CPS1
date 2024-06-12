@@ -28,6 +28,8 @@ else
    echo "MACHINE UNKNOWN!! EXITING NOW!!"
    exit -1
 fi
+c3s_checker_cmd=c3s-checker
+envcondac3schecker=c3schecker
 SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
@@ -35,13 +37,17 @@ yyyySCEN=2015
 refcaseHIST=${CPSSYS}_HIST_reference
 refcaseSCEN=${CPSSYS}_SSP585_reference
 envcondanemo=nemo_rebuild
+DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
+#   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
+   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]]
    then
+      HEAD=cmcc
       operational_user=cp1
       pID=0490 #Juno
 #      pID=0438 #Juno
@@ -55,9 +61,11 @@ then
       maxnumbertosubmit=18
       maxnumberguarantee=14
       env_workflow_tag=cmcc
-      DIR_REST_OIS=/work/csp/aspect/CESM2/rea_archive/
+      DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
+      DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "zeus" ]]
    then
+      HEAD=csp
       pID=0574 #zeus
 #      pID=0438 #zeus
       nnodes_SC=120
@@ -68,18 +76,23 @@ then
       maxnumberguarantee=6
       mpilib4py_nemo_rebuild=impi20.1/19.7.217
       mpirun4py_nemo_rebuild=mpirun
-      envcondaclm=/work/csp/sp1/anaconda3/envs/CMOR_5
-      envcondacm3=/users_home/csp/dp16116/.conda/envs/py38CS2
+      envcondaclm=/work/$HEAD/sp1/anaconda3/envs/CMOR_5
+      envcondacm3=/users_home/$HEAD/dp16116/.conda/envs/py38CS2
       env_workflow_tag=cmcc
+      DATA_ECACCESS=/data/delivery/$HEAD/ecaccess/
    fi
-   MYCESMDATAROOT=/data/$DIVISION/$USER/
-   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
-   envcondarclone=rclone_gdrive
-   DIR_CESM=/users_home/$DIVISION/${operational_user}/CMCC-CM/
-   MYCESMDATAROOT1=/data/$DIVISION/$operational_user/
+   MYCESMDATAROOT1=/data/$HEAD/$operational_user/
+   MYCESMDATAROOT=/data/$HEAD/$operational_user/
+   DATA_ARCHIVE=/data/$HEAD/$USER/archive
+   DATA_ARCHIVE1=/data/$HEAD/${operational_user}/archive
+   DIR_ROOT1=/users_home/$HEAD/${operational_user}/CPS/CMCC-${CPSSYS}
+   WORK=/work/$HEAD/$USER/
+   WORK1=/work/$HEAD/$operational_user/
+   DIR_CESM=/users_home/$HEAD/${operational_user}/CMCC-CM/
 #   S_apprun=??? #SERIAL_sps35 Zeus
 #now suppressed because redundant
 #   sla_serialID=SC_SERIAL_sps35 #Zeus
+   BATCHUNKNOWN="UNKN"
    BATCHRUN="RUN"
    BATCHPEND="PEND"
    nmb_nemo_domains=279
@@ -123,17 +136,11 @@ then
 #      FINALARCHC3S=$SCRATCHDIR/Seasonal/${CPSSYS}/daily_postpc
 #   fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
-   DATA_ARCHIVE=/data/$DIVISION/$USER/archive
-   DATA_ARCHIVE1=/data/$DIVISION/${operational_user}/archive
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
-   DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
-   DIR_ROOT1=/users_home/$DIVISION/${operational_user}/CPS/CMCC-${CPSSYS}
 #   OUTDIR_DIAG=/work/csp/sp2/${CPSSYS}/
 #   DIR_WEB=/data/products/C3S/sp2/webpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
 #   DIR_FORE_ANOM=/work/csp/${operational_user}/CMCC-${CPSSYS}/forecast_anom
-   WORK=/work/$DIVISION/$USER/
-   WORK1=/work/$DIVISION/$operational_user/
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
    DIR_ARCHIVE=$WORK_CPS/archive
@@ -167,16 +174,7 @@ then
    if [ $(whoami) == ${operational_user} ]; then
       IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
    fi
-# TEMPORARY
-   if [[ $machine == "juno" ]]
-   then
-      DATA_ECACCESS=/work/$DIVISION/cp1/scratch/DATA_ECACCESS
-   elif [[ $machine == "zeus" ]]
-   then
-      DATA_ECACCESS=/data/delivery/$DIVISION/ecaccess/
-   fi
-   WORK_C3S1=/work/$DIVISION/$operational_user/CESM/archive/C3S/
-#   WORK_C3Shind=/data/$DIVISION/$operational_user/archive/CESM/${CPSSYS}/C3S/
+#   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
@@ -193,15 +191,10 @@ then
 # ######## MARCONI SECTION
 elif [[ "$machine" == "leonardo" ]]
 then
-   qos="None"
-   maxnumbertosubmit=120
-   env_workflow_tag=leonardo
+   account_name=CMCC_Copernic_4
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
-   MYCESMDATAROOT1=$MYCESMDATAROOT
    DIR_CESM=$HOME/CMCC-CM/
-   account_name=CMCC_Copernic_4
-   envcondacm3=cmcc-cm_py
    BATCHRUN="RUN"
    BATCHPEND="PEND"
 #    nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
@@ -211,20 +204,19 @@ then
    slaID=s_met_cmcc_p
    sla_serialID=s_met_cmcc_s
    nmb_nemo_domains=336
-   serialq_s=dcgp_usr_prod
-   serialq_m=dcgp_usr_prod
-   serialq_l=dcgp_usr_prod
+   serialq_s=1
+   serialq_m=1
+   serialq_l=1
    parallelq_s=dcgp_usr_prod
    parallelq_m=dcgp_usr_prod
    parallelq_l=dcgp_usr_prod
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
-   WORK=/leonardo_work/CMCC_Copernic_4/  #is environment var in leonardo
-#   WORK=/leonardo_scratch/large/usera07cmc/a07cmc00  
+   WORK=/leonardo_work/$account_name/  #is environment var in leonardo
    WORK1=$WORK
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK_CPS1}
-   DIR_ARCHIVE=$WORK_CPS/archive
+   DIR_ARCHIVE=$WORK/archive
    DIR_ARCHIVE1=$DIR_ARCHIVE
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
@@ -239,7 +231,6 @@ then
 #    DATA_ECACCESS=$SCRATCHDIR1
 #    DIR_CLIM=$CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
 # #TO BE DEFINED -
-    DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
     DIR_ROOT1=$DIR_ROOT
     OUTDIR_DIAG=$WORK/diagnostics
     DIR_FORE_ANOM=$WORK/CMCC-${CPSSYS}/forecast_anom
@@ -255,7 +246,6 @@ then
 # ######## ICs_CAM
     IC_CAM_CPS_DIR1=$SCRATCHDIR1/IC/CAM_${CPSSYS}/
     IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
-    WORK_C3S1=$DIR_ARCHIVE1/C3S
     WORK_C3S=$WORK_C3S1
    	ecmwfmail=$mymail
     ccmail=$mymail
@@ -263,6 +253,15 @@ then
     CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
     PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
 fi
+WORK_C3S1=$DIR_ARCHIVE1/C3S
+DIR_LOG1=$WORK1/CPS/CMCC-${CPSSYS}/logs
+DIR_LOG=$WORK/CPS/CMCC-${CPSSYS}/logs
+DIR_SUBM_SCRIPTS1=$WORK1/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_SUBM_SCRIPTS=$WORK/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
+DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
+DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
+DIR_CPS=$DIR_ROOT/src/scripts_oper
+DIR_RECOVER=$DIR_ROOT/src/recover
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -270,14 +269,13 @@ fi
 # forecastday="02" # FORECAST starts the second of the month
 # endforecastday="08" # late FORECAST end 
 # n_notif=6
-DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
 nmonfore=6      # number of forecast months
 fixsimdays=185  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
  natm3d=5    # number of required fields for C3S 3d atmospheric
- nfieldsC3S=55    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
+ nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
@@ -297,8 +295,10 @@ freq_forcings=8
 # # DIRS to be set
 # #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # DIR_CHECK_IC_NEMO=$SCRATCHDIR/check_newICs_nemo/
-DIR_CPS=$DIR_ROOT/src/scripts_oper
-DIR_RECOVER=$DIR_ROOT/src/recover
+REPOSITORY=$MYCESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}
+REPOSITORY1=$MYCESMDATAROOT1/CMCC-${CPSSYS}/files4${CPSSYS}
+REPOGRID=$MYCESMDATAROOT/CMCC-${CPSSYS}/regrid_files
+REPOGRID1=$MYCESMDATAROOT1/CMCC-${CPSSYS}/regrid_files
 DIR_SRC=$DIR_ROOT/src
 DIR_CHECK=$DIR_ROOT/checklists
 # DIR_TEST_SUITE=$DIR_SRC/test_suite
@@ -307,19 +307,12 @@ dictionary=$DIR_UTIL/CPS1_checkfile_dictionary.txt
 DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
-DIR_LOG1=$WORK1/CPS/CMCC-${CPSSYS}/logs
-DIR_LOG=$WORK/CPS/CMCC-${CPSSYS}/logs
-DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
 DIR_ATM_IC=$IC_CPS/IC_CAM
 DIR_OCE_IC=$IC_CPS/IC_NEMO
 DIR_LND_IC=$IC_CPS/IC_CLM
-REPOSITORY=$MYCESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}
-REPOSITORY1=$MYCESMDATAROOT1/CMCC-${CPSSYS}/files4${CPSSYS}
-REPOGRID=$MYCESMDATAROOT/CMCC-${CPSSYS}/regrid_files
-REPOGRID1=$MYCESMDATAROOT1/CMCC-${CPSSYS}/regrid_files
 DIR_EXE=$DIR_ROOT/executables_cesm
 DIR_EXE1=$DIR_ROOT1/executables_cesm
 DIR_REP=$DIR_LOG/reports
@@ -329,11 +322,6 @@ WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
 DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
-if [[ $machine != "leonardo" ]]
-then
-   DIR_SUBM_SCRIPTS1=/work/$DIVISION/$operational_user/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
-fi
-DIR_SUBM_SCRIPTS=$WORK/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
 WORK_C3S=$DIR_ARCHIVE_C3S

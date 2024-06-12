@@ -1,12 +1,12 @@
-       Conventions =CF-1.6 C3S-0.1
+       Conventions =CF-1.11 C3S-0.3
        title =CMCC seasonal forecast model output prepared for C3S
-       references =The new CMCC Seasonal Prediction System, CMCC report NAN
-       source =CMCC-CM3-v20231101:  atmos: CAM(fv_0.47x0.63 L83); ocean: NEMOv4.2 (ORCA0.25_z75, 0.25x0.25L75); land: CLM(fv_0.47x0.63 L25); seaice: CICE(same spatial configuration of NEMO)
+       references =The new CMCC Seasonal Prediction System, CMCC report NA
+       source =CMCC-CM3-v20231101:  atmos: CAM(fv_0.47x0.63 L83); ocean: NEMOv4.2 (ORCA0.25_z75, 0.25x0.25L75); land: CLM(fv_0.47x0.63 L25); seaice: CICE(same horizontal resolution of NEMO)
        institute_id =cmcc
        institution =CMCC, Centro Euro-Mediterraneo sui Cambiamenti Climatici, Bologna, Italy
        contact =http://copernicus-support.ecmwf.int
        project =C3S Seasonal Forecast
-       commit =2023-11-01T9:35:32Z https://www.cmcc.it/it/publications/NAN
+       commit =2023-11-01T9:35:32Z https://www.cmcc.it/it/publications/NA
        history =
        comment =Run by CMCC at CMCC Supercomputing Center, University of Salento
        summary =Seasonal Forecast data produced by CMCC as its contribution to the seasonal forecast activity of the Copernicus Climate Change Service (C3S). The data has global coverage with a 1-degree horizontal resolution and spans for around 6 months since the start date

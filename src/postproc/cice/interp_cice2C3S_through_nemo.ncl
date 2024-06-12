@@ -23,12 +23,16 @@ begin
     lat@bounds="lat_bnds"
     lat@valid_max = 90.d
     lat@valid_min = -90.d    
+    lat@axis = "Y" 
+    lat@standard_name = "latitude"
     filevarattdef(ncdf,"lat"  ,lat)                     ; copy lat attributes
 
     filevardef(ncdf, "lon"  ,C3S_type,getvardims(lon))           
     lon@bounds="lon_bnds"
     lon@valid_max = 360.d
     lon@valid_min = 0.d
+    lon@axis = "X" 
+    lon@standard_name = "longitude"
     filevarattdef(ncdf,"lon"  ,lon)                     ; copy lon attributes
 
     filevardef(ncdf, "realization", typeof(realization), "str31")

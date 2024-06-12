@@ -134,7 +134,7 @@ fincl3 = 'Q1000','Q925','Q850','Q700','Q500','Q400','Q300',
 fincl4 = 'ICEFRAC','PRECC','PRECT','PRECSL','PRECSC','SHFLX','LHFLX',
          'FSDS','FLDS','FLNS','FSNS','FLNT','FSNT',
          'TAUX','TAUY','QFLX','FSNTOA','TS',
-         'TREFMXAV:X','TREFMNAV:M',
+         'TREFMXAV:X','TREFMNAV:M','SOLIN',
          'Z500','V850','U850','T850','VBOT','UBOT','TREFHT','RHREFHT',
          'WSPDSRFMX:X','U10','FSDS','PSL','PRECTMX:X','PRECT','TMQ' ,
 fincl5 = 'TS','CLDTOT',
@@ -182,4 +182,4 @@ f_strairx = "m",
 f_strairy = "m"
 EOF3
 
-./case.build
+#./case.build

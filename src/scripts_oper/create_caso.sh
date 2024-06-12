@@ -68,14 +68,9 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
 
-if [[ $USER == "$operational_user" ]]
-then
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
-   rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
-else
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
-fi
-#----------------------------------------------------------
+rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+# this makes use of SC and if a user has no access to the SC it cannot run
+rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 # TO DO
 # set-up the case after modfication env_workflow
 #----------------------------------------------------------

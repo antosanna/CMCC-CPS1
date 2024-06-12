@@ -67,7 +67,10 @@ then
    isSOLINin=`ncdump -h $inputFV|grep SOLIN|wc -l`
    if [[ $isSOLINin -eq 0 ]]
    then
-       export C3Stable="$DIR_POST/cam/C3S_table_noSOLIN.txt"
+       
+       export C3Stable="$wkdir/C3S_table_noSOLIN.txt"
+       #remove last line of C3Stable - which MUST be SOLIN
+       sed '$ d' $DIR_POST/cam/C3S_table.txt > $C3Stable
        touch $check_no_SOLIN
    fi
 fi

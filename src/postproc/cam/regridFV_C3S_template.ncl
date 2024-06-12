@@ -661,13 +661,17 @@ begin
              end if
           else if(typein.eq."h0")then
              if(isfilepresent(wgtFileName)) then
-                var1x1= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
+                var1x1= ESMF_regrid_with_weights(var2regrid(0,:,:),wgtFileName,Opt)
+                print("var is "+varout(k))
+                printVarSummary(var1x1)
              else
-                var1x1= ESMF_regrid(var2regrid,Opt)
+                var1x1= ESMF_regrid(var2regrid(0,:,:),Opt)
              end if
              if(varout(k).eq."orog" )then
                 dst_file->$varout(k)$ = var1x1/9.18
              else if(varout(k).eq."sftlf" )then
+                delete(var1x1@missing_value)
+                delete(var1x1@remap)
                 dst_file->$varout(k)$ = var1x1
              end if
              end if
@@ -693,6 +697,11 @@ begin
                 var2regrid=conv_fac(k)*tofloat(src_file->$varlevin$)
                 var3d(:,il,:,:)= ESMF_regrid_with_weights(var2regrid,wgtFileName,Opt)
              end do
+             printVarSummary(var3d)
+             delete(var3d@missing_value)
+             delete(var3d@remap)
+             var3d!0="leadtime"
+             var3d!1="plev"
              dst_file->$varout(k)$ = var3d
              delete(var2regrid)
    ;         frqin.eq."day"

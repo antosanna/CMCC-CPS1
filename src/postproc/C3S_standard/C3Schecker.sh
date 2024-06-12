@@ -27,7 +27,7 @@ st=`echo "${startdate}" | cut -c5-6`
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
-dir_log_checker=$SCRATCHDIR/C3Schecker/$typeofrun/$real/
+dir_log_checker=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$real/
 # try and do it everytime (if too slow add the exception)
 if [[ -d $dir_log_checker ]]
 then

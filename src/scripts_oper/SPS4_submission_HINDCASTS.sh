@@ -8,8 +8,6 @@ set -evx
 
 # check if there is another job submitted by crontab with the same name
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
-echo "testo ok"
-exit
 if [ $np -gt 1 ]
 then
 # if so check if it is correctly running
@@ -58,7 +56,8 @@ cnt_run=0
 cnt_archive=0
 cnt_data_archive=0
 cnt_dircases=0
-cnt_temp_archive=0
+cnt_archive=0
+cnt_old_home=0
 cnt_atmICfile=0
 cnt_lndIC=0
 cnt_nemoIC=0
@@ -81,15 +80,19 @@ for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
    do
+       if [[ $yyyy -eq 2014 ]]
+       then
+          continue
+       fi
        echo "YEAR $yyyy *****************************"
        
        #check how many members done per year
-       n_6month_done=`ls $DIR_CASES/${SPSSystem}_${yyyy}${st}_???/logs/${SPSSystem}_${yyyy}${st}_*_${nmonfore}months_done |wc -l`
-       if [[ ${n_6month_done} -ge $nmaxens ]] ; then
+       n_moredays_done=`ls $DIR_CASES/${SPSSystem}_${yyyy}${st}_???/logs/run_moredays_${SPSSystem}_${yyyy}${st}_0??_DONE |wc -l`
+       if [[ ${n_moredays_done} -ge $nmaxens ]] ; then
           continue
        fi
        np_yyyyst=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_${yyyy}${st} -c yes`
-       if [[ $((${n_6month_done} + $np_yyyyst )) -ge $nmaxens ]] ; then
+       if [[ $((${n_moredays_done} + $np_yyyyst )) -ge $nmaxens ]] ; then
           continue
        fi
        
@@ -119,10 +122,16 @@ do
             cnt_dircases=$(( $cnt_dircases + 1 ))            
             lg_continue=1
          fi
-         # if exist in temporary archive, skip
+         # if exist in archive, skip
          if [ -d $DIR_ARCHIVE/$caso ] ; then
             echo "$DIR_ARCHIVE/$caso exist. skip"  
-            cnt_temp_archive=$(( $cnt_temp_archive + 1 ))            
+            cnt_archive=$(( $cnt_archive + 1 ))            
+            lg_continue=1
+         fi 
+  
+         if [ -f /work/csp/cp1/CPS/CMCC-CPS1/cases/$caso/logs/run_moredays_${caso}_DONE ] ; then
+            echo "$caso completed on old $HOME (csp). skip"  
+            cnt_old_home=$(( $cnt_old_home + 1 ))            
             lg_continue=1
          fi 
   
@@ -250,14 +259,15 @@ echo "Submittable $submittable_cnt"
 totalskipIC=${listaskipCAM}" "${listaskipCICE}" "${listaskipNEMO}" "${listaskipCLM}
 listaskip=${listaskipCAM}" "${listaskipCICE}" "${listaskipNEMO}" "${listaskipCLM}
 cnt_skipIC=`echo $totalskipIC|wc -w`
-totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_data_archive + $cnt_dircases + $cnt_temp_archive + $cnt_skipIC ))
+totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_data_archive + $cnt_dircases + $cnt_archive + $cnt_skipIC + $cnt_old_home))
 echo "Total skipped $totalskipped"
 echo "Land $cnt_lndICfile "
 echo "Atm $cnt_atmICfile "
 echo "Ocn $cnt_oceICfile "
 echo "Ice $cnt_iceICfile "
-echo "temporary archive ($DIR_ARCHIVE) $cnt_temp_archive "
+echo "archive ($DIR_ARCHIVE) $cnt_archive "
 echo "case already created $cnt_dircases "
+echo "case already completed on old $HOME but still to be ported $cnt_old_home "
 echo "running $cnt_run "
 body="Submitted $subm_cnt startdates \n
 \n
@@ -280,7 +290,7 @@ ICE cice IC file missing $cnt_iceIC \n
 \n
 OCE nemo IC file missing $cnt_nemoIC \n
 \n
-temporary archive $cnt_temp_archive \n
+archive $cnt_archive \n
 \n
 case running $cnt_run \n
 \n

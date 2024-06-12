@@ -21,8 +21,6 @@ currmon=`printf '%.2d' $mese`
 #
 # go back to CASEROOT
 cd $CASEROOT
-NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
-# this is the number of parallel postprocessing you want to set
 N=1
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
 # activate needed env
@@ -103,4 +101,7 @@ set -euvx
 touch $check_nemo_rebuild
 set +euvx
 condafunction deactivate $envcondanemo
-condafunction activate $envcondacm3
+
+if [[ $machine == "leonardo" ]] ; then
+   condafunction activate $envcondacm3
+fi

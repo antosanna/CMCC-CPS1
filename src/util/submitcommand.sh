@@ -27,7 +27,8 @@ exited="None"
 exited2="None"
 prev2="None"
 prev3="None"
-mem=1000
+memdefault=1000
+mem=$memdefault
 partition="None"
 reservation="None"
 qos="None"
@@ -235,11 +236,11 @@ then
       then
          command+=' -ti -w "exit('$exited') || exit('$exited2')"'
       fi
-      if [[ "$mem" != "None" ]]
-      then
+#      if [[ $mem -ne $memdefault ]]
+#      then
 # (mem is expressed in MB)
          command+=' -R "rusage[mem='$mem']"'
-      fi
+#      fi
    fi
    if [[ "$starttime" != "None" ]]
    then
@@ -385,11 +386,11 @@ then
       then
          command+=' -ti -w "exit('$exited') || exit('$exited2')"'
       fi
-      if [[ "$mem" != "None" ]]
-      then
+#      if [[ $mem -ne $memdefault ]]
+#      then
 # (mem is expressed in MB)
          command+=' -R "rusage[mem='$mem']"'
-      fi
+#      fi
    fi
    if [[ "$starttime" != "None" ]]
    then
@@ -542,11 +543,11 @@ then
               command+=' --dependency=afternotok:$jid1 '
          fi
       fi
-      if [[ "$mem" != "None" ]]
-      then
+#      if [[ $mem -ne $memdefault ]]
+#      then
       # (mem is expressed directly)
         command+=' --mem=$mem '
-      fi
+#      fi
       if [[ "$ntask" != "None" ]]
       then
              command+=' --ntasks=$ntask '

@@ -22,6 +22,7 @@ then
    . $dictionary
    set -euvx
    touch $check_run_moredays
+   exit #temporary disabled C3S production
    if [[ ! -f $check_pp_C3S ]] && [[ $machine == "juno" ]]
    then
       ./postproc_C3S_${caso}.sh 

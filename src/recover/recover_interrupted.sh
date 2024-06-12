@@ -248,7 +248,7 @@ for caso in $listofcases ; do
            cnt_pp_C3S=$(($cnt_pp_C3S + 1))
            lista_pp_C3S+=" $caso"
         else
-            if [[ ! -f $check_postclm ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
+            if [[ ! -f $check_all_postclm ]] || [[ ! -f $check_all_camC3S_done ]] || [[ ! -f $check_iceregrid ]] || [[ ! -f $check_oceregrid ]] 
             then
               cnt_pp_C3S=$(($cnt_pp_C3S + 1))
               lista_pp_C3S+=" $caso"
@@ -385,8 +385,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
-          if [[ "$ismoderr" != "" ]]  
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
+          if [[ $ismoderr -ne 0 ]]  
           then
              domodify=1
           fi
@@ -485,8 +485,8 @@ caso=""
       then
           #take the last one
           lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog`
-          if [[ "$ismoderr" != "" ]]
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
+          if [[ $ismoderr -ne 0 ]]
           then
              domodify=1
           fi
