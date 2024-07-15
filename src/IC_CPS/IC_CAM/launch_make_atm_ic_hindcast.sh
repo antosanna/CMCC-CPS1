@@ -49,7 +49,7 @@ then
 fi
 tstamp="00"
 #for st in `seq -w $inist 12`
-list_startdate="10 11 12 01 02 03 04 05 06 07 08 09"
+list_startdate="12 05 10 11 01 02 03 04 06 07 08 09"
 for st in $list_startdate
 do
    for yyyy in `seq $iniy 2022`
@@ -67,6 +67,7 @@ do
              continue
           fi
 
+          inputECEDA=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${tstamp}.grib
           casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
           if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
           then
@@ -91,7 +92,6 @@ do
               continue
           fi
 
-          inputECEDA=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${tstamp}.grib
           if [[ ! -f ${inputECEDA} ]] 
           then
              body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputECEDA} missing!"
@@ -104,6 +104,9 @@ do
              continue
           fi
           inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
+          if [[ $yyyy == 1997 ]] && [[ $st == 01 ]] ; then
+             inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.02.nc
+          fi 
           if [[ ! -f ${inputNEMO4CAM} ]] 
           then
              body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputNEMO4CAM} missing!"

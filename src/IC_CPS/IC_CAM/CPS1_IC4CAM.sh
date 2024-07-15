@@ -92,6 +92,15 @@ sed -i '/inithist/d' user_nl_cam
 echo "ncdata='$ncdata'">>user_nl_cam
 echo "inithist='ENDOFRUN'">>user_nl_cam
 
+if [[ $st -eq "01" ]] ; then
+   echo "check_finidat_year_consistency = .false." >>user_nl_clm
+fi
+
+#for 2015 IC the scenario compset is used here but for CLM ICs comes from historical one (last restart)
+if [[ $st -eq "01" ]] && [[ $yyyy -eq 2015 ]]; then
+   echo "use_init_interp = .true." >>user_nl_clm
+fi
+
 #
 echo "timestep = $((86400 / $ncpl))"
 echo "vertical levels 83"

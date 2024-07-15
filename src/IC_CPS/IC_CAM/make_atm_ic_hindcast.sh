@@ -43,6 +43,11 @@ else
    iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
    clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
    rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.01.nc
+   if [[ $yyyy == 1997 ]] && [[ $st == 01 ]] 
+   then
+        oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.02.nc
+        iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.02.nc
+   fi
 
    if [[ -f $oceic.gz ]]
    then

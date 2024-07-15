@@ -3,7 +3,7 @@
 . ~/.bashrc
 # load variables from descriptor
 . ${DIR_UTIL}/descr_CPS.sh
-set -evx
+#set -evx
 . ${DIR_UTIL}/load_cdo
 . ${DIR_UTIL}/load_ncl
 
@@ -128,11 +128,15 @@ echo $ymax
 
 echo "launching mergedomain$curryear$currmon.ncl "`date`
 export outfile=$wkdir/${EquTfile}
+set +euvx
 . ${DIR_UTIL}/load_ncl
+set -euvx
 ncl $wkdir/mergedomain$curryear$currmon.ncl
 echo "ended mergedomain$curryear$currmon.ncl "`date`
 nt=`cdo -ntime $wkdir/${EquTfile}`
+set +euvx
 . ${DIR_UTIL}/load_nco
+set -euvx
 if [ -f $outfile ]
 then
    rootname=`basename $outfile |rev |cut -d '.' -f1 --complement|rev`
