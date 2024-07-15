@@ -56,7 +56,12 @@ $DIR_UTIL/clean_caso.sh $caso
 # we prefer clone to newcase with usermods_dir because in the first case the case tree is built also without case.build and we do not wnat to build the case because we are going to use always the same executable
 # refcase changes with scenario but the executable must not
 set +euvx
-$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+if [[ $machine == "leonardo" ]]
+then
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
+else
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+fi
 
 set -euvx
 #----------------------------------------------------------
@@ -68,9 +73,14 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso
 #----------------------------------------------------------
 
+if [[ $machine == "leonardo" ]]
+then
+   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_${account_name} $DIR_CASES/$caso/env_workflow.xml
+else
+   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+fi
 rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 # this makes use of SC and if a user has no access to the SC it cannot run
-rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 # TO DO
 # set-up the case after modfication env_workflow
 #----------------------------------------------------------

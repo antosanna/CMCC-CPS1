@@ -191,9 +191,22 @@ then
 # ######## MARCONI SECTION
 elif [[ "$machine" == "leonardo" ]]
 then
-   account_name=CMCC_Copernic_4
+   env_workflow_tag=leonardo
+   envcondacm3=cmcc-cm_py
+   mpirun4py_nemo_rebuild=srun
+   mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
+#moved to .bashrc
+   if [[ $account_name == "CMCC_reforeca" ]]
+   then
+      qos=qos_lowprio
+   else
+#   account_name=CMCC_Copernic_4
+      :
+   fi
+   maxnumbertosubmit=60 #120
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
+   MYCESMDATAROOT1=$CESMDATAROOT
    DIR_CESM=$HOME/CMCC-CM/
    BATCHRUN="RUN"
    BATCHPEND="PEND"
@@ -204,9 +217,9 @@ then
    slaID=s_met_cmcc_p
    sla_serialID=s_met_cmcc_s
    nmb_nemo_domains=336
-   serialq_s=1
-   serialq_m=1
-   serialq_l=1
+   serialq_s=dcgp_usr_prod
+   serialq_m=dcgp_usr_prod
+   serialq_l=dcgp_usr_prod
    parallelq_s=dcgp_usr_prod
    parallelq_m=dcgp_usr_prod
    parallelq_l=dcgp_usr_prod
@@ -216,14 +229,16 @@ then
    WORK1=$WORK
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK_CPS1}
-   DIR_ARCHIVE=$WORK/archive
+   DIR_ARCHIVE=${WORK_CPS}/archive
    DIR_ARCHIVE1=$DIR_ARCHIVE
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
-    SCRATCHDIR=$WORK/scratch
+    #SCRATCHDIR=$WORK/scratch
+    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch
     SCRATCHDIR1=$SCRATCHDIR
     FINALARCHC3S=$WORK_CPS/archive_C3Sdaily
     FINALARCHC3S1=$FINALARCHC3S
+    DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
 # #TO BE DEFINED +
 #    pushdirapec=$SCRATCHDIR1
 #    dirdataNOAA=$SCRATCHDIR1

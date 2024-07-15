@@ -4,7 +4,7 @@
 . ~/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 set -eu
-usage() { echo "Usage: $0 [-m <machine string >] [-q <queue string>] [-s <scriptname string >] [-j <jobname string >] [-d <scriptdir string >] [-l <logdir string >] [-i <input string OPTIONAL>] [-R <cores in the same node OPTIONAL BUT REQUIRES ntask>] [-f <is this the model? OPTIONAL>] [-p <previousjob string OPTIONAL>] [-w <second previousjob string OPTIONAL>] [-e <previousjobi-exited string OPTIONAL>] [-f <previousjob-exited string OPTIONAL>] [-Z <no arg string OPTIONAL>] [-M <memory integer OPTIONAL >] [-P <partition string OPTIONAL>] [-Q <qos string OPTIONAL>] [-r <reservation string OPTIONAL>] [-n <ntask string OPTIONAL>] [-t <duration string OPTIONAL>] [-S <quality of service string OPTIONAL>] [-E <string to require exlusivity of nodesOPTIONAL >] [-B <starting-time string OPTIONAL (format yyyy:mm:dd:hh:mm)>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-q <queue string>] [-s <scriptname string >] [-j <jobname string >] [-d <scriptdir string >] [-l <logdir string >] [-i <input string OPTIONAL>] [-R <cores in the same node OPTIONAL BUT REQUIRES ntask>] [-f <is this the model? OPTIONAL>] [-p <previousjob string OPTIONAL>] [-w <second previousjob string OPTIONAL>] [-e <previousjobi-exited string OPTIONAL>] [-f <previousjob-exited string OPTIONAL>] [-Z <no arg string OPTIONAL>] [-M <memory integer OPTIONAL >] [-P <partition string OPTIONAL>] [-r <reservation string OPTIONAL>] [-n <ntask string OPTIONAL>] [-t <duration string OPTIONAL>] [-S <qos quality of service string OPTIONAL>] [-E <string to require exlusivity of nodesOPTIONAL >] [-B <starting-time string OPTIONAL (format yyyy:mm:dd:hh:mm)>]" 1>&2; exit 1; }
 
 if [[ $# -eq 0 ]]
 then
@@ -98,9 +98,6 @@ while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:W:Z:B:S:E:" o; do
             ;;
         r)
             reservation=${OPTARG}
-            ;;
-        Q)
-            qos=${OPTARG}
             ;;
         n)
             ntask=${OPTARG}
@@ -457,7 +454,9 @@ if [[ "$machine" == "leonardo" ]]
 then
   unset SLURM_MEM_PER_CPU
   set -vx
-  command='sbatch --export=NONE'
+  command='sbatch '
+# modified 20240618 to allow for recover_interrupted.sh to run!!! previously was NONE
+#  command='sbatch --export=NONE'
 #  command='sbatch --export=all'
   if [[ "$basic" == "None"  ]]
   then
@@ -494,10 +493,11 @@ then
       command+=' --time=06:00:00 '
     fi
 
-    if [[ "$qos" != "None" ]]
+    if [[ "$account_name" == "CMCC_reforeca" ]]
     then
     # sbatch $account_name with reservation
-      command+=" --qos=$qos --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+#      command+=" --qos=qos_lowprio --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+      command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
     else
       command="sbatch --account=$account_name --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail"
     fi

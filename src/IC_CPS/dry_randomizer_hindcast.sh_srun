@@ -12,19 +12,19 @@ set -evxu
 ntot=$nrunmax
 mkdir -p $TRIP_DIR
 #for yyyy in `seq $iniy_hind $endy_hind`
-for yyyy in `seq -w 2008 2009` 
+for yyyy in `seq -w 1993 2022` 
 do 
-   for st in "05"
+   for st in {01..12}
    do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
       mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts
       mkdir -p $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA
 
-      #for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
+      for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
    
-      #for i in `seq -w 01 $n_ic_clm` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
+      for i in `seq -w 01 $n_ic_clm` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
 
-      #for i in `seq -w 01 $n_ic_cam` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/atm.ics.$yyyy$st
+      for i in `seq -w 01 $n_ic_cam` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/atm.ics.$yyyy$st
 
 #---------------------------------------------
 # CHECK THAT YOU HAVE ENOUGH ICs TO RUN THE ENSEMBLE WITH $nrunmax MEMBERS
@@ -103,7 +103,7 @@ mkdir -p $caso/logs
 mkdir -p $SCRATCHDIR/cases_${st}
 sed -e "s/YYYY/${yyyy}/g;s/STDATE/$st/g;s/PATM/$pp/g;s/PLAND/$ppland/g;s/POCE/$poce/g;s/NRUN/$nrun/g;" $DIR_CPS/create_caso_leonardo.sh > $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
 chmod u+x $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
-srun -c16 -A ${account_name} -p dcgp_usr_prod -t 0:30:00 $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
+srun -c16 -A ${account_name} --qos=qos_lowprio -p dcgp_usr_prod -t 0:30:00 $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
 
 
 EOF2

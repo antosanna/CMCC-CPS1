@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<file id="env_mach_specific.xml" version="2.0">
+  <header>
+    These variables control the machine dependent environment including
+    the paths to compilers and libraries external to cime such as netcdf,
+    environment variables for use in the running job should also be set	here.
+    </header>
+  <group id="compliant_values">
+    <entry id="run_exe" value="${EXEROOT}/cesm.exe ">
+      <type>char</type>
+      <desc>executable name</desc>
+    </entry>
+    <entry id="run_misc_suffix" value=" &gt;&gt; cesm.log.$LID 2&gt;&amp;1 ">
+      <type>char</type>
+      <desc>redirect for job output</desc>
+    </entry>
+  </group>
+  <module_system type="module">
+    <init_path lang="perl">/leonardo/prod/opt/environment/module/current/init/perl.pm</init_path>
+    <init_path lang="python">/leonardo/prod/opt/environment/module/current/init/python.py</init_path>
+    <init_path lang="csh">/leonardo/prod/opt/environment/module/current/init/csh</init_path>
+    <init_path lang="sh">/leonardo/prod/opt/environment/module/current/init/sh</init_path>
+    <cmd_path lang="perl">/leonardo/prod/opt/environment/module/current/bin/modulecmd perl</cmd_path>
+    <cmd_path lang="python">/leonardo/prod/opt/environment/module/current/bin/modulecmd python </cmd_path>
+    <cmd_path lang="sh">module</cmd_path>
+    <cmd_path lang="csh">module</cmd_path>
+    <modules compiler="intel">
+      <command name="load">/leonardo/prod/opt/modulefiles/base/compilers/intel-oneapi-compilers/2023.2.1</command>
+      <command name="load">/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mkl/2023.2.0</command>
+      <command name="load">/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mpi/2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm</command>
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+    </modules>
+    <modules compiler="intel" DEBUG="TRUE">
+      <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0</command>
+    </modules>
+  </module_system>
+  <environment_variables>
+    <env name="XIOS_PATH">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m</env>
+  </environment_variables>
+  <environment_variables comp_interface="nuopc">
+    <env name="ESMF_RUNTIME_PROFILE">ON</env>
+    <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
+    <env name="PIO_INCDIR">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include</env>
+    <env name="PIO_LIBDIR">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/lib</env>
+  </environment_variables>
+  <environment_variables compiler="intel">
+    <env name="I_MPI_EXTRA_FILESYSTEM_FORCE">lustre</env>
+    <env name="I_MPI_EXTRA_FILESYSTEM_LIST">lustre</env>
+    <env name="I_MPI_EXTRA_FILESYSTEM">on</env>
+    <env name="I_MPI_DEBUG">6</env>
+  </environment_variables>
+  <mpirun mpilib="default">
+    <executable> srun</executable>
+    <arguments>
+      <arg name="binding">--cpu-bind=cores</arg>
+      <arg name="num_tasks">--ntasks=288</arg>
+      <arg name="killonbadexit"> --kill-on-bad-exit</arg>
+    </arguments>
+  </mpirun>
+</file>

@@ -23,6 +23,18 @@
 #
 ##########################################################################################################################
 
+function write_help_leonardo
+{
+  echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
+  echo "     (if hindcast only st else also yyyy)"
+  echo ""
+  echo "SUBMISSION COMMAND:"
+  echo "./recover_interrupted.sh \$dbg \$stmain "
+  echo ""
+  echo "CAVEAT"
+  echo "First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+}
+#set -euxv
 function write_help
 {
   echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
@@ -37,8 +49,14 @@ function write_help
 #set -euxv
 if [[ "$1" == "-h" ]]
 then
-   write_help
-   exit
+   if [[ $machine == "leonardo" ]]
+   then
+      write_help_leonardo
+      exit
+   else
+      write_help
+      exit
+   fi
 fi
 set -euxv
 mo_today=`date +%m`
@@ -51,7 +69,8 @@ debug=2  #set to 2 the first time you run in order to print only the list of int
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh 1993
-set -euvx
+#set -euvx
+set -eux
 
 #flag introduced to prevent double submission
 #touched at the beginning of the execution and removed at the end
@@ -73,15 +92,17 @@ fi
 cd $DIR_CASES/
 
 #listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
-#listofcases=sps4_199605_003
-listofcases="sps4_199605_001 sps4_199605_012 sps4_199605_015 sps4_199605_024 sps4_199605_027 sps4_199605_028 sps4_199705_004 sps4_199705_012 sps4_199705_013 sps4_199705_017 sps4_199705_020 sps4_199705_029"
 
+#listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
+
+listofcases="sps4_199711_026 sps4_199711_027"
 if [[ $# -ge 1 ]]
 then
    debug=${1}
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
-set -euvx
+#set -euvx
+set -eux
 fi
 if [[ $# -ge 2 ]]
 then
@@ -97,7 +118,13 @@ then
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
-set -euvx
+#set -euvx
+set -eux
+fi
+if [[ $machine == "leonardo" ]]
+then
+    LOG_FILE=$DIR_LOG/hindcast/recover_${debug}_`date +%Y%m%d%H%M`.log
+    exec 3>&1 1>>${LOG_FILE} 2>&1
 fi
 if [[ $# -ge 3 ]]
 then
@@ -113,7 +140,8 @@ then
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-set -euvx
+#set -euvx
+set -eux
 fi
 if [[ `echo -n $debug|wc -c` -ne 1 ]]
 then
@@ -153,7 +181,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
+lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_199402_005 sps4_199402_009"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
@@ -175,7 +203,8 @@ for caso in $listofcases ; do
   outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
   set +uevx
   . $dictionary
-  set -euvx
+#  set -euvx
+set -eux
 
 # check if directory is writable (we remove  writing permission after postproc_C3S)
 # this reduce the list to be checked on Juno
@@ -344,12 +373,14 @@ then
    set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
-   set -euvx
+#   set -euvx
+set -eux
    python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
    rclone copy ${filexls} my_drive:recover
    set +euvx
    condafunction deactivate $envcondarclone
-   set -euvx
+#   set -euvx
+set -eux
    echo "end of conversion with python on CMCC machines "`date`
 else
    echo "skippin conversion with python (NOT YET IMPLEMENTED ON Leonardo) "`date`
@@ -368,7 +399,8 @@ if [[ $debug -ne 2 ]] ; then
 set +euv
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
-set -euvx
+#set -euvx
+set -eux
 caso=""
 # first month
    if [[ $cnt_first_month -ne 0 ]] ; then
@@ -389,44 +421,61 @@ caso=""
           if [[ $ismoderr -ne 0 ]]  
           then
              domodify=1
+# temporary until instabilities on Leonardo are not over 20240628
+             if [[ $machine == "leonardo" ]]
+             then 
+                domodify=0
+             fi
           fi
       fi
       if [[ $domodify -eq 1 ]] 
       then      
-               #numerical failure of the model (instability, conservation check failure etc)
-               #we change ICs with modify_triplette
-               st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-               yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-               log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
-               mkdir -p $log_dir_modify  #probably redundant
-               while `true`
-               do
-                  #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
-                  np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
-                  if [[ $np -eq 0 ]]
-                  then
-                      ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
-                      break
-                  fi
-                  sleep 60
-               done
+         #numerical failure of the model (instability, conservation check failure etc)
+         #we change ICs with modify_triplette
+         st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+         yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+         log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
+         mkdir -p $log_dir_modify  #probably redundant
+         while `true`
+         do
+            #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
+            np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
+            if [[ $np -eq 0 ]]
+            then
+               if [[ $machine == "leonardo" ]]
+               then
+                  $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
+               else
+                  ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+               fi
+               break
+            fi
+            sleep 60
+         done
       else
-               $DIR_RECOVER/refresh_all_scripts.sh $caso
-               st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-               yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-               member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+         $DIR_RECOVER/refresh_all_scripts.sh $caso
+         st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+         yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+         member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
 
-               CASEROOT=$DIR_CASES/$caso/
-               outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
-               set +uevx
-               . $dictionary
-               set -euvx
-               cd ${DIR_CASES}/$caso
+         CASEROOT=$DIR_CASES/$caso/
+         outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+         set +uevx
+         . $dictionary
+#         set -euvx
+set -eux
+         cd ${DIR_CASES}/$caso
 # workaround in order to keep the syntax highlights correct (case is a shell command)
-               command="case.submit"
-               echo $command
-                ./$command
-               echo "$command done"
+         command="case.submit"
+         echo $command
+         if [[ $machine == "leonardo" ]]
+         then
+# does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+             srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+         else
+             ./$command
+         fi
+         echo "$command done"
       fi
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
@@ -447,7 +496,14 @@ caso=""
       then
          ./xmlchange STOP_OPTION=nmonths
       fi
-      $DIR_RECOVER/recover_lt_archive.sh $caso
+      if [[ $machine == "leonardo" ]]
+      then
+         srun -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+# 20240627 G.F.Marras  does not work
+#         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+      else
+         $DIR_RECOVER/recover_lt_archive.sh $caso
+      fi
       
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
@@ -489,6 +545,11 @@ caso=""
           if [[ $ismoderr -ne 0 ]]
           then
              domodify=1
+# temporary until instabilities on Leonardo are not over 20240628
+             if [[ $machine == "leonardo" ]]
+             then 
+                domodify=0
+             fi
           fi
       fi
 
@@ -507,8 +568,13 @@ caso=""
                np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
                if [[ $np -eq 0 ]]
                then
-                   ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
-                   break
+                  if [[ $machine == "leonardo" ]]
+                  then
+                     $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
+                  else
+                     ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                  fi
+                  break
                fi
                sleep 60
           done
@@ -523,13 +589,20 @@ caso=""
           outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
           set +uevx
           . $dictionary
-          set -euvx
+#          set -euvx
+set -eux
           cd ${DIR_CASES}/$caso
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
           echo $command
-          ./$command
           echo "$command done"
+          if [[ $machine == "leonardo" ]]
+          then
+#does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+             srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+          else
+             ./$command
+          fi
       fi
       if [[ $debug -eq 1 ]] ; then break ; fi
    done

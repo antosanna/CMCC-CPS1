@@ -2,7 +2,6 @@
 {{ batchdirectives }}
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. $DIR_UTIL/load_nco
 set -euvx
 CASEROOT={{ caseroot }}
 cd $CASEROOT
@@ -40,11 +39,6 @@ do
    for grd in T U V W ptr
    do
 # from 20240115 ptr is stored as one_file 
-      if [[ -f `echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc` ]]
-      then
-         headptr=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc|rev|cut -d '.' -f2-|rev`
-         $compress $headptr.nc $headptr.zip.nc
-      fi
       nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
       then
@@ -63,20 +57,10 @@ do
       if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc ]]
       then
          rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
-         $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
-         if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc ]]
-         then
-            rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc 
-         fi
       fi
    done
    for grd in scalar
    do
-      if [[ -f `echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc` ]]
-      then
-         headscalarfile=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc|rev|cut -d '.' -f2-|rev`
-         $compress $headscalarfile.nc $headscalarfile.zip.nc
-      fi
 # until 20240115 scalar was erroneously stored as multiple files 
       nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc|wc -l`
       if [[ $nfile -eq 0 ]]
@@ -87,21 +71,28 @@ do
       finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
       headscalarfile=`echo $finalfile|sed 's/_0000.nc//g'`
       mv $finalfile $headscalarfile.nc
-      $compress $headscalarfile.nc $headscalarfile.zip.nc
-      if [[ -f $headscalarfile.zip.nc ]]
-      then
-         rm $headscalarfile.nc
-      fi
       rm $listarm
    done
 done
+# check if compression needed
+for frq in 1m 1d
+do
+   for grd in T U V W ptr scalar
+   do
+# from 20240115 ptr is stored as one_file 
+      if [[ -f `echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc` ]]
+      then
+         headfile=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc|rev|cut -d '.' -f2-|rev`
+         $DIR_UTIL/compress.sh $headfile.nc $headfile.zip.nc
+         if [[ -f $headfile.zip.nc ]]
+         then
+            rm $headfile.nc
+         fi
+      fi
+   done
+done
+#
 set +euvx
 . $dictionary
 set -euvx
 touch $check_nemo_rebuild
-set +euvx
-condafunction deactivate $envcondanemo
-
-if [[ $machine == "leonardo" ]] ; then
-   condafunction activate $envcondacm3
-fi

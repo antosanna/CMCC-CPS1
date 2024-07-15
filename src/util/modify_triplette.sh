@@ -85,7 +85,12 @@ do
    sed -i "${n2},${n2}d" triplette.random.${yyyy}${st}.txt
 
    # Make substitutions in ensemble scripts
-   cd $DIR_SUBM_SCRIPTS/${st}/${yyyy}${st}_scripts/ 
+   if [[ $machine == "leonardo" ]]
+   then
+      cd $DIR_SUBM_SCRIPTS/${st}/${yyyy}${st}_scripts/CINECA
+   else
+      cd $DIR_SUBM_SCRIPTS/${st}/${yyyy}${st}_scripts/ 
+   fi
    if [ ! -f ensemble4_${yyyy}${st}_${ens}.sh.orig ]
    then
       cp ensemble4_${yyyy}${st}_${ens}.sh ensemble4_${yyyy}${st}_${ens}.sh.orig

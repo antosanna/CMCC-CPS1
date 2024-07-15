@@ -19,20 +19,21 @@ condafunction() {
        fi
    fi
    if [  $comm == "activate"  ]; then
-	conda $comm $env
+      	conda $comm $env
    elif [  $comm == "deactivate"  ]; then
-	conda $comm
+      	conda $comm
    fi
 }
 elif [[ "${machine}" == "leonardo" ]] ; then 
+   module load $mpilib4py_nemo_rebuild
 # get conda version
 condafunction() {
    local comm=$1
    local env=$2	
    if [  $comm == "activate"  ]; then
-	conda $comm $env
+      	conda $comm $env
    elif [  $comm == "deactivate"  ]; then
-	conda $comm
+      	conda $comm
    fi
 }
 fi

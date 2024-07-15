@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=12:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{parallelq_l} --exclusive --err=logs/$CASE.run_%J.err --out=logs/$CASE.run_%J.out --mem=0">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=18:00:00 --account=$ENV{account_name} --partition=$ENV{parallelq_l} --exclusive --err=logs/$CASE.run_%J.err --out=logs/$CASE.run_%J.out --gres=tmpfs:1000g --mem=400GB">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -80,7 +80,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=01:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/st_archive_%J.err --out=logs/st_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=01:00:00 --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/st_archive_%J.err --out=logs/st_archive_%J.out --mem=10GB">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -136,7 +136,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=01:30:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/nemo_rebuild_%J.err --out=logs/nemo_rebuild_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=01:30:00 --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/nemo_rebuild_%J.err --out=logs/nemo_rebuild_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -192,7 +192,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_s} --time=30:00 --err=logs/checklist_%J.err --out=logs/checklist_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--account=$ENV{account_name} --partition=$ENV{serialq_s} --time=30:00 --err=logs/checklist_%J.err --out=logs/checklist_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -248,7 +248,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_moredays_%J.err --out=logs/lt_archive_moredays_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_moredays_%J.err --out=logs/lt_archive_moredays_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -304,7 +304,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_%J.err --out=logs/lt_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_%J.err --out=logs/lt_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

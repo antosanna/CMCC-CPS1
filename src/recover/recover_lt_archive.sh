@@ -7,16 +7,22 @@
 
 set -euxv
 mkdir -p $DIR_LOG/hindcast/recover
-LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
 
 dorelaunch=0
 if [[ $# -eq 0 ]]
 then
-   listofcases="sps4_199307_003 sps4_199307_006 sps4_199307_008 sps4_199307_009"
+   listofcases="sps4_199302_004 sps4_200002_019"
+   LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_`date +%Y%m%d%H%M`
 else
    listofcases=$1
+   if [[ `echo $listofcases|wc -w` -eq 1 ]]
+   then
+      LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_${listofcases}_`date +%Y%m%d%H%M`
+   else
+      LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_`date +%Y%m%d%H%M`
+   fi
 fi
+exec 3>&1 1>>${LOG_FILE} 2>&1
 for caso in $listofcases 
 do
   if [[ ! -d $DIR_CASES/$caso ]] ; then
@@ -44,7 +50,23 @@ do
 #ANTO-
 #  ./case.setup --reset
   ./xmlchange BUILD_COMPLETE=TRUE
-  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 15000 -j lt_archive -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
+  ./xmlchange NEMO_REBUILD=TRUE
+  ./xmlchange STOP_OPTION=nmonths
+  
+  #in order to relaunch lt_archive with the right syntax, we keep the command as appear in preview_run (for portability)
+  cmd=`./preview_run |grep case.lt_archive|tail -1`
+  #this is needed to remove the dependency from model run
+  if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
+  then
+     cmd_nodep="$(echo "${cmd/"-ti -w 'done(2)'"/}")"
+  elif [[ $machine == "leonardo" ]]  
+  then
+     cmd_nodep="$(echo "${cmd/"--dependency=afterok:2"/}")"  #--dependency=afterok:2
+  fi  
+  eval ${cmd_nodep}
+
+
+#  ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 15000 -j lt_archive -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
 done
 
 exit 0

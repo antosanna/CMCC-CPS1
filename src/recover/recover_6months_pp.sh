@@ -1,7 +1,6 @@
 #!/usr/bin/sh -l
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. ${DIR_UTIL}/load_nco
 set -euvx
 CASE=$1
 CASEROOT=$DIR_CASES/$CASE
@@ -12,12 +11,10 @@ NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
 # this is the number of parallel postprocessing you want to set
 N=1
 CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
-# activate needed env
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 
-set +euxv
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondanemo
-set -euvx    # keep this instruction after conda activation
+
 yyyy=`echo $CASE|cut -d '_' -f2|cut -c 1-4`
 st=`echo $CASE|cut -d '_' -f2|cut -c 5-6`
 yyyystdd=$yyyy${st}15
@@ -47,7 +44,7 @@ do
             then
                ff=`basename $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}.nc`
                ffzip=`echo $ff|rev|cut -d '.' -f2-|rev`
-               $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ff} $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc
+               $DIR_UTIL/compress.sh $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ff} $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc
                if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc ]]
                then
                   rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ff}
@@ -62,15 +59,22 @@ do
                exit
             fi
          fi
+
+         set +euxv
+         . $DIR_UTIL/condaactivation.sh
+         condafunction activate $envcondanemo
+         set -euvx    # keep this instruction after conda activation
+
+
    # this should be independent from expID and general
          data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
    # VA MODIFICATO USANDO IL PACCHETTO EXTERNAL IN CMCC-CM git
          $mpirun4py_nemo_rebuild -n $N python $DIR_NEMO_REBUILD/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
-   # if correctly merged remove single files
+   # if correctly merged remove single fileruns
          if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc ]]
          then
             rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
-            $compress $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
+            $DIR_UTIL/compress.sh $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc
             if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.zip.nc ]]
             then
                 rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}.nc
@@ -87,7 +91,7 @@ do
             then
                ff=`basename $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}.nc`
                ffzip=`echo $ff|rev|cut -d '.' -f2-|rev`
-               $compress  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ff  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ffzip.zip.nc
+               $DIR_UTIL/compress.sh  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ff  $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ffzip.zip.nc
                if [[ -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ffzip.zip.nc ]]
                then
                    rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/$ff
@@ -99,7 +103,7 @@ do
          finalfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_${grd}_0000.nc`
          headscalarfile=`echo $finalfile|sed 's/_0000.nc//g'`
          mv $finalfile $headscalarfile.nc
-         $compress $headscalarfile.nc $headscalarfile.zip.nc
+         $DIR_UTIL/compress.sh $headscalarfile.nc $headscalarfile.zip.nc
          if [[ -f $headscalarfile.zip.nc ]]
          then
              rm $headscalarfile.nc
@@ -109,14 +113,16 @@ do
    done
    touch $check_nemo_rebuild
 done
-set +euvx
-condafunction deactivate $envcondanemo
-condafunction activate $envcondacm3
-set -euvx
+#set +euvx
+#condafunction deactivate $envcondanemo
+#condafunction activate $envcondacm3
+#set -euvx
 
 echo "-----------STARTING ${CASE}.postproc monthly CESM-------- "`date`
 cd $DIR_CASES/${CASE}
 ic=`cat $DIR_CASES/${CASE}/logs/ic_${CASE}.txt`
+
+. $DIR_UTIL/load_nco
 
 
 # HERE SET YEAR AND MONTHS TO RECOVER
@@ -164,8 +170,6 @@ do
       rm -rf $DIR_ARCHIVE/$CASE/rest/${curryear}-$currmon-01-00000
    fi
    # now rebuild EquT from NEMO
-   yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
-   st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
    if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
    then
       if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc|wc -l` -eq 1 ]]

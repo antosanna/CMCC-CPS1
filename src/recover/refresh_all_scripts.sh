@@ -31,7 +31,12 @@ rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/
 if [[ `ls env_mach_specific.xml |wc -l` -ne 0 ]]
 then
    echo "env_mach_specific is here "`ls env_mach_specific.xml`
+else
+   cp $DIR_TEMPL/env_mach_specific.xml $DIR_CASES/$caso
 fi
+module use -p $modpath
+./xmlchange MAX_TASKS_PER_NODE=96
+./xmlchange MAX_MPITASKS_PER_NODE=96
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE

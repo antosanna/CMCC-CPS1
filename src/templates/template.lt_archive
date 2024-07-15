@@ -65,6 +65,15 @@ set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
 set -euvx
-   ./case.submit
-   exit
+   if [[ $machine == "leonardo" ]]
+   then
+#should be temporary until a better fix is found (G.F.Marras 20240627)
+#       unset SLURM_CPU_BIND_LIST
+#       unset SLURM_CPU_BIND_TYPE
+#       unset SLURM_CPU_BIND_VERBOSE
+       srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./case.submit
+# non funziona       srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 --export=ALL ./case.submit
+   else
+       ./case.submit
+   fi
 fi

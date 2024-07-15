@@ -19,11 +19,17 @@ fi
 
 caso=${CPSSYS}_SSP585_reference
 
+DIR_CASES=/leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/
 if [[ -d $DIR_CASES/$caso ]]
 then
    rm -rf $DIR_CASES/$caso
 fi
 
+#load modules in leonardo
+if [[ $machine == "leonardo" ]]
+then
+   module use -p $modpath
+fi
 conda activate $envcondacm3
 $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset SSP585_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
 
@@ -47,6 +53,17 @@ then
    ./xmlchange NTASKS_ROF=-4
    ./xmlchange NTASKS_LND=-4
    ./xmlchange PIO_STRIDE=18
+elif [[ $machine == "leonardo" ]]
+then
+# hardcoded because we cannot use the entire node (112 cores) due to
+# memory issues (we will ask 3 nodes)
+   ./xmlchange NTASKS_ATM=288
+   ./xmlchange NTASKS_CPL=288
+   ./xmlchange NTASKS_OCN=279
+   ./xmlchange NTASKS_ICE=288
+   ./xmlchange NTASKS_ROF=288
+   ./xmlchange NTASKS_LND=288
+   ./xmlchange PIO_STRIDE=-99
 fi
 ./xmlchange NTASKS_WAV=1
 ./xmlchange NTASKS_GLC=1
@@ -62,7 +79,7 @@ fi
 ./xmlchange PROJECT=0490
 ./xmlchange STOP_N=1
 ./xmlchange RUN_TYPE=hybrid
-./xmlchange --force --subgroup case.run JOB_QUEUE=p_long
+./xmlchange --force --subgroup case.run JOB_QUEUE=$parallelq_l
 ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=08:00
 
 ./case.setup --reset
@@ -182,4 +199,4 @@ f_strairx = "m",
 f_strairy = "m"
 EOF3
 
-#./case.build
+./case.build
