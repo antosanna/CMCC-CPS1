@@ -1,0 +1,58 @@
+#!/bin/sh -l
+#BSUB -J copy_SPS4DMO_from_Leonardo
+#BSUB -q s_download
+#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo.out.%J  
+#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo.err.%J  
+#BSUB -P 0490
+#BSUB -M 1000
+
+. $HOME/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+# First check that no other this script is running
+if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]
+then
+   exit
+fi
+#load module for sshpass
+module load intel-2021.6.0/sshpass/.1.06-zarp3
+set -uvx
+
+leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
+# get the list of completed cases (produced daily in cron on Leonardo)
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:/leonardo_work/CMCC_reforeca/scratch/list_`date +%Y%m%d` $DIR_TEMP
+
+lista=""
+cnt=0
+while read -r LINE
+do
+    if [[ -f $DIR_ARCHIVE/$LINE.transfer_from_Leonardo_DONE ]] ; then
+       continue
+    fi  
+    cnt=$(( $cnt +1 ))
+    if [[ $cnt -le 9 ]] ; then
+       continue
+    fi
+    lista+=" $LINE"
+    if [[ $cnt -eq 18 ]] ; then
+       break 
+    fi
+done < $DIR_TEMP/list_`date +%Y%m%d`
+
+echo $lista
+for caso in $lista ; do
+
+   checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
+   if [[ -f $checkfile ]]
+   then
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/
+      continue
+   fi
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
+   stat=$?
+   if [[ $stat -eq 0 ]]
+   then
+      touch $checkfile
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/
+   fi
+
+done

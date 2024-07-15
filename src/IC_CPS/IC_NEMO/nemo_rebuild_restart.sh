@@ -21,18 +21,37 @@ yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 # add your frequencies and grids. The script skip them if not present
 case $poce1 in
-   0) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
-   1) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/;;
+   0) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      #IC for startdate 202212 saved in the operational runs (OPSLAMB0,OPSLAMB1,OPSLAMB4 and OPSLAMB5)
+      #even if also the others OPSLAMBs are present (e.g. OPSLAB1,OPSLAMB2 etc) 
+      #the numeration has been conserved consistent with the SLAMBs run (0,1,4,5)
+      if [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
+      then
+           OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      fi 
+      ;;
+   1) OUTDIR=$DIR_REST_OIS/SLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      if [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
+      then
+           OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      fi 
+      ;;
    2) OUTDIR=$DIR_REST_OIS/SLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
       if [[ "$st" == "01" ]] && [[ $yyyy -eq 1993 ]]
       then
         OUTDIR=$DIR_REST_OIS/MB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      elif [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
+      then
+        OUTDIR=$DIR_REST_OIS/OPSLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
       fi
       ;;
    3) OUTDIR=$DIR_REST_OIS/SLAMB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
       if [[ "$st" == "01" ]] && [[ $yyyy -eq 1993 ]]
       then
         OUTDIR=$DIR_REST_OIS/MB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      elif [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
+      then
+        OUTDIR=$DIR_REST_OIS/OPSLAMB5/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
       fi
       ;;
 esac

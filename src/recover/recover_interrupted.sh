@@ -237,8 +237,14 @@ set -eux
 
      nmb_rest=`ls -d $DIR_ARCHIVE/$caso/rest/ |wc -l`
      if [[ ${nmb_rest} -eq 0 ]] ; then
-        cnt_first_month=$(($cnt_first_month + 1))
-        lista_first_month+=" $caso"
+        is_starch=`ls -ltr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
+        if [[ ${is_starch} -eq 1 ]] ; then
+            cnt_st_archive=$(($cnt_st_archive + 1))
+            lista_st_archive+=" $caso"
+        else
+           cnt_first_month=$(($cnt_first_month + 1))
+           lista_first_month+=" $caso"
+        fi
      else
         is_starch=`ls -ltr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
         if [[ ${is_starch} -eq 1 ]] ; then

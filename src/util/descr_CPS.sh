@@ -59,7 +59,7 @@ then
       envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       maxnumbertosubmit=18
-      maxnumberguarantee=14
+      maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
       DATA_ECACCESS=/data/delivery/csp/cp1/in/

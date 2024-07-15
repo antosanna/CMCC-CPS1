@@ -15,7 +15,8 @@ DIR_ARCHIVE1=/work/cmcc/cp1/CMCC-CM/archive/
 DIR_ARCHIVE1_old=/work/csp/cp1/CMCC-CM/archive/
 DIR_ARCHIVE1_remote=/work/csp/sps-dev/CMCC-CM/archive/
 DIR_CASES_remote=/work/csp/sps-dev/CPS/CMCC-CPS1/cases
-for st in 08 10 11
+#iniy_hind=2010
+for st in 01 10 11 08
 do
    n_rsync=0
    for yyyy in `seq $iniy_hind $endy_hind`

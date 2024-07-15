@@ -23,8 +23,9 @@ yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 
 #all xmlquery called before loading nco env (in CINECA the conda for nco gives conflicts in xmlquery)
+set +euxv
 . ${DIR_UTIL}/load_nco
-
+set -euxv
 #-----------------------------------------------------------------------
 # check presence of TMAX spikes
 # KEEP  BUT HOPEFULLY UNNECESSARY

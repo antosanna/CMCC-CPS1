@@ -3,8 +3,6 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-#. $DIR_UTIL/load_nco
-#. $DIR_UTIL/load_cdo
 
 set -evxu
 
