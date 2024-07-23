@@ -35,8 +35,8 @@ echo " file1 will be written in $file1"
 
 
 # Write header ---------------------------------------
-echo "CASO,month1,month2,month3,month4,month5,month6,days,C3S,QC" > $file1
-echo "TOTAL DONE,0,0,0,0,0,0,0,0,0" >> $file1
+echo "CASO,month1,month2,month3,month4,month5,month6,days,n_memb_per_y,C3S,QC" > $file1
+echo "TOTAL DONE,0,0,0,0,0,0,0,0,0,0" >> $file1
 # Write body -----------------------------------------
 for st in {01..12}
 do
@@ -47,7 +47,7 @@ do
          caso=${SPSSystem}_${yyyy}${st}_${ens}
 
          # write body
-         echo "$caso,0,0,0,0,0,0,0,0,0" >> $file1
+         echo "$caso,0,0,0,0,0,0,0,0,0,0" >> $file1
          
       done
    done

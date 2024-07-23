@@ -48,11 +48,24 @@ for mach in ${remote_mach_list} ; do
 #   DIR_CASES_remote=${DIR_CASES}/cases/cases_from_${mach}
 
    listadone=`ls $DIR_ARCHIVE/*.transfer_from_${mach}_DONE|rev|cut -d '/' -f1|rev|cut -d '.' -f1`
+   n_year=0
    for caso in $listadone 
    do 
+      yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
-      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN
+      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN 
+      yyyylast=$yyyy
    done #listofcases
+   for yyyy in {1993..2022}
+   do
+      for st in {01..12}
+      do
+         caso=sps4_${yyyy}${st}_001
+         n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_${mach}_DONE|wc -l`
+         LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
+         python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
+      done 
+   done 
   
 
 done #remote_mach_list
@@ -69,6 +82,8 @@ do
    fi
    cd ${DIR_ARCHIVE}
    listofcases=`ls -d ${SPSSystem}_*${st}_0??`
+   yyyylast=`ls $listadone|head -1|cut -d '_' -f2|cut -c 1-4`
+   n_year=0
    cd $DIR_CASES
    for caso in $listofcases
    do
@@ -89,7 +104,7 @@ do
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
       if [[ -f $check_pp_C3S ]]
       then
-          python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN
+          python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 3)) $LN
       else
 
          CASEROOT=$DIR_CASES/$caso
@@ -105,6 +120,13 @@ do
          fi
        fi
    done #listofcases
+   for yyyy in {1993..2022}
+   do
+      caso=sps4_${yyyy}${st}_001
+      n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_${mach}_DONE|wc -l`
+      LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
+      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
+   done 
 done #st running
 
 cp ${DIR_TEMP}/$listfiletocheck ${DIR_TEMP}/after_juno_list.`date +%Y%m%d`.csv

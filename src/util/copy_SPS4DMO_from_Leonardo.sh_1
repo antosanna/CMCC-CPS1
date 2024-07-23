@@ -18,8 +18,9 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
 
 leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
+leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:/leonardo_work/CMCC_reforeca/scratch/list_`date +%Y%m%d` $DIR_TEMP
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover1.leonardo.cineca.it:/leonardo_work/CMCC_reforeca/scratch/list_`date +%Y%m%d` $DIR_TEMP
 
 lista=""
 cnt=0
@@ -36,20 +37,30 @@ do
 done < $DIR_TEMP/list_`date +%Y%m%d`
 
 echo $lista
+
+lista_today_1=" "
 for caso in $lista ; do
 
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
    if [[ -f $checkfile ]]
    then
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
       continue
    fi
-   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
    stat=$?
    if [[ $stat -eq 0 ]]
    then
       touch $checkfile
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
+      if [[ dim -lt 256 ]]
+      then
+         continue
+      fi
+      lista_today_1+=" $caso"
    fi
 
 done
+echo $lista_today_1 > $DIR_TEMP/list1_cases_transferred_`date +%Y%m%d`.txt
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $DIR_TEMP/list1_cases_transferred_`date +%Y%m%d`.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/
