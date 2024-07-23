@@ -11,7 +11,7 @@ mkdir -p $DIR_LOG/hindcast/recover
 dorelaunch=0
 if [[ $# -eq 0 ]]
 then
-   listofcases="sps4_199302_004 sps4_200002_019"
+   listofcases="sps4_199611_015 sps4_199811_016 sps4_199811_017 sps4_199911_004 sps4_200011_013 sps4_200011_027 sps4_200011_028 sps4_200011_029 sps4_200011_030 sps4_200111_001 sps4_200111_003"
    LOG_FILE=$DIR_LOG/hindcast/recover/recover_lt_archive_`date +%Y%m%d%H%M`
 else
    listofcases=$1

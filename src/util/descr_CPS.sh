@@ -37,6 +37,7 @@ yyyySCEN=2015
 refcaseHIST=${CPSSYS}_HIST_reference
 refcaseSCEN=${CPSSYS}_SSP585_reference
 envcondanemo=nemo_rebuild
+envcondarclone=rclone_gdrive
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
@@ -44,7 +45,7 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
 #   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
-   envcondarclone=rclone_gdrive
+#   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]]
    then
       HEAD=cmcc
@@ -59,6 +60,7 @@ then
       envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       maxnumbertosubmit=18
+      maxnumbertorecover=40
       maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
@@ -72,6 +74,7 @@ then
       cores_per_node=36
       cores_per_run=720
       operational_user=sps-dev
+      maxnumbertorecover=40
       maxnumbertosubmit=10
       maxnumberguarantee=6
       mpilib4py_nemo_rebuild=impi20.1/19.7.217
@@ -203,7 +206,8 @@ then
 #   account_name=CMCC_Copernic_4
       :
    fi
-   maxnumbertosubmit=60 #120
+   maxnumbertosubmit=64 #120
+   maxnumbertorecover=$maxnumbertosubmit
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
    MYCESMDATAROOT1=$CESMDATAROOT

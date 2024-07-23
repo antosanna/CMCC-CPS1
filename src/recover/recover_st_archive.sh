@@ -50,7 +50,7 @@ do
 
        #${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "1" -M 200 -j st_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s case.st_archive 
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -p st_archive.$caso  -t "1" -M 1500 -j nemo_rebuild.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.nemo_rebuild
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -p nemo_rebuild.$caso -t "1" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -p nemo_rebuild.$caso -t "6" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
   else
     #is st_archive after moredays.. launch with dependency lt_arch_moredays
 

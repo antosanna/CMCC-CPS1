@@ -30,7 +30,7 @@
       <directive> --ntasks-per-node={{ tasks_per_node }}</directive>
       <directive> --output={{ job_id }}.%J.out   </directive>
       <directive> --error={{ job_id }}.%J.err   </directive>
-      <directive> --exclusive             </directive>
+      <directive> --exclusive   </directive>
     </directives>
   </batch_system>
   <batch_system MACH="leonardo" type="slurm">
@@ -42,9 +42,6 @@
       <arg flag="--mem" name="300GB"/>
       <arg flag="--exclusive"/>
     </submit_args>
-    <directives>
-      <directive> --ntasks-per-node={{ tasks_per_node }}</directive>
-    </directives>
     <queues>
       <queue walltimemin="00:00:00" walltimemax="02:00:00" default="true">dcgp_usr_prod</queue>
       <queue walltimemin="02:00:00" walltimemax="04:00:00">dcgp_usr_prod</queue>

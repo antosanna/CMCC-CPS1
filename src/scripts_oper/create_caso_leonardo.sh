@@ -118,6 +118,11 @@ else
    ./xmlchange --subgroup case.checklist prereq=1
 fi
 
+#20240715 - test
+#WE HAVE TRIED AND IT DOES NOT WORK!!!
+#./xmlchange PIO_NUMTASKS=4
+
+
 # cp and change script for nemo standardization
 # THIS GOES IN env_workflow
 sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh

@@ -248,7 +248,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_moredays_%J.err --out=logs/lt_archive_moredays_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --ntasks-per-node=16 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_moredays_%J.err --out=logs/lt_archive_moredays_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
@@ -304,7 +304,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --err=logs/lt_archive_%J.err --out=logs/lt_archive_%J.out">
+    <entry id="BATCH_COMMAND_FLAGS" value="--time=06:00:00 --qos=qos_lowprio --account=$ENV{account_name} --partition=$ENV{serialq_m} --exclusive --err=logs/lt_archive_%J.err --out=logs/lt_archive_%J.out">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>

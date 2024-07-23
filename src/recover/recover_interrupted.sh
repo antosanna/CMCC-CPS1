@@ -95,7 +95,11 @@ cd $DIR_CASES/
 
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
-listofcases="sps4_199711_026 sps4_199711_027"
+listofcases="sps4_201011_001 sps4_201011_008 sps4_201011_015 sps4_201011_017 sps4_201011_020 sps4_201011_022 sps4_201011_025 sps4_201011_026 sps4_201011_028 sps4_201011_029 sps4_201011_030 sps4_201111_001 sps4_201111_002 sps4_201111_007 sps4_201111_009 sps4_201111_010 sps4_201111_012 sps4_201111_014 sps4_201111_015 sps4_199811_028"
+
+#"sps4_199811_028  sps4_200211_026 sps4_200211_030 sps4_200311_018 sps4_200411_007 sps4_200411_009 sps4_200411_010 sps4_200411_013 sps4_200411_014 sps4_200411_015 sps4_200411_016 sps4_200411_025 sps4_200411_026 sps4_200411_030 sps4_200511_001 sps4_200511_016 sps4_200511_017 sps4_200511_020 sps4_200511_023 sps4_200511_024 sps4_200511_025 sps4_200511_028 "
+
+
 if [[ $# -ge 1 ]]
 then
    debug=${1}
@@ -305,7 +309,6 @@ set -eux
 
 done  
 
-
 if [[ "$lista_lt_archive"  != " " ]]
 then
    echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted"
@@ -373,24 +376,19 @@ then
 fi
 
 
-if [[ $machine != "leonardo" ]]
-then
-   echo "starting conversion with python on CMCC machines (NOT YET IMPLEMENTED ON Leonardo) "`date`
-   set +euvx
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondarclone
+echo "starting conversion with python on CMCC machines (NOT YET IMPLEMENTED ON Leonardo) "`date`
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
 #   set -euvx
 set -eux
-   python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-   rclone copy ${filexls} my_drive:recover
-   set +euvx
-   condafunction deactivate $envcondarclone
+python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+rclone copy ${filexls} my_drive:recover
+set +euvx
+condafunction deactivate $envcondarclone
 #   set -euvx
 set -eux
-   echo "end of conversion with python on CMCC machines "`date`
-else
-   echo "skippin conversion with python (NOT YET IMPLEMENTED ON Leonardo) "`date`
-fi
+echo "end of conversion with python on CMCC machines "`date`
 
 if [[ $debug -eq 2 ]]
 then
@@ -402,12 +400,19 @@ fi
 if [[ $debug -ne 2 ]] ; then
     
    echo "NOW PROCESSING THE INTERRUPTED CASES"
+   now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+   if [[ $now_running -ge $maxnumbertorecover ]]
+   then
+      echo "ALREADY RUNNING MAXIMUM NUMBER OF JOBS! exit now"
+      exit
+   fi
+   ncount=0
 set +euv
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
 #set -euvx
 set -eux
-caso=""
+   caso=""
 # first month
    if [[ $cnt_first_month -ne 0 ]] ; then
       echo "RELAUNCH first month FOR CASES:"
@@ -474,6 +479,7 @@ set -eux
 # workaround in order to keep the syntax highlights correct (case is a shell command)
          command="case.submit"
          echo $command
+         now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
          if [[ $machine == "leonardo" ]]
          then
 # does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
@@ -482,6 +488,11 @@ set -eux
              ./$command
          fi
          echo "$command done"
+         ncount=$(($ncount + 1))
+         if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+         then
+            exit
+         fi
       fi
       if [[ $debug -eq 1 ]] ; then break ; fi
    done
@@ -502,6 +513,7 @@ set -eux
       then
          ./xmlchange STOP_OPTION=nmonths
       fi
+      now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $machine == "leonardo" ]]
       then
          srun -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
@@ -509,6 +521,11 @@ set -eux
 #         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
       else
          $DIR_RECOVER/recover_lt_archive.sh $caso
+      fi
+      ncount=$(($ncount + 1))
+      if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+      then
+         exit
       fi
       
       if [[ $debug -eq 1 ]] ; then break ; fi
@@ -601,13 +618,19 @@ set -eux
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
           echo $command
-          echo "$command done"
+          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
           if [[ $machine == "leonardo" ]]
           then
 #does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
              srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
           else
              ./$command
+          fi
+          echo "$command done"
+          ncount=$(($ncount + 1))
+          if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+          then
+             exit
           fi
       fi
       if [[ $debug -eq 1 ]] ; then break ; fi

@@ -64,6 +64,7 @@ then
    ./xmlchange NTASKS_ROF=288
    ./xmlchange NTASKS_LND=288
    ./xmlchange PIO_STRIDE=-99
+# this var must be set as -99 because with any other value the model does not run
 fi
 ./xmlchange NTASKS_WAV=1
 ./xmlchange NTASKS_GLC=1

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -A CMCC_reforeca
-#SBATCH -p dcgp_usr_prod
-#SBATCH --time 08:00:00     # format: HH:MM:SS
+#SBATCH -p lrd_all_serial
+#SBATCH --time 01:00:00     # format: HH:MM:SS
 #SBATCH --ntasks=1 # 4 tasks out of 112
 #SBATCH --job-name=list_completed
 #SBATCH --err=/leonardo_work/CMCC_reforeca//CPS/CMCC-CPS1/logs/hindcast/monitor/list_completed_%J.err

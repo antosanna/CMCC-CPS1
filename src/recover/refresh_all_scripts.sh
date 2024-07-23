@@ -37,6 +37,9 @@ fi
 module use -p $modpath
 ./xmlchange MAX_TASKS_PER_NODE=96
 ./xmlchange MAX_MPITASKS_PER_NODE=96
+if [[ $machine == "leonardo" ]] ; then
+  ./xmlchange PIO_NUMTASKS=-99
+fi
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE

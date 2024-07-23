@@ -39,16 +39,18 @@ do
    #of running twice the same members for the startdates initially launched with 40 members, which have potentially run already 
    #some members between 31 and 40
    #in forecast $nmax4modify_trip will be equal to $nrunmax
-
-   while `true`
-   do
-     np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
-     if [ $np -eq 1 ]
-     then
-        break
-     fi
-     sleep 30
-   done
+   
+   if [[ $machine != "leonardo" ]] ; then
+      while `true`
+      do
+         np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
+         if [ $np -eq 1 ]
+         then
+            break
+         fi
+         sleep 30
+      done
+   fi
 
    if [ ! -f $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig ]
    then
@@ -108,10 +110,15 @@ do
    iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
    if [[ -f $clmICfile ]] && [[ -f $rofICfile ]] && [[ -f $atmICfile ]] && [[ -f $nemoICfile ]] && [[ -f $iceICfile ]] ; then  
      
-      #if all the ICs are present resubmit the case
-      ./ensemble4_${yyyy}${st}_${ens}.sh
-      subm_cnt=$(( $subm_cnt + 1 ))
-      listacasisubmitted+="$caso "
+   #if all the ICs are present resubmit the case
+       if [[ $machine == "leonardo" ]] ; then
+            mkdir -p $SCRATCHDIR/cases_${st}
+            ./ensemble4_${yyyy}${st}_${ens}.sh >& $SCRATCHDIR/cases_${st}/ensemble4_${yyyy}${st}_${ens}.log
+       else
+          ./ensemble4_${yyyy}${st}_${ens}.sh
+       fi
+       subm_cnt=$(( $subm_cnt + 1 ))
+       listacasisubmitted+="$caso "
    else
       #otherwise clean_caso so that the automatic procedure for hindcast submission will resubmit it as soon as the ICs are ready
       ${DIR_UTIL}/clean_caso.sh $caso
