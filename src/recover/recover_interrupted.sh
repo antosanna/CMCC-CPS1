@@ -491,6 +491,9 @@ set -eux
          ncount=$(($ncount + 1))
          if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
          then
+            if [[ -f ${check_recover_running} ]] ; then
+                rm ${check_recover_running}
+            fi 
             exit
          fi
       fi
@@ -525,6 +528,9 @@ set -eux
       ncount=$(($ncount + 1))
       if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
       then
+         if [[ -f ${check_recover_running} ]] ; then
+             rm ${check_recover_running}
+         fi 
          exit
       fi
       
@@ -630,6 +636,9 @@ set -eux
           ncount=$(($ncount + 1))
           if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
           then
+             if [[ -f ${check_recover_running} ]] ; then
+                 rm ${check_recover_running}
+             fi 
              exit
           fi
       fi
