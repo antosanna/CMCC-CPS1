@@ -36,7 +36,7 @@ for mach in ${remote_mach_list} ; do
 
 
 #   set +u
-   n_done=`ls $DIR_ARCHIVE/*${search_string}_0*.transfer_from_${mach}_DONE|wc -l`
+   n_done=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0??.transfer_from_${mach}_DONE 2>/dev/null|wc -l`
 #   set -ue
    if [[ $n_done -ne 0 ]]
    then

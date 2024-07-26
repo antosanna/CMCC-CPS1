@@ -18,7 +18,7 @@ then
       exit
    else
       echo "On `date` jobs running $job_run instead of $maxnumberguarantee" >$SCRATCHDIR/CPS/CMCC-CPS1/check_production/job_running.`date +%Y%m%d%H`
-      title="[SPS4 HINDCASTS] $machine WARNING!!! less then expected jobs"
+      title="[SPS4 HINDCASTS] $machine WARNING!!! less than expected jobs"
       body="Found $job_run job running instead of the expected $maxnumberguarantee \n
  and $job_pen job pending \n
    \n

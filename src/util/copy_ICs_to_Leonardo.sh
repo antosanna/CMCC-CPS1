@@ -7,6 +7,14 @@
 #BSUB -M 1000
 
 #set -euvx
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n copy_ICs_to_Leonardo -c yes`
+if [[ $isrunning -gt 0 ]]
+then
+    echo "already running! exit!"
+    exit
+fi
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 
 leo_dir=/leonardo_work/CMCC_reforeca/scratch/IC/
@@ -23,7 +31,7 @@ do
       then 
          continue
       fi
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*.nc a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/$rea/$st/.
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/.
       touch $checkf
 
    done
