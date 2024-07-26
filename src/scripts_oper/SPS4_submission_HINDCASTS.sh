@@ -7,24 +7,37 @@
 set -evx
 
 # check if there is another job submitted by crontab with the same name
-np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
-if [ $np -gt 1 ]
+if [[ $machine == "leonardo" ]]
 then
-# if so check if it is correctly running
-   ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -a $BATCHUNKNOWN -i yes`
-   if [[ -n $ID_unknown ]]
+   LOG_FILE=$DIR_LOG/hindcast/SPS4_submission_hindcast.`date +%Y%m%d%H%M`.log
+   exec 3>&1 1>>${LOG_FILE} 2>&1
+
+   cnt_this_script_running=$(ps -u ${operational_user} -f |grep SPS4_submission_HINDCASTS_leonardo | grep -v $$|wc -l)
+   if [[ $cnt_this_script_running -gt 2 ]]
    then
+      echo "already running"
+      exit
+   fi
+else
+   np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
+   if [ $np -gt 1 ]
+   then
+# if so check if it is correctly running
+      ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -a $BATCHUNKNOWN -i yes`
+      if [[ -n $ID_unknown ]]
+      then
 # in the remote case that the job already on queue is in unknown status 
 # kill it
-      $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
+         $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
 # it often occurs that if a job is in unknown status others too are in the same.
-      title="WARNING!!! HINDCAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
-      body="Check if other jobs are in unknown status too!!"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
-   else
+         title="WARNING!!! HINDCAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
+         body="Check if other jobs are in unknown status too!!"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+      else
 # otherwise exit
-      echo "there is one SPS4_main_hc already running! Exiting now!"
-      exit
+         echo "there is one SPS4_main_hc already running! Exiting now!"
+         exit
+      fi
    fi
 fi
 # Input **********************
@@ -48,6 +61,9 @@ then
    tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
 else
    echo "Exiting now! already $np_all job on parallel queue"
+   if [[ $machine == "leonardo" ]] && [[ -f ${check_submission_running} ]] ; then
+      rm ${check_submission_running}
+   fi
    exit
 fi
 
@@ -139,14 +155,26 @@ do
          then
             continue
          fi 
-         script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
+         if [[ $machine == "leonardo" ]]
+         then
+            script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/CINECA/${header}_${yyyy}${st}_${ens}.sh 
+         else
+            script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
+         fi
          submittable_cnt=$(( $submittable_cnt + 1 ))
          if [ -f $script_to_submit ] ; then
-            res1=`grep submitcommand.sh ${script_to_submit} | cut -d ' ' -f18`
+            if [[ $machine == "leonardo" ]]
+            then
+               res1=`grep 'sed' ${script_to_submit} |cut -d '/' -f12`
+               res2=`grep 'sed' ${script_to_submit} |cut -d '/' -f9`
+               res3=`grep 'sed' ${script_to_submit} |cut -d '/' -f15`
+            else
+               res1=`grep submitcommand.sh ${script_to_submit} | cut -d ' ' -f18`
+               res2=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f17`
+               res3=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f19`
+            fi
             lndIC=`printf '%.2d' $res1`
-            res2=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f17`
             atmIC=`printf '%.2d' $res2`
-            res3=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f19`
             oceIC=`printf '%.2d' $res3`
             # oceIC only digit
   
@@ -231,7 +259,13 @@ do
             subm_cnt=$(( $subm_cnt + 1 ))
 
             # If here, all the conditions are satisfied, and the serial launcher can be submitted
-            $script_to_submit
+            if [[ $machine == "leonardo" ]]
+            then
+               mkdir -p $SCRATCHDIR/cases_${st}
+               $script_to_submit >& $SCRATCHDIR/cases_${st}/ensemble4_${yyyy}${st}_${ens}.log
+            else
+               $script_to_submit
+            fi
             listacasi+="$caso "
 
             if [ $subm_cnt -eq $tobesubmitted ]
@@ -295,6 +329,11 @@ archive $cnt_archive \n
 case running $cnt_run \n
 \n
 cases already created $cnt_dircases \n"
+if [[ $machine == "leonardo" ]]
+then
+#mail not implemented yet
+   exit
+fi
 title="NEW HINDCAST JOBS SUBMITTED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
