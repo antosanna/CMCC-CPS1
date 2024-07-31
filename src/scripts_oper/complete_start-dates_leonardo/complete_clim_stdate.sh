@@ -3,7 +3,7 @@
 . $DIR_UTIL/descr_CPS.sh
 
 set -euvx
-st=11
+st=03
 LOG_FILE=$DIR_LOG/hindcast/complete_${st}_hindcast_leonardo.`date +%Y%m%d%H%M`.log
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
@@ -25,12 +25,12 @@ conda activate $envcondacm3
 debug=0
 here=$DIR_CPS/complete_start-dates_leonardo
 
-#for yyyy in {1993..2022}  #for May
+for yyyy in {1993..2022} 
 
 #20240711
 #For november stdate, many years were run with half ensemble run 
 #Waiting for the IC to be copied, 1993 has started on Zeus, so on Leo we will run from 1994 onward
-for yyyy in {1994..2011}  
+#for yyyy in 2022
 do
    cd $here
    list_casi=`python read_csv.py sps4_hindcast_list.csv -y $yyyy -st $st `

@@ -404,6 +404,9 @@ if [[ $debug -ne 2 ]] ; then
    if [[ $now_running -ge $maxnumbertorecover ]]
    then
       echo "ALREADY RUNNING MAXIMUM NUMBER OF JOBS! exit now"
+      if [[ -f ${check_recover_running} ]] ; then
+         rm ${check_recover_running}
+      fi 
       exit
    fi
    ncount=0

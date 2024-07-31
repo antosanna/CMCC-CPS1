@@ -22,4 +22,4 @@
 !    $CASEROOT/CaseDocs/nemo_in
 !----------------------------------------------------------------------------------
 &namrun
-cn_ocerst_outdir = "DIRTEMP"
+nn_stock=-1

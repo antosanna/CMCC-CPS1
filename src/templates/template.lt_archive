@@ -60,7 +60,7 @@ then
    ./xmlchange NEMO_REBUILD=FALSE
    ./xmlchange --subgroup case.lt_archive_moredays prereq=1
    mkdir -p ${DIR_TEMP}/$caso
-   sed -e 's:DIRTEMP:'${DIR_TEMP}/$caso':g' $DIR_TEMPL/user_nl_nemo_moredays > $DIR_CASES/$caso/user_nl_nemo
+   rsync -auv $DIR_TEMPL/user_nl_nemo_moredays $DIR_CASES/$caso/user_nl_nemo
 set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3

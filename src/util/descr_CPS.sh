@@ -206,7 +206,7 @@ then
 #   account_name=CMCC_Copernic_4
       :
    fi
-   maxnumbertosubmit=64 #120
+   maxnumbertosubmit=64 #modifyied 20240729
    maxnumbertorecover=$maxnumbertosubmit
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
