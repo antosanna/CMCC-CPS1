@@ -23,18 +23,15 @@ then
    flag_test=0
 fi
 
-if [ $yyyy -ge $yyyySCEN ]; then
+if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-# this should become a module on Juno
 cesmexe=$DIR_EXE1/cesm.exe.CPS1
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
-#----------------------------------------------------------
-#${yyyy}${st}_${nrun} define case name and reference 
 #----------------------------------------------------------
 ncdatanow=$IC_CAM_CPS_DIR1/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$pp.nc
 #----------------------------------------------------------
@@ -44,8 +41,6 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # create the case as a clone from the reference
 #----------------------------------------------------------
-# NEW TO RESPECT ORIGINAL STRUCTURE -
-# we prefer clone to newcase with usermods_dir because in the first case the case tree is built also without case.build and we do not wnat to build the case because we are going to use always the same executable
 # refcase changes with scenario but the executable must not
 set +euvx
 if [[ $machine == "leonardo" ]]
@@ -62,7 +57,7 @@ echo "$ic" > $DIR_CASES/$caso/logs/ic_${caso}.txt
 
 cd $DIR_CASES/$caso
 #----------------------------------------------------------
-# Copy log_cheker from DIR_TEMPL in $caso
+# Copy log_cheker from DIR_TEMPL in $caso  TO BE DONE
 #----------------------------------------------------------
 
 if [[ $USER == "$operational_user" ]]
@@ -72,9 +67,6 @@ then
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
 fi
-#----------------------------------------------------------
-# TO DO
-# set-up the case after modfication env_workflow
 #----------------------------------------------------------
 ./case.setup --reset
 ./case.setup
@@ -99,7 +91,6 @@ ncpl=48
 echo "timestep = $((86400 / $ncpl))"
 echo "vertical levels 46"
 stop_op=nmonths
-# here we can test if branch....
 ./xmlchange RUN_STARTDATE=$yyyy-$st-01
 ./xmlchange RUN_REFDATE=$yyyy-$st-01
 ./xmlchange RUN_REFCASE=${refcaseIC}
@@ -119,12 +110,10 @@ else
 fi
 
 #20240715 - test
-#WE HAVE TRIED AND IT DOES NOT WORK!!!
+#WE HAVE TRIED AND IT DOES NOT WORK REGARLESS THE FIGURE TESTED. THERE MUST BE A PROBLEM WITH THE INTERPRATATION OF VARIABLES FROM THE COMPILED LIBRARY
 #./xmlchange PIO_NUMTASKS=4
 
 
-# cp and change script for nemo standardization
-# THIS GOES IN env_workflow
 sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 outdirC3S=${WORK_C3S}/$yyyy$st/
@@ -147,20 +136,19 @@ echo "IC CAM $ncdatanow"
 sed -i '/ncdata/d' $DIR_CASES/$caso/user_nl_cam
 echo "ncdata='$ncdatanow'">>$DIR_CASES/$caso/user_nl_cam
 
+if [[ $yyyy$st -ge ${yyyySCEN}07 ]] && [[ $yyyy$st -le ${yyyySCEN}12 ]]
+then
+   echo "prescribed_ozone_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
+   echo "prescribed_strataero_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
+fi
 #----------------------------------------------------------
 
-# QUESTO DIVENTERA UN MODULO
+
 cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe
 
 cd $DIR_CASES/$caso
 #----------------------------------------------------------
-# add the notification on error to the job script
-#----------------------------------------------------------
-#----------------------------------------------------------
-# submit first month
-#----------------------------------------------------------
 
-#exit
 if [[ $flag_test -ne 0 ]]
 then
 #   if [[ $flag_test -eq 1 ]]
