@@ -14,8 +14,6 @@ yyyy=`echo ${startdate:0:4}`
 set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
-echo "STILL TO BE UPDATED, NOW EXITING"
-exit 0
 
 debug=0
 cd $outdirC3S   #can be redundant
@@ -41,12 +39,13 @@ mkdir -p $dir_log_checker
 #fi
 # others checkers 
 # try and do it everytime (if too slow add the exception)
-#if [ ! -f $check_c3s_meta_ok ] 
-#then
-${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
-#fi
+if [ ! -f $check_c3s_meta_ok ] 
+then
+   ${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
+fi
 
 # BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
+# to be rewritten
 #if [ ! -f $outdirC3S/dmoc3s_checker_ok_0${real} ]
 #then 
 #			${DIR_C3S}/launch_checkdmoC3S-pdf-chain.sh $startdate $real $outdirC3S
@@ -65,8 +64,14 @@ else
    exit
    
 fi
-exit
-if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
+if [ ! -f ${check_c3s_qa_ok} ]
+then
+   $DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S
+fi
+
+#if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
+if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
+then
    mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
 # the following is defined in $dictionary
 #   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${real}

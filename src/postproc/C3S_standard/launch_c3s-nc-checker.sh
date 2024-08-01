@@ -2,6 +2,7 @@
 # Load environment
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_nco
 set +euvx
   . $DIR_UTIL/condaactivation.sh
   condafunction activate $envcondac3schecker
@@ -16,9 +17,10 @@ startdate=$1
 real=$2
 outdirC3S=$3
 dir_log_checker=$4
+##############################
 filedir=$outdirC3S
 
-##############################
+
 # real in 2 digits
 real=$(printf "%.2d" $((10#${real})))
 
@@ -50,12 +52,12 @@ do
 done } < $C3Stable_oce
 
 
+cd ${filedir}
 for var in ${varC3S[@]};
 do
 
-    file=`ls -1 ${filedir}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00.nc`
+    filename=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00.nc`
     
-    filename=$(basename $file)
 
     #$c3s_checker_cmd -p $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
     set +e

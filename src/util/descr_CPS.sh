@@ -132,12 +132,12 @@ then
    DIR_TEMP_CICEPLOT=$SCRATCHDIR/SIE
 #   FINALARCHIVE1=/work/csp/${operational_user}/test_archive/CPS/${CPSSYS}/
 #   FINALARCHIVE=/work/csp/`whoami`/test_archive/CPS/${CPSSYS}/
-#   FINALARCHC3S1=/data/csp/${operational_user}/Seasonal/${CPSSYS}/daily_postpc
-#   if [[ `whoami` == ${operational_user} ]] ;then
-#      FINALARCHC3S=$FINALARCHC3S1
-#   else
-#      FINALARCHC3S=$SCRATCHDIR/Seasonal/${CPSSYS}/daily_postpc
-#   fi
+   FINALARCHC3S1=/data/products/CMCC_SPS4/C3S_daily
+   if [[ `whoami` == ${operational_user} ]] ;then
+      FINALARCHC3S=$FINALARCHC3S1
+   else
+      FINALARCHC3S=$SCRATCHDIR/CMCC_SPS4/C3S_daily
+   fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
 #   OUTDIR_DIAG=/work/csp/sp2/${CPSSYS}/
@@ -240,7 +240,7 @@ then
     #SCRATCHDIR=$WORK/scratch
     SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch
     SCRATCHDIR1=$SCRATCHDIR
-    FINALARCHC3S=$WORK_CPS/archive_C3Sdaily
+    FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
     FINALARCHC3S1=$FINALARCHC3S
     DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
 # #TO BE DEFINED +

@@ -26,10 +26,28 @@ do
    for yyyy in $ylist
    do
       n_done=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0??.transfer_from_*_DONE 2>/dev/null|wc -l`
-      n_done_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0??/logs/*6months_done 2>/dev/null|wc -l`
-      if [[ $(($n_done + $n_done_juno)) -ne 0 ]]
+      n_done_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0??/logs/run_moredays_*DONE 2>/dev/null|wc -l`
+      if [[ $(($n_done + $n_done_juno)) -gt 0 ]]
       then
-          echo "$yyyy$st done number $(($n_done + $n_done_juno))"
+         echo "$yyyy$st done number $(($n_done + $n_done_juno))"
+         if [[ $(($n_done + $n_done_juno)) -lt 30 ]]
+         then
+             list2do=""
+             for i in {01..30}
+             do
+                hinddone=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${i}.transfer_from_*_DONE 2>/dev/null|wc -l`
+                hinddone_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0${i}/logs/run_moredays_*DONE 2>/dev/null|wc -l`
+                if [[ $hinddone -eq 0 ]] && [[ $hinddone_juno -eq 0 ]]
+                then
+                    list2do+=" ${SPSSystem}_${yyyy}${st}_0${i}"
+                fi
+             done
+             echo "members still to be run: $list2do"
+         fi
+  
+      elif [[ $(($n_done + $n_done_juno)) -eq 0 ]]
+      then
+         echo "$yyyy$st NONE MEMBER COMPLETED"
       fi
       n_st_done=$(($n_st_done + $n_done + $n_done_juno))
    done

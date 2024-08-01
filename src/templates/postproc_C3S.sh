@@ -187,7 +187,7 @@ real="r"${member}"i00p00"
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $caso"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -t "24" -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then
@@ -248,10 +248,13 @@ then
 fi
 chmod u-w -R $DIR_ARCHIVE/$caso/
 #
-if [[ -d $SCRATCHDIR/regrid_C3S/$caso ]]
-then
-   rm -rf $SCRATCHDIR/regrid_C3S/$caso
-fi
+for realm in CAM CLM NEMO CICE
+do
+   if [[ `ls $SCRATCHDIR/regrid_C3S/$caso/$realm/*nc |wc -l` -gt 0 ]]
+   then
+      rm -rf $SCRATCHDIR/regrid_C3S/$caso/$realm/*nc
+   fi  
+done
 
 echo "Done."
 

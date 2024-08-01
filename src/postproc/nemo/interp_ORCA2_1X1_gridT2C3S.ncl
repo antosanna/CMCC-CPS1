@@ -9,7 +9,6 @@ function definitions(ncdf,lat,nlat,lon,nlon,leadtime,time,depth,nt,reftime,reali
 begin
 
     ncdfAtt = True
-    ncdfAtt@Conventions = "CF-1.6 C3S-0.1" 
     fileattdef( ncdf, ncdfAtt )            ; copy file attributes    
 
 
@@ -181,7 +180,7 @@ begin
     temperature=0.d
     temperature@long_name = "Isotherm Temperature"
     temperature@standard_name = "sea_water_potential_temperature"
-    temperature@units = "C" 
+    temperature@units = "degC" 
 
     sigma_theta=0.d
     sigma_theta@long_name = "Sigma-theta of Sea Water"
@@ -472,7 +471,6 @@ begin
     ;===================================================================
    ; create global attributes of the netCDF file containing regridded data
    ;===================================================================
-   ; DA FARE
           global=define_att(realm(i),level(i),"mon")
           fileattdef( ncdf, global )        ; copy file attributes to netCDF file
    
