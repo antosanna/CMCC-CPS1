@@ -20,9 +20,9 @@ touch $DIR_TEMP/launch_postproc_C3S_from_remote_on
 cd $DIR_ARCHIVE/
 
 debug=1
-for mach in "Zeus"
+for mach in "Zeus Leonardo"
 do
-   dir_cases_remote=/work/$DIVISION/$USER/CPS/CMCC-CPS1/cases_from_${mach}
+   dir_cases_remote=/work/cmcc/$USER/CPS/CMCC-CPS1/cases_from_${mach}
    mkdir -p $dir_cases_remote
    listofcases=`ls *transfer_from_${mach}_DONE|cut -d '.' -f1`
    echo "SPANNING $listofcases"

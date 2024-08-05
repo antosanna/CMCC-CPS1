@@ -34,10 +34,19 @@ then
 else
    cp $DIR_TEMPL/env_mach_specific.xml $DIR_CASES/$caso
 fi
-module use -p $modpath
-./xmlchange MAX_TASKS_PER_NODE=96
-./xmlchange MAX_MPITASKS_PER_NODE=96
-if [[ $machine == "leonardo" ]] ; then
+if [[ $machine == "juno" ]]
+then
+   ./xmlchange MAX_TASKS_PER_NODE=72
+   ./xmlchange MAX_MPITASKS_PER_NODE=72
+  ./xmlchange PIO_NUMTASKS=18
+elif [[ $machine == "zeus" ]]
+then
+   ./xmlchange MAX_TASKS_PER_NODE=36
+   ./xmlchange MAX_MPITASKS_PER_NODE=30
+elif [[ $machine == "leonardo" ]] ; then
+   module use -p $modpath
+   ./xmlchange MAX_TASKS_PER_NODE=112
+   ./xmlchange MAX_MPITASKS_PER_NODE=96
   ./xmlchange PIO_NUMTASKS=-99
 fi
 ./case.setup --reset
