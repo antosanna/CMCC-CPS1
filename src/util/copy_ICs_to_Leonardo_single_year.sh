@@ -10,7 +10,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n copy_ICs_to_Leonardo -c yes`
-if [[ $isrunning -gt 0 ]]
+if [[ $isrunning -gt 1 ]]
 then
     echo "already running! exit!"
     exit

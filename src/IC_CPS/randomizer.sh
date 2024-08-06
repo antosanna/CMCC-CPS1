@@ -38,111 +38,67 @@ ntot=$nrunmax
 mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
 cd $DIR_LOG/$typeofrun/$yyyy$st
 
-#listaicoce=`ls $IC_NEMO_SPS_DIR/$st/$yyyy${st}*modified.nc`
-#for file in $listaicoce 
-#do
-#   icsoce+=" `basename $file|cut -d '_' -f3`"
-#done
-#for i in $icsoce ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/forecast/$yyyy$st/oce.ics.$yyyy$st
-#cd $IC_NEMO_SPS_DIR/$st/
 for poce in `seq -w 01 $n_ic_nemo`
 do
    oceic=$IC_NEMO_SPS_DIR/$st/${CPSSYS}.nemo.${yyyy}-${st}-01-00000.${poce}.nc
    iceic=$IC_CICE_SPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$poce.nc
 # DA MODIFICARE +
-   bk_oceic=da_definire.nc
+# TO BE DEFINED
+#   bk_oceic=da_definire.nc
 #         bk_oceic=$IC_SPS_guess/NEMO/$st/${yyyy}${st}0100_R025_${poce}_restart_oce_modified.bkup.nc
-   bk_iceic=da_definire.nc
+#   bk_iceic=da_definire.nc
 #            bk_iceic=$IC_SPS_guess/NEMO/$st/ice_ic${yyyy}${st}_${poce}.bkup.nc ice_ic${yyyy}${st}_${poce}.nc
 # DA MODIFICARE -
-   if [[ $typeofrun == "forecast" ]]
+   if [[ ! -f $oceic ]]
    then
-      if [[ ! -f $oceic ]]
+      if [[ -f $bk_oceic ]]
       then
+         ln -sf $bk_oceic $oceic
+         if [[ -f $iceic ]]
+         then
+            rm  $iceic
+         fi
+         ln -sf $bk_iceic $iceic
+         icsoce+=" $poce"
+   
+         body="Using bkup as IC for perturbation $poce" 
+         title="[NEMOIC] ${CPSSYS} forecast notification"
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      else
+         body="Nemo IC for perturbation $poce not available" 
+         title="[NEMOIC] ${CPSSYS} forecast warning"
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      fi 
+   elif [[ ! -f $iceic ]]
+   then
+      if [[ -f $bk_iceic ]]
+      then
+         ln -sf $bk_iceic $iceic
+         if [[ -f $oceic ]]
+         then
+            rm ${oceic}
+         fi
+         ln -sf $bk_oceic $oceic
+         body="Using bkup as IC for perturbation $poce" 
+         title="[NEMOIC] ${CPSSYS} forecast notification"
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+         icsoce+=" $poce"
+      else
+         body="Nemo IC for perturbation $poce not available" 
+         title="[NEMOIC] ${CPSSYS} forecast warning"
+         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      fi 
+   else
+      if [[ `whoami` == $operational_user ]] ; then 
          if [[ -f $bk_oceic ]]
          then
-            ln -sf $bk_oceic $oceic
-            if [[ -f $iceic ]]
-            then
-               rm  $iceic
-            fi
-            ln -sf $bk_iceic $iceic
-            icsoce+=" $poce"
-   
-            body="Using bkup as IC for perturbation $poce" 
-            title="[NEMOIC] ${CPSSYS} forecast notification"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-         else
-            body="Nemo IC for perturbation $poce not available" 
-            title="[NEMOIC] ${CPSSYS} forecast warning"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-         fi 
-      elif [[ ! -f $iceic ]]
-      then
+            rm $bk_oceic
+         fi
          if [[ -f $bk_iceic ]]
          then
-            ln -sf $bk_iceic $iceic
-            if [[ -f $oceic ]]
-            then
-               rm ${oceic}
-            fi
-            ln -sf $bk_oceic $oceic
-            body="Using bkup as IC for perturbation $poce" 
-            title="[NEMOIC] ${CPSSYS} forecast notification"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-            icsoce+=" $poce"
-         else
-            body="Nemo IC for perturbation $poce not available" 
-            title="[NEMOIC] ${CPSSYS} forecast warning"
-            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-         fi 
-      else
-         if [[ `whoami` == $operational_user ]] ; then 
-            if [[ -f $bk_oceic ]]
-            then
-               rm $bk_oceic
-            fi
-            if [[ -f $bk_iceic ]]
-            then
-               rm $bk_iceic
-            fi
-         fi
-         icsoce+=" $poce"
-      fi
-   else
-#HINDCAST
-      if [[ ! -f $oceic ]]
-      then
-         poce1=$((10#$(($poce - 1))))
-#TEMPORARY: is this path final?
-         if [[ `ls $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*_restart_0???.nc|wc -l` -eq 0 ]]
-         then
-            mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-#           get  check_IC_NEMO_miss from dictionary
-
-            set +euvx
-            . $dictionary
-            set -euvx
-            touch $check_IC_Nemo_miss
-            continue
-         else
-            $DIR_OCE_IC/nemo_rebuild_restart.sh $yyyy $st $poce
+            rm $bk_iceic
          fi
       fi
-      if [[ ! -f $iceic ]]
-      then
-         if [[ `ls $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*cice.r.*nc |wc -l` -ne 0 ]]
-         then
-            rsync -auv $DIR_REST_OIS/MB$poce1/RESTARTS/$yyyy${st}0100/*cice.r.*nc $IC_CICE_CSP_DIR/$st/$iceic
-         else
-            mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CICE
-#           get  check_IC_CICE_miss from dictionary
-            set +euvx
-            . $dictionary
-            set -euvx
-            touch $check_IC_CICE_miss
-         fi
-      fi 
       icsoce+=" $poce"
    fi
 done
@@ -150,6 +106,7 @@ done
 # to each $i a random number is associated and then sorted in ascendong order
 for i in $icsoce ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
    
+#DO WE WANT TO ALLOW FOR THE POSSIBILITY TO HAVE LESS THAN THE STATED ICs???
 #listaicland=`ls $IC_CLM_SPS_DIR/$st/*clm2.r.${yyyy}-${st}-01-00000.nc`
 #for file in $listaicland 
 #do
@@ -161,12 +118,9 @@ for clmic in `seq -w 01 $n_ic_clm`
 do
    lndic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$clmic.nc
    rtmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$clmic.nc
-   bk_rtmic=da_definire.nc
-   bk_lndic=da_definire.nc
-   if [[ $typeofrun == "hindcast" ]]
-   then
-      icslnd+=" $clmic"
-   fi
+# TO BE DEFINED
+#   bk_rtmic=da_definire.nc
+#   bk_lndic=da_definire.nc
    if [[ ! -f $lndic ]]
    then
       if [[ -f $bk_lndic ]]
@@ -176,10 +130,7 @@ do
          body="Using $bk_lndic and $bk_rtmic as IC for perturbation $clmic" 
          title="[CLMIC] ${CPSSYS} forecast notification"
          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r "$typeofrun" -s $yyyy$st
-         if [[ $typeofrun == "forecast" ]]
-         then
-            icslnd+=" $clmic"
-         fi
+         icslnd+=" $clmic"
       else
          body="Not available IC for perturbation $clmic" 
          title="[CLMIC] ${CPSSYS} forecast warning"
@@ -196,10 +147,7 @@ do
             rm $bk_rtmic
          fi
       fi
-      if [[ $typeofrun == "forecast" ]]
-      then
-         icslnd+=" $clmic"
-      fi
+      icslnd+=" $clmic"
    fi
 done
 for i in $icslnd ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
