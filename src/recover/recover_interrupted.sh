@@ -480,7 +480,8 @@ set -eux
          if [[ $machine == "leonardo" ]]
          then
 # does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-             srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
+             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
          else
              ./$command
          fi
@@ -516,7 +517,8 @@ set -eux
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $machine == "leonardo" ]]
       then
-         srun -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+         salloc -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
+         srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
 # 20240627 G.F.Marras  does not work
 #         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
       else
@@ -625,7 +627,8 @@ set -eux
           if [[ $machine == "leonardo" ]]
           then
 #does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-             srun -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
+             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
           else
              ./$command
           fi

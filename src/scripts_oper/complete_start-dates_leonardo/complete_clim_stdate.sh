@@ -3,7 +3,7 @@
 . $DIR_UTIL/descr_CPS.sh
 
 set -euvx
-st=03
+st=10
 LOG_FILE=$DIR_LOG/hindcast/complete_${st}_hindcast_leonardo.`date +%Y%m%d%H%M`.log
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
@@ -25,7 +25,8 @@ conda activate $envcondacm3
 debug=0
 here=$DIR_CPS/complete_start-dates_leonardo
 
-for yyyy in {1993..2022} 
+#for yyyy in {1993..2022} 
+for yyyy in 2014
 
 #20240711
 #For november stdate, many years were run with half ensemble run 

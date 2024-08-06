@@ -61,3 +61,4 @@ for caso in $listacasi ; do
   fi
 
 done
+echo "Succesfully removed $listacasi"

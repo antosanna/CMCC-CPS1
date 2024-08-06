@@ -90,8 +90,8 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2022 
-iniy_hind=2022
+endyear=2014 
+iniy_hind=2014
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
