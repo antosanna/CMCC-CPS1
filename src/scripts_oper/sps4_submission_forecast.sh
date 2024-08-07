@@ -110,7 +110,7 @@ do
       fi
 
   # if rtm IC condition not exist, skip
-      if [ -f $rtmICfile ] ; then
+      if [ ! -f $rtmICfile ] ; then
          echo "rtmICfile not exist. skip ************** "
          cnt_rtmIC=$(( $cnt_rtmIC + 1 ))              
            listaskip+="$caso "
