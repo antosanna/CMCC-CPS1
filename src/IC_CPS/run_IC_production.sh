@@ -40,9 +40,9 @@ for poce in `seq -w 01 $n_ic_nemo`;do
    poce1=$((10#$poce - 1))
    nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
    ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
-   dirnemoic=${IC_NEMO_CPS_DIR1}/$st/
+   dirnemoic=${IC_NEMO_CPS_DIR}/$st/
    mkdir -p $dirnemoic
-   dirciceic=${IC_CICE_CPS_DIR1}/$st/
+   dirciceic=${IC_CICE_CPS_DIR}/$st/
 #
 # compute only if operational or not existing  ANTO 20210319
    if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirnemoic/$ciceic ]]

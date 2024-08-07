@@ -38,7 +38,8 @@ if [[ $machine == "juno" ]]
 then
    ./xmlchange MAX_TASKS_PER_NODE=72
    ./xmlchange MAX_MPITASKS_PER_NODE=72
-  ./xmlchange PIO_NUMTASKS=18
+  ./xmlchange PIO_NUMTASKS=-99
+  ./xmlchange PIO_STRIDE=18
 elif [[ $machine == "zeus" ]]
 then
    ./xmlchange MAX_TASKS_PER_NODE=36
