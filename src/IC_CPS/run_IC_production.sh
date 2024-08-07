@@ -4,16 +4,10 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 set -euvx
-debug=0   #does not produce forcings and uses operational ICs
-if [[ `whoami` == $operational_user ]]
-then
-   debug=0
-fi
 
 yyyy=$1                    # year start-date
 mm=$2                    # month start-date: this is a number 
                          # not 2 digits
-idcomplete=${3:-0}       #1=true month complete
 st=`printf '%.2d' $((10#$mm))`   # 2 digits
 
 mkdir -p $IC_CAM_CPS_DIR/$st
@@ -32,52 +26,49 @@ mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
 #TO BE DEFINED
 #eda_incomplete_check=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/EDA_incomplete_${yyyy}$st
 
-if [[ $idcomplete -eq 0 ]]    # operational case run-time
-then
    # inizialize flags to send informative emails   ANTO 20210319
-   submittedNEMO=0
-   ###############################################################
-   # FIRST OF ALL IC FOR NEMO NEEDED TO COMPUTE IC CAM ON THE FORECAST DAY
-   ###############################################################
-   # generate Ocean conditions 
-   nom_oce=0
-   bk_oce=0
-   procdate=`date +%Y%m%d-%H%M`
-   mkdir -p $WORKDIR_OCE
-   for poce in `seq -w 01 $n_ic_nemo`;do
-      poce1=$((10#$poce - 1))
-      nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
-      ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
-      dirnemoic=${IC_NEMO_CPS_DIR1}/$st/
-      mkdir -p $dirnemoic
-      dirciceic=${IC_CICE_CPS_DIR1}/$st/
-   #
-   # compute only if operational or not existing  ANTO 20210319
-      if [[ $debug -eq 0 ]] || [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirnemoic/$ciceic ]]
-      then
-   
-         input="$yyyy $st $poce"
-         $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-   
-        submittedNEMO=1
-        sleep 30
-     fi
-   done
-   
-   clm_err_file1=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_GFS.$tstamp
-   clm_err_file2=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_ERA5.$tstamp
-   if [[ -f $clm_err_file1 ]]
+submittedNEMO=0
+###############################################################
+# FIRST OF ALL IC FOR NEMO NEEDED TO COMPUTE IC CAM ON THE FORECAST DAY
+###############################################################
+# generate Ocean conditions 
+nom_oce=0
+bk_oce=0
+procdate=`date +%Y%m%d-%H%M`
+mkdir -p $WORKDIR_OCE
+for poce in `seq -w 01 $n_ic_nemo`;do
+   poce1=$((10#$poce - 1))
+   nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
+   ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
+   dirnemoic=${IC_NEMO_CPS_DIR1}/$st/
+   mkdir -p $dirnemoic
+   dirciceic=${IC_CICE_CPS_DIR1}/$st/
+#
+# compute only if operational or not existing  ANTO 20210319
+   if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirnemoic/$ciceic ]]
    then
-      rm $clm_err_file1
-   fi
-   if [[ -f $clm_err_file2 ]]
-   then
-      rm $clm_err_file2
-   fi
-fi  #end if on idcomplete!
 
+      input="$yyyy $st $poce"
+      $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
 
-##start from here if idcomplete=1 (recover case) 
+     submittedNEMO=1
+     sleep 30
+  fi
+done
+
+clm_err_file1=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_GFS.$tstamp
+clm_err_file2=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_ERA5.$tstamp
+if [[ -f $clm_err_file1 ]]
+then
+   rm $clm_err_file1
+fi
+if [[ -f $clm_err_file2 ]]
+then
+   rm $clm_err_file2
+fi
+
+#removed section idcomplete
+
 
 ###############################################################
 # Generate ECMWF/ERA5 (perturbation 5) forced CLM run restart
@@ -96,35 +87,24 @@ for ilnd in {01..03}
 do
    icclm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
    icrtm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
-   if [[ $debug -eq 1 ]] 
-   then
-      icclm=$IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
-      icrtm=$IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
-   fi
-   
-   #debug=0 -> operational: you always compute for savety
-   #debug=1 -> test: you compute only if file does not exist
          
-   if [[ $debug -eq 0 ]] 
-   then
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!
    # this part I would rather leave it to Marianna
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!
    # if $era5_incomplete_check does not exist it means that the time-series was complete and you do not have to run it again with idcomplete=1
-      if [[ ! -f $era5_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
-      then
+   if [[ ! -f $era5_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
+   then
          body="CLM: EDA time-series was complete. You do not have to rerun"
          title="[CLMIC] ${CPSSYS} forecast notification"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r yes -s $yyyy$st
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
          
-      else      #operationally or for incomplete era5 recover
+   else      #operationally or for incomplete era5 recover
          inputlnd="$yyyym1 $mmm1 $icclm $icrtm $era5_incomplete_check"
    # TO BE UPDATED
          ${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -s launch_forced_run_ERA5.sh -j launchFREC_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
          body="CLM: submitted script launch_forced_run_ERA5.sh to produce CLM ICs from ERA5"
          title="[CLMIC] ${CPSSYS} forecast notification"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r yes -s $yyyy$st
-      fi
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
    fi
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!
    # end of part I would rather leave it to Marianna

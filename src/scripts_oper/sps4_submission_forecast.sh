@@ -3,7 +3,7 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/descr_ensmeble.sh 2024
+. ${DIR_UTIL}/descr_ensemble.sh 2020
 set -euvx
 
 echo "Starting job submission"
@@ -17,7 +17,6 @@ yyyy=$2
 ko=0
 cnt_run=0
 cnt_archive=0
-cnt_temp_archive=0
 cnt_atmICfile=0
 cnt_lndIC=0
 listacasi=""
@@ -50,28 +49,29 @@ do
       # oceIC only digit
       oceICnum=$(echo $oceIC |  grep -o -E '[0-9]+' )
 
-      lndICfile="${IC_CLM_CPS_DIR1}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${lndIC}.nc"
-      atmICfile="${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${atmIC}.nc"
-      nemoICfile="${IC_NEMO_CPS_DIR1}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${oceICnum}.nc"
-      iceICfile="${IC_CICE_CPS_DIR1}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceICnum}.nc"
+      lndICfile="${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${lndIC}.nc"
+      atmICfile="${IC_CAM_CPS_DIR}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${atmIC}.nc"
+      nemoICfile="${IC_NEMO_CPS_DIR}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${oceICnum}.nc"
+      ciceICfile="${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceICnum}.nc"
 
       caso=${SPSSystem}_${yyyy}${st}_${ens}
 
+   # is running?
       set +e
-      njobs=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
+      nj=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso}_run -c yes` 
       set -e
 
    # if is running, skip
-      if [ $njobs -gt 0 ] ; then
+      if [ $nj -gt 0 ] ; then
          echo "job running. skip"
          cnt_run=$(( $cnt_run + 1 )) 
          ko=1
       fi
 
-   # if exist in temporary archive, skip
+   # if exist in archive, skip
       if [ -d $DIR_ARCHIVE/$caso ] ; then
          echo "$DIR_ARCHIVE/$caso exist. skip"  
-         cnt_temp_archive=$(( $cnt_temp_archive + 1 ))            
+         cnt_archive=$(( $cnt_archive + 1 ))            
          ko=1
       fi 
 # THIS CHECKS ARE REDUNDANT IN PRINCIPLE (ALREADY DONE BY run_IC_production SCRIPT) BUT KEEP THEM
@@ -120,10 +120,9 @@ done
 
 echo "Submitted $subm_cnt forecasts"
 echo "Submittable $submittable_cnt"
-totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_temp_archive + $cnt_atmICfile + $cnt_lndIC  ))
+totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_atmICfile + $cnt_lndIC  ))
 echo "Total skipped $totalskipped"
 echo "Land $cnt_lndIC "
-echo "temporary archive $cnt_temp_archive "
 echo "archive $cnt_archive "
 body="Submitted $subm_cnt forecasts \n
 \n
@@ -142,11 +141,9 @@ ICE cice IC file missing $cnt_iceIC \n
 \n
 OCE nemo IC file missing $cnt_nemoIC \n
 \n
-temporary archive $cnt_temp_archive \n
-\n
-archive_tmp $cnt_archive "
-title="${SPSSYS} notification: FORECAST SUBMITTED"
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+archive $cnt_archive"
+title="${CPSSYS} notification: FORECAST SUBMITTED"
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
 
 exit 0

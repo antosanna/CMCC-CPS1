@@ -44,7 +44,7 @@ while [[ ${yy}${mm} -le $finalyy$finalmm ]] ; do
           generating scripts:
           ${DIR_LND_IC}/create_edaFORC.sh "
        title="[CLMIC] ${CPSSYS} forecast ERROR"
-       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s ${yyyy}${st}
     else
        mm=${st}   #`date -d ' '$yy${mm}01' + 1 month' +%m`
        yy=${yyyy} #`date -d ' '$yy${mm}01' + 1 month' +%Y`     
