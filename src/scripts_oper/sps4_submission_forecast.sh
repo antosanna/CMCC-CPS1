@@ -19,10 +19,10 @@ cnt_run=0
 cnt_archive=0
 cnt_atmICfile=0
 cnt_lndIC=0
+cnt_rtmIC=0
 listacasi=""
 listaskip=""
 listaskip+=" "
-cnt_lndIC=0
 cnt_atmICfile=0
 cnt_iceIC=0
 cnt_nemoIC=0
@@ -44,12 +44,14 @@ do
 
       # Check if belongs to NCEP Initial Condition (if 1 is NCEP statement )
       lndIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f18`
+      rtmddIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f18`
       atmIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f17`
       oceIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f19`
       # oceIC only digit
       oceICnum=$(echo $oceIC |  grep -o -E '[0-9]+' )
 
       lndICfile="${IC_CLM_CPS_DIR1}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${lndIC}`.nc"
+      rtmICfile="${IC_CLM_CPS_DIR1}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${lndIC}`.nc"
       atmICfile="${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.`printf "%.2d" ${atmIC}`.nc"
       nemoICfile="${IC_NEMO_CPS_DIR1}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${oceICnum}`.nc"
       iceICfile="${IC_CICE_CPS_DIR1}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${oceICnum}`.nc"
@@ -100,9 +102,17 @@ do
       fi       
              
   # if land IC condition not exist, skip
-      if [ `ls $lndICfile|wc -l` -ne 2 ] ; then
-         echo "lndICfiles not exist. skip ************** "
+      if [ -f $lndICfile ] ; then
+         echo "lndICfile not exist. skip ************** "
          cnt_lndIC=$(( $cnt_lndIC + 1 ))              
+           listaskip+="$caso "
+         ko=1
+      fi
+
+  # if rtm IC condition not exist, skip
+      if [ -f $rtmICfile ] ; then
+         echo "rtmICfile not exist. skip ************** "
+         cnt_rtmIC=$(( $cnt_rtmIC + 1 ))              
            listaskip+="$caso "
          ko=1
       fi
