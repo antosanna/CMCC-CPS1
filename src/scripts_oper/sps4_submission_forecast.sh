@@ -102,7 +102,7 @@ do
       fi       
              
   # if land IC condition not exist, skip
-      if [ -f $lndICfile ] ; then
+      if [ ! -f $lndICfile ] ; then
          echo "lndICfile not exist. skip ************** "
          cnt_lndIC=$(( $cnt_lndIC + 1 ))              
            listaskip+="$caso "
