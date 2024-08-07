@@ -16,9 +16,9 @@ mm=$2                    # month start-date: this is a number
 idcomplete=${3:-0}       #1=true month complete
 st=`printf '%.2d' $((10#$mm))`   # 2 digits
 
-mkdir -p $IC_CAM_SPS_DIR/$st
-mkdir -p $IC_CLM_SPS_DIR/$st
-mkdir -p $IC_NEMO_SPS_DIR/$st
+mkdir -p $IC_CAM_CPS_DIR/$st
+mkdir -p $IC_CLM_CPS_DIR/$st
+mkdir -p $IC_NEMO_CPS_DIR/$st
 
 yyyym1=`date -d ' '$yyyy${st}01' - 1 month' +%Y`
 stnemo=`date -d ' '$yyyy${st}01' - 1 month' +%m`
@@ -48,9 +48,9 @@ then
       poce1=$((10#$poce - 1))
       nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
       ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
-      dirnemoic=${IC_NEMO_SPS_DIR1}/$st/
+      dirnemoic=${IC_NEMO_CPS_DIR1}/$st/
       mkdir -p $dirnemoic
-      dirciceic=${IC_CICE_SPS_DIR1}/$st/
+      dirciceic=${IC_CICE_CPS_DIR1}/$st/
    #
    # compute only if operational or not existing  ANTO 20210319
       if [[ $debug -eq 0 ]] || [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirnemoic/$ciceic ]]
@@ -85,7 +85,7 @@ fi  #end if on idcomplete!
 # INPUTDIR: /data/delivery/csp/ecaccess/ERA5/6hourly/forc4CLM
 # INPUTFILES : era5_forcings_an_${yr}${mo}.grib
 # FORCINGS OUTPUTDIR: $CESMDATAROOT/inputdata/atm/datm7/sps3.5_atm_forcing.datm7.ERA5.0.5d
-# OUTPUTDIR: $IC_CLM_SPS_DIR
+# OUTPUTDIR: $IC_CLM_CPS_DIR
 # OUTPUTFILES: land_clm45_forced_5_analisi_1993_2015.*.r.${startclm}-00000.n
 #
 # compute only if operational or not existing  ANTO 20210319forecast
@@ -94,12 +94,12 @@ fi  #end if on idcomplete!
 
 for ilnd in {01..03}
 do
-   icclm=$IC_CLM_SPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
-   icrtm=$IC_CLM_SPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
+   icclm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
+   icrtm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
    if [[ $debug -eq 1 ]] 
    then
-      icclm=$IC_CLM_SPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
-      icrtm=$IC_CLM_SPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
+      icclm=$IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.nc
+      icrtm=$IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.nc
    fi
    
    #debug=0 -> operational: you always compute for savety
@@ -114,15 +114,15 @@ do
       if [[ ! -f $era5_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
       then
          body="CLM: EDA time-series was complete. You do not have to rerun"
-         title="[CLMIC] ${SPSSYS} forecast notification"
+         title="[CLMIC] ${CPSSYS} forecast notification"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r yes -s $yyyy$st
          
       else      #operationally or for incomplete era5 recover
          inputlnd="$yyyym1 $mmm1 $icclm $icrtm $era5_incomplete_check"
    # TO BE UPDATED
-         ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "24" -q $serialq_l -s launch_forced_run_ERA5.sh -j launchFREC_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -s launch_forced_run_ERA5.sh -j launchFREC_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
          body="CLM: submitted script launch_forced_run_ERA5.sh to produce CLM ICs from ERA5"
-         title="[CLMIC] ${SPSSYS} forecast notification"
+         title="[CLMIC] ${CPSSYS} forecast notification"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r yes -s $yyyy$st
       fi
    fi
@@ -142,112 +142,104 @@ fi
 ###############################################################
 # NOW COMPUTE IC FOR CAM
 # using poce=01 (unperturbed) -
-UP TO HERE
 ###############################################################
-#wait until all make_atm_ic_l46_ processes are done so that you are sure that no CAM ICs are in production
+#wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production
 # if operational run-time (idcomplete=0) 
 if [[ $idcomplete -eq 0 ]]  
 then
    while `true`
    do
        #if present, remove old links to avoid using them instead of newly computed files
-       if [[ -L $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc ]]
-       then
-          unlink $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc 
-       fi
-       if [[ -L $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc ]]
-       then
-          unlink $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc
-       fi
-       if [[ -L $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc ]]
-       then
-          unlink $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc 
-       fi
-       if [[ -L $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc ]]
-       then
-          unlink $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc
-       fi
-       if [[ -f $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.$yyyy-$st-01-00000.nc ]] && [[ -f $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.rtm.r.$yyyy-$st-01-00000.nc ]] 
-       then
-          ppland=5
-          break
-       elif [[ -f $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.clm2.r.$yyyy-$st-01-00000.nc ]] && [[ -f $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.rtm.r.$yyyy-$st-01-00000.nc ]]
-       then
-          ppland=4
-          break
-       elif [[ -f $clm_err_file2 ]]
-       then
-          body="Using $IC_SPS_guess/CLM/$st/land_clm45_forced_5.clm2.r.${yyyy}-${st}-01-00000.bkup.nc as ECMWF forced IC. ${SPSsystem}_land_clm45_forced_ERA5_RCP85 did not complete correctly"
-          title="[CLMIC] ${SPSSYS} forecast warning"
-          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+#template case cm3_lndSSP5-8.5_bgc_NoSnAg_eda2_scen/
+#       if [[ -L $IC_CLM_CPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc ]]
+      ppland_found=0
+      for ilnd in {01..03}
+      do
+         actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ilnd.nc
+         if [[ -L $actual_ic_clm ]]
+         then
+            unlink $actual_ic_clm
+         fi
+         actual_ic_rtm=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ilnd.nc
+         if [[ -L $actual_ic_rtm ]]
+         then
+            unlink $actual_ic_rtm
+         fi
+         if [[ -f $actual_ic_clm ]] && [[ -f $actual_ic_rtm ]]
+         then
+            ppland=$ilnd
+            ppland_found=1
+            break
+         elif [[ $ppland_found -eq 0 ]]
+         then
           # use backup
-          ln -sf $IC_SPS_guess/CLM/$st/land_clm45_forced_5.clm2.r.${yyyy}-${st}-01-00000.bkup.nc $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc
-          ln -sf $IC_SPS_guess/CLM/$st/land_clm45_forced_5.rtm.r.${yyyy}-${st}-01-00000.bkup.nc $IC_CLM_SPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc
-          ppland=5
-          break
-       elif [[ -f $clm_err_file1 ]]
-       then
-          body="Using $IC_SPS_guess/CLM/$st/land_clm45_forced_4.clm2.r.${yyyy}-${st}-01-00000.bkup.nc as GFS forced IC. ${SPSsystem}_land_clm45_forced_GFS_RCP85 did not complete correctly"
-          title="[CLMIC] ${SPSSYS} forecast warning"
-          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-          # use backup
-          ln -sf $IC_SPS_guess/CLM/$st/land_clm45_forced_4.clm2.r.${yyyy}-${st}-01-00000.bkup.nc $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc
-          ln -sf $IC_SPS_guess/CLM/$st/land_clm45_forced_4.rtm.r.${yyyy}-${st}-01-00000.bkup.nc $IC_CLM_SPS_DIR/$st/land_clm45_forced_4_analisi_1993_2015.rtm.r.${yyyy}-${st}-01-00000.nc
-          ppland=4
-          break
-       fi
-       sleep 600
+            bkup_ic_clm=$IC_CPS_guess/CLM/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ilnd.bkup.nc
+            bkup_ic_rtm=$IC_CPS_guess/CLM/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ilnd.bkup.nc
+#template case cm3_lndSSP5-8.5_bgc_NoSnAg_eda2_scen/
+            body="Using $bkup_ic_clm and $bkup_ic_rtm. cm3_lndSSP5-8.5_bgc_NoSnAg_eda${ilnd}_scen did not complete correctly"
+            title="[CLMIC] ${CPSSYS} forecast warning"
+            $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+            ln -sf $bkup_ic_clm $actual_ic_clm
+            ln -sf $bkup_ic_rtm $actual_ic_rtm
+         fi
+      done
+      sleep 600
   done
 fi
 
 inputatm="$st $yyyy $ppland"
-now_ic_cam=`ls $IC_CAM_SPS_DIR/$st/*${yyyy}$st*nc |wc -l`
+now_ic_cam=`ls $IC_CAM_CPS_DIR/$st/*${yyyy}$st*nc |wc -l`
 mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
 #
 # with dependency condition only if operational  ANTO 20210319
 # the CAM IC production takes ~ 1 hour
 while `true`
 do
-   np9=`${DIR_UTIL}/findjobs.sh -m $machine -n NEMOICs.${yyyy}${st}_09 -c yes`
-   if [[ $np9 -eq 0 ]]
+   np_ctr=`${DIR_UTIL}/findjobs.sh -m $machine -n nemo_rebuild_restart_${yyyy}${st}_01 -c yes`
+   if [[ $np_ctr -eq 0 ]]
    then
       break
    fi
    sleep 600
 done
-if [[ -L $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc ]]
+nemoic_ctr=$dirnemoic/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.01.nc
+# ma non va fatto prima??? e poi perche' e' necessario???
+if [[ -L $nemoic_ctr ]]
 then
-   unlink $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc 
+   unlink $nemoic_ctr
 fi
-if [[ -L $dirnemoic/ice_ic$yyyy${st}_09.nc ]]
+ciceic_ctr=$dirciceic/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.01.nc
+if [[ -L $ciceic_ctr ]]
 then
-   unlink $dirnemoic/ice_ic$yyyy${st}_09.nc
+   unlink $ciceic_ctr
 fi
 
-if [[ ! -f $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc ]] 
+if [[ ! -f $nemoic_ctr ]]
 then
-   body="Using $IC_SPS_guess/NEMO/$st/${yyyy}${st}0100_R025_09_restart_oce_modified.bkup.nc and $IC_SPS_guess/NEMO/$st/ice_ic$yyyy${st}_09.bkup.nc as ocean/seaice ICs for atm IC production. $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc not present."
-   title="[NEMOIC] ${SPSSYS} forecast warning"
+   bkup_nemoic_ctr=$IC_CPS_guess/NEMO/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.01.bkup.bkup.nc 
+   bkup_ciceic_ctr=$IC_CPS_guess/CICE/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.01.bkup.nc 
+   body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $nemoic_ctr not produced."
+
+   title="[NEMOIC] ${CPSSYS} forecast warning"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   ln -sf $IC_SPS_guess/NEMO/$st/${yyyy}${st}0100_R025_09_restart_oce_modified.bkup.nc $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc
-   if [[ -f $dirnemoic/ice_ic$yyyy${st}_09.nc ]]
+   ln -sf $bkup_nemoic_ctr $nemoic_ctr
+   if [[ -f $ciceic_ctr ]]
    then
-      rm $dirnemoic/ice_ic$yyyy${st}_09.nc
+      rm $ciceic_ctr
    fi
-   ln -sf $IC_SPS_guess/NEMO/$st/ice_ic$yyyy${st}_09.bkup.nc $dirnemoic/ice_ic$yyyy${st}_09.nc
-elif [[ ! -f $dirnemoic/ice_ic$yyyy${st}_09.nc ]]
+   ln -sf $bkup_ciceic_ctr $ciceic_ctr
+elif [[ ! -f $ciceic_ctr ]]
 then
-   body="Using $IC_SPS_guess/NEMO/$st/${yyyy}${st}0100_R025_09_restart_oce_modified.bkup.nc and $IC_SPS_guess/NEMO/$st/ice_ic$yyyy${st}_09.bkup.nc as ocean/seaice ICs for atm IC production. $dirnemoic/ice_ic$yyyy${st}_09.nc not present."
-   title="[NEMOIC] ${SPSSYS} forecast warning"
+   body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $ciceic_ctr not present."
+   title="[NEMOIC] ${CPSSYS} forecast warning"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   ln -sf $IC_SPS_guess/NEMO/$st/ice_ic$yyyy${st}_09.bkup.nc $dirnemoic/ice_ic$yyyy${st}_09.nc
-   ln -sf $IC_SPS_guess/NEMO/$st/ice_ic$yyyy${st}_09.bkup.nc $dirnemoic/ice_ic$yyyy${st}_09.nc
-   if [[ -f $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc ]]
+   ln -sf $bkup_ciceic_ctr $ciceic_ctr
+   if [[ -f $nemoic_ctr ]]
    then
-      rm $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc 
+      rm $nemoic_ctr
    fi
-   ln -sf $IC_SPS_guess/NEMO/$st/${yyyy}${st}0100_R025_09_restart_oce_modified.bkup.nc $dirnemoic/$yyyy${st}0100_R025_09_restart_oce_modified.nc
+   ln -sf $bkup_nemoic_ctr $nemoic_ctr
 fi
  
-${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "24" -q $serialq_l -j CAMICs.${yyyy}${st} -d ${DIR_ATM_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -s launch_make_atm_ic_l46_${SPSSYS}_op.sh -i "$inputatm"
+${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -j CAMICs.${yyyy}${st} -d ${DIR_ATM_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -s launch_make_atm_ic_op.sh -i "$inputatm"
 #

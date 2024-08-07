@@ -1,6 +1,6 @@
 ### Ignore the following:
 logs
 executables_cesm
-work
+development_tmp
 checklists/sps4_hindcast_list.csv
 checklists/sps4_hindcast_list_zeus.csv

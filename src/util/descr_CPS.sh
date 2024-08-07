@@ -44,6 +44,9 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
 then
+   qos=qos_lowprio   #this is used only for SLURM but it is
+                     #necessary for portability being used in
+                     #submitcommand
 #   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
 #   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]]

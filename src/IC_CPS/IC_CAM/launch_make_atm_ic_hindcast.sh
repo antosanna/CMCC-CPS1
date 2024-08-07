@@ -94,7 +94,7 @@ do
 
           if [[ ! -f ${inputECEDA} ]] 
           then
-             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputECEDA} missing!"
+             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83.sh: ${inputECEDA} missing!"
              echo $body
 #             if [[ $typeofrun == "forecast" ]]
 #             then
@@ -109,7 +109,7 @@ do
           fi 
           if [[ ! -f ${inputNEMO4CAM} ]] 
           then
-             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh: ${inputNEMO4CAM} missing!"
+             body="$DIR_ATM_IC/makeICsGuess4CAM_FV0.47x0.63_L83.sh: ${inputNEMO4CAM} missing!"
              echo $body
              continue
           fi
@@ -121,9 +121,9 @@ do
           mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
           echo "---> going to produce first guess for CAM and start date $yyyy $st"
           input="$check_IC_CAMguess $yyyy $st $pp $tstamp $inputECEDA"
-          ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83_hindcast.sh -i "$input"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
           input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC"
-          ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic_hindcast.sh -i "$input"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
           nrun_submitted=$(($nrun_submitted + 1))
           if [[ $nrun_submitted -eq $tobesubmitted ]]
           then

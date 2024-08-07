@@ -273,6 +273,9 @@ set -eux
      fi
   else
      # THIS SECTION MUST BE RUN ONLY ON JUNO BECAUSE C3S ARE PRODUCED ONLY THERE\# FOR A MATTER OF CONSISTENCY
+
+     if [[ $typeofrun == "forecast" ]]
+     then
      if [[ $machine == "juno" ]]
      then
         # meaning that the 185 day-run has been completed but last pp (C3S regrid) has not.
@@ -295,6 +298,7 @@ set -eux
             fi
         fi
      fi #juno
+     fi #forecast
   fi #if moredays
 #               checkin_qa=`ls $DIR_CASES/$caso/logs/qa_started_${yyyy}${st}_0${member}_ok | wc -l`
 #               checkout_all=`ls $DIR_ARCHIVE/C3S/$yyyy$st/all_checkers_ok_0${member} | wc -l`

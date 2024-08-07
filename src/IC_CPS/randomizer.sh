@@ -307,7 +307,7 @@ set -evx
       echo "mkdir -p $caso/logs"           >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       
       # +ANTONIO 31/03/21 - added reservation and qos for MARCONI
-      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -S qos_resv -q \$serialq_l -r \$sla_serialID -j crea_${SPSSystem}_$yyyy${st}_${nrun3} -l \$DIR_LOG/forecast/$yyyy${st} -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
+      echo "\${DIR_UTIL}/submitcommand.sh -m \$machine -S $qos -q \$serialq_l -r \$sla_serialID -j crea_${SPSSystem}_$yyyy${st}_${nrun3} -l \$DIR_LOG/forecast/$yyyy${st} -d \$DIR_CPS -s create_caso.sh -i \"$input\" " >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
       chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
 #crea analogo per CINECA -
       nrun=`expr $nrun + 1`
