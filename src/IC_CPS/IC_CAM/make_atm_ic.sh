@@ -19,10 +19,12 @@ yyIC=$4  # IC year
 mmIC=$5   # IC month; this is not a number (2 digits)
 dd=$6    # last day of month previous to $st
 caso=$7   #casoIC in launcher
+ppland=$8  # 2 digits
+
 oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
 iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.nc
-clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.01.nc
-rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.01.nc
+clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc
+rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc
 if [[ $yyyy == 1997 ]] && [[ $st == 01 ]] 
 then
      oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.02.nc

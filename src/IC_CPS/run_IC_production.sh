@@ -169,10 +169,6 @@ fi
 # using poce=01 (unperturbed) -
 ###############################################################
 #wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production
-inputatm="$st $yyyy $ppland"
-now_ic_cam=`ls $IC_CAM_CPS_DIR/$st/*${yyyy}$st*nc |wc -l`
-mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
-#
 # with dependency condition only if operational  ANTO 20210319
 # the CAM IC production takes ~ 1 hour
 while `true`
@@ -223,5 +219,51 @@ then
    ln -sf $bkup_nemoic_ctr $nemoic_ctr
 fi
  
-${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -j CAMICs.${yyyy}${st} -d ${DIR_ATM_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -s launch_make_atm_ic_op.sh -i "$inputatm"
+now_ic_cam=`ls $IC_CAM_CPS_DIR/$st/*${yyyy}$st*nc |wc -l`
+mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
+#
+#${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -j CAMICs.${yyyy}${st} -d ${DIR_ATM_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -s launch_make_atm_ic_op.sh -i "$inputatm"
+yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
+mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
+dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
+for pp in {0..9}
+do
+
+    # check if IC was already created on Juno (up to 20240108 it could be)
+    ppcam=`printf '%.2d' $(($pp + 1))`
+    if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]]
+    then
+       continue
+    fi
+
+    inputECEDA=$DATA_ECACCESS/EDA/snapshot/${tstamp}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${tstamp}.grib
+    casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
+
+    if [[ ! -f ${inputECEDA} ]]
+    then
+       body="$IC_CPS/run_IC_production.sh: ${inputECEDA} missing!"
+       echo $body
+       title="[CAMIC] ${CPSSYS} ERROR"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+       continue
+    fi
+    inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
+    if [[ ! -f ${inputNEMO4CAM} ]]
+    then
+       body="$IC_CPS/run_IC_production.sh: ${inputNEMO4CAM} missing!"
+       echo $body
+       continue
+    fi
+
+#         get check_IC_CAMguess from dictionary
+    set +euvx
+    . $dictionary
+    set -euvx
+    mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
+    echo "---> going to produce first guess for CAM and start date $yyyy $st"
+    input="$check_IC_CAMguess $yyyy $st $pp $tstamp $inputECEDA"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
+    input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
+done     #loop on pp
 #
