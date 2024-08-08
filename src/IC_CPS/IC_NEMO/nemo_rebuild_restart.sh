@@ -16,7 +16,7 @@ set -euvx    # keep this instruction after conda activation
 yyyy=$1
 st=$2
 poce=$3
-poce1=$((10#$(($poce - 1))))   #one digit and one figure less
+poce1=$((10#$poce - 1)) #one digit and one figure less
 yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 bkup_flag=0
