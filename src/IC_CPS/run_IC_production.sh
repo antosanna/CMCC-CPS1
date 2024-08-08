@@ -119,17 +119,13 @@ fi
 
 
 
-###############################################################
-# NOW COMPUTE IC FOR CAM
-# using poce=01 (unperturbed) -
-###############################################################
-#wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production
 # if operational run-time (idcomplete=0) 
 if [[ $idcomplete -eq 0 ]]  
 then
    while `true`
    do
        #if present, remove old links to avoid using them instead of newly computed files
+# WHY IT IS HERE???
 #template case cm3_lndSSP5-8.5_bgc_NoSnAg_eda2_scen/
 #       if [[ -L $IC_CLM_CPS_DIR/$st/land_clm45_forced_5_analisi_1993_2015.clm2.r.${yyyy}-${st}-01-00000.nc ]]
       ppland_found=0
@@ -167,6 +163,11 @@ then
   done
 fi
 
+###############################################################
+# NOW COMPUTE IC FOR CAM
+# using poce=01 (unperturbed) -
+###############################################################
+#wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production
 inputatm="$st $yyyy $ppland"
 now_ic_cam=`ls $IC_CAM_CPS_DIR/$st/*${yyyy}$st*nc |wc -l`
 mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
