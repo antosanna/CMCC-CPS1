@@ -56,6 +56,7 @@ for poce in `seq -w 01 $n_ic_nemo`;do
   fi
 done
 
+tstamp=`date +%Y%m`
 clm_err_file1=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_GFS.$tstamp
 clm_err_file2=$DIR_LOG/$typeofrun/$tstamp/IC_CLM/clm_run_error_touch_ERA5.$tstamp
 if [[ -f $clm_err_file1 ]]
