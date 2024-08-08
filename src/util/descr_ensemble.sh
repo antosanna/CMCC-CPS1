@@ -22,7 +22,7 @@ then
    #DATA_ECACCESS_CLM=$DATA_ECACCESS/ERA5/6hourly
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY -
 else
-   n_ic_clm=5
+   n_ic_clm=3
    n_ic_nemo=9
    nrunmax=55      # 40 number of realizations you want to produce
    nrunC3Sfore=50  # 40 number of realizations required to C3S forecast

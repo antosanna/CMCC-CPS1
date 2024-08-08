@@ -49,6 +49,7 @@ for poce in `seq -w 01 $n_ic_nemo`;do
    then
 
       input="$yyyy $st $poce"
+      mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
       $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
 
      submittedNEMO=1
@@ -194,7 +195,7 @@ fi
 
 if [[ ! -f $nemoic_ctr ]]
 then
-   bkup_nemoic_ctr=$IC_CPS_guess/NEMO/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.01.bkup.bkup.nc 
+   bkup_nemoic_ctr=$IC_CPS_guess/NEMO/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.01.bkup.nc 
    bkup_ciceic_ctr=$IC_CPS_guess/CICE/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.01.bkup.nc 
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $nemoic_ctr not produced."
 
