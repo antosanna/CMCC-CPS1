@@ -9,7 +9,6 @@ function definitions(ncdf,lat,nlat,lon,nlon,leadtime,time,nt,reftime,realization
 begin
 
     ncdfAtt = True
-    ncdfAtt@Conventions = "CF-1.6 C3S-0.1" 
     fileattdef( ncdf, ncdfAtt )            ; copy file attributes    
 
 
@@ -144,8 +143,7 @@ begin
 
 ;---Retrieve data from ORCA Grid
     sfile = addfile(srcFileName,"r")
-    tmpsic=sfile->aice ;aicen001
-    sic=tmpsic/100
+    sic=sfile->aice ;aicen001
     copy_VarMeta(tmpsic,sic)
     delete(tmpsic)
     ttmp   = sfile->time

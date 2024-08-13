@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -J copy_SPS4DMO_from_Leonardo
+#BSUB -J copy_SPS4DMO_from_Leonardo1
 #BSUB -q s_download
 #BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo1.out.%J  
 #BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo1.err.%J  

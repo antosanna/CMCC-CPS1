@@ -605,7 +605,7 @@ begin
                 dst_file->$varout(k)$ = (/ tmpclt/)
                 delete(tmpclt)
    ;__________________________________________________________
-             else if ( varout(k).eq."uas100") then
+             else if ( varout(k).eq."ua100mm") then
    ;__________________________________________________________
    ; derive u100 from ubot
    ;__________________________________________________________
@@ -626,7 +626,7 @@ begin
                    u100 = ESMF_regrid(var2regrid,Opt)*(100/10)^(alpha_clim)
                 end if
                 dst_file->$varout(k)$ = (/u100/)
-             else if ( varout(k).eq."vas100") then
+             else if ( varout(k).eq."va100m") then
    ;__________________________________________________________
    ; derive v100 from vbot
    ;__________________________________________________________
