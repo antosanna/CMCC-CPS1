@@ -101,10 +101,10 @@ then
       if [[ $bkup_flag -eq 0 ]]
       then
           mkdir -p ${IC_CICE_CPS_DIR}/$st
-          rsync -auv $ff ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
+          rsync -auv $f_ice ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
       else
 #then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
-          rsync -auv $ff ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc 
+          rsync -auv $f_ice ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc 
           ln -sf ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
       fi
    fi
