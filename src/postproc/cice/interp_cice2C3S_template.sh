@@ -9,6 +9,8 @@
 export ic=ICs
 export outdirC3S=OUTDIRC3S
 INPUT=${DIR_ARCHIVE}/CASO/ice/hist
+wkdir=${SCRATCHDIR}/CPS/CMCC-CPS1/regrid_cice/
+mkdir -p $wkdir
 
 
 set -exv
@@ -52,8 +54,8 @@ else
    export Stoday=`date +%S`
    cd $INPUT
    #TAKES 3'
-   input=CASO.cice.nc 
-   if [ ! -f $input ] 
+   export inputfile=$wkdir/CASO.cice.nc 
+   if [ ! -f $inputfile ] 
    then
       inputlist=" "
       for mon in `seq 0 $(($nmonfore - 1))`
@@ -63,7 +65,7 @@ else
          inputlist+=" CASO.cice.h.${curryear}-${currmon}.zip.nc"
       done
    #echo "inizio ncrcat " `date`
-      ncrcat -O $inputlist $input
+      ncrcat -O $inputlist $inputfile
    #echo 'fine ncrcat ' `date`
    fi
    scriptname=interp_cice2C3S_through_nemo.ncl
@@ -76,7 +78,6 @@ else
    
    export ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
    
-   export inputfile=$INPUT/$input
    export nmonfore=$nmonfore
    
    echo "---------------------------------------------"

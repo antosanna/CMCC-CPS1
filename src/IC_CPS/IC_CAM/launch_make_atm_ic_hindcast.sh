@@ -21,35 +21,35 @@ then
    echo "go on with hindcast submission"
    tobesubmitted=10
    #tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
-else
+#else
 ## this is temporary and holds only for Juno but is harmless on Zeus
-   ncoresclim=1296
-   if [ $np_all -ne 0 ]
-   then
-      ncoreshind=$(($np_all*$cores_per_run))
-      totcores=$(($ncoresclim + $ncoreshind))
-      if [[ $totcores -ge $totcores_SC ]]
-      then
-         echo "Exiting now! already $np_all job on parallel queue"
-         exit
-      fi
-      tobesubmitted=$((($totcores_SC - $totcores)/$cores_per_run))
-# just to be really safe take out 2
-      tobesubmitted=$(($tobesubmitted - 2 ))
-   fi
+#   ncoresclim=1296
+#   if [ $np_all -ne 0 ]
+#   then
+#      ncoreshind=$(($np_all*$cores_per_run))
+#      totcores=$(($ncoresclim + $ncoreshind))
+#      if [[ $totcores -ge $totcores_SC ]]
+#      then
+#         echo "Exiting now! already $np_all job on parallel queue"
+#         exit
+#      fi
+#      tobesubmitted=$((($totcores_SC - $totcores)/$cores_per_run))
+## just to be really safe take out 2
+#      tobesubmitted=$(($tobesubmitted - 2 ))
+#   fi
 fi
 
 nrun_submitted=0
-if [[ $machine == "zeus" ]]
-then
+#if [[ $machine == "zeus" ]]
+#then
    inist=1
-elif [[ $machine == "juno" ]]
-then
-   exit 0
-fi
+#elif [[ $machine == "juno" ]]
+#then
+#   exit 0
+#fi
 tstamp="00"
 #for st in `seq -w $inist 12`
-list_startdate="12 05 10 11 01 02 03 04 06 07 08 09"
+list_startdate="06 07 08 09 12 05 10 11 01 02 03 04"
 for st in $list_startdate
 do
    for yyyy in `seq $iniy 2022`
@@ -72,23 +72,23 @@ do
           if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
           then
 # remove raw data from /data/delivery
-              is_file_there=`ssh sp2@zeus01.cmcc.scc ls ${inputECEDA} |wc -l`
-              if [[ $is_file_there -eq 1 ]]
-              then
-                 ssh sp2@zeus01.cmcc.scc rm ${inputECEDA}
-              fi
-              if [[ -d $DIR_CASES/$casoIC ]]
-              then
-                 rm -rf $DIR_CASES/$casoIC
-              fi
-              if [[ -d $DIR_ARCHIVE/$casoIC ]]
-              then
-                 rm -rf $DIR_ARCHIVE/$casoIC
-              fi
-              if [[ -d $WORK_CPS/$casoIC ]]
-              then
-                 rm -rf $WORK_CPS/$casoIC
-              fi
+#              is_file_there=`ssh sp2@zeus01.cmcc.scc ls ${inputECEDA} |wc -l`
+#              if [[ $is_file_there -eq 1 ]]
+#              then
+#                 ssh sp2@zeus01.cmcc.scc rm ${inputECEDA}
+#              fi
+#              if [[ -d $DIR_CASES/$casoIC ]]
+#              then
+#                 rm -rf $DIR_CASES/$casoIC
+#              fi
+#              if [[ -d $DIR_ARCHIVE/$casoIC ]]
+#              then
+#                 rm -rf $DIR_ARCHIVE/$casoIC
+#              fi
+#              if [[ -d $WORK_CPS/$casoIC ]]
+#              then
+#                 rm -rf $WORK_CPS/$casoIC
+#              fi
               continue
           fi
 

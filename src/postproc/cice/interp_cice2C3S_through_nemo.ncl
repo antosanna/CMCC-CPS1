@@ -144,8 +144,6 @@ begin
 ;---Retrieve data from ORCA Grid
     sfile = addfile(srcFileName,"r")
     sic=sfile->aice ;aicen001
-    copy_VarMeta(tmpsic,sic)
-    delete(tmpsic)
     ttmp   = sfile->time
     nt=dimsizes(ttmp)
     delete(ttmp)

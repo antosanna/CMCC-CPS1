@@ -100,6 +100,7 @@ then
       f_ice=`ls $OUTDIR/*.cice.r.${yyyy}-${st}*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
       if [[ $bkup_flag -eq 0 ]]
       then
+          mkdir -p ${IC_CICE_CPS_DIR}/$st
           rsync -auv $ff ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
       else
 #then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
