@@ -44,7 +44,7 @@ then
    esac
 else
 # forecast
-   lastdir=`ls -tr $DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/|tail -1`
+   lastdir=`ls -dtr $DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${yy_assim}${mm_assim}*|tail -1`
    OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${lastdir}/
 fi
 if [[ ! -d $OUTDIR ]] && [[ $typeofrun == "forecast" ]]
