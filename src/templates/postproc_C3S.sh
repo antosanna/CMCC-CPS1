@@ -57,7 +57,7 @@ mkdir -p $outdirC3S
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
 
 fi
 # get   check_iceregrid from dictionary

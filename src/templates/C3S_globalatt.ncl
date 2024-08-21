@@ -47,12 +47,12 @@ begin
        k=12
        global@keywords=valore(k)
 ;       print(global)
-       yyyytoday=getenv("yyyytoday")
-       mmtoday=getenv("mmtoday")
-       ddtoday=getenv("ddtoday")
-       Htoday=getenv("Htoday")
-       Mtoday=getenv("Mtoday")
-       Stoday=getenv("Stoday")
+       yyyytoday=systemfunc("date +%Y")
+       mmtoday=systemfunc("date +%m")
+       ddtoday=systemfunc("date +%d")
+       Htoday=systemfunc("date +%H")
+       Mtoday=systemfunc("date +%M")
+       Stoday=systemfunc("date +%S")
        global@creation_date = yyyytoday+"-"+mmtoday+"-"+ddtoday+"T"+Htoday+":"+Mtoday+":"+Stoday+"Z"
 ;       print(global@creation_date)
        yyyy=getenv("yyyy")
@@ -61,11 +61,6 @@ begin
        global@modeling_realm = domain
        fore_type=getenv("fore_type")
        global@forecast_type = fore_type
-;       if ( varout .eq. "sftlt". or. varout .eq. "orog") then
-;         frq="fix"
-;      else
-;          frq=getenv("frq")
-;      end if
        global@frequency = freq
        global@level_type = level
        ic=getenv("ic")

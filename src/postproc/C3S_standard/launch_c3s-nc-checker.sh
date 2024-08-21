@@ -71,10 +71,13 @@ do
     #one option is evaluate ERROR -gt 2
     #n_error=`grep ERROR $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log|wc -l`
     #alternative approach:
-    n_error=`grep 'Failed tests:' $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log |rev|cut -d ':' -f1|rev` 
+    n_error=`grep 'Failed tests:' $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log|rev|cut -d ':' -f1|rev` 
+    tracepy_error=`grep 'Traceback' $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log |wc -l`
+    syspy_error=`grep 'sys.exit' $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log |wc -l`
+ 
     #evaluate following string" ERROR    |     Failed tests: 0" - if 0 ok, otherwise problems
     echo "$n_error found for var ${var}"
-    if [[ $n_error -gt 0 ]]  
+    if [[ $n_error -gt 0 ]] || [[ ${tracepy_error} -gt 0 ]] || [[ ${syspy_error} -gt 0 ]]  
     then
         list_error+=" ${c3s_checker_cmd}_${var}_${startdate}_0${real}.log"
     fi

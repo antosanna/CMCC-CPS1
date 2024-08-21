@@ -46,12 +46,6 @@ else
    export wgtFile="$REPOGRID/ORCA_2_World_SCRIP_gridT.nc"
    
    export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
-   export yyyytoday=`date +%Y`
-   export mmtoday=`date +%m`
-   export ddtoday=`date +%d`
-   export Htoday=`date +%H`
-   export Mtoday=`date +%M`
-   export Stoday=`date +%S`
    cd $INPUT
    #TAKES 3'
    export inputfile=$wkdir/CASO.cice.nc 

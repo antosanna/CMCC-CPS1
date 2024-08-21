@@ -122,8 +122,9 @@ echo "-----------STARTING ${CASE}.postproc monthly CESM-------- "`date`
 cd $DIR_CASES/${CASE}
 ic=`cat $DIR_CASES/${CASE}/logs/ic_${CASE}.txt`
 
+set +euvx
 . $DIR_UTIL/load_nco
-
+set -euvx
 
 # HERE SET YEAR AND MONTHS TO RECOVER
 for mon in `seq -w 0 $(($nmonfore - 1))`

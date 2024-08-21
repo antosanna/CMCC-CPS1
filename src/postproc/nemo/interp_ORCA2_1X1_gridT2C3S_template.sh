@@ -100,27 +100,13 @@ member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary
 set -euvx
-export check_oceregrid
-export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
-export real="r"${member}"i00p00"
 export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
-
-export lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
-export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
-export srcGridName="$REPOGRID/ORCA_SCRIP_gridT.nc"
-export dstGridName="$REPOGRID/World1deg_SCRIP_gridT.nc"
-export wgtFile="$REPOGRID/ORCA_2_World_SCRIP_gridT.nc"
-export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
-export yyyytoday=`date +%Y`
-export mmtoday=`date +%m`
-export ddtoday=`date +%d`
-export Htoday=`date +%H`
-export Mtoday=`date +%M`
-export Stoday=`date +%S`
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
+C3S_table_ocean2d=$DIR_POST/nemo/C3S_table_ocean2d.txt
+
 inputlist=" "
 for mon in `seq 0 $(($nmonfore - 1))`
 do
@@ -134,40 +120,54 @@ do
       inputlist+=" `ls $OUTDIR_NEMO/${caso}_1m_${curryear}${currmon}*grid_T.nc`"
    fi
 done
-export inputfile=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo//${caso}_1m_grid_T.nc
-mkdir -p $SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/
+
+wkdir=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/$caso
+mkdir -p $wkdir
+export inputfile=$wkdir/${caso}_1m_grid_T.nc
 #echo 'inizio ncrcat ' `date`
 if [ ! -f $inputfile ]
 then
    ncrcat -O $inputlist $inputfile
 fi
+
+prefix=${GCM_name}-v${versionSPS}
+ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
+level="ocean2d"
+frq="mon"
+
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-prefix=${GCM_name}-v${versionSPS}
-export fore_type=$typeofrun
-export frq="mon"
-export level="ocean2d"
-
-export ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
-
-
-echo "---------------------------------------------"
-echo "launching $scriptname "`date`
-echo "---------------------------------------------"
-ncl ${DIR_POST}/nemo/$scriptname
-echo "---------------------------------------------"
-echo "executed $scriptname "`date`
-echo "---------------------------------------------"
-if [ ! -f $check_oceregrid ]
-then
-    title="[C3S] ${CPSSYS} forecast ERROR"
-    body="ERROR in standardization of ocean files for case ${caso}. 
-            Script is ${DIR_POST}/nemo/$scriptname"
-    exit 1
-else
-    rm $inputfile
-fi
+for var in t14d t17d t20d t26d t28d others
+do
+    echo "---------------------------------------------"
+    echo "launching $scriptname "`date`
+    echo "---------------------------------------------"
+    mkdir -p $wkdir/$var
+    cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 10000 -t "24" -S qos_resv -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${DIR_CASES}/$caso/logs -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
+done
+while `true`
+do
+   if [ ! -f ${check_oceregrid}_t14d ] || [ ! -f ${check_oceregrid}_t20d ] || [ ! -f ${check_oceregrid}_t26d ] || [ ! -f ${check_oceregrid}_t28d ] || [ ! -f ${check_oceregrid}_t17d ] || [ ! -f ${check_oceregrid}_others ]
+   then
+      np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
+      if [[ $np -eq 0 ]]
+      then
+         title="[C3S] ${CPSSYS} forecast ERROR"
+         body="ERROR in standardization of ocean files for case ${caso}. 
+            Script is ${wkdir}/var/$scriptname"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+         exit 1
+      else
+         sleep 300
+      fi
+   else
+      touch ${check_oceregrid}
+      rm $inputfile
+      break
+   fi
+done
 # 
 {
 read 

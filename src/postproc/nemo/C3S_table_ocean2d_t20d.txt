@@ -1,0 +1,2 @@
+Model Name,C3S Name,long_name,standard_name,units,modeling_realm,level,Arithmetic expr,coordinates,cell_method,ref lev,model,fillval
+thetao,t20d,Depth of 20 degree Celsius Isotherm,depth_of_isosurface_of_sea_water_potential_temperature,m,ocean,ocean2d,0,reftime realization time leadtime temperature lat lon,leadtime: mean (interval: 1 day),20.,nemo,1.e+20

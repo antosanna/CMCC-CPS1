@@ -26,12 +26,6 @@ set -euvx
 
 startdate=$yyyy$st
 export fore_type=$typeofrun
-export yyyytoday=`date +%Y`
-export mmtoday=`date +%m`
-export ddtoday=`date +%d`
-export Htoday=`date +%H`
-export Mtoday=`date +%M`
-export Stoday=`date +%S`
 export outputgrid="reg1x1"
 export srcGridName=$REPOGRID/srcGrd_FV.nc
 export dstGridName=$REPOGRID/dstGrd_${outputgrid}.nc

@@ -72,28 +72,31 @@ fi
 #if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
 if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
 then
-   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
+#   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
 # the following is defined in $dictionary
 #   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${real}
-   if [ ! -f ${checkfile_daily} ] || [[ $debug -eq 0 ]]
-   then
-      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $real 
-   fi
+#   if [ ! -f ${checkfile_daily} ] || [[ $debug -eq 0 ]]
+#   then
+#      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $real 
+#   fi
    touch $check_allchecksC3S$real
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
-if [ $allcheckersok -ge $nrunC3Sfore ] 
+if [[ $typeofrun == "forecast" ]] 
 then
-   ns=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n submit_tar_and_push${startdate} -c yes`
-   nt=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n tar_and_push_${startdate} -c yes`
-   if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
-   then
-      body="$startdate forecast completed. \n
+  if [ $allcheckersok -ge $nrunC3Sfore ] 
+  then
+      ns=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n submit_tar_and_push${startdate} -c yes`
+      nt=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n tar_and_push_${startdate} -c yes`
+      if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
+      then
+         body="$startdate forecast completed. \n
                        Now submitting submit_tar_and_push.sh"
-      title="${SPSSYS} $startdate FORECAST COMPLETED"
-    	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-    	 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -t "6" -r $sla_serialID -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st" 
-   fi  
+         title="${SPSSYS} $startdate FORECAST COMPLETED"
+    	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+    	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -t "6" -r $sla_serialID -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st" 
+      fi
+  fi  
 fi  
 echo "$0 completed"
 exit 0

@@ -88,6 +88,78 @@ begin
      return(x)
 end
 
+undef ("isotherm_depth")
+function isotherm_depth(tsn,tmask,fsdept,fsdepw,isot,mbathy,missval)
+begin
+     nn=dimsizes(tsn)
+     jpi=nn(3)
+     jpj=nn(2)
+     jpk=nn(1)
+     jpt=nn(0)
+
+; initialize hd using tsn
+     hd=tofloat(tsn(:,0,:,:)*0.)
+     hd@_FillValue=missval
+;     mbathy=bottom_level from ORCA025L75_domain_cfg.nc
+;     mbkt = toint(where( mbathy.gt. 1,mbathy,1) ) 
+     mbkt = toint(where( mbathy.gt. 1,mbathy,1) ) -1 ; for this is ncl and indices start from 0
+;     printVarSummary(mbkt)
+     ik=new((/jpj,jpi/),"integer")
+;     printVarSummary(ik)
+     do jt = 0, jpt-1
+        ik(:,:)=0
+        do jk = 0, jpk-2
+           do jj = 0, jpj-1
+              do ji = 0, jpi-1
+                 zztmp = tsn(jt,jk,jj,ji)  
+                 if(zztmp.ge.isot)then
+                    ik(jj,ji)=jk
+                 end if
+              end do
+           end do
+        end do
+        delete(zztmp)
+        do jj = 0, jpj-1
+           do ji = 0, jpi-1
+;        print("index mbkt(jj,ji)+1 and jpk-1 "+(jpk-1))
+;        print(mbkt(jj,ji)+1)
+              zzdep = tofloat(fsdepw(mbkt(jj,ji)+1,jj,ji)  )
+;              print("zzdep "+zzdep)
+
+;   k   ---------w
+;   k   ---------T
+;   k+1 ---------w
+;---> w-level is 1/2 grid distance above T-level and coincides with the ocean depth (ho capito bene?)
+
+              iid=ik(jj,ji)
+
+              if( iid .ne. 0 )then
+; linear interpolation
+;                 printVarSummary(fsdept)
+;                 printVarSummary(tmask)
+;                 printVarSummary(tsn)
+                 if (tsn(jt,iid+1,jj,ji).eq.tsn(jt,iid,jj,ji)) then
+                    iidp1=iid+1
+                    print("month number "+jt+" isot "+isot+" tiidp1 "+tsn(jt,iid+1,jj,ji)+" uguale a tiid "+tsn(jt,iid,jj,ji)+"indici j "+jj+" i "+ji+" iid "+iid+" "+iidp1)
+                 end if
+                 zztmp = fsdept(iid,jj,ji)+( fsdept(iid+1,jj,ji)-fsdept(iid,jj,ji) ) * ( isot*tmask(iid+1,jj,ji) - tsn(jt,iid,jj,ji) ) / ( tsn(jt,iid+1,jj,ji)-tsn(jt,iid,jj,ji)+( 1.-tmask(0,jj,ji) ) )
+; bound by the ocean depth
+;                 hd(jt,jj,ji) = min( zztmp , zzdep ) * tmask(0,jj,ji)
+                 if(zzdep.lt.zztmp)then
+                    zztmp=zzdep
+                 end if
+                 hd(jt,jj,ji) = tofloat(zztmp * tmask(0,jj,ji))
+              else 
+                 hd(jt,jj,ji) = 0.
+              end if
+           end do
+        end do
+     end do
+     printVarSummary(hd)
+
+     return(hd)
+end
+
 undef ("avg300")
 function avg300(sshn,field,tmask,fse3t,e3t_0,missval)
 begin
@@ -137,6 +209,7 @@ begin
     srcFileName = getenv("inputfile")
     print("going to read "+srcFileName)
     lsmFileName = getenv("lsmfile")
+    print("going to read "+lsmFileName)
     lsmfile = addfile(lsmFileName,"r")
     lsm=tofloat(lsmfile->lsmC3S_SPS4)
     delete(lsm@_FillValue)
@@ -149,6 +222,7 @@ begin
     delete(lon@_FillValue)
     nlon=dimsizes(lon)
 
+    print("going to defineaccessory vars required by C3S")
    ;--- Define accessory vars required by C3S 
     C3S_type="double"
     C3S_type_var="float"
@@ -156,11 +230,13 @@ begin
     lon_bnds(:,0)=lon(:)-0.5
     lon_bnds(:,1)=lon(:)+0.5
     delete_VarAtts(lon_bnds,-1)
+    print("defined lon_bnds")
 
     lat_bnds=new((/nlat,2/),C3S_type)
     lat_bnds(:,0)=lat(:)-0.5
     lat_bnds(:,1)=lat(:)+0.5
     delete_VarAtts(lat_bnds,-1)
+    print("defined lat_bnds")
 
     lon=lonFlip(lon)
     delete(lon@lonFlip)
@@ -168,6 +244,7 @@ begin
     lsm=tmp
     copy_VarMeta(tmp,lsm)
     delete(tmp)
+    print("flipped lsm")
 
 
     real=getenv("real")
@@ -176,16 +253,19 @@ begin
     realization@long_name = "realization" ;
     realization@standard_name = "realization" ;
     realization@axis = "E" ;
+    print("defined realization")
 
     temperature=0.d
     temperature@long_name = "Isotherm Temperature"
     temperature@standard_name = "sea_water_potential_temperature"
     temperature@units = "degC" 
+    print("defined temperature")
 
     sigma_theta=0.d
     sigma_theta@long_name = "Sigma-theta of Sea Water"
     sigma_theta@standard_name = "sea_water_sigma_theta"
     sigma_theta@units = "kg m-3" 
+    print("defined sigma_theta")
 
     depth=0.d
     depth@long_name = "depth"
@@ -201,11 +281,15 @@ begin
 
     meshmaskfile = getenv("meshmaskfile")
     meshmask = addfile(meshmaskfile,"r")
+    print(meshmaskfile+" read ")
     tmpnemo=meshmask->tmaskutil
     lsmnemo=where(tmpnemo.eq.0.,-999.,0.)
     lsmnemo@_FillValue=-999.
     delete(tmpnemo)
 
+    domainfile = getenv("domainfile")
+    domain = addfile(domainfile,"r")
+    print(domainfile+" read ")
 
 ;---Output (and input) files
     srcGridName = getenv("srcGridName")
@@ -263,6 +347,7 @@ begin
     reftime@calendar = "gregorian" ;
     reftime@units = "days since "+yyyy+"-"+st+"-01T00:00:00Z" ;
 
+    print("accessory vars defined ")
   C3Stable=getenv("C3S_table_ocean2d")
   print(C3Stable)
   strs = asciiread(C3Stable,-1,"string")
@@ -312,14 +397,16 @@ begin
 
   nav_lat = sfile->nav_lat
   nav_lon = sfile->nav_lon
-  tem = sfile->thetao
+  tem = tofloat(sfile->thetao)
+  delete(tem@_FillValue)
+  tem=where(tem.gt.1000.,0.,tem)
   sal = sfile->so
   sshn = sfile->zos
 
   tmask = tofloat(meshmask->tmask(0,:,:,:))
-  fse3t = tofloat(meshmask->e3t_0(0,:,:,:))
-;  fse3t = tofloat(meshmask->e3t(0,:,:,:))
-;  e3t_0 = tofloat(meshmask->e3t_0(0,:))
+  fse3t = tofloat(meshmask->gdept_0(0,:,:,:))
+  fse3w = tofloat(meshmask->gdepw_0(0,:,:,:))
+  mbathy=tofloat(domain->bottom_level(0,:,:))
   e3t_0 = tofloat(meshmask->e3t_1d(0,:))
 
   lon=lonFlip(lon)
@@ -343,15 +430,17 @@ begin
           opt   = 0
    
    ;---------------------------------------------
-          if(varname(i).ne."somtt300".and.varname(i).ne."somss300")then
-             xtmp   = tofloat(sfile->$varname(i)$) 
-          end if
           print("processing var "+varname(i))
           if ( varname(i).eq."somss300") then
              xtmp=avg300(sshn,sal,tmask,fse3t,e3t_0,fillval(i))
-          end if
-          if ( varname(i).eq."somtt300") then
+          else if ( varname(i).eq."somtt300") then
              xtmp=avg300(sshn,tem,tmask,fse3t,e3t_0,fillval(i))
+          else if ( varnameout(i).eq."t14d".or.varnameout(i).eq."t17d".or.varnameout(i).eq."t20d".or.varnameout(i).eq."t26d".or.varnameout(i).eq."t28d") then
+             xtmp=isotherm_depth(tem,tmask,fse3t,fse3w,reflev(i),mbathy,fillval(i))
+          else
+             xtmp   = tofloat(sfile->$varname(i)$) 
+          end if
+          end if
           end if
 
           nn=dimsizes(xtmp)
@@ -501,7 +590,7 @@ begin
    
    
           temperature=0.d
-          if(varname(i).eq."t14d".or.varname(i).eq."t17d".or.varname(i).eq."t20d".or.varname(i).eq."t26d".or.varname(i).eq."t28d")then
+          if(varnameout(i).eq."t14d".or.varnameout(i).eq."t17d".or.varnameout(i).eq."t20d".or.varnameout(i).eq."t26d".or.varnameout(i).eq."t28d")then
              temperature=reflev(i)
              filevardef(ncdf, "temperature", C3S_type, "ncl_scalar")
              filevarattdef(ncdf,"temperature" ,temperature)    
@@ -520,7 +609,7 @@ begin
           delete(tmp)
        end if  ; if on nemo vars
   end do   ; end loop on var
-  check_oceregrid=getenv("check_oceregrid")
+  check_oceregrid=getenv("check_oceregrid_var")
   system("touch "+check_oceregrid)
 
 end
