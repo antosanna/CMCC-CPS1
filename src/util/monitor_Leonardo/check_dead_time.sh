@@ -13,6 +13,7 @@
 set -u
 
 cd $DIR_CASES
-lista=`ls -altr |grep sps4|grep Jul|awk '{print $9}'` 
-grep "DUE TO TIME" sps4*/logs/sps*err |grep 2024-07-15
+lista=`ls -altr |grep sps4|grep Aug|awk '{print $9}'` 
+#grep "DUE TO TIME" sps4*/logs/sps*err |grep 2024-07-15
+grep "DUE TO TIME" sps4*/logs/sps*err |grep 2024-08
 

@@ -25,14 +25,17 @@
 
 function write_help_leonardo
 {
-  echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
+  echo "USE ONLY FROM crontab if not debug: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
   echo "     (if hindcast only st else also yyyy)"
-  echo ""
-  echo "SUBMISSION COMMAND:"
-  echo "./recover_interrupted.sh \$dbg \$stmain "
   echo ""
   echo "CAVEAT"
   echo "First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+  echo ""
+  echo "SUBMISSION COMMAND WITH dbg=2:"
+  echo "./recover_interrupted.sh 2 $st"
+  echo ""
+  echo "SUBMISSION COMMAND EXAMPLE (every 30'):"
+  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0 $st"
 }
 #set -euxv
 function write_help
@@ -89,8 +92,7 @@ cd $DIR_CASES/
 
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
-listofcases="sps4_201010_004"
-
+listofcases="sps4_201111_018 sps4_201111_019 sps4_201111_020 sps4_201111_021 sps4_201111_022"
 #"sps4_199811_028  sps4_200211_026 sps4_200211_030 sps4_200311_018 sps4_200411_007 sps4_200411_009 sps4_200411_010 sps4_200411_013 sps4_200411_014 sps4_200411_015 sps4_200411_016 sps4_200411_025 sps4_200411_026 sps4_200411_030 sps4_200511_001 sps4_200511_016 sps4_200511_017 sps4_200511_020 sps4_200511_023 sps4_200511_024 sps4_200511_025 sps4_200511_028 "
 
 
@@ -101,6 +103,8 @@ set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
 #set -euvx
 set -eux
+else
+   debug=0    #you want to resubmit just the cases listed in your hardcoded $listofcases
 fi
 if [[ $# -ge 2 ]]
 then
@@ -179,7 +183,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_199711_011 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_199402_005 sps4_199402_009"  
+lista_caso_ignored="sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_199402_005 sps4_199402_009"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
