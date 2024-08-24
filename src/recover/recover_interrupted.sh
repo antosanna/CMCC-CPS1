@@ -92,7 +92,8 @@ cd $DIR_CASES/
 
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
-listofcases="sps4_201111_018 sps4_201111_019 sps4_201111_020 sps4_201111_021 sps4_201111_022"
+listofcases="sps4_202211_021 sps4_202211_024 sps4_202211_029"  
+#"sps4_199711_018 sps4_199811_003 sps4_199811_012 sps4_200411_007 sps4_200411_015 sps4_200711_028 sps4_200811_013 sps4_201011_023 sps4_201411_025" 
 #"sps4_199811_028  sps4_200211_026 sps4_200211_030 sps4_200311_018 sps4_200411_007 sps4_200411_009 sps4_200411_010 sps4_200411_013 sps4_200411_014 sps4_200411_015 sps4_200411_016 sps4_200411_025 sps4_200411_026 sps4_200411_030 sps4_200511_001 sps4_200511_016 sps4_200511_017 sps4_200511_020 sps4_200511_023 sps4_200511_024 sps4_200511_025 sps4_200511_028 "
 
 
@@ -432,15 +433,21 @@ set -eux
       if [[ $isrunlog -ge 1 ]] 
       then
           #take the last one
-          lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
+          lastrunlog=`ls -ltr $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
           ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
           if [[ $ismoderr -ne 0 ]]  
           then
              domodify=1
-# temporary until instabilities on Leonardo are not over 20240628
              if [[ $machine == "leonardo" ]]
              then 
                 domodify=0
+                logff=`grep 'See log file for details: ' $lastrunlog | cut -d ':' -f 2`
+                clmerr=`grep "h2osoi_ice has gone significantly negative" $logff |wc -l`
+                #since on Leonardo the 'ERROR: RUN FAIL:' string can be also due to machine issue, we allow modify_triplette just in case of clm instability 
+                #(the most frequent one)
+                if [[ $clmerr -ne 0 ]] ; then
+                   domodify=1
+                fi
              fi
           fi
       fi
@@ -576,15 +583,21 @@ set -eux
       if [[ $isrunlog -ge 1 ]]
       then
           #take the last one
-          lastrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
+          lastrunlog=`ls -ltr $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
           ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
           if [[ $ismoderr -ne 0 ]]
           then
              domodify=1
-# temporary until instabilities on Leonardo are not over 20240628
              if [[ $machine == "leonardo" ]]
              then 
                 domodify=0
+                logff=`grep 'See log file for details: ' $lastrunlog | cut -d ':' -f 2`
+                clmerr=`grep "h2osoi_ice has gone significantly negative" $logff |wc -l`
+                #since on Leonardo the 'ERROR: RUN FAIL:' string can be also due to machine issue, we allow modify_triplette just in case of clm instability 
+                #(the most frequent one)
+                if [[ $clmerr -ne 0 ]] ; then
+                   domodify=1
+                fi 
              fi
           fi
       fi

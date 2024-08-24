@@ -66,10 +66,15 @@ do
    line1script=`echo $line1 | awk '{print $3" "$1" "$2}'`
    line2=`cat triplette.random.${yyyy}${st}.txt | head -n${n2} | tail -1`
    line2script=`echo $line2 | awk '{print $3" "$1" "$2}'`
-   
+  
+  
    #line2 is the order of tirplette file ($1 - lnd, $2 - oce, $3 - atm)
    #line2script is the order of submission script (atm, lnd, oce)
    #retrieveing tag of new ICs to check for their presence
+  
+   ppatmold=`echo $line1 | awk '{print $3}'`
+   pplndold=`echo $line1 | awk '{print $1}'`
+   ppoceold=`echo $line1 | awk '{print $2}'`   
    ppatmnew=`echo $line2 | awk '{print $3}'`
    pplndnew=`echo $line2 | awk '{print $1}'`
    ppocenew=`echo $line2 | awk '{print $2}'`     
@@ -99,7 +104,14 @@ do
    else
       cp ensemble4_${yyyy}${st}_${ens}.sh ensemble4_${yyyy}${st}_${ens}.sh.$dateymdhms
    fi
-   sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
+   if [[ $machine == "leonardo" ]] ; then
+      #s/YYYY/1994/g;s/STDATE/11/g;s/PATM/9/g;s/PLAND/2/g;s/POCE/3/g;s/NRUN/14/g;
+      line1script_leo="s/PATM/${ppatmold}/g;s/PLAND/${pplndold}/g;s/POCE/${ppoceold}/g"
+      line2script_leo="s/PATM/${ppatmnew}/g;s/PLAND/${pplndnew}/g;s/POCE/${ppocenew}/g"
+      sed -i "s@${line1script_leo}@${line2script_leo}@g" ensemble4_${yyyy}${st}_${ens}.sh
+   else
+      sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
+   fi
    chmod 744 ensemble4_${yyyy}${st}_${ens}.sh
   
    #now everything is ready to submit the modified triplette caso, before submission check for presence of ICs
