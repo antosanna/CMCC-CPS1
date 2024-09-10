@@ -31,14 +31,18 @@ mkdir -p $outdirC3S
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
+    sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    chmod u+x $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
 
 fi
 # get   check_iceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
 if [ ! -f $check_iceregrid ]
 then
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
+   sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
+   chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
 fi 
 
 #***********************************************************************
@@ -123,13 +127,13 @@ then
          input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile $ic" 
              # ADD the reservation for serial !!!
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft"
+         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M ${req_mem} -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       else
    # meaning that preproc files have been done by create_cam_files.sh
    # so submit without dependency
-         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft"
+         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       fi
@@ -176,6 +180,9 @@ else
       exit 1
    fi
 fi
+
+exit
+
 #***********************************************************************
 if [ -d $WORK_CPS/$caso ]
 then

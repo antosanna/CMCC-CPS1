@@ -42,7 +42,9 @@ ens=$(printf "%.3d" $((10#$memberlist))) #member with 3 digits
 
 ACTDIR=$SCRATCHDIR/qa_checker/$startdate/CHECKER_${ens}
 wdir=$ACTDIR/CHECK/
-DL=$DIR_CASES/${SPSSystem}_${startdate}_${ens}/logs # case dir 
+#DL=$DIR_CASES/${SPSSystem}_${startdate}_${ens}/logs # case dir 
+
+DL=${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}
 mkdir -p $DL
 if [ -d $ACTDIR ]
 then

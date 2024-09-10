@@ -9,7 +9,7 @@
 real=$1
 outdirC3S=$2
 startdate=$3
-
+member=$real #for dictionary consistency
 yyyy=`echo ${startdate:0:4}`
 set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy

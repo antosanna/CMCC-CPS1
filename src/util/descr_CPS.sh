@@ -125,11 +125,11 @@ then
 # DIRECTORIES Juno
 #   BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup
 #   pushdirapec=/data/products/C3S/$(whoami)/push_APEC
-#   pushdir=$WORK/push/
-   if [[ $(whoami) == ${operational_user} ]] 
-   then
-     	pushdir=/data/products/C3S/$(whoami)/push/
-   fi
+   pushdir=/work/cmcc/cp1/CPS/CMCC-CPS1/push
+#   if [[ $(whoami) == ${operational_user} ]] 
+#   then
+#     	pushdir=/data/products/C3S/$(whoami)/push/
+#   fi
    DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
    DIR_TEMP_NEMOPLOT=$SCRATCHDIR/nemo_timeseries
    DIR_TEMP_CICEPLOT=$SCRATCHDIR/SIE

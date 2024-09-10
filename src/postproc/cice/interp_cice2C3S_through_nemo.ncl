@@ -263,9 +263,15 @@ begin
     system("/bin/rm -f "+outdir+"/interp_cice2C3S_through_nemo.ncl_"+real+"_ok")
     do i=0,nv-1
        if(model(i).eq."cice") then
+          threshold=0.05
           xin   = sfile->$varname(i)$
-          sic@_FillValue=0.
-          xin=xin/sic
+          sic2=sic
+          sic2=where(sic.lt.threshold, 0.,sic)
+          sic2@_FillValue=0.
+          print("ciccio")
+          xin=xin/sic2
+
+          xin=where(sic.lt.threshold, 0.,xin)
           xtmp=xin
           nn=dimsizes(xin)
           nt=nn(0)
@@ -283,7 +289,7 @@ begin
              xtmppois(it,:,:)=tmp2d
              delete(tmp2d)
           end do
-      
+ 
           SKIP_ORCA_SCRIP_GEN  = True
           SKIP_WORLD_SCRIP_GEN = True
           SKIP_WGT_GEN         = True

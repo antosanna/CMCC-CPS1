@@ -1,12 +1,12 @@
 #!/bin/sh -l
 #-------------------------------------------------------------------------------
-# Use: create_edaFORC.sh [yyyy] [mm] [member] [debug]
+# Use: create_edaFORC.sh [yyyy] [mm] [member] [dbg]
 #   yyyy     year of month preceding start-date
 #   mm       month preceding start-date
 #   member      tag for EDA member
 #   backup   for backup IC tag
 #   checkfe 
-#   debug    OPTIONAL (0/1)
+#   dbg    OPTIONAL (0/1)
 #
 # In operational production, this script is launched in $DIR_LND_IC by launch_forced_run_EDA.sh
 #-------------------------------------------------------------------------------
@@ -34,7 +34,7 @@ set +euxv
 . ${DIR_UTIL}/load_ncl
 set -euxv
 
-debug=${6:-0}
+dbg=${6:-0}
 
 #-----------------------------------
 # INPUT SECTION
@@ -96,12 +96,12 @@ then
   exit 1
 fi
 
-if [ $debug -eq 1 ]
+if [ $dbg -eq 1 ]
 then
    forcDIR=$SCRATCHDIR/forc4CLM_eda${member}
    if [ ! -d $forcDIR ]
    then
-       echo "Missing folder $forcDIR. Note that you are in debug mode."
+       echo "Missing folder $forcDIR. Note that you are in dbg mode."
        exit 1
    fi
 fi
@@ -146,7 +146,7 @@ tstep=`expr $nday \* 8`   #248
 # Copy and process required files
 #-------------------------------------------------------------
 #------------------------------------------------       
-DIRDATA=$DATA_ECACCESS/EDA/3hourly/
+DIRDATA=$DATA_ECACCESS/EDA/FORC4CLM/3hourly/
 
 #------------------------------------------------
 # Get inst data from repository

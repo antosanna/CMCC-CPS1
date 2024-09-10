@@ -22,17 +22,19 @@ jun_dir=/data/cmcc/cp1/archive/IC/
 
 realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 
-for st in 01 02 04 05 06 07 09
+for yyyy in `seq 2013 2022`
 do
-   for rea in $realm ; do
+  for st in 01
+  do
+     for rea in $realm ; do
 
-      checkf=$DIR_TEMP/ICs_${st}_${rea}_done
-      if [[ -f $checkf ]]
-      then 
-         continue
-      fi
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/.
-      touch $checkf
-
+       checkf=$DIR_TEMP/ICs_${st}_${rea}_done
+       if [[ -f $checkf ]]
+       then 
+          continue
+       fi
+       rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/.
+       #touch $checkf
+     done
    done
 done

@@ -27,7 +27,7 @@ set +evxu
 . $dictionary
 set -evxu
 
-if [[ ! -f $check_merge_cam_files ]]
+if [[ ! -f ${check_merge_cam_files}_${ft} ]]
 then
    #--------------------------------------------
    # cam define mulptiplier for timestep (daily,6h,12h)
@@ -62,7 +62,7 @@ then
       elif [ $nt -gt $expected_ts  ]
       then
          ncks -O -F -d time,1,$expected_ts $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
-         rsync -auv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc   
+         mv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc   
       fi
    
    # remove nr.1 timestep according to filetyp $ft
@@ -84,4 +84,4 @@ then
       fi
    fi
 fi
-touch $check_merge_cam_files
+touch ${check_merge_cam_files}_${ft}

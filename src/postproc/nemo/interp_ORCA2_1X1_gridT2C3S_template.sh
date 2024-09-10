@@ -144,8 +144,12 @@ do
     echo "launching $scriptname "`date`
     echo "---------------------------------------------"
     mkdir -p $wkdir/$var
-    cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 10000 -t "24" -S qos_resv -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${DIR_CASES}/$caso/logs -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
+    
+   if [[ ! -f ${check_oceregrid}_${var} ]] 
+   then
+       cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 10000 -t "24" -S qos_resv -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${DIR_CASES}/$caso/logs -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
+   fi
 done
 while `true`
 do
@@ -154,11 +158,19 @@ do
       np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
       if [[ $np -eq 0 ]]
       then
-         title="[C3S] ${CPSSYS} forecast ERROR"
-         body="ERROR in standardization of ocean files for case ${caso}. 
-            Script is ${wkdir}/var/$scriptname"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-         exit 1
+
+         #in the time of the findjobs the flag may have appeared check again before exiting
+          if [ ! -f ${check_oceregrid}_t14d ] || [ ! -f ${check_oceregrid}_t20d ] || [ ! -f ${check_oceregrid}_t26d ] || [ ! -f ${check_oceregrid}_t28d ] || [ ! -f ${check_oceregrid}_t17d ] || [ ! -f ${check_oceregrid}_others ]
+          then
+             title="[C3S] ${CPSSYS} forecast ERROR"
+             body="ERROR in standardization of ocean files for case ${caso}. 
+             Script is ${wkdir}/var/$scriptname"
+             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+             exit 1
+          else
+             touch ${check_oceregrid}
+             rm $inputfile
+          fi
       else
          sleep 300
       fi

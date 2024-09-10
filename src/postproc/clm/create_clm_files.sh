@@ -53,6 +53,10 @@ then
           title="${CPSSYS} forecast notification - ERROR "
           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
           exit 1
+      elif [ $nt -gt $expected_ts  ]
+      then
+          ncks -O -F -d time,1,$expected_ts pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc  
+          mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc  
       fi
      # remove nr.1 timestep according to filetyp $ft
      # take from 2nd timestep

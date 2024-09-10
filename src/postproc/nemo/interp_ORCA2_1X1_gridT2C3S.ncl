@@ -405,6 +405,7 @@ begin
 
   tmask = tofloat(meshmask->tmask(0,:,:,:))
   fse3t = tofloat(meshmask->gdept_0(0,:,:,:))
+  fse3t4avg = tofloat(meshmask->e3t_0(0,:,:,:))
   fse3w = tofloat(meshmask->gdepw_0(0,:,:,:))
   mbathy=tofloat(domain->bottom_level(0,:,:))
   e3t_0 = tofloat(meshmask->e3t_1d(0,:))
@@ -432,9 +433,9 @@ begin
    ;---------------------------------------------
           print("processing var "+varname(i))
           if ( varname(i).eq."somss300") then
-             xtmp=avg300(sshn,sal,tmask,fse3t,e3t_0,fillval(i))
+             xtmp=avg300(sshn,sal,tmask,fse3t4avg,e3t_0,fillval(i))
           else if ( varname(i).eq."somtt300") then
-             xtmp=avg300(sshn,tem,tmask,fse3t,e3t_0,fillval(i))
+             xtmp=avg300(sshn,tem,tmask,fse3t4avg,e3t_0,fillval(i))
           else if ( varnameout(i).eq."t14d".or.varnameout(i).eq."t17d".or.varnameout(i).eq."t20d".or.varnameout(i).eq."t26d".or.varnameout(i).eq."t28d") then
              xtmp=isotherm_depth(tem,tmask,fse3t,fse3w,reflev(i),mbathy,fillval(i))
           else

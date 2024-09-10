@@ -23,7 +23,7 @@ filedir=$outdirC3S
 
 # real in 2 digits
 real=$(printf "%.2d" $((10#${real})))
-
+member=$real #for dictionary consistency
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh ${startdate:0:4}
 . $dictionary
