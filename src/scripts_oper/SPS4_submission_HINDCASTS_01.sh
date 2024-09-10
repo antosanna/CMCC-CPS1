@@ -90,7 +90,7 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2022 
+endyear=2012 
 iniy_hind=1993
 for st in $stlist
 do

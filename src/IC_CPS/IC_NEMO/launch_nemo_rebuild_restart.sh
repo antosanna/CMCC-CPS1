@@ -16,7 +16,8 @@ mkdir -p $DIR_TEMP
 for yyyy in `seq $iniy_hind $endy_hind`
 do
 #TEMPORARY
-   for st in {01..12}
+#   for st in {01..12}
+   for st in {07..09}
    do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
       mkdir -p ${IC_NEMO_CPS_DIR}/$st

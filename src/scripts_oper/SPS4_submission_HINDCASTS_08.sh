@@ -90,8 +90,8 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2022 
-iniy_hind=1993
+endyear=2015 #MODIFIED FOR DOUBLE IC ISSUE (ZEUS AND JUNO RUNNING THE SAME ICs) 
+iniy_hind=2001
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
