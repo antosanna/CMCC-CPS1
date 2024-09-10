@@ -142,6 +142,13 @@ then
    echo "prescribed_strataero_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
    echo "use_init_interp = .true.">>$DIR_CASES/$caso/user_nl_clm
 fi
+#for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
+if [[ $yyyy$st -eq 201501 ]]  
+then   
+   echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
+fi
+
+
 #----------------------------------------------------------
 
 

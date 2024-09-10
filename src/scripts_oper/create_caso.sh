@@ -148,6 +148,11 @@ then
    echo "use_init_interp = .true.">>$DIR_CASES/$caso/user_nl_clm
 fi
 
+#for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
+if [[ $yyyy$st -eq 201501 ]] 
+then   
+   echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
+fi
 #----------------------------------------------------------
 
 cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe

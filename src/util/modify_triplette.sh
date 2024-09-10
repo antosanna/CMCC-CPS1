@@ -87,7 +87,8 @@ do
 
    # Make substitutions in triplette.random
    # substitute triplette with the ones in 41st line
-   sed -i "s/${line1}/${line2}/g" triplette.random.${yyyy}${st}.txt
+   sed -i "${n1}s/${line1}/${line2}/" triplette.random.${yyyy}${st}.txt
+   #sed -i "s/${line1}/${line2}/g" triplette.random.${yyyy}${st}.txt
    # remove 41st line to avoid repetition in next substitutions
    sed -i "${n2},${n2}d" triplette.random.${yyyy}${st}.txt
 
@@ -110,7 +111,8 @@ do
       line2script_leo="s/PATM/${ppatmnew}/g;s/PLAND/${pplndnew}/g;s/POCE/${ppocenew}/g"
       sed -i "s@${line1script_leo}@${line2script_leo}@g" ensemble4_${yyyy}${st}_${ens}.sh
    else
-      sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
+      sed -i "s/${yyyy} ${st} ${line1script}/${yyyy} ${st} ${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
+      #sed -i "s/${line1script}/${line2script}/g" ensemble4_${yyyy}${st}_${ens}.sh
    fi
    chmod 744 ensemble4_${yyyy}${st}_${ens}.sh
   
