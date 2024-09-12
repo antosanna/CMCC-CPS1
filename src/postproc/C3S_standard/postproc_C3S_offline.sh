@@ -58,7 +58,6 @@ wkdir_clm=$SCRATCHDIR/regrid_C3S/$caso/CLM
 mkdir -p ${wkdir_clm}
 # get check_postclm  from dictionary
 
-#if [[ ! -f $dir_cases_remote/$caso/logs/${caso}_clm_C3SDONE ]]
 if [[ ! -f $check_all_postclm ]]
 then
   
@@ -222,15 +221,51 @@ done
 
 exit
 # now rm file not necessary for archiving
-if [[ `ls $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc |wc -l` -ge 1 ]] ; then
-   rm $DIR_ARCHIVE/$caso/rof/hist/$caso.hydros.h0.????-??.nc
-fi
-if [[ `ls  $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc |wc -l` -ge 1 ]] ; then
-   rm $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.h0.????-??.nc
-fi
-if [[ `ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc |wc -l` -ge 1 ]] ; then
-   rm $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.????-??.nc
-fi
+for realm in clm2 cam hydros
+do
+   case $realm in
+        clm2)listatypes="h0 h1 h2 h3";dirname=lnd;;
+        cam)listatypes="h0 h1 h2 h3 h4";dirname=atm;;
+        hydros)listatypes="h0";dirname=rof;;
+   esac
+   for ft in $listatypes
+   do
+      if [[ $ft == "h0" ]]
+      then
+         suff=".nc"
+      else
+         suff="-01-00000.nc"
+      fi
+      n_zip=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc|wc -l`
+      if [[ $n_zip -ne 0 ]]
+      then
+         listzip=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc`
+         for ff in $listzip
+         do
+            rootf=`echo $ff|rev|cut -d '.' -f3-|rev`
+            if [[ -f $rootf$suff ]]
+            then
+               rm $rootf$suff
+               echo "$rootf$suff removed"
+            fi
+         done
+      else
+         n=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc|wc -l`
+         if [[ $n -ne 0 ]]
+         then
+            list=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc`
+            for ff in $list
+            do
+               finalf=`echo "${ff/$suff/.zip.nc}"`
+               echo "compress $ff $finalf"
+               $compress $ff $finalf
+               rm $ff
+               echo "$ff removed"
+            done
+         fi
+      fi
+   done   #type
+done  #realm
 if [[ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc |wc -l` -ge 1 ]] ; then
   rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
 fi

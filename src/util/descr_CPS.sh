@@ -357,3 +357,6 @@ IC_CPS_guess=$WORK/CPS/CMCC-${CPSSYS}/IC_CPS_guess
 WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
+
+
+set +a

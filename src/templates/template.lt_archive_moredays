@@ -22,8 +22,11 @@ then
    . $dictionary
    set -euvx
    touch $check_run_moredays
-   exit #temporary disabled C3S production
-   if [[ ! -f $check_pp_C3S ]] && [[ $machine == "juno" ]]
+   if [[ $typeofrun == "hindcast" ]]
+   then
+      exit 0 #disabled for hindcast and done off-line
+   fi
+   if [[ ! -f $check_pp_C3S ]] 
    then
       ./postproc_C3S_${caso}.sh 
    fi  

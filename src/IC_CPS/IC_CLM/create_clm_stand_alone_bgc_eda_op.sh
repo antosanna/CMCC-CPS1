@@ -43,7 +43,7 @@ cd ${DIR_CASES}/$caze
 ./xmlchange DATM_MODE=CLMGSWP3v1
 ./xmlchange PROJECT=0490
 ./xmlchange CHARGE_ACCOUNT=0490
-./xmlchange RUN_TYPE=hybrid
+#./xmlchange RUN_TYPE=hybrid
 ./xmlchange DATM_YR_ALIGN=2015
 ./xmlchange DATM_YR_START=2015
 ./xmlchange DATM_YR_END=2030

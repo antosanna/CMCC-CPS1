@@ -40,6 +40,10 @@ do
                 if [[ $hinddone -eq 0 ]] && [[ $hinddone_juno -eq 0 ]]
                 then
                     list2do+=" ${SPSSystem}_${yyyy}${st}_0${i}"
+                    if [[ `echo $list2do|wc -w` -eq $((30 - $n_done - $n_done_juno)) ]]
+                    then
+                       break
+                    fi
                 fi
              done
              echo "members still to be run: $list2do"
