@@ -13,7 +13,7 @@ yyyy=1994
 st=08
 caso=sps4_${yyyy}${st}_004
 
-debug=1 #only one month
+dbg=1 #only one month
 mkdir -p $DIR_LOG/hindcast/recover/
 echo "-----------STARTING ${caso}.l_archive-------- "`date`
 cd $DIR_CASES/${caso}
@@ -77,7 +77,7 @@ do
       $DIR_POST/nemo/rebuild_EquT_1month.sh ${caso} $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
       echo "-----------postproc_monthly_${caso}.sh COMPLETED-------- "`date`
       touch  $check_pp_monthly
-      if [[ $debug -eq 1 ]]
+      if [[ $dbg -eq 1 ]]
       then
          exit
       fi

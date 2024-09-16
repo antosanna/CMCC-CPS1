@@ -18,7 +18,7 @@ nrun=$4
 workdir=$5
 var=$6
 ncep_dir=$7
-debug=$8
+dbg=$8
 
 if [ $yyyy -lt ${iniy_fore} ]
 then
@@ -47,7 +47,7 @@ if [ $nsstfilesDONE -eq $nrun ] ; then
 	rm ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_0??_DONE
 
 mkdir -p $DIR_FORE_ANOM/monthly/${var}/C3S/anom/
- if [[ $debug -eq  0 ]] ; then
+ if [[ $dbg -eq  0 ]] ; then
     #rsync to $DIR_CLIM
     rsync -auv --remove-source-files ${DIR}/${var}_${SPSSYS}_sps_${yyyy}${st}_all_ano.${refperiod}_miss.nc $DIR_FORE_ANOM/monthly/${var}/C3S/anom/ 
  fi

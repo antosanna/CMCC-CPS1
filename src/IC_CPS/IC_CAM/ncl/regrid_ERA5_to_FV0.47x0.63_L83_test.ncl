@@ -21,7 +21,7 @@ begin
     ; isfilepresent raise an hdf5 error with complex path as /work/csp/sp1/CMCC-SPS3.5/WORK_IC4CAM/ECOPER_20201227_00_ok
     ; (it expect a supported file as netcdf,hdf5 etc. and return a misleading error message)
     ; fileexists support txt files (look at NCL doc page)
-    ; since debug for isfilepresent was a nightmare, a verbose if then else statement has been preferred
+    ; since dbg for isfilepresent was a nightmare, a verbose if then else statement has been preferred
     exists = fileexists(checkfile)
     if(.not.exists) then
         print(checkfile+" file not exists")

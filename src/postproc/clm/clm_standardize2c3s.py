@@ -28,7 +28,7 @@ def getdzgrnd(c3s_el, f, dbmode):
         dzl=2*(mid-top)
         bot=mid+0.5*dzl
         dzgrnd[idx]=dzl
-        # if debug mode is active print
+        # if dbg mode is active print
         printdb("%4.0f %9.3f %9.3f %9.3f %9.3f" % (idx,top,mid,bot,dzl),dzgrnd[idx],dbmode) 
 
     flag_error = False

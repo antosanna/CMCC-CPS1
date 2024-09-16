@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-#this script can be run in debug mode but always using submitcommand
+#this script can be run in dbg mode but always using submitcommand
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -19,11 +19,11 @@ ifexistdelete() {
 #*************************************************************************
 # Input 
 #*************************************************************************
-debug=0
+dbg=0
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
 #
 #
-if [ $debug -eq 1 ]
+if [ $dbg -eq 1 ]
 then
    ic="atm=5,lnd=1,ocn=02"
    caso="sps4_199307_001"
@@ -83,7 +83,7 @@ then
    export CLM_OUTPUT_REG1x1=${DIROUT_REG1x1}/${rootname}.reg1x1.nc
     
    cd ${DIROUT_REG1x1}  
-   if [[ $debug -ne 0 ]] && [[ -f $CLM_OUTPUT_REG1x1 ]]
+   if [[ $dbg -ne 0 ]] && [[ -f $CLM_OUTPUT_REG1x1 ]]
    then
       echo "file already regridded"
    else

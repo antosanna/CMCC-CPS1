@@ -14,7 +14,7 @@ climdir=$5
 workdir=$6
 var=$7
 vardir=$var
-debug=$8
+dbg=$8
 if [ $yyyy -lt ${iniy_fore} ]
 then
    . ${DIR_SPS35}/descr_hindcast.sh
@@ -69,7 +69,7 @@ if [ $nanomDONE -eq $nrun ] ; then
 
    #rsync to $DIR_CLIM!
    mkdir -p $DIR_FORE_ANOM/monthly/${var}/C3S/anom/ 
-   if [[ $debug -eq  0 ]]  ; then
+   if [[ $dbg -eq  0 ]]  ; then
       rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_spread_ano.$refperiod.nc $DIR_FORE_ANOM/monthly/${var}/C3S/anom/
       rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_ens_ano.$refperiod.nc $DIR_FORE_ANOM/monthly/${var}/C3S/anom/
       rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_all_ano.$refperiod.nc $DIR_FORE_ANOM/monthly/${var}/C3S/anom/

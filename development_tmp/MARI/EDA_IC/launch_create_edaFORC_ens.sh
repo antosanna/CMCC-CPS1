@@ -18,7 +18,7 @@ mm=01
 finalyy="1969"
 finalmm="12"
 
-debug=0
+dbg=0
 backup=0
 n=$1
 while [[ ${yy}${mm} -le $finalyy$finalmm ]] ; do
@@ -40,7 +40,7 @@ while [[ ${yy}${mm} -le $finalyy$finalmm ]] ; do
          echo "advancing without recomputing"
          continue
       fi
-      . ${script_dir}/create_edaFORC.sh $yy $mm $n $backup $checkfile $debug
+      . ${script_dir}/create_edaFORC.sh $yy $mm $n $backup $checkfile $dbg
     if [[ ! -f $checkfile ]]
     then
        body="CLM ICs: Forcing files from EDA member $n data NOT created

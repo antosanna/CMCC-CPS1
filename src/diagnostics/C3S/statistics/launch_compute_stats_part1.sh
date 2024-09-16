@@ -11,12 +11,10 @@
 
 # THIS SCRIPT IS MEANT TO BE LAUNCHED FROM CRONTAB
 set -uexv
-debug=0          # just the first startdate and first year
 do_only_wind=0   # if you want to compute only vector vars
 do_only_test_var=1   # if you want to compute only myvar
 myvar="clt"
 #
-# IN debug=1 MODE ONLY ONE YEAR (instead of all 24)
 namescript=compute_stats_C3S_
 outdir=$OUTDIR_DIAG/C3S_statistics   #OUTDIR_DIAG
 mkdir -p $outdir

@@ -13,9 +13,9 @@ set -euvx
 
 if [[ `whoami` == $operational_user ]]
 then
-   debug=0
+   dbg=0
 fi
-debug=1
+dbg=1
 skip=1
 if [[ $# -eq 0 ]]
 then
@@ -108,7 +108,7 @@ do
 
    export SPSSystem
    ncl $DIR_DIAG/ncl/compute_SIE_cice.ncl
-   if [[ $debug -eq 1 ]]
+   if [[ $dbg -eq 1 ]]
    then
       exit
    fi

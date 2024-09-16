@@ -13,9 +13,9 @@ set +evxu
 set -evxu
 st=$2
 
-debug=0  #operational
+dbg=0  #operational
 if [[ `whoami` != "${operational_user}"  ]] ;  then
-    debug=1  #test
+    dbg=1  #test
 fi
 
 dirlog=${DIR_LOG}/$typeofrun/$yyyy$st/diagnostics/
@@ -23,11 +23,11 @@ mkdir -p $dirlog
 flag_done=$dirlog/plots_all_DONE
 
 echo "launching diagnostic on C3S files for website"
-input="$yyyy $st $flag_done $debug" 
+input="$yyyy $st $flag_done $dbg" 
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
 
 echo "launching ocean diagnostics on DMO for website"
-input="$yyyy $st $flag_done $debug"
+input="$yyyy $st $flag_done $dbg"
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
 
 echo "waiting for the diagnostic to be concluded before updating the website"

@@ -3,7 +3,7 @@
 #BSUB -J test
 #BSUB -e logs/test_%J.err
 #BSUB -o logs/test_%J.out
-# this script can be run in debug mode but always with submitcommand
+# this script can be run in dbg mode but always with submitcommand
 # THIS IHAS TO BE REVIEWED!!!!!!
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
@@ -12,11 +12,11 @@
 . $DIR_UTIL/load_ncl
 set -euvx
 here=$PWD
-#debug=${7:-0}    #new argument to allow test in debug mode
-debug=1
+#dbg=${7:-0}    #new argument to allow test in dbg mode
+dbg=1
 #
 
-if [ $debug -eq 1 ] 
+if [ $dbg -eq 1 ] 
 then
 #==================================================
 # USER DEFINED SECTION
@@ -103,7 +103,7 @@ do
       cd $inputdirCAM
       if [[ $inputFV -nt $outdirC3S/regridSE_C3S.ncl_${type}_${real}_ok ]]
       then
-         if [[ $debug -eq 0 ]]
+         if [[ $dbg -eq 0 ]]
          then
 # in operational mode rm to recompute
             rm $outdirC3S/regridSE_C3S.ncl_${type}_${real}_ok
@@ -162,7 +162,7 @@ do
        fi  
     fi  
 done
-if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ] || [[ $debug -eq 0 ]]
+if [ ! -f $outdirC3S/interp_cice2C3S_through_nemo.ncl_${real}_ok ] || [[ $dbg -eq 0 ]]
 then
 #-------------------------------------------------------------
 # compute C3S var from CICE

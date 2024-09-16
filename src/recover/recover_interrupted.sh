@@ -2,7 +2,7 @@
 # REMEMBER TO UPDATE THE NAME OF LOGFILE!!!
 # PART YOU SHOULD MODIFY: log file above
 # start-month
-# debug
+# dbg
 # listacases
 # JUST IN CASE listatoignore*
 
@@ -25,7 +25,7 @@
 
 function write_help_leonardo
 {
-  echo "USE ONLY FROM crontab if not debug: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
+  echo "USE ONLY FROM crontab if not dbg: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
   echo "     (if hindcast only st else also yyyy)"
   echo ""
   echo "CAVEAT"
@@ -65,7 +65,7 @@ set -euxv
 mo_today=`date +%m`
 yy_today=`date +%Y`
 
-debug=2  #set to 2 the first time you run in order to print only the list of interrupted 
+dbg=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
@@ -99,13 +99,13 @@ listofcases="sps4_200802_013 sps4_200802_021 sps4_200802_022 sps4_200802_023 sps
 
 if [[ $# -ge 1 ]]
 then
-   debug=${1}
+   dbg=${1}
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh 1993
 #set -euvx
 set -eux
 else
-   debug=0    #you want to resubmit just the cases listed in your hardcoded $listofcases
+   dbg=0    #you want to resubmit just the cases listed in your hardcoded $listofcases
 fi
 if [[ $# -ge 2 ]]
 then
@@ -126,7 +126,7 @@ set -eux
 fi
 if [[ $machine == "leonardo" ]]
 then
-    LOG_FILE=$DIR_LOG/hindcast/recover_${debug}_`date +%Y%m%d%H%M`.log
+    LOG_FILE=$DIR_LOG/hindcast/recover_${dbg}_`date +%Y%m%d%H%M`.log
     exec 3>&1 1>>${LOG_FILE} 2>&1
 fi
 if [[ $# -ge 3 ]]
@@ -146,9 +146,9 @@ set +euvx
 #set -euvx
 set -eux
 fi
-if [[ `echo -n $debug|wc -c` -ne 1 ]]
+if [[ `echo -n $dbg|wc -c` -ne 1 ]]
 then
-   echo "first input should be debug=0/1/2"
+   echo "first input should be dbg=0/1/2"
    if [[ -f ${check_recover_running} ]] ; then
          rm ${check_recover_running}
    fi 
@@ -173,7 +173,7 @@ cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 cnt_st_archive=0     #CASES INTERRUPTED DURING ST_ARCHIVE
 
-filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${debug}_list.${machine}.`date +%Y%m%d%H`.csv
+filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${dbg}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
 echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays (postproc C3S)" > $filecsv
 ### INITIALIZE LISTS
@@ -393,14 +393,14 @@ condafunction deactivate $envcondarclone
 set -eux
 echo "end of conversion with python on CMCC machines "`date`
 
-if [[ $debug -eq 2 ]]
+if [[ $dbg -eq 2 ]]
 then
    echo "DEBUG=2: NO ACTION REQUIRED, JUST LISTING OF INTERRUPTED JOBS"
 fi
 
-### REMEMBER: if debug=1 only 1 case for category will be processed and you could check that everything was ok.
+### REMEMBER: if dbg=1 only 1 case for category will be processed and you could check that everything was ok.
 
-if [[ $debug -ne 2 ]] ; then
+if [[ $dbg -ne 2 ]] ; then
     
    echo "NOW PROCESSING THE INTERRUPTED CASES"
    now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
@@ -510,7 +510,7 @@ set -eux
             exit
          fi
       fi
-      if [[ $debug -eq 1 ]] ; then break ; fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 # lt_archive
    if [[ $cnt_moredays -ne 0 ]] ; then
@@ -548,7 +548,7 @@ set -eux
          exit
       fi
       
-      if [[ $debug -eq 1 ]] ; then break ; fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
    done
   
 # st_archive
@@ -564,7 +564,7 @@ set -eux
       cd $DIR_CASES/$caso
       $DIR_RECOVER/recover_st_archive.sh $caso
 
-      if [[ $debug -eq 1 ]] ; then break ; fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
    done
  
 # resubmit monthly run
@@ -663,7 +663,7 @@ set -eux
              exit
           fi
       fi
-      if [[ $debug -eq 1 ]] ; then break ; fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
    done
    
    
@@ -689,7 +689,7 @@ set -eux
       cd $DIR_CASES/$caso
 #      bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
-      if [[ $debug -eq 1 ]] ; then break ; fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
    done
    
    
@@ -701,7 +701,7 @@ fi
 exit
 
 #TEMPORARY DISABLED
-if [[ $debug -eq 0 ]] ; then
+if [[ $dbg -eq 0 ]] ; then
   # third input optional: if present do not print the list of running/pending jobs
   doplot=1
   logfile=$DIR_LOG/$typeofrun/monitor_${typeofrun}.$st.`date +%Y%m%d%M`.txt

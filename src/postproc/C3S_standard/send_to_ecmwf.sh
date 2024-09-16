@@ -102,7 +102,7 @@ EOF
    fi
    chmod 744 $script_send
 
-fi  #if debug
+fi  #if dbg
 lftp -f $script_send
 stat=$?
 if [ $stat -eq 1 ]; then

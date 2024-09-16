@@ -76,7 +76,7 @@ end if
 SPSsys=getenv("SPSSystem")
 fili = systemfunc("cd "+dirwkroot+" ; ls "+SPSsys+"_"+yyyyfore+st+"*.cice.nc")
 nfils=dimsizes(fili)
-;nfils=5 ;for debug purposes
+;nfils=5 ;for dbg purposes
 fi = addfile (dirwkroot+"/"+fili(0), "r")
 print("going to read "+dirwkroot+"/"+fili(0))
 tmp=fi->aice

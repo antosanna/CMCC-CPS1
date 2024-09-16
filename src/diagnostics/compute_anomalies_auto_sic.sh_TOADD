@@ -19,13 +19,13 @@ workdir=${11}
 monthstr=${12}
 checkfile=${13}
 pldir=${14}
-debug=${15}
+dbg=${15}
 #
 
 datamm=$monthdir/${varm}/C3S
 workdir=$workdir/${varm}
 
-#if [ $debug -ne 1 ]
+#if [ $dbg -ne 1 ]
 #then
 $DIR_UTIL/diag/$varm/assembler_SPS3_${varm}_month.sh $yyyy $st $nrun $datamm $workdir $varm $scriptdir $nmf
 if [ $var == "sic" ] ; then

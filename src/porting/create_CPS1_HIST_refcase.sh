@@ -37,7 +37,7 @@ $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset HIST_CAM
 
 cd $DIR_CASES/$caso
 
-# set to days for debug purposes; then modified in the op-chain
+# set to days for dbg purposes; then modified in the op-chain
 ./xmlchange STOP_OPTION=nmonths
 if [[ $machine == "zeus" ]]
 then

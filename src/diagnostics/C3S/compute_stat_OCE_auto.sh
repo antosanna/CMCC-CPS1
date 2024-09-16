@@ -19,7 +19,7 @@ make_statistics=${9}
 make_anom=${10}
 make_plot=${11}
 flag_done=${12}
-debug=${13}
+dbg=${13}
 #
 climdir=$DIR_CLIM/daily/$varm 
 
@@ -98,7 +98,7 @@ if [ ! -f ${dirlog}/capsule_${yyyy}${st}_oce_${varm}_DONE ] ; then
 fi 
 
 if [ $make_anom -eq 1 ] ; then
-	  $DIR_DIAG_C3S/anom_${SPSSYS}_oce.sh $yyyy $st $refperiod $nrun $climdir $varm $workdir $debug
+	  $DIR_DIAG_C3S/anom_${SPSSYS}_oce.sh $yyyy $st $refperiod $nrun $climdir $varm $workdir $dbg
 fi
 
 if [ $make_plot -eq 1 ] ; then

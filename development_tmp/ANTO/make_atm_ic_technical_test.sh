@@ -13,9 +13,9 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh
 set -euvx
 
-debug=1
+dbg=1
 bk=1
-if [[ $debug -eq 1 ]]
+if [[ $dbg -eq 1 ]]
 then
 #   IC_SPS_guess=/work/$DIVISION/$USER/scratch/ICs4tests/
    IC_CAM_SPS_DIR=$IC_SPS_guess/CAM/

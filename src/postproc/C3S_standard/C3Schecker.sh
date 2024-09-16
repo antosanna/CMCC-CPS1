@@ -1,6 +1,6 @@
 #!/bin/sh -l
 
-#this script can be run in debug mode but always using submitcommand
+#this script can be run in dbg mode but always using submitcommand
 
 # load variables from descriptor
 . $HOME/.bashrc
@@ -15,7 +15,7 @@ set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 
-debug=0
+dbg=0
 cd $outdirC3S   #can be redundant
 set +euvx
 . $dictionary
@@ -75,7 +75,7 @@ then
 #   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
 # the following is defined in $dictionary
 #   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${real}
-#   if [ ! -f ${checkfile_daily} ] || [[ $debug -eq 0 ]]
+#   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
 #   then
 #      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $real 
 #   fi

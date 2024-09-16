@@ -15,7 +15,7 @@ typefore=$7
 export reglist="$8"
 ensorgl="$9"
 flag_done=${10}
-debug=${11}
+dbg=${11}
 
 if [ $yyyy -lt ${iniy_fore} ]
 then
@@ -35,7 +35,7 @@ if [ $all -eq 3 ] ; then #case all=3 -> compute capsule, anomalies and plot
        set -e
        if [ $ncapsuleyyyystDONE -eq 0 ] ; then
 
-	          $DIR_DIAG_C3S/C3S_lead2Mmonth_capsule_notify.sh  $yyyy $st $nrun $workdir $varm $debug ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
+	          $DIR_DIAG_C3S/C3S_lead2Mmonth_capsule_notify.sh  $yyyy $st $nrun $workdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
        fi
        
        # if this flag is missing: you are running for the first time
@@ -65,7 +65,7 @@ if [ $all -eq 3 ] ; then #case all=3 -> compute capsule, anomalies and plot
        #if this flag is missing - is the first time you run this routine
        if [ $nanomyyyystDONE -eq 0 ] ; then
            
-	            $DIR_DIAG_C3S/anom_${SPSSYS}_C3S_notify.sh $yyyy $st $refperiod $nrun $climdir $workdir $varm $debug ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
+	            $DIR_DIAG_C3S/anom_${SPSSYS}_C3S_notify.sh $yyyy $st $refperiod $nrun $climdir $workdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
        fi
 
 elif [ $all -eq 2 ] ; then #case all=2  -> compute anomalies +plot
@@ -73,7 +73,7 @@ elif [ $all -eq 2 ] ; then #case all=2  -> compute anomalies +plot
        nanomyyyystDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/anom_sps_${yyyy}${st}_${varm}_DONE* | wc -l`
        set -e
        if [ $nanomyyyystDONE -eq 0 ] ; then
-	         $DIR_DIAG_C3S/anom_${SPSSYS}_C3S_notify.sh $yyyy $st $refperiod $nrun $climdir $workdir $varm $debug
+	         $DIR_DIAG_C3S/anom_${SPSSYS}_C3S_notify.sh $yyyy $st $refperiod $nrun $climdir $workdir $varm $dbg
        fi	
 fi 
 
@@ -86,7 +86,7 @@ if [[ "$varm" == "sst" ]] ; then
    ncep_dir=$SCRATCHDIR/ENSO/NCEP
    mkdir -p $ncep_dir
 
-	  $DIR_DIAG_C3S/nino_plume_notify.sh $yyyy $st $refperiod $nrun $workdir $varm $ncep_dir $debug
+	  $DIR_DIAG_C3S/nino_plume_notify.sh $yyyy $st $refperiod $nrun $workdir $varm $ncep_dir $dbg
 	  for ensoreg in $ensorgl ; do
 	      $DIR_DIAG_C3S/ENSO_plot_notify.sh $yyyy $st $ensoreg $dirplots $workdir $ncep_dir
        $DIR_DIAG_C3S/ENSO_prob_seas_plot.sh $yyyy $st $ensoreg $dirplots $workdir

@@ -5,13 +5,13 @@
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/descr_ensemble.sh 1993  #THIS SCRIPT SHOULD RUN
                                       #ONLY FOR HINDCASTS
-#. $DIR_UTIL/load_nco
+. $DIR_UTIL/load_nco
 #. $DIR_UTIL/load_cdo
 
 set -evxu
 
 caso=$1
-dir_cases_remote=$2
+dir_cases=$2
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
 yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
@@ -31,24 +31,25 @@ set +euvx
 . $dictionary
 set -euvx
 mkdir -p $outdirC3S
-mkdir -p $dir_cases_remote/$caso/logs
-
+mkdir -p $dir_cases/$caso/logs
+dirlog=$dir_cases/$caso/logs
 # get   check_oceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
-    sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $dir_cases_remote/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
-    chmod u+x $dir_cases_remote/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 1500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $dir_cases_remote/$caso/logs/ -d ${dir_cases_remote}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh 
+    sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    chmod u+x $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 1500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$dirlog" 
 
 fi
 # get   check_iceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
 if [[ ! -f $check_iceregrid ]]
 then
-   sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $dir_cases_remote/$caso/interp_cice2C3S_${caso}.sh
-   chmod u+x $dir_cases_remote/$caso/interp_cice2C3S_${caso}.sh
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $dir_cases_remote/$caso/logs/ -d ${dir_cases_remote}/$caso -s interp_cice2C3S_${caso}.sh 
+   sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $dir_cases/$caso/interp_cice2C3S_${caso}.sh
+   chmod u+x $dir_cases/$caso/interp_cice2C3S_${caso}.sh
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_cice2C3S_${caso}.sh 
 fi 
 
 #***********************************************************************
@@ -75,13 +76,13 @@ then
 
             input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic"
             # ADD the reservation for serial !!!
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${dir_cases_remote}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
         
 
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $dir_cases_remote/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
        else
        # meaning that preproc files have been done by create_clm_files.sh
@@ -90,14 +91,14 @@ then
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv  -j postpc_clm_${caso} -l $dir_cases_remote/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv  -j postpc_clm_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
        fi
    done
    while `true`
    do
        if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 2 ]]
        then
-          #touch $dir_cases_remote/$caso/logs/${caso}_clm_C3SDONE
+          #touch $dir_cases/$caso/logs/${caso}_clm_C3SDONE
           touch $check_all_postclm
           break
        fi  
@@ -119,7 +120,7 @@ wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
 mkdir -p ${wkdir_cam}
 #get check_all_camC3S_done from dictionary
 #if [[ ! -f $check_all_camC3S_done ]]
-#if [[ ! -f $dir_cases_remote/$caso/logs/${caso}_all_cam_C3SDONE ]]
+#if [[ ! -f $dir_cases/$caso/logs/${caso}_all_cam_C3SDONE ]]
 if [[ ! -f $check_all_camC3S_done ]]
 then
    filetyp="h0 h1 h2 h3"
@@ -143,16 +144,16 @@ then
       then
          input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile $ic" 
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases_remote/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
          input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M ${req_mem} -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $dir_cases_remote/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M ${req_mem} -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       else
    # meaning that preproc files have been done by create_cam_files.sh
    # so submit without dependency
          input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases_remote/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       fi
             
    done
@@ -163,7 +164,7 @@ then
       if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
       then
          touch $check_all_camC3S_done
-#         touch $dir_cases_remote/$caso/logs/${caso}_all_cam_C3SDONE
+#         touch $dir_cases/$caso/logs/${caso}_all_cam_C3SDONE
          break
       fi
       sleep 60
@@ -173,14 +174,14 @@ fi # if on $check_all_camC3S_done
 while `true`
 do
    if [[ -f $check_all_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
-#   if [[ -f $dir_cases_remote/$caso/logs/${caso}_clm_C3SDONE ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $dir_cases_remote/$caso/logs/${caso}_all_cam_C3SDONE ]]
+#   if [[ -f $dir_cases/$caso/logs/${caso}_clm_C3SDONE ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $dir_cases/$caso/logs/${caso}_all_cam_C3SDONE ]]
    then
       break
    fi
    sleep 60
 done
 #touch $check_pp_C3S
-touch $dir_cases_remote/$caso/logs/postproc_C3S_${caso}_DONE
+touch $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
@@ -219,7 +220,6 @@ do
    fi  
 done
 
-exit
 # now rm file not necessary for archiving
 for realm in clm2 cam hydros
 do

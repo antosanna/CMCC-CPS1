@@ -81,9 +81,9 @@ idaspath=/idas/home/sp1/CMCC-${CPSSYS}
 # retention time
 rettime=60
 # DEBUG flag 
-# debug=0 - enables  the removing procedure of DMO (!!!) from $dir_caso and the ocean rsync to $OCNARCHIVE, performed starting from line 568
-# debug=1 - disables the removing procedure of DMO from $dir_caso and the ocean rsync to $OCNARCHIVE, performed starting from line 568
-debug=0
+# dbg=0 - enables  the removing procedure of DMO (!!!) from $dir_caso and the ocean rsync to $OCNARCHIVE, performed starting from line 568
+# dbg=1 - disables the removing procedure of DMO from $dir_caso and the ocean rsync to $OCNARCHIVE, performed starting from line 568
+dbg=0
 sizethreshold=50 # MB differences allowed in size check
 # ******************************************
 set +euvx
@@ -577,7 +577,7 @@ rm -r $workdir
 # save ocn into OCNARCHIVE dir
 # ******************************************
 mkdir -p $OCNARCHIVE/$caso/ # redundant but safe to cath quota exceptions
-if [ $debug -eq 0 ]; then
+if [ $dbg -eq 0 ]; then
 	  cd $dir_caso 
   	rsync -auv ocn $OCNARCHIVE/$caso/
 	  if [ $? -ne 0 ]; then
@@ -596,7 +596,7 @@ echo "Going to remove ${dir_caso}"
 archivedir="$(dirname "${dir_caso}")"
 cd $archivedir
 
-if [ $debug -eq 0 ]; then
+if [ $dbg -eq 0 ]; then
 	  chmod -R u+wx $caso
   	rm -r $caso
 	  if [ $? -ne 0 ]; then

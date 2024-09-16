@@ -1,4 +1,5 @@
 # ON THE HINDCAST PERIOD
+# # THIS SCRIPTS MUST BE RUN ONLY BY cp2 USER
 1-launch_compute_stats_part1.sh
 2-launch_compute_stats_part2.sh
 These should be the commands in crontab

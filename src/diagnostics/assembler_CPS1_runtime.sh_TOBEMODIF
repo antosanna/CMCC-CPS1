@@ -15,7 +15,7 @@ scrdir=$4
 nmf=$5
 WKDIR=$6
 inputfile=$7
-debug=$8
+dbg=$8
 
 set +euvx
 . ${DIR_SPS35}/descr_ensemble.sh $yyyy
@@ -68,7 +68,7 @@ do
               then
                  yyyycurr=`date -d "${yyyy}${st}01 + $(($mm - 1)) months" +%Y`
                  mmcurr=`date -d "${yyyy}${st}01 + $(($mm - 1)) months" +%m`
-                 if [[ $debug -eq 0 ]]
+                 if [[ $dbg -eq 0 ]]
                  then
                     ncrcat -O ${datadir}/$sps.cam.$ftype.${yyyycurr}-${mmcurr}*.nc $WKDIR/${sps}.$ftype.$mm.nc
                  else

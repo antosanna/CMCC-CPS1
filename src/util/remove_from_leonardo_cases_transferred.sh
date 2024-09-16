@@ -22,7 +22,7 @@ fi
 LOG_FILE=$DIR_LOG/hindcast/REMOVE_FROM_LEONARDO_CASES_TRANSFERRED_`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-debug=$1
+dbg=$1
 set -euvx
 listacasi=""
 for i in {1..4}
@@ -39,7 +39,7 @@ do
    done <$infile
 done
 echo $listacasi
-if [[ $debug -eq 1 ]]
+if [[ $dbg -eq 1 ]]
 then
    exit
 fi

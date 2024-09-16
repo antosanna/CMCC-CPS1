@@ -12,7 +12,7 @@ start_date=$yyyy$st
 
 flag_done=$3
 
-debug=$4
+dbg=$4
 if [ $yyyy -lt ${iniy_fore} ]
 then
    . ${DIR_SPS35}/descr_hindcast.sh
@@ -41,7 +41,7 @@ for var in $varlist
 do
      cd $DIR_DIAG_C3S
      echo 'postprocessing $var '$st
-     input="$yyyy $st $refperiod $var $nrun $all $typefore '$reglist' '$ensorgl' ${flag_done} $debug"
+     input="$yyyy $st $refperiod $var $nrun $all $typefore '$reglist' '$ensorgl' ${flag_done} $dbg"
      echo $input
      ${DIR_SPS35}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -r $sla_serialID -S qos_resv -q $serialq_m -n 1 -M 7000 -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
 

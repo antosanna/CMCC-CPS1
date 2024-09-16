@@ -90,7 +90,7 @@ begin
          xmeanmon(0,:,:,:) = xmeanmon(0,:,:,:)+delta/mon(0)
          xM2mon(0,:,:,:) = xM2mon(0,:,:,:)+delta*(x(0,:,:,:) - xmeanmon(0,:,:,:))
       else
-; this only for debug+
+; this only for dbg+
 ;   fout  = addfile ("/work/csp/sp2/scratch/C3S_statistics/tmp/check.nc", "c")  ; open output file
 ;   fout->x = x
 ;   fout->xmeanmon = xmeanmon
@@ -100,7 +100,7 @@ begin
 ;   fout->delta = delta
 ;   fout->xM2mon = xM2mon
 ;         print("I am here")
-; this only for debug-
+; this only for dbg-
       end if
 ; following leadtimes
       print("---mese "+month(0))

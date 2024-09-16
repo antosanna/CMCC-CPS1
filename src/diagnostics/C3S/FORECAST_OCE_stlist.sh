@@ -10,7 +10,7 @@ set -euvx
 yyyy=$1   #`date +%Y`
 st=$2        #`date +%m`
 flag_done=$3
-debug=$4
+dbg=$4
 # Choose the reference period as you want
 refperiod=${iniy_hind}-${endy_hind}
 if [ $yyyy -lt ${iniy_fore} ]
@@ -44,7 +44,7 @@ do
 
    echo 'postprocessing $var '$st
 
-   input="$yyyy $st $refperiod $var $nrun $typeofrun $dirlog $filetype ${make_statistics} ${make_anom} ${make_plot} ${flag_done} $debug"
+   input="$yyyy $st $refperiod $var $nrun $typeofrun $dirlog $filetype ${make_statistics} ${make_anom} ${make_plot} ${flag_done} $dbg"
   
 ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j compcompute_stat_OCE_auto_${var}_${st} -l ${dirlog} -d ${DIR_DIAG_C3S} -s compute_stat_OCE_auto.sh -i "$input" 
 

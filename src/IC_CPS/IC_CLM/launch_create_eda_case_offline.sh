@@ -17,5 +17,5 @@ scriptname=create_clm_stand_alone_bgc_eda_op     ## scenario 2015-onwards
 #for member in `seq 1 3` ; do
 for member in `seq 1 1` ; do
    echo $member
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 1000 -d ${DIR_LND_IC} -s ${scriptname}.sh  -j ${scriptname}_${member} -l $logdir -i "$member" 
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 3000 -d ${DIR_LND_IC} -s ${scriptname}.sh  -j ${scriptname}_${member} -l $logdir -i "$member" 
 done

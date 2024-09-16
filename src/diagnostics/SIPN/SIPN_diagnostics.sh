@@ -38,7 +38,7 @@ else
 fi
 yyyyp1=`date -d "$yyyy${st}01  + 1 month" +%Y`
 stp1=`date -d "$yyyy${st}01  + 1 month" +%m`
-debug=0    # process only one file
+dbg=0    # process only one file
 if [ "$st" == "11" ]
 then
    seas="DJF"
@@ -117,7 +117,7 @@ do
      rm sic_${yyyy}${st}_0${pp}_tmp.nc
 
    
-     if [ $debug -eq 1 ]
+     if [ $dbg -eq 1 ]
      then
         exit
      fi

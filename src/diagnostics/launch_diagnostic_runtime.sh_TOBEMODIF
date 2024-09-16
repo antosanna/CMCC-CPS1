@@ -12,14 +12,14 @@
 . $DIR_UTIL/descr_CPS.sh
 #-- parameters -----------------------------------------------------------------
 set -euxv
-debug=1
-# to run in debug mode you must provide $WORK_SPS3/archive/$caso/rest
+dbg=1
+# to run in dbg mode you must provide $WORK_SPS3/archive/$caso/rest
 # and $WORK_SPS3/archive/$caso/atm/hist
 
 today=`date +%d`
 if [ `whoami` == "$operational_user" ] 
 then
-   debug=0
+   dbg=0
 fi
 
 #-- Initialization -------------------------------------------------------------
@@ -45,7 +45,7 @@ echo "checkfiles are:"
 echo "checkfile1=$checkfile1"
 echo "checkfile2=$checkfile2"
 echo "checkfile3=$checkfile3"
-if [ $debug -eq 1 ]
+if [ $dbg -eq 1 ]
 then
    start_date=202212    # you should change with appropriate date. 
                         # Must have res in the correct dir
@@ -121,7 +121,7 @@ do
   fi 
 done
 
-if [ $debug -eq 1 ]
+if [ $dbg -eq 1 ]
 then
   echo "now first month done by $n_first_month_done jobs. To launch postproc needed $nrunC3Sfore"
   echo "now third month done by $n_third_month_done jobs. To launch postproc needed $nrunC3Sfore"
@@ -147,7 +147,7 @@ then
       flgmnth=1
       monthstr=`date -d "$yyyy${st}01 " +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile1 $inputfile $debug"
+      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit
@@ -155,8 +155,8 @@ set -euvx
       echo "plot_forecast_first_month_${yyyy}${st} already running"
    fi
 #
-#  in debug mode send informative email
-   if [ $debug -eq 1 ]
+#  in dbg mode send informative email
+   if [ $dbg -eq 1 ]
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month"
       title="${CPSSYS} forecast notification"
@@ -179,7 +179,7 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile2 $inputfile $debug"
+      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile2 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 # Only one $DIR_UTIL/diag/plot_forecast_all_vars.sh allowed at a time!
 set -euvx
@@ -188,8 +188,8 @@ set -euvx
       echo "plot_forecast_lead0_${yyyy}${st} already running"
    fi
 #
-#  in debug mode send informative email
-   if [ $debug -eq 1 ]
+#  in dbg mode send informative email
+   if [ $dbg -eq 1 ]
    then
       body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0"
       title="${CPSSYS} forecast notification"
@@ -214,7 +214,7 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile3 $inputfile $debug"
+      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit
@@ -222,10 +222,10 @@ set -euvx
       echo "plot_forecast_lead1_${yyyy}${st} already running"
    fi
 #
-#  in debug mode send informative email
-   if [ $debug -eq 1 ]
+#  in dbg mode send informative email
+   if [ $dbg -eq 1 ]
    then
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead $debug"
+      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead $dbg"
       title="${CPSSYS} forecast notification"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    fi

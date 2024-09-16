@@ -23,7 +23,7 @@ flgmnth=$5 #1  # this is to decide the timescale plot: 0 for seasonal, 1 for mon
 monthstr=$6
 checkfile=$7
 inputfile=$8
-debug=${9:-0}
+dbg=${9:-0}
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -31,7 +31,7 @@ set -euvx
 logdir=$DIR_LOG/$typeofrun/$yyyy$st
 WKDIR=$SCRATCHDIR/runtimediag/$yyyy$st
 mkdir -p $WKDIR
-if [[ $debug -eq 1 ]]
+if [[ $dbg -eq 1 ]]
 then
    mymail=sp1@cmcc.it #antonella.sanna@cmcc.it
    ccmail=sp1@cmcc.it #antonella.sanna@cmcc.it
@@ -75,7 +75,7 @@ mkdir -p $pldir
 set -evx
 
 # all vars at once
-$DIR_DIAG/assembler_${CPSSYS}_runtime.sh $yyyy $st $nrun $scriptdir $nmf $WKDIR $inputfile $debug
+$DIR_DIAG/assembler_${CPSSYS}_runtime.sh $yyyy $st $nrun $scriptdir $nmf $WKDIR $inputfile $dbg
 cd $WKDIR
 for var in $varlist
 do
@@ -107,7 +107,7 @@ do
    fi
    set +e
 #   rm -rf $WKDIR/*_${yyyy}${st}_*
-   input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $debug"
+   input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $dbg"
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
 done
 

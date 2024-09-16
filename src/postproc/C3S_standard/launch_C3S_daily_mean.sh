@@ -7,7 +7,7 @@
 
 #COMPUTE ONE START-DATE AT A TIME
 set -euxv
-debug=0
+dbg=0
 st=$1
 #NEW 202103 + yyyy instead of year
 yyyy=$2
@@ -63,7 +63,7 @@ then
 # do the daily mean
          $DIR_C3S/C3S_daily_mean.sh $member $wkdir $yyyy$st $outdir "$daylist"
    fi
-   if [ $debug -ne 0 ]
+   if [ $dbg -ne 0 ]
    then
       exit
    fi

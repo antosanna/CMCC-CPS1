@@ -11,7 +11,7 @@
 
 set -euvx
 
-debug=1
+dbg=1
 . $DIR_SPS35/descr_hindcast.sh
 export nhindmem=40
 export hiniy=1993
@@ -24,7 +24,7 @@ export filarea="$CESMDATAROOT/CMCC-SPS3.5/files4SPS3.5/tarea.cice.nc"
 dirout=/work/csp/sp2/SPS3.5/CESM/monthly/sic/SIE_NH/clim
 mkdir -p $dirout
 export ntime=$nmonfore
-if [[ $debug -eq 1 ]]
+if [[ $dbg -eq 1 ]]
 then
    mymail=antonella.sanna@cmcc.it
    DIR_DIAG=$PWD
@@ -46,7 +46,7 @@ do
    then
       
       ncl $DIR_DIAG/compute_SIE_hincast_clim.ncl
-#   if [[ $debug -eq 1 ]]
+#   if [[ $dbg -eq 1 ]]
 #   then
 #      exit
 #   fi

@@ -26,7 +26,7 @@ units=${14}
 unitsl=${15}
 fact=${16}
 pldir=${17}
-debug=${18}
+dbg=${18}
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -88,4 +88,4 @@ rm $tmpfile
 ncecat -O  $ensalllist $allanomfile
   
 # NOW DO THE PLOT
-$DIR_DIAG/forecast_auto.sh $yyyy $st $nrun $flgmnth $nmf $DIR_DIAG ${monthstr} ${var} $pldir $pctldir $colormap $units $unitsl $datamm/anom $fact $debug
+$DIR_DIAG/forecast_auto.sh $yyyy $st $nrun $flgmnth $nmf $DIR_DIAG ${monthstr} ${var} $pldir $pctldir $colormap $units $unitsl $datamm/anom $fact $dbg

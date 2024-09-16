@@ -15,7 +15,7 @@ nrun=$4
 climdir=$5
 var=$6
 workdir=$7
-debug=$8
+dbg=$8
 vardir=$var
 
 [ ! -d $workdir/anom ] && mkdir -p $workdir/anom
@@ -52,7 +52,7 @@ ncrename -O -d record,ens $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_all_an
 #rm $ensalllist
 rm tmp${var}_${SPSSYS}_sps_${yyyy}${st}_ens_ano.$refperiod.nc
 mkdir -p $DIR_FORE_ANOM/daily/${var}/anom/ 
-if  [[ $debug -eq 0 ]] ; then
+if  [[ $dbg -eq 0 ]] ; then
     rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_spread_ano.$refperiod.nc $DIR_FORE_ANOM/daily/${var}/anom/
     rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_ens_ano.$refperiod.nc $DIR_FORE_ANOM/daily/${var}/anom/
     rsync -auv $workdir/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_all_ano.$refperiod.nc $DIR_FORE_ANOM/daily/${var}/anom/ 

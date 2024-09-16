@@ -16,7 +16,7 @@ nmf=$4         # this is the final forecast month to be processed
 flgmnth=$5 #1  # this is to decide the timescale plot: 0 for seasonal, 1 for monthly
 monthstr=$6
 checkfile=$7
-debug=${8:-0}
+dbg=${8:-0}
 
 mymail=$mymail
 ccmail=$mymail
@@ -78,7 +78,7 @@ do
 #TO BE MODIFED      count=`ls /work/csp/sp2/${CPSSYS}/CESM/pctl/${var}_${st}_l?_??.nc|wc -l`
       nmaxcount=8
    fi
-   if [ $debug -ne 1 ]
+   if [ $dbg -ne 1 ]
    then
       if [ $count -ne $nmaxcount ]
       then
@@ -101,7 +101,7 @@ do
    set -evx
 
    echo "postprocessing $var "$st
-   input="$yyyy $st $refperiod $var $nrun $nmf $mproj $flgmnth $scriptdir $monthdir $workdir $monthstr $checkdiagfile $pldir $debug"
+   input="$yyyy $st $refperiod $var $nrun $nmf $mproj $flgmnth $scriptdir $monthdir $workdir $monthstr $checkdiagfile $pldir $dbg"
    ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -s compute_anomalies_auto_${var}.sh -j diag_ANOM_${var}${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
 
 done

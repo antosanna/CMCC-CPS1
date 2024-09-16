@@ -14,8 +14,6 @@ set +euvx
 . $DIR_UTIL/load_ncl
 set -euvx
 
-debug=0
-
 #INPUT SECTION
 check_IC_CAMguess=$1
 yyyy=$2

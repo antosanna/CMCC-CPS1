@@ -48,8 +48,8 @@ startdate="${yyyy}${st}"
 sl_time=$5
 # 6. progressive number (for email title)
 prog_count=$6
-debug=${7:-0}
-if [[ $debug -eq 1 ]]
+dbg=${7:-0}
+if [[ $dbg -eq 1 ]]
 then
    mymail=antonella.sanna@cmcc.it
    ccmail=$mymail

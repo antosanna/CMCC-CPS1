@@ -36,7 +36,7 @@ for yyyy in `seq $iyy $fyy` ; do
      DIR_C3S="$DIR_ROOT/development_tmp/ANDREA/src/postproc/C3S_standard"
      mymail="sp1@cmcc.it"
      ccmail=$mymail
-     body="launch_push4ECMWF.mach_dep.sh in debug mode debug_push = $debug_push. Data push to cmcc ftp"
+     body="launch_push4ECMWF.mach_dep.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
      title="[C3S] ${SPSSystem} warning"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    else

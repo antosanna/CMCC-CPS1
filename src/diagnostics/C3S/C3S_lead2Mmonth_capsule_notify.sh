@@ -11,7 +11,7 @@ st=$2
 nrun=$3
 workdir=$4
 var=$5
-debug=$6
+dbg=$6        #NOT USED!!!!
 
 outputfile="output.1.nc"  	#python_fst_output
 intoutput="output.2.nc"		#cdo intermediate output

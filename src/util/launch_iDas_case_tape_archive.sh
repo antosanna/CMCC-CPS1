@@ -25,7 +25,7 @@ set -euvx
 st=$1 # da settare manualmente
 FINALARCHIVECINECA=/data/csp/${operational_user}/archive/CESM/${SPSSYS}_cineca
 # ******************************************
-debug=0   #if 1 only one case
+dbg=0   #if 1 only one case
 maxprocess=3 # number of processes at runtime (1 is crontab + 1 launched script and + 1 subshell)
 # ******************************************
 # LOG FILE
@@ -41,7 +41,7 @@ maxprocess=3 # number of processes at runtime (1 is crontab + 1 launched script 
 #cntrun=$(ps -u${operational_user} -f |grep launch_case_tape_archive.sh | grep -v "grep --color=auto" | wc -l)
 
 cnt=0
-if [ $debug -eq 1 ]; then
+if [ $dbg -eq 1 ]; then
 	# questo processo (con il pipe) crea una sottoshell
 	# quindi le linee attese saranno 3 (una per il crontab, una per il processo che gira)
 	# ed una per il processo normale
@@ -205,7 +205,7 @@ for dir in $casetoarchive; do
 	   echo "you submitted $icsubmitted $DIR_UTIL/iDas_case_tape_archive.sh. Exiting now"
     exit 0
  fi
- if [ $debug -eq 1 ]
+ if [ $dbg -eq 1 ]
  then
     exit 0
  fi

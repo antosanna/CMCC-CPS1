@@ -26,7 +26,7 @@ export units=${12}
 export unitsl=${13}  #for lead season units may change (see precip)
 export inputdir=${14}  #for lead season units may change (see precip)
 export fact=${15}
-debug=${16}
+dbg=${16}
 
 # ANTO new for automatic diagnositcs+
 set +euvx
@@ -42,7 +42,7 @@ in
 esac
 
 export pltype="png"
-#if [[ $debug -eq 1 ]]
+#if [[ $dbg -eq 1 ]]
 #then
 #  export pltype="x11"
 #fi

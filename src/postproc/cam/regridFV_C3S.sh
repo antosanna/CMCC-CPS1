@@ -3,7 +3,7 @@
 ##BSUB -J test
 ##BSUB -e logs/test_%J.err
 ##BSUB -o logs/test_%J.out
-# this script can be run in debug mode but always with submitcommand
+# this script can be run in dbg mode but always with submitcommand
 # THIS HAS TO BE REVIEWED!!!!!!
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
@@ -98,7 +98,7 @@ if [[ -f $checkfile ]]
 then
    if [[ $inputFV -nt $checkfile ]]
    then
-      if [[ $debug -eq 0 ]]
+      if [[ $dbg -eq 0 ]]
       then
 # in operational mode rm to recompute
          rm $checkfile

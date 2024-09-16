@@ -13,10 +13,10 @@
 # check is done in the inner script
 set -uvxe
 stlist="01 02 03 04 05 06 07 08 09 10 11 12"
-debug=0   # IN debug=1 only uas is processed; debug=2 exit at the first cycle;debug=3 only vectorial fields
+dbg=0   # IN dbg=1 only uas is processed; dbg=2 exit at the first cycle;dbg=3 only vectorial fields
 do_only_wind=1  # if 1 computes onyl for winds
 #
-# IN debug=1 MODE ONLY ONE VAR (instead of all 53)
+# IN dbg=1 MODE ONLY ONE VAR (instead of all 53)
 namescript=stdev_on_line
 outdir=$OUTDIR_DIAG/C3S_statistics/  
 launchdir=$DIR_DIAG/C3S_statistics
@@ -58,7 +58,7 @@ var_array=( "${var_array2d[@]}" "${var_array3d[@]}" "${var_array2dmon[@]}")
 institude_id="cmcc"
 model_id="CMCC-CM2-v"$versionSPS
 fileroot=${institude_id}_${model_id}_${typeofrun}
-if [[ $debug -eq 3 ]]
+if [[ $dbg -eq 3 ]]
 then
    varlist="ua va vas uas tauu tauv"
 else
@@ -72,7 +72,7 @@ do
 
    ic=0
    for var in ${varlist[@]}; do
-       if [ $debug -eq 1 ] && [ $var != "uas" ]
+       if [ $dbg -eq 1 ] && [ $var != "uas" ]
        then
          continue
        fi
@@ -101,7 +101,7 @@ do
        fi
        input="$var ${refperiod} $st $inpdir $outdir/ $fileroot $fileok $endyear $nens $namescript"
        ${DIR_SPS35}/submitcommand.sh -m $machine -M 10000  -S qos_resv -t "1" -q $serialq_m -j compute_stats_refperiod_${var} -l $DIR_LOG/DIAGS/stats -d ${launchdir} -s compute_stats_refperiod.sh -i "$input"
-       if [ $debug -eq 2 ]
+       if [ $dbg -eq 2 ]
        then
           exit 0
        fi

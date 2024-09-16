@@ -22,7 +22,7 @@ fi
 
 
 conda activate $envcondacm3
-debug=0
+dbg=0
 here=$DIR_CPS/complete_start-dates_leonardo
 
 for yyyy in {1993..2022} 
@@ -51,7 +51,7 @@ do
       fi
       mkdir -p $SCRATCHDIR/cases_${st}
       ./ensemble4_${yyyy}${st}_0${i}.sh >& $SCRATCHDIR/cases_${st}/ensemble4_${yyyy}${st}_0${i}.log
-      if [[ $debug -eq 1 ]]
+      if [[ $dbg -eq 1 ]]
       then
           exit
       fi
