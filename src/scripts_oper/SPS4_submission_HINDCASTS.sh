@@ -9,6 +9,7 @@ set -evx
 # check if there is another job submitted by crontab with the same name
 if [[ $machine == "leonardo" ]]
 then
+   conda activate $envcondacm3
    LOG_FILE=$DIR_LOG/hindcast/SPS4_submission_hindcast.`date +%Y%m%d%H%M`.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
 

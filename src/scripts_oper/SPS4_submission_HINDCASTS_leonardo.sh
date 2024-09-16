@@ -1,5 +1,6 @@
 #!/bin/sh -l
 # load variables from descriptor
+# TO BE REMOVED ONCE SPS4_submission_HINDCASTS.sh (MORE GENRAL) WILL BE TESTED FOR MARCH ON LEONARDO
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/descr_ensemble.sh 1993

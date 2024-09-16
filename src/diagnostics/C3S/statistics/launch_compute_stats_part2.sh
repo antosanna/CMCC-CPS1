@@ -28,9 +28,14 @@ mkdir -p ${DIR_LOG}/DIAGS
 
 # read C3S variables
 # Tackle separately 3d, 2d and 2dmon (the first require much more memory)
-C3Stablecam=$DIR_POST/cam/C3S_table.txt
-C3Stableclm=$DIR_POST/clm/C3S_table_clm.txt
-C3Stableocean=$DIR_POST/nemo/C3S_table_ocean2d.txt
+C3Stable_cam=$DIR_POST/cam/C3S_table.txt
+C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
+C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
+C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
+C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
+C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 {
 read 
 while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
@@ -41,18 +46,48 @@ do
    else
       var_array2d+=("$C3S")
    fi
-done } < $C3Stablecam
+done } < $C3Stable_cam
 {
 while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
    var_array2d+=("$C3S")
-done } < $C3Stableclm
+done } < $C3Stable_clm
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
 do
    var_array2dmon+=("$C3S")
-done } < $C3Stableocean
+done } < $C3Stable_oce1
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2dmon+=("$C3S")
+done } < $C3Stable_oce2
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2dmon+=("$C3S")
+done } < $C3Stable_oce3
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2dmon+=("$C3S")
+done } < $C3Stable_oce4
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2dmon+=("$C3S")
+done } < $C3Stable_oce5
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2dmon+=("$C3S")
+done } < $C3Stable_oce6
 var_array=( "${var_array2d[@]}" "${var_array3d[@]}" "${var_array2dmon[@]}")
 
 institude_id="cmcc"

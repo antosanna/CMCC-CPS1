@@ -8,10 +8,14 @@ set +euvx
   condafunction activate $envcondac3schecker
 set -euvx
 
-export C3Stable_cam="$DIR_POST/cam/C3S_table.txt"
-export C3Stable_clm="$DIR_POST/clm/C3S_table_clm.txt"
-export C3Stable_oce="$DIR_POST/nemo/C3S_table_ocean2d.txt"
-
+C3Stable_cam="$DIR_POST/cam/C3S_table.txt"
+C3Stable_clm="$DIR_POST/clm/C3S_table_clm.txt"
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
+C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
+C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
+C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
+C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 # Load input vars
 startdate=$1
 real=$2

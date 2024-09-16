@@ -26,9 +26,14 @@ set -euxv
 #memberstocheck=20
 #
 start_date=${yyyy}${st}
-C3Stablecam=$DIR_POST/cam/C3S_table.txt
-C3Stableclm=$DIR_POST/clm/C3S_table_clm.txt
-C3Stableocean=$DIR_POST/nemo/C3S_table_ocean2d.txt
+C3Stable_cam=$DIR_POST/cam/C3S_table.txt
+C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
+C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
+C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
+C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
+C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 #
 {
 read 
@@ -40,18 +45,48 @@ do
    else
       var_array2d+=("$C3S")
    fi
-done } < $C3Stablecam
+done } < $C3Stable_cam
 {
 while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
    var_array2d+=("$C3S")
-done } < $C3Stableclm
+done } < $C3Stable_clm
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
 do
    var_array2d+=("$C3S")
-done } < $C3Stableocean
+done } < $C3Stable_oce1
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2d+=("$C3S")
+done } < $C3Stable_oce2
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2d+=("$C3S")
+done } < $C3Stable_oce3
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2d+=("$C3S")
+done } < $C3Stable_oce4
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2d+=("$C3S")
+done } < $C3Stable_oce5
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+do
+   var_array2d+=("$C3S")
+done } < $C3Stable_oce6
 # AA -
 
 cd $pushdir/$yyyy$st

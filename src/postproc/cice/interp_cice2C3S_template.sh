@@ -38,7 +38,7 @@ then
       fi  
    done
 else
-   export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d.txt"
+   export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d_others.txt"
    export lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
    export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
    export srcGridName="$REPOGRID/ORCA_SCRIP_gridT.nc"

@@ -106,7 +106,12 @@ export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
-C3S_table_ocean2d=$DIR_POST/nemo/C3S_table_ocean2d.txt
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
+C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
+C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
+C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
+C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 
 inputlist=" "
 for mon in `seq 0 $(($nmonfore - 1))`
@@ -191,7 +196,57 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_ocean2d
+done } < $C3S_table_oce1
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
+do
+   model="$model"
+   if [[ $model == "nemo" ]]
+   then
+      varout+=("$C3S")
+   fi
+done } < $C3S_table_oce2
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
+do
+   model="$model"
+   if [[ $model == "nemo" ]]
+   then
+      varout+=("$C3S")
+   fi
+done } < $C3S_table_oce3
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
+do
+   model="$model"
+   if [[ $model == "nemo" ]]
+   then
+      varout+=("$C3S")
+   fi
+done } < $C3S_table_oce4
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
+do
+   model="$model"
+   if [[ $model == "nemo" ]]
+   then
+      varout+=("$C3S")
+   fi
+done } < $C3S_table_oce5
+{
+read 
+while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
+do
+   model="$model"
+   if [[ $model == "nemo" ]]
+   then
+      varout+=("$C3S")
+   fi
+done } < $C3S_table_oce6
 for v in ${varout[@]}
 do 
    C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc
