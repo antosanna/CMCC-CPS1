@@ -28,7 +28,9 @@ else
    nrunC3Sfore=50  # 40 number of realizations required to C3S forecast
    nmax4modify_trip=$nrunmax #line from which modify_triplette acts
    typeofrun="forecast"
-   debug_push=1    # if 0 you are going to send results to ECMWF
+   debug_push=2    # if 0 you are going to send results to ECMWF
+                   # if 1 you are doing a sending test to Zeus
+                   # if 2 you are doing a sending test to ECMWF
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY +
    export apprun=cps            #THESE COULD BE MODIFIED
    export S_apprun=SERIAL_cps   #THESE COULD BE MODIFIED

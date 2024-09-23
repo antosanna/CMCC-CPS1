@@ -33,10 +33,9 @@ for yyyy in `seq $iyy $fyy` ; do
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
    if [ $debug_push -ge 1 ]
    then
-     DIR_C3S="$DIR_ROOT/development_tmp/ANDREA/src/postproc/C3S_standard"
      mymail="sp1@cmcc.it"
      ccmail=$mymail
-     body="launch_push4ECMWF.mach_dep.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
+     body="launch_push4ECMWF.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
      title="[C3S] ${SPSSystem} warning"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    else
@@ -115,12 +114,18 @@ for yyyy in `seq $iyy $fyy` ; do
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
    mkdir -p ${DIR_LOG}/${typeofrun}/${yyyy}${st}
-   if [[ $debug_push -eq 0 ]]
-   then
-      ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q s_download -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-   else
-      ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q s_download -j push4ECMWF_${yyyy}${st} -l ${DIR_ROOT}/development_tmp/ANDREA/src/postproc/C3S_standard/logs -s push4ECMWF.sh -i "$input"
-   fi
+   #if [[ $debug_push -eq 0 ]]
+   #then
+      if [[ "$machine" == "juno" ]]
+      then
+         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+      else
+         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -P ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+      fi
+   #else
+      
+  #    ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+   #fi
    ic=0
    while `true`; do
       # each 15' look for $filedone
@@ -145,11 +150,15 @@ for yyyy in `seq $iyy $fyy` ; do
   	          body="C3S: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
   	          title="[C3S] ${SPSSystem} ${typeofrun} notification"
             	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
-             if [[ $debug_push -eq 0 ]]
+     #        if [[ $debug_push -eq 0 ]]
+     #        then
+             if [[ "$machine" == "juno" ]]
              then
-                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q s_download -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
              else
-                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q s_download -j push4ECMWF_${yyyy}${st} -l ${DIR_ROOT}/development_tmp/ANDREA/src/postproc/C3S_standard/logs -s push4ECMWF.sh -i "$input"
+                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -P ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+             #else
+             #   ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
              fi
           fi
        fi

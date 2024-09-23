@@ -38,15 +38,19 @@ list2rm=""
 log_script=ls_S${yyyy}${st}.log
 if [ $dbg_push -ge 1 ]
 then
-   DIR_C3S=$DIR_ROOT/development_tmp/ANDREA/src/postproc/C3S_standard
    log_script=ls_S${yyyy}${st}_cmcc.log
    mymail="sp1@cmcc.it"
    ecmwfmail=$mymail
    ccecmwfmail=$mymail
    title_debug="TEST"
-   pushdir="/work/cmcc/cp1/CPS/CMCC-CPS1/push"
+   if [ $machine = "juno" ] 
+   then
+      pushdir="/work/cmcc/cp1/CPS/CMCC-CPS1/push"
+   else
+      pushdir="/leonardo_work/CMCC_reforeca/CPS/CMCC-CPS1/push"
+   fi
 else
-   ccecmwfmail="adrien.owono@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,silvio.gualdi@cmcc.it,antonella.sanna@cmcc.it"
+   ccecmwfmail="adrien.owono@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
    title_debug=""
 fi
 
@@ -61,7 +65,7 @@ then
    cmd_cntfirst="ls $firstdtn03 |wc -l "
 elif [[ "$machine" == "leonardo" ]]
 then
-   module load profile/advanced autoload lftp
+   #module load profile/advanced autoload lftp
    cmd_cntfirst="ls $firstdtn03 |wc -l "
 fi
 cntfirst=`eval $cmd_cntfirst`

@@ -184,7 +184,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004 sps4_199402_005 sps4_199402_009"  
+lista_caso_ignored="sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative

@@ -13,7 +13,7 @@ then
    LOG_FILE=$DIR_LOG/hindcast/SPS4_submission_hindcast.`date +%Y%m%d%H%M`.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
 
-   cnt_this_script_running=$(ps -u ${operational_user} -f |grep SPS4_submission_HINDCASTS_leonardo | grep -v $$|wc -l)
+   cnt_this_script_running=$(ps -u ${operational_user} -f |grep SPS4_sub | grep -v $$|wc -l)
    if [[ $cnt_this_script_running -gt 2 ]]
    then
       echo "already running"
@@ -55,7 +55,8 @@ if [[ $nmaxens -gt ${nrunmax} ]] ; then
    nmaxens=${nrunmax}
 fi
 
-np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+#np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive.${SPSSystem}_ -c yes`
 if [ $np_all -lt $maxnumbertosubmit ]
 then
    echo "go on with hindcast submission"

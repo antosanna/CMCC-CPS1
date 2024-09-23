@@ -120,12 +120,12 @@ then
    time_limit_parallelq_l=$((time_limit_parallelq_l_min / 60 )) ##RUNLIMIT TIME IN hours
    serialq_push=s_long
    serialq_l=s_long
+   serialq_push=s_download
    time_limit_serialq_l_min=`bqueues -l $serialq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
    time_limit_serialq_l=$((time_limit_serialq_l_min / 60 )) ##RUNLIMIT TIME IN hours
 # DIRECTORIES Juno
 #   BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup
 #   pushdirapec=/data/products/C3S/$(whoami)/push_APEC
-   pushdir=/work/cmcc/cp1/CPS/CMCC-CPS1/push
 #   if [[ $(whoami) == ${operational_user} ]] 
 #   then
 #     	pushdir=/data/products/C3S/$(whoami)/push/
@@ -284,6 +284,7 @@ DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 DIR_CPS=$DIR_ROOT/src/scripts_oper
 DIR_RECOVER=$DIR_ROOT/src/recover
+pushdir=$WORK/CPS/CMCC-CPS1/push
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
