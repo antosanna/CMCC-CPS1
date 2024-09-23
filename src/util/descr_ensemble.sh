@@ -30,7 +30,7 @@ else
    debug_push=2    # if 0 you are going to send results to ECMWF
                    # if 1 you are doing a sending test to Zeus
                    # if 2 you are doing a sending test to ECMWF
----
+#---
 
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY +
    export apprun=cps            #THESE COULD BE MODIFIED
