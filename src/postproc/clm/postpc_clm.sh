@@ -20,7 +20,6 @@ ifexistdelete() {
 # Input 
 #*************************************************************************
 dbg=0
-mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
 #
 #
 if [ $dbg -eq 1 ]
@@ -46,6 +45,8 @@ else
    ic=${8}  
    ftype=${9} #h1 or h3 currently
 fi
+
+mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
 pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
@@ -54,7 +55,7 @@ pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
 # Load vars depending on hindcast/forecast
 #**********************************************************
 set +uexv
-$DIR_UTIL/descr_ensemble.sh $yyyy
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 
 #file name:$caso.clm2.$ft.$yyyy-$st.zip.nc

@@ -43,12 +43,6 @@ then
    ecmwfmail=$mymail
    ccecmwfmail=$mymail
    title_debug="TEST"
-   if [ $machine = "juno" ] 
-   then
-      pushdir="/work/cmcc/cp1/CPS/CMCC-CPS1/push"
-   else
-      pushdir="/leonardo_work/CMCC_reforeca/CPS/CMCC-CPS1/push"
-   fi
 else
    ccecmwfmail="adrien.owono@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
    title_debug=""

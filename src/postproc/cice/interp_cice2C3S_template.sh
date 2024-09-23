@@ -18,8 +18,9 @@ member=`echo CASO|cut -d '_' -f3|cut -c 2,3`
 export real="r"${member}"i00p00"
 export st=`echo CASO|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo CASO|cut -d '_' -f 2|cut -c 1-4`
+caso=CASO #needed for dictionary 
 set +evxu
-$DIR_UTIL/descr_ensemble.sh $yyyy
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 . $dictionary
 set -evxu
 

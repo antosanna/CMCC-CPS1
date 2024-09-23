@@ -349,13 +349,17 @@ do
          echo "instantaneous fields"
          echo "tstepfile $tstepfile"
          echo "tstep $tstep"
-         if [ $tstepfile -lt $tstep ] 
+         if [ $tstepfile -le $tstep ] 
          then
-             #here the idea is that entire days are missing (i.e. 8  timestep at once)
-             tsel=$(($tstepfile -1)) #keeping everything: from 0 to tstepfile-1
+             nt_var=`cdo ntime $var.gauss.${yr}-${mo}_n${member}.nc`
+
+             last_h=`cdo showtime -seltimestep,${nt_var} $var.gauss.${yr}-${mo}_n${member}.nc |cut -d ':' -f1`
+             nmb_tstep=$((${last_h}/3))
+             #in this way I go back to the last available complete day (comprising the midnight of the following day for the last time interpolation)
+             tsel=$(($tstepfile - ${nmb_tstep} - 1)) 
              ncks -O -d time,0,$tsel $var.gauss.${yr}-${mo}_n${member}.nc $var.gauss.${yr}-${mo}_n${member}_tstep.nc
          else  #usually for a 31day month, tstepfile=249 (248+00 of the first of following month)
-             tsel=$(($tstep)) 
+             tsel=$(($tstep))  #from 0 to $tsel meaning everything
              ncks -O -d time,0,$tsel $var.gauss.${yr}-${mo}_n${member}.nc $var.gauss.${yr}-${mo}_n${member}_tstep.nc
          fi
       fi

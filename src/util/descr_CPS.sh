@@ -143,7 +143,7 @@ then
    fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
-   OUTDIR_DIAG=/work/cmcc/cp2/diagnostics/
+   OUTDIR_DIAG=$WORK/diagnostics/
 #   DIR_WEB=/data/products/C3S/sp2/webpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
 #   DIR_FORE_ANOM=/work/csp/${operational_user}/CMCC-${CPSSYS}/forecast_anom

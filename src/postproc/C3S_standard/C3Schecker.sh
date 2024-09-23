@@ -56,7 +56,7 @@ if [ -f $check_c3s_meta_ok ]
 then
    title="C3S ${c3s_checker_cmd} ok for member $real"
    body="C3S ${c3s_checker_cmd} ok for member $real"
- 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+# 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 else
    title="[C3S ERROR] ${c3s_checker_cmd} KO for member $real"
    body="C3S ${c3s_checker_cmd} Ko for member $real"
@@ -72,13 +72,15 @@ fi
 #if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
 if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
 then
-#   mkdir -p ${DIR_LOG}/${typeofrun}/$startdate/C3S_daily_postproc
+#-------------------------------------------
+# 20240919 ready to uncomment
+#-------------------------------------------
 # the following is defined in $dictionary
-#   checkfile_daily=$DIR_LOG/$typeofrun/$yyyy$st/C3S_daily_postproc/qa_checker_daily_ok_${real}
-#   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
-#   then
-#      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $real 
-#   fi
+checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
+   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
+   then
+      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
+   fi
    touch $check_allchecksC3S$real
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`

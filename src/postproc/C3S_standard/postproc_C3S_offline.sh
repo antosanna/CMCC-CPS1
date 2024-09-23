@@ -67,14 +67,15 @@ then
    for ft in $filetyp ; do
 
        case $ft in
-           h1 | h3) mult=1 ;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
+           h1) mult=1 ; req_mem=12000 ;;
+           h3) mult=1 ; req_mem=1000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        if [[ ! -f $finalfile_clm ]]
        then
 
-            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic"
+            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
             # ADD the reservation for serial !!!
             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
         
@@ -82,7 +83,7 @@ then
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
        else
        # meaning that preproc files have been done by create_clm_files.sh
@@ -91,7 +92,7 @@ then
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 12000 -S qos_resv  -j postpc_clm_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv  -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
        fi
    done
    while `true`
@@ -187,7 +188,8 @@ real="r"${member}"i00p00"
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate"
+   #MUST BE ON A SERIAL to write c3s daily files on /data
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then

@@ -83,26 +83,26 @@ then
    for ft in $filetyp ; do
 
       case $ft in
-          h1 ) mult=1 ;; # for land h1 is daily, multiplier=1
-          h3 ) mult=1 ;; # for land h3 is daily, multiplier=1
+          h1 ) mult=1 ; req_mem=12000 ;; # for land h1 is daily, multiplier=1
+          h3 ) mult=1 ; req_mem=1000 ;; # for land h3 is daily, multiplier=1
       esac
       flag_for_type=${check_postclm_type}_${ft}_DONE
       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
       if [[ ! -f $finalfile_clm ]]
       then
-            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic"
+            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
             # ADD the reservation for serial !!!
             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "24" -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
 
            echo "start of postpc_clm "`date`
            input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"  
            # ADD the reservation for serial !!!
-           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M ${req_mem}-S qos_resv -t "24" -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
       else
            echo "start of postpc_clm "`date`
            input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
            # ADD the reservation for serial !!!
-           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 12000 -S qos_resv -t "24" -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M ${req_mem} -S qos_resv -t "24" -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
       fi
     done 
     while `true`

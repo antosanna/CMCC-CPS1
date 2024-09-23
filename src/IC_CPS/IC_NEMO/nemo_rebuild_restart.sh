@@ -20,6 +20,9 @@ poce1=$((10#$poce - 1)) #one digit and one figure less
 yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
 bkup_flag=0
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
 if [[ $typeofrun == "hindcast" ]]
 then
    case $poce1 in
@@ -88,7 +91,7 @@ then
      else
 #then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
         ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc
-        ln -sf $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
+        cp $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
      fi
    fi
 fi
@@ -105,7 +108,7 @@ then
       else
 #then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
           rsync -auv $f_ice ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc 
-          ln -sf ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
+          cp ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
       fi
    fi
 fi

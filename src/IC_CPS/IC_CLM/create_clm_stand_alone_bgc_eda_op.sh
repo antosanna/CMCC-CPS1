@@ -7,7 +7,7 @@ set -euvx
 
 member=$1
 refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_scen"
-caze="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op_TEST"
+caze="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op"
 if [[ -d $DIR_CASES/$caze ]] ; then
   rm -rf $DIR_CASES/$caze
 fi
@@ -34,7 +34,7 @@ cp -p ${DIR_TEMPL}/user_nl_hydros_clmIC $DIR_CASES/$caze/user_nl_hydros
 
 cd ${DIR_CASES}/$caze
 
-./xmlchange RUN_TYPE=branch #from scenario to scenario
+./xmlchange RUN_TYPE=hybrid #from scenario to scenario
 ./xmlchange NTASKS=216
 ./xmlchange STOP_OPTION=nmonths
 ./xmlchange STOP_N=1

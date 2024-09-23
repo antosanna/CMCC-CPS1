@@ -17,7 +17,7 @@ caso=$2
 export outdirC3S=$3
 wkdir=$4
 export type=$5 
-export ic=$ic
+export ic=$6
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 member=`echo $caso|cut -d '_' -f 3|cut -c 2,3`
@@ -82,12 +82,19 @@ then
              ncatted -Oh -a ic,global,o,c,"$ic" $SCRATCHDIR/regrid_C3S/$caso/CAM/${solinfile_new_name}
              rsync -auv $SCRATCHDIR/regrid_C3S/$caso/CAM/${solinfile_new_name} $outdirC3S
        else
-             echo "NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file. Exiting now"
-             body="NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file. Exiting now"
+             echo "NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file."
+             body="NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file. Exiting now. When at least one member in $outdirC3S will have completed SOLIN postproc, delete $DIR_TEMP/C3S_postproc_offline_${caso} to allow automatic resubmission. "
              title="[C3S] ${CPSSYS} forecast warning "
              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+             if [[ -f ${DIR_TEMP}/C3S_postproc_offline_${caso} ]] 
+             then
+                  #kill the launcher to allow for new submission
+                  postproc_C3Sid=`${DIR_UTIL}/findjobs.sh -m $machine -n postproc_C3S_offline_${caso} -i yes`
+                  set +e
+                  $DIR_UTIL/killjobs.sh -m $machine -i ${postproc_C3Sid}
+                  set -euvx  
+             fi
              exit
-   
        fi
    fi
 fi

@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #BSUB -q s_medium
-#BSUB -J launch_compute_maxmin_single_year
+#BSUB -J launch_maxmin_single_year
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/DIAGS/C3S_statistics/launch_compute_maxmin_single_year%J.out
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/DIAGS/C3S_statistics/launch_compute_maxmin_single_year%J.err
 #BSUB -P 0490
@@ -13,26 +13,24 @@
 # THIS SCRIPT IS MEANT TO BE LAUNCHED FROM CRONTAB AND cp2 USER
 
 set -uexv
-dbg=0          # just the first startdate and first year
-do_only_test_var=1   # if you want to compute only myvar
+stnow=$1
+maxjob=10       # max number of procs to be simultaneously submitted
+do_only_test_var=0   # if you want to compute only myvar
 myvar=tas
 #
-# IN dbg=1 MODE ONLY ONE YEAR (instead of all 24)
 namescript=compute_maxmin
 outdir=$OUTDIR_DIAG/C3S_statistics   #OUTDIR_DIAG
 mkdir -p $outdir
 
 # ONLY ONE AT A TIME because it requires a large amount of memory
-maxjob=1
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n $namescript -c yes`
-if [[ $np -gt $maxjob ]] 
+if [[ $np -gt 0 ]] 
 then
-   echo "there are $maxjob $namescript already running! Exiting now!"
+   echo "there are $np $namescript already running! Exiting now!"
    exit
 fi
 
-launchdir=$DIR_DIAG/C3S_statistics
-launchdir=$PWD
+launchdir=$DIR_DIAG_C3S/statistics
 mkdir -p ${DIR_LOG}/DIAGS/C3S_statistics
 
 # read C3S variables
@@ -98,12 +96,6 @@ echo ${var_arrayC3S[@]}
 
 for var in ${var_arrayC3S[@]}; do
     
-    echo "Launch $var"
-   if [[ -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_${var}_allyears_allst_done ]] 
-   then
-      echo "$var already computed! "
-      continue
-   fi
     if [[ "$var" == "orog" ]] || [[ "$var" == "sftlf" ]] || [[ "$var" == "rsdt" ]]
     then
        continue
@@ -115,10 +107,15 @@ for var in ${var_arrayC3S[@]}; do
            continue
        fi
     fi
+    echo "Launch $var"
         
-#    for st in {01..12}
-    for st in 10
+    for st in $stnow
     do
+       if [[ -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
+       then
+          echo "$var already computed! "
+          continue
+       fi
        for yyyy in `seq $iniy_hind $endy_hind`
        do
           fileok=$outdir/$st/$yyyy/${var}/maxminDONE_${var}_${yyyy}$st
@@ -137,14 +134,19 @@ for var in ${var_arrayC3S[@]}; do
              exit 0
           fi
        done    #loop on $yyyy
+       if [[ ! -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
+       then
+          body="all year from $iniy_hind $endy_hind and start-date $stnow done"
+          title="C3S_statistics maxmin start-date $st all years $var completed"
+          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+          touch     $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done    
+       fi
    done    #loop on $st
-   if [[ ! -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_${var}_allyears_allst_done ]] 
-   then
-      body="all year from $iniy and $lasty and start-date {01..12} done"
-      title="C3S_statistics maxmin single year $var completed"
-      $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-      touch $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_allst_${var}_done
-   fi
 done    #loop on $var
+if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_*_done |wc -l` -eq ${#var_arrayC3S[@]} ]]
+then
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
+   
+fi
 
 exit 0

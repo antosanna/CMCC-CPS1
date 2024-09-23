@@ -265,8 +265,7 @@ EOF3
     input="$ns ${startdate} ${ens} ${json}"
 
 #
-
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l $DL -i "$input"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l $DL -i "$input"
 
 
 

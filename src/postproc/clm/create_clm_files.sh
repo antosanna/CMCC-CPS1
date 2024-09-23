@@ -18,7 +18,7 @@ wkdir_clm=$5
 finalfile=$6
 checkfile=$7
 ic=$8
-
+mult=$9
 set +evxu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -evxu

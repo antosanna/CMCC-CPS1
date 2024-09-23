@@ -130,18 +130,10 @@ do
 
    listatocheck+="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc | head -n $nrunC3Sfore` "
 
-#   listafiles="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_r??i00p00.nc |head -n $nrunC3Sfore`"
-#   for ff in $listafiles ; do
-#       #common part cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_
-#      tag=`echo $ff | cut -d '_' -f5-`
-#      listatocheck+="$tag "
-#   done
 done
 echo $listatocheck
 
-prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_"
 
-exit
 cd $WORK_C3S/${start_date}
 if [[ `ls $listatocheck|wc -l` -eq 0 ]]
 then
@@ -151,18 +143,8 @@ fi
 #----------------------------
 #  CHEKC THAT ALL NEEDED MEMBERS ARE THERE
 #----------------------------
-#nmbfile=0
-#for tag in $listatocheck ; do
-#  if [[ `ls "${prefix}$tag" |wc -l` -eq 1 ]] 
-#  then
-#						let nmbfile=$nmbfile+1
-#     #nmbfile=$(($nmbfile +1 ))
-#  fi
-#done
-
 
 if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
-#if [ $nmbfile -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
 then
     body="C3S: $DIR_C3S/tar_and_push.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
     title="[C3S] ${CPSSYS} $typeofrun ERROR"
@@ -179,14 +161,6 @@ fi
 listatocheck=" "
 for var in "${var_array[@]}"
 do
-
- #  listafiles="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_r??i00p00.nc |head -n $nrunC3Sfore`"
- #  for ff in $listafiles ; do
- #      #common part cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_
- #     tag=`echo $ff | cut -d '_' -f5-`
- #     listatocheck+="$tag "
- #  done
-
   listatocheck+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc |head -n $nrunC3Sfore`"
 done
 #
@@ -200,82 +174,73 @@ mkdir -p ${pushdir_hc}
 # CHECK THE TIME LENGTH OF EACH FILE
 #----------------------------------------------
 
-redo=0
-if [[ $redo -eq 1 ]] ; then
-#daily=`ls $listatocheck|grep day`
-daily=" "
-lista6hrly=" "
-lista12hrly=" "
-for t in $listatocheck ; do 
-  if [[ $t == *day* ]]
-  then
-     daily+=" $prefix$t"
-  fi
-  if [[ $t == *6hr* ]] 
-  then
-     lista6hrly+=" $prefix$t"
-  fi
-  if [[ $t == *12h* ]]
-  then
-     lista12hrly+=" $prefix$t"
-  fi
-done
+isdaily=`ls $listatocheck|grep day |wc -l`
+if [[ $isdaily -ne 0 ]]  
+then
+   daily=`ls $listatocheck|grep day`
 
-for file in $daily
-do
-    echo $file
-    nstep=`cdo -ntime $file`
-    if [ $nstep -ne $fixsimdays ]
-    then
-       body="C3S: $DIR_C3S/tar_and_push.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-       title="[C3S] ${CPSSYS} forecast ERROR"
-       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
-       exit 1
-    else
-       echo "number of days in file $nstep correct"
-    fi
-done
+   for file in $daily
+   do
+      echo $file
+      nstep=`cdo -ntime $file`
+      if [ $nstep -ne $fixsimdays ]
+      then
+          body="C3S: $DIR_C3S/tar_and_push.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
+          title="[C3S] ${CPSSYS} forecast ERROR"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+          exit 1
+      else
+         echo "number of days in file $nstep correct"
+      fi
+   done
+fi
 
-#lista6hrly=`ls $listatocheck|grep 6hr`
-n6hr=`expr $fixsimdays \* 4`
-for file in ${lista6hrly}
-do
-    nstep=`cdo -ntime $file`
-    if [ $n6hr -ne $nstep ]
-    then
-       body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-       title="[C3S] ${CPSSYS} forecast ERROR"
-       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
-       exit 1
-    else
-       echo "number of timesteps in file $nstep correct"
-    fi
-done
+islista6hrly=`ls $listatocheck|grep 6hr |wc -l`
+if [[ $islista6hrly -ne 0 ]]
+then
 
-#lista12hrly=`ls $listatocheck|grep 12hr`
-n12hr=`expr $fixsimdays \* 2`
-for file in ${lista12hrly}
-do
-    nstep=`cdo -ntime $file`
-    if [ $n12hr -ne $nstep ]
-    then
-       body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-       title="[C3S] ${CPSSYS} forecast ERROR"
-       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
-       exit 1
-    else
-       echo "number of timesteps in file $nstep correct"
-    fi
-done
+  lista6hrly=`ls $listatocheck|grep 6hr`
+  n6hr=`expr $fixsimdays \* 4`
+  for file in ${lista6hrly}
+  do
+     nstep=`cdo -ntime $file`
+     if [ $n6hr -ne $nstep ]
+     then
+        body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
+        title="[C3S] ${CPSSYS} forecast ERROR"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+        exit 1
+     else
+        echo "number of timesteps in file $nstep correct"
+     fi
+  done
+fi
+
+islista12hrly=`ls $listatocheck|grep 12hr |wc -l`
+if [[ $islista12hrly -ne 0 ]] ; then
+   lista12hrly=`ls $listatocheck|grep 12hr`
+   n12hr=`expr $fixsimdays \* 2`
+   for file in ${lista12hrly}
+   do
+      nstep=`cdo -ntime $file`
+      if [ $n12hr -ne $nstep ]
+      then
+         body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
+         title="[C3S] ${CPSSYS} forecast ERROR"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+         exit 1
+      else
+         echo "number of timesteps in file $nstep correct"
+      fi
+   done
 fi
 #
 #----------------------------------------------
 # PRODUCE SHA256
 #----------------------------------------------
 echo "NOW PRODUCE sha256 FILES"
-for tag in ${listatocheck}
+for file in ${listatocheck}
 do
-   file="$prefix$tag"
    file="${file%.*}"
    if [ -f $file.sha256 ]
    then
@@ -283,7 +248,7 @@ do
    fi
    sha256sum ${file}.nc > $file.sha256
 done
-exit
+
 donotsend=0
 NUMB_CHECK=`expr $nrunC3Sfore + $nrunC3Sfore` # for each field we have the .nc file and .sha
 

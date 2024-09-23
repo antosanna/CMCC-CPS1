@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=10 # startdate
-onlycheckfileok=0    #if 0 does tar_and_push
+st=11 # startdate
+onlycheckfileok=0   #if 0 does tar_and_push
                      #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -119,7 +119,7 @@ do
         if [ $onlycheckfileok -eq 0 ]
         then 
            echo "Submitting tar_and_push for $startdate"     
-           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_and_push_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_and_push.sh_new -i "$input"
+           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_and_push_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_and_push.sh -i "$input"
         fi    
      else
        body="something is still running. Retry"

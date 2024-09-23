@@ -1,0 +1,24 @@
+#!/bin/sh -l
+{{ batchdirectives }}
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euvx
+CASEROOT={{ caseroot }}
+
+cd $CASEROOT
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+
+last_rest=`ls -trd $DIR_ARCHIVE/$caso/rest/* |tail -n1`
+last_date=`basename ${last_rest}`
+yyyy=`echo $last_date |cut -d '-' -f1`
+st=`echo $last_date |cut -d '-' -f2`
+
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
+
+./mv_IC_2ICDIR_${caso}.sh
+
+
+
+

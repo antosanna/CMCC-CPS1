@@ -1,5 +1,6 @@
 #!/bin/sh -l
 #launched with submitcommand by $DIR_LND_IC/launch_edaFORC_4hindcast.sh
+#this is meant to create EDA-based forcing for CLM analysis offline
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh

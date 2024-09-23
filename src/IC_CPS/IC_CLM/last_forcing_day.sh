@@ -37,7 +37,9 @@ tstep=`expr $nday \* $freq`
 date_lastday=999
 if [ $tstepread -ne $tstep ]
 then
-    lastdayp1=`cdo showdate $inputfile|rev|cut -d ' ' -f1|rev`
+    #lastdayp1=`cdo showdate $inputfile|rev|cut -d ' ' -f1|rev`
+    #tail added to handle multiple line output of cdo showdate
+    lastdayp1=`cdo showdate $inputfile|rev|cut -d ' ' -f1|rev |tail -n1`
     date_lastdayp1=${lastdayp1:0:4}${lastdayp1:5:2}${lastdayp1:8:2}
     date_lastday=`date -d "$date_lastdayp1 - 1day" +%d`
 fi

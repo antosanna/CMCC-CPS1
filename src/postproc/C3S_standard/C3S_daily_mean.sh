@@ -5,8 +5,8 @@
 #BSUB -o logs/C3S_daily_mean_%J.out
 
 . ~/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
-. $DIR_TEMPL/load_cdo
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_cdo
 
 set -euxv
 export member=$1
@@ -14,47 +14,37 @@ ens=$member
 wkdir=$2
 stdate=$3
 outdir=$4  #$FINALARCHC3S/$yyyy$st
-#NEW 202103 !!! position of checkfile
-checkfile=$5 #$FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${member}
-daylist="$6"
+daylist="$5"
+check_ok=$6 #wkdir/C3S_daily_mean_2d_${member}_ok
 
-#NEW 202103 !!! 
-# descr_hindcast.sh o descr_forecast.sh
 yyyy=`echo $stdate |cut -c 1-4`
 st=`echo $stdate |cut -c 5-6`
 set +euvx
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 if [ ! -d $wkdir ]
 then
    echo "something wrong $wkdir does not exist"
 fi
 #NEW 202103 !!! +
-# condiziona ncl al checkfile
-checkncl=$wkdir/C3S_daily_mean_2d_${member}_ok
 varlist="tso tas uas vas tdps psl ta zg ua va hus"
-if [ -f $checkncl ] 
+if [ -f $check_ok ] 
 then
 #se i file C3S ad alta frequenza sono piu' recenti rifai
    for var in $varlist
    do
       cd $WORK_C3S/$stdate/
       file=`ls *${var}_r${member}i00p00.nc`
-      if [[ $file -nt ${checkncl} ]]
+      if [[ $file -nt ${check_ok} ]]
       then
-         rm $checkncl
+         rm $check_ok
          break 
       fi
    done
 fi
 #NEW 202103 !!! -
 
-if [ ! -f $checkncl ]
+if [ ! -f $check_ok ]
 then
    for var in $varlist
    do
@@ -76,13 +66,11 @@ then
 
 #ta, ua, va: 925, 850, 500, 200
 #zg 850, 500, 200
-#hus: 850
+#hus: 850  (ANTO added 700 20240918)
       case $var in
          zg) option="-sellevel,85000,50000,20000";level="pressure";;  
-         hus) option="-sellevel,85000";level="pressure";;  
-         ta) option="-sellevel,92500,85000,50000,20000";level="pressure";;  
-         ua) option="-sellevel,92500,85000,50000,20000";level="pressure";;  
-         va) option="-sellevel,92500,85000,50000,20000";level="pressure";;  
+         hus) option="-sellevel,70000,85000";level="pressure";;  
+         ta | ua | va) option="-sellevel,92500,85000,50000,20000";level="pressure";;  
          *) option="";level="surface";;
       esac
 #redefine timeaxis
@@ -91,38 +79,16 @@ then
 
       nt=`cdo -ntime $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc`
 #cdo daily mean - descarding first time step (I.C.)
-      cdo -O shifttime,1sec -daymean -shifttime,-1sec -seltimestep,2/$nt $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc  $outdir/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${realm}_day_${level}_${var}_r${ens}i00p00.nc
+      cdo -O shifttime,1sec -daymean -shifttime,-1sec -seltimestep,2/$nt $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc  $outdir/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${realm}_day_${level}_${var}_r${ens}i00p00.nc
       rm $wkdir/${var}_${yyyy}${st}_${ens}_*nc
    done
-   touch $checkncl
+   touch $check_ok
 fi
-if [ -f $checkncl ]
+if [ ! -f $check_ok ]
 then
-#NEW 202103 !!! +
-# condiziona il qa_checker al suo checkfile e spostato il log in $DIR_LOG/$typeofrun
-# if $checkfile for quality check exist check if older than corresponding files 
-   if [ -f $checkfile ]
-   then
-      for var in $varlist
-      do
-         cd $outdir
-         file=`ls *${var}_r${member}i00p00.nc`
-         if [[ $file -nt ${checkfile} ]]
-         then
-            rm $checkfile
-            break 
-         fi
-      done
-   fi
-   if [ ! -f $checkfile ]
-   then
-#NEW 202103 !!!  -
-      $DIR_C3S/launch_c3s_qa_checker_keep_in_archive.sh ${stdate} $member $wkdir $outdir $checkfile "$daylist"
-   fi
-else # checkncl does not exist
-   title="[C3Sdaily] ${SPSSYS} forecast ERROR"
+   title="[C3Sdaily] ${CPSSYS} daily postprocessing ERROR"
    body="$stdate $member $DIR_C3S/C3S_daily_mean.sh did not complete correctly. Check ${DIR_LOG}/$typeofrun/${stdate}/launch_C3S_daily_${stdate}_${member}*.err/out"
-   ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit 11
 fi
 echo "That's all Folks"
