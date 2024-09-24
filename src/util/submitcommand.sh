@@ -497,7 +497,12 @@ then
     then
     # sbatch $account_name with reservation
 #      command+=" --qos=qos_lowprio --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
-      command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+       if [[ "$queue" == "lrd_all_serial" ]]
+       then
+           command+=" --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err --mail-type=FAIL --mail-user=$mymail"
+       else
+           command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+       fi
     else
       command="sbatch --account=$account_name --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail"
     fi

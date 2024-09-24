@@ -8,6 +8,7 @@
 set -euxv
 check_pp_monthly=$1
 echo "-----------STARTING EXPNAME.l_archive-------- "`date`
+caso=EXPNAME
 cd $DIR_CASES/EXPNAME
 ic="DUMMYIC"
 DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
@@ -133,6 +134,9 @@ then
    $DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
 fi
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
+set +euvx
+. $dictionary
+set -euvx
 touch  $check_pp_monthly
 
 exit 0
