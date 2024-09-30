@@ -42,6 +42,8 @@ then
     lastdayp1=`cdo showdate $inputfile|rev|cut -d ' ' -f1|rev |tail -n1`
     date_lastdayp1=${lastdayp1:0:4}${lastdayp1:5:2}${lastdayp1:8:2}
     date_lastday=`date -d "$date_lastdayp1 - 1day" +%d`
+    #date_lastday=`date -d "$date_lastdayp1" +%d`
+    
 fi
 echo $((10#$date_lastday))
 

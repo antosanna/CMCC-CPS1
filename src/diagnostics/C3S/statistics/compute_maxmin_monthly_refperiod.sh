@@ -9,6 +9,8 @@
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
 set -euvx
+st=$1
+echo $st
 dbg=0 #just one cycle to check
 fileroot=cmcc_CMCC-CM3-v20231101_hindcast
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -30,46 +32,46 @@ while IFS=, read -r flname C3S realm prec coord lname sname units freq level add
 do
    var_arrayC3S+=("$C3S")
 done } < $C3Stable_clm
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce1
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce2
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce3
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce4
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce5
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_oce6
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce1
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce2
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce3
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce4
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce5
+#{
+#read 
+#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+#do
+#   var_arrayC3S+=("$C3S")
+#done } < $C3Stable_oce6
 
          
 echo ${var_arrayC3S[@]}
-for st in 10
+for st in $st
 do
    for var in ${var_arrayC3S[@]}
    do
@@ -140,6 +142,11 @@ do
             cdo add $SCRATCHDIR//C3S_statistics/zeros.$var.${st}.${freq}_${mm}.nc $SCRATCHDIR//C3S_statistics/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly_${mm}.nc $SCRATCHDIR//C3S_statistics/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.$mm.nc
          done
          cdo -O mergetime $SCRATCHDIR/C3S_statistics/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.??.nc $OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.C3S.nc
+         if [[ ! -f $OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.C3S.nc ]]
+         then
+            $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -M "C3S statistics not done for ${var} $st" -t "WARNING $var"
+            exit
+         fi
       done
       if [[ $dbg -eq 1 ]]
       then
@@ -147,3 +154,11 @@ do
       fi
    done
 done
+#if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/*/${fileroot}_${st}.${iniy_hind}-${endy_hind}_*.C3S.nc|wc -l` -eq 106 ]]
+if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/*/${fileroot}_${st}.${iniy_hind}-${endy_hind}_*.C3S.nc|wc -l` -eq 82 ]]
+then
+   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics done for $st" -M "completed"
+else
+   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics not complete for $st" -M "WARNING $st C3S_statistics "
+fi
+

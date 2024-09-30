@@ -23,6 +23,8 @@ bkup_flag=0
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
+nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc 
+ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.nc 
 if [[ $typeofrun == "hindcast" ]]
 then
    case $poce1 in
@@ -47,21 +49,15 @@ then
    esac
 else
 # forecast
-   lastdir=`ls -dtr $DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${yy_assim}${mm_assim}*|tail -1`
-   OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${lastdir}/
-fi
-if [[ ! -d $OUTDIR ]] && [[ $typeofrun == "forecast" ]]
-then
-# meaming that you are taking the last available analysis and this will be a bkup IC
-   OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+   OUTDIR=$DIR_REST_OIS_FORE/$poce1  #to be defined: temporarily defined in descr_CPS.sh as root (no path start-date not existing)
    if [[ ! -d $OUTDIR ]] 
    then
-      title="[NEMOIC] - $OUTDIR backup directory not present"
-      body="you cannot produce NEMO ic poce1 for $yyyy and $st because neither operational nor back-up restart  available"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
-      exit
+# meaming that you are taking the last available analysis and this will be a bkup IC
+      OUTDIR=`ls -dtr $DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${yy_assim}${mm_assim}*|tail -1`
+      bkup_flag=1
+      nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
    fi
-   bkup_flag=1
 fi
 mkdir -p $IC_NEMO_CPS_DIR/$st
 TMPNEMOREST=$SCRATCHDIR/nemo_rebuild/restart/$yyyy$st
@@ -73,7 +69,7 @@ N=1
  
 # do we want to include the possibility for restart of nemo present and cice missing and viceversa???
 # I'd rather don't
-if [[ ! -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc ]]
+if [[ ! -f $nemoic ]]
 then
    cd $TMPNEMOREST
    for ff in $listaf
@@ -85,31 +81,17 @@ then
    if [[ -f $TMPNEMOREST/${rootname}.nc ]]
    then
      # remove DELAY_fwb from OIS restarts
-     if [[ $bkup_flag -eq 0 ]]
-     then
-        ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
-     else
-#then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
-        ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc
-        cp $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc
-     fi
+     ncatted -a DELAY_fwb,global,d,, $TMPNEMOREST/${rootname}.nc $nemoic
    fi
 fi
 
-if [[ ! -f ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc ]]
+if [[ ! -f $ciceic ]]
 then
    nf_ice=`ls $OUTDIR/*.cice.r.*.nc |wc -l`
    if [[ ${nf_ice} -eq 1 ]] ; then
       mkdir -p ${IC_CICE_CPS_DIR}/$st
-      f_ice=`ls $OUTDIR/*.cice.r.${yyyy}-${st}*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
-      if [[ $bkup_flag -eq 0 ]]
-      then
-          rsync -auv $f_ice ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
-      else
-#then this is a backup. Copy it to the final dir with bkup flag and create a symbolic link to the expected operationa file name
-          rsync -auv $f_ice ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc 
-          cp ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.bkup.nc ${IC_CICE_CPS_DIR}/$st/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${poce}.nc 
-      fi
+      f_ice=`ls $OUTDIR/*.cice.r.*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
+      rsync -auv $f_ice $ciceic
    fi
 fi
 set +euvx

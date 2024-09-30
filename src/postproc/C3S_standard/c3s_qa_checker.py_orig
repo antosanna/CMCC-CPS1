@@ -299,13 +299,7 @@ def main():
                             #test 20240925 
                             #ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=173, delta_limit2=40, verbose=args.verbose, very_verbose=args.very_verbose)
                             #test 20240926
-                            filesic="cmcc_CMCC-CM3-v20231101_hindcast_S"+lab_std+"0100_seaIce_day_surface_sic_r"+lab_mem+"i00p00.nc"
-                            filemask="cmcc_CMCC-CM3-v20231101_hindcast_S"+lab_std+"0100_atmos_fix_surface_sftlf_r"+lab_mem+"i00p00.nc"
-                            DS_mask = xr.open_dataset(os.path.join(args.path,filemask), decode_times=False )
-                            DS_sic=xr.open_dataset(os.path.join(args.path,filesic), decode_times=False )
-                            maskfield=DS_mask['sftlf']
-                            sicfield=DS_sic['sic']
-                            list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
+                            list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
 
                         elif shortname=='tas':
                             ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=183, delta_limit2=50, verbose=args.verbose, very_verbose=args.very_verbose)

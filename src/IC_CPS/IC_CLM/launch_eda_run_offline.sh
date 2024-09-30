@@ -20,7 +20,7 @@ mm_in=02
 newyy=${yyyy_in}                   # year start-date
 newmm=${mm_in}
 
-while [[ ${newyy}${newmm} -le 202408 ]]
+while [[ ${newyy}${newmm} -le 202409 ]]
 do
     
    yyyy=$newyy                # month start-date: this is a number 

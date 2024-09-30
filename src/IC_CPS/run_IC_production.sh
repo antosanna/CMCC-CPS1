@@ -30,13 +30,10 @@ set -euvx
 #TO BE DEFINED
 
    # inizialize flags to send informative emails   ANTO 20210319
-submittedNEMO=0
 ###############################################################
 # FIRST OF ALL IC FOR NEMO NEEDED TO COMPUTE IC CAM ON THE FORECAST DAY
 ###############################################################
 # generate Ocean conditions 
-nom_oce=0
-bk_oce=0
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
 for poce in `seq -w 01 $n_ic_nemo`;do
@@ -55,7 +52,6 @@ for poce in `seq -w 01 $n_ic_nemo`;do
       input="$yyyy $st $poce"
       $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
 
-     submittedNEMO=1
      sleep 30
   fi
 done
@@ -99,12 +95,12 @@ then
    for ilnd in {01..03}
    do
       #if present, remove old links to avoid using them instead of newly computed files
-      actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ilnd.nc
+      actual_ic_clm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ilnd.nc
       if [[ -L $actual_ic_clm ]]
       then
          unlink $actual_ic_clm
       fi
-      actual_ic_hydros=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ilnd.nc
+      actual_ic_hydros=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ilnd.nc
       if [[ -L $actual_ic_hydros ]]
       then
          unlink $actual_ic_hydros
@@ -127,40 +123,23 @@ then
       then
 	  #if nothing is running, something wrong should have happened
 	  #count the flag clm_run_error to take into account error runtime during clm analysis and take the first one - for that clm IC the backup will be used for CAM-IC computation
-          nmb_clm_err=`ls $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/clm_run_error_touch_EDA${ilnd}.$yyyy$st |wc -l`
-	         if [[ $nmb_clm_err -ne 0 ]]
-          then
-                ppland=`ls $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/clm_run_error_touch_EDA${ilnd}.$yyyy$st |tail -n1 |rev | cut -d '.' -f2 |cut -c1 |rev`
-              		actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ppland.nc
-	              	actual_ic_hydros=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ppland.nc
-                bkup_ic_clm=$IC_CPS_guess/CLM/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ppland.bkup.nc
-                bkup_ic_hydros=$IC_CPS_guess/CLM/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ppland.bkup.nc
-                body="Using $bkup_ic_clm and $bkup_ic_hydros for CAM ICs computation. cm3_lndSSP5-8.5_bgc_NoSnAg_eda$((10#${ppland}))_op did not complete correctly"
-                title="[CLMIC] ${CPSSYS} forecast warning"
-                $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-                ln -sf $bkup_ic_clm $actual_ic_clm
-                ln -sf $bkup_ic_hydros $actual_ic_hydros
-		              break
-          else
 	       #this is not a runtime error, is something different which has not allowed the production of clm ICs at all
-               if [[ `ls $IC_CPS_guess/CLM/$st/CPS1.clm2.r.$yyyy-$st-01-00000.??.bkup.nc |wc -l` -ne 0 ]] 
-	              then
-	                  bkup_ic_clm=`ls $IC_CPS_guess/CLM/$st/CPS1.clm2.r.$yyyy-$st-01-00000.??.bkup.nc |tail -n1`
-	                  ppland=`echo $bkup_ic_clm |rev | cut -d '.' -f3 |rev`
-	                  bkup_ic_hydros=$IC_CPS_guess/CLM/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ppland.bkup.nc
-	                  actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ppland.nc
-	                  actual_ic_hydros=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ppland.nc
-                   ln -sf $bkup_ic_clm $actual_ic_clm
-                   ln -sf $bkup_ic_hydros $actual_ic_hydros
-                   body="Using $bkup_ic_clm and $bkup_ic_hydros for CAM ICs computation. Operational CLM IC procedures do not complete correctly"
-                   title="[CLMIC] ${CPSSYS} forecast warning"
-                   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-                   ln -sf $bkup_ic_clm $actual_ic_clm
-                   ln -sf $bkup_ic_hydros $actual_ic_hydros
-                   break
-  	            fi
+         if [[ `ls $IC_CPS_guess/CLM/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.??.bkup.nc |wc -l` -ne 0 ]] 
+         then
+             bkup_ic_clm=`ls $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.??.bkup.nc |tail -n1`
+             ppland=`echo $bkup_ic_clm |rev | cut -d '.' -f3 |rev`
+             bkup_ic_hydros=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.bkup.nc
+             actual_ic_clm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc
+             actual_ic_hydros=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc
+# replace operational IC with backup (we want to delete backup if not used)
+             rsync -auv $bkup_ic_clm $actual_ic_clm
+             rsync -auv $bkup_ic_hydros $actual_ic_hydros
+             body="Using $bkup_ic_clm and $bkup_ic_hydros for CAM ICs computation. Operational CLM IC procedures do not complete correctly"
+             title="[CLMIC] ${CPSSYS} forecast warning"
+             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+             break
+         fi
             
-          fi
       fi
    done
 fi
@@ -183,15 +162,7 @@ do
 done
 nemoic_ctr=$dirnemoic/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.01.nc
 # ma non va fatto prima??? e poi perche' e' necessario???
-if [[ -L $nemoic_ctr ]]
-then
-   unlink $nemoic_ctr
-fi
 ciceic_ctr=$dirciceic/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.01.nc
-if [[ -L $ciceic_ctr ]]
-then
-   unlink $ciceic_ctr
-fi
 
 if [[ ! -f $nemoic_ctr ]]
 then
@@ -201,23 +172,21 @@ then
 
    title="[NEMOIC] ${CPSSYS} forecast warning"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   ln -sf $bkup_nemoic_ctr $nemoic_ctr
-   if [[ -f $ciceic_ctr ]]
-   then
-      rm $ciceic_ctr
-   fi
-   ln -sf $bkup_ciceic_ctr $ciceic_ctr
+# we replace both operational ICs with backup (backup ICs will be removed if not used)
+# here we evaluate the case where CICE IC was produced but Nemo was not 
+# and for consistency we replace both
+   rsync -auv $bkup_nemoic_ctr $nemoic_ctr
+   rsync -auv $bkup_ciceic_ctr $ciceic_ctr
 elif [[ ! -f $ciceic_ctr ]]
 then
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $ciceic_ctr not present."
    title="[NEMOIC] ${CPSSYS} forecast warning"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-   ln -sf $bkup_ciceic_ctr $ciceic_ctr
-   if [[ -f $nemoic_ctr ]]
-   then
-      rm $nemoic_ctr
-   fi
-   ln -sf $bkup_nemoic_ctr $nemoic_ctr
+# we replace both operational ICs with backup (backup ICs will be removed if not used)
+# here we evaluate the case where Nemo IC was produced but CICE was not 
+# and for consistency we replace both
+   rsync -auv $bkup_ciceic_ctr $ciceic_ctr
+   rsync -auv $bkup_nemoic_ctr $nemoic_ctr
 fi
  
 now_ic_cam=`ls $IC_CAM_CPS_DIR/$st/*${yyyy}$st*nc |wc -l`
@@ -227,17 +196,12 @@ mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
 yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
 mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
 dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
+t_analysis=00
 for pp in {0..9}
 do
 
-    # check if IC was already created on Juno (up to 20240108 it could be)
     ppcam=`printf '%.2d' $(($pp + 1))`
-    if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.DONE ]]
-    then
-       continue
-    fi
 
-    t_analysis=00
     inputECEDA=$DATA_ECACCESS/EDA/snapshot/${t_analysis}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${t_analysis}.grib
     casoIC=${SPSSystem}_EDACAM_IC${ppcam}.${yyIC}${mmIC}${dd}
 
@@ -249,13 +213,6 @@ do
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
        continue
     fi
-    inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.nc
-    if [[ ! -f ${inputNEMO4CAM} ]]
-    then
-       body="$IC_CPS/run_IC_production.sh: ${inputNEMO4CAM} missing!"
-       echo $body
-       continue
-    fi
 
 #         get check_IC_CAMguess from dictionary
     set +euvx
@@ -263,12 +220,13 @@ do
     set -euvx
     mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
     echo "---> going to produce first guess for CAM and start date $yyyy $st"
-    input="$check_IC_CAMguess $yyyy $st $pp $t_analysis $inputECEDA"
+    input="$yyyy $st $pp $t_analysis $inputECEDA $dd"
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
     input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
 done     #loop on pp
 
+# loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
 while `true`
 do
     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n firstGuess -a PEND -c yes`
@@ -279,6 +237,7 @@ do
     sleep 60
 done
 sleep 1800 # assuming root_casoIC takes almost 40'
+# wait until completion of all CAM ICs
 while `true`
 do
     root_casoIC=${SPSSystem}_EDACAM_IC
@@ -289,14 +248,53 @@ do
     fi
     sleep 60
 done
+# replace missing CAM ICs with backup
 for ic in `seq -w 01 $n_ic_cam`
 do
-    if [[ ! -f $IC_CAM_CPS_DIR/$st/CPS1.cam.i.$yyyy-$st-01-00000.$ic.nc ]]
+    if [[ ! -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc ]]
     then
-        mv $IC_CAM_CPS_DIR/CPS1.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CAM_CPS_DIR/CPS1.cam.i.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc
         body="CAM: CAM IC $ic was not correctly produced. You are going to use the back-up"
         title="[CAMIC] ${CPSSYS} forecast notification"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+     else
+        rm $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc 
     fi
 done
 #
+# replace missing CLM ICs with backup
+for ic in `seq -w 01 $n_ic_clm`
+do
+    if [[ ! -f $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc ]]
+    then
+        mv $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.nc
+        body="CLM: CLM IC $ic was not correctly produced. You are going to use the back-up"
+        title="[CLMIC] ${CPSSYS} forecast notification"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+     else
+        rm $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc
+    fi
+done
+# replace missing NEMO ICs with backup
+for ic in `seq -w 01 $n_ic_nemo`
+do
+    if [[ ! -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc ]]
+    then
+        mv $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
+        body="NEMO: NEMO IC $ic was not correctly produced. You are going to use the back-up both for NEMO and CICE"
+        title="[NEMO/CICEIC] ${CPSSYS} forecast notification"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+    elif [[ ! -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc ]]
+    then
+        mv $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
+        body="CICE: CICE IC $ic was not correctly produced. You are going to use the back-up both for NEMO and CICE"
+        title="[NEMO/CICEIC] ${CPSSYS} forecast notification"
+     else
+        rm $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc
+    fi
+done

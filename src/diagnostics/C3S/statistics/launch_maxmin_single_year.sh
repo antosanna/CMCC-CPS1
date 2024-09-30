@@ -143,10 +143,10 @@ for var in ${var_arrayC3S[@]}; do
        fi
    done    #loop on $st
 done    #loop on $var
-if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_*_done |wc -l` -eq ${#var_arrayC3S[@]} ]]
+if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${stnow}_*_done |wc -l` -eq $((${#var_arrayC3S[@]} - 3)) ]]
 then
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
-   
+   $DIR_DIAG_C3S/statistics/compute_maxmin_monthly_refperiod.sh $stnow
 fi
 
 exit 0

@@ -48,7 +48,7 @@ checkfile=$5
 ####definition to be checked/included in descr_CPS.sh
 forcDIReda_ens=${forcDIReda}/EDA_n$member
 mkdir -p ${forcDIReda_ens}
-forcDIReda_bkup=${forcDIReda_ens}
+forcDIReda_bkup=${forcDIReda}/EDA_n${member}_backup
 WORKDIR_LAND=$SCRATCHDIR/WORK_LAND_IC
 mkdir -p ${WORKDIR_LAND}
 REPOSITORY=$MYCESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}
@@ -76,14 +76,14 @@ if [[ $backup -eq 0 ]]  #operational
 then
   forcDIR=${forcDIReda_ens}
   wdir=workdir_eda${member}
-  jobname=launch_create_edaFORC_${member}
+  jobname=launchFREDA0${member}_${yyyy}${st}
   preffix="clmforc.EDA${member}.0.5d"
   title_tag="[CLMIC]"
 elif [[ $backup -eq 1 ]]  #backup mode
 then
   forcDIR=$forcDIReda_bkup
   wdir=workdir_eda${member}_bkup
-  jobname=launch_create_edaFORC_${member}_bkup
+  jobname=launchFREDA0${member}_${yyyy}${st}_bkup
   preffix="clmforc.EDA${member}.backup.0.5d"
   title_tag="[CLMIC-backup]"
 elif [[ $backup -gt 1 ]]  #backup mode
@@ -349,13 +349,17 @@ do
          echo "instantaneous fields"
          echo "tstepfile $tstepfile"
          echo "tstep $tstep"
-         if [ $tstepfile -lt $tstep ] 
+         if [ $tstepfile -le $tstep ] 
          then
-             #here the idea is that entire days are missing (i.e. 8  timestep at once)
-             tsel=$(($tstepfile -1)) #keeping everything: from 0 to tstepfile-1
+             nt_var=`cdo ntime $var.gauss.${yr}-${mo}_n${member}.nc`
+
+             last_h=`cdo showtime -seltimestep,${nt_var} $var.gauss.${yr}-${mo}_n${member}.nc |cut -d ':' -f1`
+             nmb_tstep=$((${last_h}/3))
+             #in this way I go back to the last available complete day (comprising the midnight of the following day for the last time interpolation)
+             tsel=$(($tstepfile - ${nmb_tstep} - 1)) 
              ncks -O -d time,0,$tsel $var.gauss.${yr}-${mo}_n${member}.nc $var.gauss.${yr}-${mo}_n${member}_tstep.nc
          else  #usually for a 31day month, tstepfile=249 (248+00 of the first of following month)
-             tsel=$(($tstep)) 
+             tsel=$(($tstep))  #from 0 to $tsel meaning everything
              ncks -O -d time,0,$tsel $var.gauss.${yr}-${mo}_n${member}.nc $var.gauss.${yr}-${mo}_n${member}_tstep.nc
          fi
       fi

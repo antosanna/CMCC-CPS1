@@ -195,11 +195,19 @@
             "wsgmax":[0,56.0]
         },
 
+
+        "spike_checked_vars" : [ 
+            "tasmin",
+            "tas",
+            "TREFMNAV"
+        ],  
+
         "DMO_variables" : [
             "SST",
             "PSL",
             "TREFHT",
             "TREFMXAV",
+            "TREFMNAV",
             "TREFHTMX",
             "TS",
             "ANRAIN",

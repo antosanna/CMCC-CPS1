@@ -67,6 +67,7 @@ then
       maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
+      DIR_REST_OIS_FORE=$WORK/OIS2/archive/   # TO BE DEFINED?
       DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "zeus" ]]
    then

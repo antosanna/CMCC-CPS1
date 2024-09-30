@@ -15,18 +15,19 @@ set +euvx
 set -euvx
 
 #INPUT SECTION
-check_IC_CAMguess=$1
-yyyy=$2
-st=$3
-ppeda=$4
-tstamp=$5
-export inputECEDA=$6
+#check_IC_CAMguess=$1
+yyyy=$1
+st=$2
+ppeda=$3
+tstamp=$4
+export inputECEDA=$5
+export dd=$6
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 # export vars needed by ncl script
 export yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
 export mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month; this is not a number (2 digits)
-export dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
+#export dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
 #TEMPLATE FILE 2 CAM
 export ftemplate=${CESMDATAROOT}/inputdata/atm/cam/inic/fv/cami_0000-01-01_0.47x0.63_L83_c230109.nc
 
@@ -108,4 +109,4 @@ mkdir -p $IC_CPS_guess/CAM/$st
 mv ${output} $ncdataSPS
 echo 'ended compression IC CAM 00 '`date`
 echo ''
-touch $check_IC_CAMguess
+#touch $check_IC_CAMguess

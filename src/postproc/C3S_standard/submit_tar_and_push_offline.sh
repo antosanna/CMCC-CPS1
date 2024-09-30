@@ -14,9 +14,9 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=11 # startdate
-onlycheckfileok=0   #if 0 does tar_and_push
-                     #if 1 only check that everything is ready
+st=12 # startdate
+onlycheckfileok=1  #if 0 does tar_and_push
+                   #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
 C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt

@@ -104,190 +104,168 @@ def check_2d_field(field, filling_value, constant_limit):
     if (difs < constant_limit):
         raise FieldError('All field = constant')
 
-def check_temp_spike(maskfield,sicfield,varn,shortn,timen,lab_std, lab_mem, error_list, field1, min_limit1=183, delta_limit1=50, delta_limit2=30,verbose=False, very_verbose=False):
+def check_temp_spike(varn,shortn,timen,lab_std, lab_mem, spike_error_list, field1, field2=None, field3=None, max_limit1=313, delta_limit1=30, min_limit2=5, delta_limit2=60,  max_limit3=0,verbose=False, very_verbose=False):
     """
     Performs a series of tests designed to identify anomalous temp spikes. 
-    The rationale is that a spike is defined if a threshold is exceeded AND 
-    if it is ONLY at one time shot
+    WARNING: This function works only on 2D data shaped as [time, gridpoint]
     Arguments:
-        field1=TMIN 
+        field1=TREFHT (necessary, the filter will be T>limit | dT>limit)
+        field2=QREFHT (optional, the filter will be T>limit | dT>limit & dQ>limit)
+        field3=ICEFRAC (optional, will find how many points had also an ice faction>limit)
     Returns:
         spike list, spikes on ice list
     Raises:
         Error when spike on ice is found
     """
-    mask=maskfield.data
-    sic=sicfield.data
-    point_list=[]
-    point_list_noc3=[]
-    point_list_c1=[]
-    point_list_c2=[]
-    point_list_c1andc2=[]
-    spk_pos=None
-    if (len(field1.dims)) == 3 and (field1.dims == (timen,'lat','lon')):
+    log_list = []
+    point_list_ice = []
+
+    # DMO shape
+    if (len(field1.dims)) == 2 and (field1.dims == (timen,'ncol')):
+
+        data1=field1.data
+        if field2 is not None:
+            data2=field2.data
+        if field3 is not None:
+            data3=field3.data
+    # C3S shape
+    elif (len(field1.dims)) == 3 and (field1.dims == (timen,'lat','lon')):
         ndims=field1.data.shape
         newdims=(ndims[0], ndims[1]*ndims[2])
         if very_verbose:
             print('Warning: Reshaping arrays',ndims,'to',newdims)
         
         data1=field1.data.reshape(newdims)
+        if field2 is not None:
+            data2=field2.data.reshape(newdims)
+        if field3 is not None:
+            data3=field3.data.reshape(newdims)
+            if np.any(np.isnan(data3)) and very_verbose:
+                print('Warning: There are NaN values in icefrac that will not be checked')
     else:
         raise InputError('Unsupported dimensions in spike check')
         
-    # compute delta T
-    data1=field1.data
+    # compute delta T/Q
     delta1 = np.zeros_like(data1)
-#------------------------------------------------------------
-#------------------------------------------------------------
-
-  #  delta1[0:-2,:,:] = data1[1:-1, :,:] - data1[0:-2, :,:]
-  #  delta1[-1,:,:] = data1[-2, :,:] - data1[-1, :,:]
-  #  delta1[0:-1,:,:]=data1[1:len(data1),:,:]-data1[0:-1,:,:]
-  #  delta1[-1,:,:]=data1[-2, :,:] - data1[-1, :,:]
-
-    #the difference t(i+1)-t(i) is assigned to delta1 at t(i+1)
-    delta1[1:len(delta1)]=data1[1:len(data1)]-data1[0:-1]
-    delta1[0]=data1[1]-data1[0]
-
-    ddelta1=np.zeros_like(data1)
-    #ddelta1[0:-2,:,:]=data1[2:len(data1),:,:]-data1[0:len(data1)-2,:,:]
-    #ddelta1[-2:len(ddelta1),:,:]=data1[-4:-2,:,:]-data1[-2:len(data1),:,:]
-   
-    #the difference t(i+2)-t(i) is assigned to ddelta1 at t(i+1)
-    #at the extremes ddelta[0]/ddelta[-1] the difference with the contigous time step is given
-    ddelta1[1:-1,:,:]=data1[2:len(data1),:,:]-data1[0:len(data1)-2,:,:]
-    ddelta1[0,:,:]=data1[1,:,:]-data1[0,:,:]
-    ddelta1[-1,:,:]=data1[-1,:,:]-data1[-2,:,:]
+    delta1[0:-2,:] = data1[1:-1, :] - data1[0:-2, :]
+    delta1[-1,:] = data1[-2, :] - data1[-1, :]
     
-    # SPIKE EXAMPLE
-    #
-    #--------\        /-------  0
-    #         \      /
-    #          \    /
-    #           \  /
-    #            \/           -60
-    #            
-    #
-    #
-    #  1    2     3     4     5       time-index
-    #
-    #
-    #  t1    t2   t3    t4    t5
-    #  0     0   -60    0     0        data1
-    #
-    #t1-t0 t2-t1 t3-t2 t4-t3 t5-t4
-    #  0     0   -60   60    0         delta1
-    #
-    #t2-t0 t3-t1 t4-t2 t5-t3 t6-t4
-    #  0    -60   0    60    0         ddelta1
-    #
-    #the checker should recognize at time step t3 the spike since
-    #  --> in t3 data1   > thershold
-    #  --> in t3 delta1  > threshold for derivative t(i+1)-t(i)
-    #  --> in t3 ddelta1 < threshold for derivative t(i+2)-t(i)
-    #
- 
-    print(f"delta computed")
+    if field2 is not None:
+        delta2 = np.zeros_like(data1) 
+        delta2[0:-2,:] = data2[1:-1, :] - data2[0:-2, :]
+        delta2[-1,:] = data2[-2, :] - data2[-1, :]
+
     # find spikes
-    # condition 1 #refT<183
-    spk_pos_c1 = np.transpose(np.nonzero((data1< min_limit1))) 
-    print(f"dim spk_pos_c1 {len(spk_pos_c1[:,1])}")
-    if len(spk_pos_c1[:,1]) > 0:
-        c1set = set([tuple(x) for x in spk_pos_c1]) 
-    # condition 2 #deltaT(Dt)>50
-    #spk_pos_c2 = np.transpose(np.nonzero(abs(delta1) > delta_limit1)) 
-    #to take care of the  sign (deltaT < -35)
-    spk_pos_c2 = np.transpose(np.nonzero(delta1 < delta_limit1)) 
-    print(f"dim spk_pos_c2 {len(spk_pos_c2[:,1])}")
-    if len(spk_pos_c2[:,1]) > 0:
-        c2set = set([tuple(x) for x in spk_pos_c2])
-    # condition 3 #deltaT(Dt2)<30
-    spk_pos_c3 = np.transpose(np.nonzero(abs(ddelta1) < delta_limit2)) 
-    print(f"dim spk_pos_c3 {len(spk_pos_c3[:,1])}")
-    if len(spk_pos_c3[:,1]) > 0:
+        delta2[0:-2] = data2[1:-1, :] - data2[0:-2, :]
+        delta2[0:-2] = data2[1:-1, :] - data2[0:-2, :]
+    # condition 1 #refT>50
+    spk_pos_c1 = np.transpose(np.nonzero((data1 > max_limit1))) #refT>50
+    c1set = set([tuple(x) for x in spk_pos_c1]) 
+    # condition 2 #deltaT>30
+    spk_pos_c2 = np.transpose(np.nonzero(abs(delta1) > delta_limit1)) #deltaT > 30deg
+    c2set = set([tuple(x) for x in spk_pos_c2])
+    # condition 3 #deltaQ>60
+    if field2 is not None:
+        spk_pos_c3 = np.transpose(np.nonzero(abs(data2) > delta_limit2)) #deltaQ > 50%    
         c3set = set([tuple(x) for x in spk_pos_c3])
-
-    if len(spk_pos_c1[:,1]) > 0 :
-          print("if c1")
-          point_list_c1=["only c1: T<"+str(min_limit1)+"\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_c1)))+";\n"+
-                    "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n"  ]
-          point_list_c1.append([
-                    str(spk_pos_c1[i,0])+";"+str(spk_pos_c1[i,1])+";"+str(spk_pos_c1[i,2])+";"+
-                    str(data1[spk_pos_c1[i,0],spk_pos_c1[i,1],spk_pos_c1[i,2]])+";"+
-                    str(delta1[spk_pos_c1[i,0],spk_pos_c1[i,1],spk_pos_c1[i,2]])+";"+
-                    str(ddelta1[spk_pos_c1[i,0],spk_pos_c1[i,1],spk_pos_c1[i,2]])+";"+
-                    str(mask[spk_pos_c1[i,1],spk_pos_c1[i,2]])+";"+
-                    str(sic[spk_pos_c1[i,0],spk_pos_c1[i,1],spk_pos_c1[i,2]])+";"+
-                    "\n" for i in range(len(spk_pos_c1[:,1]))])
-
-    if len(spk_pos_c2[:,1])> 0:
-          print("if c2")
-          point_list_c2=["only c2: DT>"+str(delta_limit1)+"\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_c2)))+";\n"+
-                    "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n" ]
-          point_list_c2.append([
-                    str(spk_pos_c2[i,0])+";"+str(spk_pos_c2[i,1])+";"+str(spk_pos_c2[i,2])+";"+
-                    str(data1[spk_pos_c2[i,0],spk_pos_c2[i,1],spk_pos_c2[i,2]])+";"+
-                    str(delta1[spk_pos_c2[i,0],spk_pos_c2[i,1],spk_pos_c2[i,2]])+";"+
-                    str(ddelta1[spk_pos_c2[i,0],spk_pos_c2[i,1],spk_pos_c2[i,2]])+";"+       
-                    str(mask[spk_pos_c2[i,1],spk_pos_c2[i,2]])+";"+
-                    str(sic[spk_pos_c2[i,0],spk_pos_c2[i,1],spk_pos_c2[i,2]])+";"+       
-                    "\n" for i in range(len(spk_pos_c2[:,1]))])
-
-    if len(spk_pos_c2[:,1]>0) and len(spk_pos_c1[:,1])>0:
-          print("if c1&c2")
-          spk_pos_c1andc2=np.array([x for x in (c1set & c2set)])
-          point_list_c1andc2=["c1&c2: T<"+str(min_limit1)+" DT>"+str(delta_limit1)+"\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_c1andc2)))+";\n"+
-                    "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n"  ]        
-          point_list_c1andc2.append([
-                    str(spk_pos_c1andc2[i,0])+";"+str(spk_pos_c1andc2[i,1])+";"+str(spk_pos_c1andc2[i,2])+";"+
-                    str(data1[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
-                    str(delta1[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
-                    str(ddelta1[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
-                    str(mask[spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
-                    str(sic[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
-                    "\n" for i in range(len(spk_pos_c1andc2[:,1]))]) 
-
-    #if len(spk_pos_c1[:,1]) > 0 and len(spk_pos_c2[:,1]) > 0 and  len(spk_pos_c3[:,1])==0:
-    #   spk_pos_noc3 = np.array([x for x in (c1set & c2set)])
-    #   point_list_noc3=["c1&c2: T<"+str(min_limit1)+" DT>"+str(delta_limit1)+" no c3\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_noc3)))+";\n"+
-    #                "Time;Lat:Lon;Tmin;ddelta1;ddelta2"  ]
-    #   point_list_noc3.append([
-    #                str(spk_pos_noc3[i,0])+";"+str(spk_pos_noc3[i,1])+";"+str(spk_pos_noc3[i,2])+";"+
-    #                str(data1[spk_pos_noc3[i,0],spk_pos_noc3[i,1],spk_pos_noc3[i,2]])+";"+
-    #                str(delta1[spk_pos_noc3[i,0],spk_pos_noc3[i,1],spk_pos_noc3[i,2]])+";"+
-    #                str(ddelta1[spk_pos_noc3[i,0],spk_pos_noc3[i,1],spk_pos_noc3[i,2]])+";"+
-    #                "\n" for i in range(len(spk_pos_noc3[:,1]))])
+    # condition 4 #icefrac>0
+    if field3 is not None:
+        icefrac_pos= np.transpose(np.nonzero(data3 > max_limit3)) #icefrac > 0 
+        iceset   = set([tuple(x) for x in icefrac_pos])
+   
     # combine filters
-    #if len(spk_pos_c1[:,1]) > 0 and len(spk_pos_c2[:,1]) > 0 and len(spk_pos_c3[:,1]) > 0 :
-    if len(spk_pos_c2[:,1]) > 0 and len(spk_pos_c3[:,1]) > 0 :
-            print("original condition") 
-            spk_pos = np.array([x for x in (c2set & c3set)])
+    if field2 is None:
+        spk_pos = np.array([x for x in (c1set | c2set)])
+        if verbose or very_verbose:
+            print('[INFO] N. Points found (('+varn+' value>'+str(max_limit1)+' | '+varn+' delta>'+str(delta_limit1)+' ): '+str(len(list(spk_pos))))
+        if very_verbose:
+            print('Locations (c1|c2):',spk_pos)
+
+        if field3 is None:
+            log_list=str(lab_std)+";"+str(lab_mem)+";"+str(len(list(spk_pos)))+";"++"\n"
+            point_list=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+
+                     str(data1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta1[spk_pos[i,0],spk_pos[i,1]])+";"
+                     "\n" for i in range(len(spk_pos[:,1])) ]
+        else:
+            c1setice = set([tuple(x) for x in spk_pos_c1]).intersection(iceset)
+            c2setice = set([tuple(x) for x in spk_pos_c2]).intersection(iceset)
+            spk_pos_ice = np.array([x for x in (c1setice | c2setice)])
             if verbose or very_verbose:
-                print('[INFO] N. Points found (( TMIN delta>'+str(delta_limit1)+'TMIN(DT2) delta<'+str(delta_limit2)+' ): '+str(len(list(spk_pos))))
+                print('[INFO] N. Points found (('+varn+' value>'+str(max_limit1)+' | '+varn+' delta>'+str(delta_limit1)+') &icefrac>'+str(max_limit3)+'): '+str(len(list(spk_pos_ice))))
             if very_verbose:
-                print('Locations (c2&c3):',spk_pos)
-            point_list=[str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos)))+";\n"+
-                    "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n"  ]
-            point_list.append([
-                    str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+str(spk_pos[i,2])+";"+
-                    str(data1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
-                    str(delta1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
-                    str(ddelta1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
-                    str(mask[spk_pos[i,1],spk_pos[i,2]])+";"+
-                    str(sic[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
-                    "\n" for i in range(len(spk_pos[:,1]))])
+                print('Locations (c1|c2&icefrac):',spk_pos_ice)
+            # write log with stadate, member, time step, grid point, Temp value, deltaT value, Qref value, deltaQ value, icefrac
+            point_list=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+
+                     str(data1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(data3[spk_pos[i,0],spk_pos[i,1]])+
+                     "\n" for i in range(len(spk_pos[:,1])) ]
 
-    print('returning list')
-    # if list of spikes is full, then raise and error, finally write the list of all spikes and error list for log
+            if len(list(spk_pos_ice)) > 0:
+                point_list_ice=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos_ice[i,0])+";"+str(spk_pos_ice[i,1])+";"+
+                     str(data1[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(delta1[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(data3[spk_pos_ice[i,0],spk_pos_ice[i,1]])+
+                     "\n" for i in range(len(spk_pos_ice[:,1])) ]
+
+            log_list=str(lab_std)+";"+str(lab_mem)+";"+str(len(list(spk_pos)))+";"+str(len(list(spk_pos_ice)))+";"+"\n"   
+
+    else: #field2 is not None
+        spk_pos = np.array([x for x in (c1set | c2set) & c3set])
+        if verbose or very_verbose:
+            print('N. Points found (('+varn+' value>'+str(max_limit1)+' | '+varn+' delta>'+str(delta_limit1)+') & Qref delta>'+str(max_delta2)+'): '+str(len(list(spk_pos))))
+        if very_verbose:
+            print('Locations (c1|c2&c3):',spk_pos)
+        if field3 is None:
+            log_list=str(lab_std)+";"+str(lab_mem)+";"+str(len(list(spk_pos)))+";"++"\n"
+            point_list=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+
+                     str(data1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(data2[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta2[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     "\n" for i in range(len(spk_pos[:,1])) ]
+        else:
+            c1setice = set([tuple(x) for x in spk_pos_c1]).intersection(iceset) 
+            c2setice = set([tuple(x) for x in spk_pos_c2]).intersection(iceset)
+            c3setice = set([tuple(x) for x in spk_pos_c3]).intersection(iceset)
+            spk_pos_ice = np.array([x for x in (c1setice | c2setice) & c3setice])
+            if verbose or very_verbose:
+                print('N. Points found (('+varn+' value>'+str(max_limit1)+' | '+varn+' delta>'+str(delta_limit1)+') & Qref delta>'+str(delta_limit2)+' &icefrac'+str(max_limit3)+'): '+str(len(list(spk_pos_ice))))
+            if very_verbose:
+                print('Locations (c1|c2&c3&icefrac):',spk_pos_ice)
+            log_list=str(lab_std)+";"+str(lab_mem)+";"+str(len(list(spk_pos)))+";"+str(len(list(spk_pos_ice)))+";"+"\n"   
+            point_list=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+
+                     str(data1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta1[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(data2[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(delta2[spk_pos[i,0],spk_pos[i,1]])+";"+
+                     str(data3[spk_pos[i,0],spk_pos[i,1]])+
+                     "\n" for i in range(len(spk_pos[:,1])) ]
+            if len(list(spk_pos_ice)) > 0:
+                point_list_ice=[ str(lab_std)+";"+str(lab_mem)+";"+
+                     str(spk_pos_ice[i,0])+";"+str(spk_pos_ice[i,1])+";"+
+                     str(data1[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(delta1[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(data2[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(delta2[spk_pos_ice[i,0],spk_pos_ice[i,1]])+";"+
+                     str(data3[spk_pos_ice[i,0],spk_pos_ice[i,1]])+
+                     "\n" for i in range(len(spk_pos_ice[:,1])) ]
+
+    # if list of spikes in ice is full, then raise and error, finally write the list of all spikes, spikes on ice and error list for log
     try:
-        if len(list(spk_pos)) == 0:
-            print('no spikes found') 
+        if field3 is not None and len(list(spk_pos_ice)) > 0:
+            print('inside spike error') 
+            raise FieldError('Spike identified on ice')
     except FieldError as e:
-        error_list=print_error(error_message=e, error_list=error_list, loc1=[shortn, varn])
+        spike_error_list=print_error(error_message=e, error_list=spike_error_list, loc1=[shortn, varn])
     finally:    
-        #return point_list_c1,point_list_c2,point_list_c1andc2,point_list_noc3,point_list, error_list
-        return point_list_c1,point_list_c2,point_list_c1andc2,point_list, error_list
-
+        return log_list, point_list_ice, spike_error_list
 def check_tsd_34dfield(field, tsd_limit, timname, levn=None, verbose=False, very_verbose=False):
     
     """

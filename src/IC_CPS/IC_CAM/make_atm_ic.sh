@@ -37,11 +37,16 @@ then
 fi
 if [[ ! -f $oceic ]]
 then
-   title="[CAMIC] - $oceic not present"
-   body="you cannot produce CAM ic for $yyyy and $st because $oceic not available"
-   echo $body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-   exit
+  if [[ -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.bkup.nc ]]
+  then
+    oceic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.bkup.nc
+  else
+     title="[CAMIC] - $oceic not present"
+     body="you cannot produce CAM ic for $yyyy and $st because $oceic not available"
+     echo $body
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+     exit
+  fi
 fi
 if [[ -f $clmic.gz ]] 
 then
@@ -49,11 +54,16 @@ then
 fi
 if [[ ! -f $clmic ]]
 then
-   title="[CAMIC] - $clmic not present"
-   body="you cannot produce CAM ic for $yyyy and $st because $clmic not available"
-   echo $body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-   exit
+   if [[ -f $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.bkup.nc ]]
+   then
+      clmic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.bkup.nc
+   else
+      title="[CAMIC] - $clmic not present"
+      body="you cannot produce CAM ic for $yyyy and $st because $clmic not available"
+      echo $body
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      exit
+   fi
 fi 
 if [[ -f $rofic.gz ]]  
 then
@@ -61,11 +71,16 @@ then
 fi  
 if [[ ! -f $rofic ]]
 then
-   title="[CAMIC] - $rofic not present"
-   body="you cannot produce CAM ic for $yyyy and $st because $rofic not available"
-   echo $body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-   exit
+   if [[ -f $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.bkup.nc ]]
+   then
+     rofic=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.bkup.nc
+   else
+      title="[CAMIC] - $rofic not present"
+      body="you cannot produce CAM ic for $yyyy and $st because $rofic not available"
+      echo $body
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      exit
+   fi
 fi
 if [[ -f $iceic.gz ]]  
 then
@@ -73,13 +88,17 @@ then
 fi  
 if [[ ! -f $iceic ]] 
 then
-   title="[CAMIC] - $iceic not present"
-   body="you cannot produce CAM ic for $yyyy and $st because $iceic not available"
-   echo $body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
-   exit
+  if [[ -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.bkup.nc ]]
+  then
+     iceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.01.bkup.nc
+  else
+     title="[CAMIC] - $iceic not present"
+     body="you cannot produce CAM ic for $yyyy and $st because $iceic not available"
+     echo $body
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+     exit
+  fi
 fi
-
 
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
