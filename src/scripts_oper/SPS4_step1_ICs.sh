@@ -52,16 +52,22 @@ touch $checkfile
 #-----------------------------------
 input="$yyyy $m"
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j run_IC_production_${yyyy}${st} -l $DIR_LOG/forecast/$yyyy$st -d $IC_CPS -s run_IC_production.sh -i "$input"
+while `true`
+do
+   sleep 100
+   np=`${DIR_UTIL}/findjobs.sh -m $machine -n run_IC_production -c yes` 
+   if [[ $np -eq 0 ]]
+   then
+      break
+   fi
+done
 #-------------------------------------------
 # check ICs and send plots by mail
 #-------------------------------------------
-$DIR_UTIL/${CPSSYS}_check_ICs.sh $st $yyyy
+#$DIR_UTIL/${CPSSYS}_check_ICs.sh $st $yyyy
 #-----------------------------------
 # triplette generation
 #-----------------------------------
 #checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
-set +euvx
-. $dictionary
-set -euvx
 ${IC_CPS}/make_triplette.sh $yyyy $st
 ${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st

@@ -47,6 +47,7 @@ else
    fi
 fi
 # Input **********************
+$DIR_CPS/make_ensemblescripts.sh $yyyy $st
 stlist=$st
 
 nmaxens=${nrunmax}

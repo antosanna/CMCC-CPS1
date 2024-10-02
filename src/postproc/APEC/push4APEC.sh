@@ -4,55 +4,48 @@
 
 # load variables from descriptor
 . $HOME/.bashrc
-. ${DIR_SPS35}/descr_SPS3.5.sh
-. ${DIR_SPS35}/descr_forecast.sh
-. ${DIR_POST}/APEC/descr_SPS35_APEC.sh
+. ${DIR_UTIL}/descr_CPS.sh
+. ${DIR_POST}/APEC/descr_SPS4_APEC.sh
 
 set -evx
 
 yyyy=$1
 st="$2"
 type_fore=$3
-debug=$4
+dbg_push=$4
+
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
 usermail=andrea.borrelli@cmcc.it
-if [ $debug -eq 0 ] ;then
+if [ $dbg_push -eq 0 ] ;then
    apecmail=cmlim@apcc21.org
 else
-   apecmail=$mymail
+   apecmail=$usermail
+   mymail=$usermail
 fi
 
-cd $pushdir/${type_fore}/${yyyy}${st}
+cd $pushdirapec/${type_fore}/${yyyy}${st}
 
 localuser=`whoami`
-localhost="dtn02.cmcc.scc"
+${DIR_POST}/APEC/send_to_APEC.sh $yyyy $st $type_fore $dbg_push
 
-#connect to dtn02.cmcc.scc
-rsync -auv ${DIR_POST}/APEC/send_to_APEC.sh ${localuser}@${localhost}:
-
-ssh ${localuser}@${localhost} << ENDSSH
-sh send_to_APEC.sh $yyyy $st $type_fore $debug
-ENDSSH
-
-npushdone=`rsync -auv ${localuser}@${localhost}:push_${yyyy}${st}_APEC_DONE | grep ${yyyy}${st} | wc -l`
+npushdone=`ls -1 $DIR_LOG/${type_fore}/${yyyy}${st}/push_${yyyy}${st}_APEC_DONE | wc -l`
 if [ $npushdone -eq 1 ] ; then
 
 #AT LAST SEND notification both to sp1 and to APEC
    title="CMCC-SPS3.5 data-transfer to APCC completed"
    body="Dear Chang-Mook, \n \n this is to notify the completion of CMCC-SPS3.5 ${type_fore} start-date ${yyyy}${st}01 transfer to your ftp server. \n \n Many thanks for your cooperation,\n CMCC-SPS staff \n"
-   ${DIR_SPS35}/sendmail.sh -m $machine -e $apecmail -M "$body" -t "$title" -s $yyyy$st -r yes -c $mymail -b $usermail
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $apecmail -M "$body" -t "$title" -s $yyyy$st -r yes -c $mymail -b $usermail
 
 else
 
 	  while `true` ; do
  
-   		  npushdone=`rsync -auv ${localuser}@${localhost}:push_${yyyy}${st}_APEC_DONE | grep ${yyyy}${st} | wc -l`
+		     sleep 300
+   		  npushdone=`ls -1 $DIR_LOG/${type_fore}/${yyyy}${st}/push_${yyyy}${st}_APEC_DONE | wc -l`
 	     	if [ $npushdone -eq 1 ] ; then
 		       	break
 		     fi
-ssh ${localuser}@${localhost} << ENDSSH
-sh send_to_APEC.sh $yyyy $st ${type_fore} $debug
-ENDSSH
-		     sleep 300
+       ${DIR_POST}/APEC/send_to_APEC.sh $yyyy $st ${type_fore} $dbg_push
 	  done 
 fi

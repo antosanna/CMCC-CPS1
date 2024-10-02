@@ -19,7 +19,6 @@ poce=$3
 poce1=$((10#$poce - 1)) #one digit and one figure less
 yy_assim=`date -d ' '$yyyy${st}15' - 1 month' +%Y`
 mm_assim=`date -d ' '$yyyy${st}15' - 1 month' +%m`
-bkup_flag=0
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
@@ -49,22 +48,23 @@ then
    esac
 else
 # forecast
-   OUTDIR=$DIR_REST_OIS_FORE/$poce1  #to be defined: temporarily defined in descr_CPS.sh as root (no path start-date not existing)
-   if [[ ! -d $OUTDIR ]] 
-   then
+   OUTDIR=/work/cmcc/aspect/CESM2/OPSLAMB$poce1/run/
+   tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3|rev`
+# temporarily disabled because there is not a defined directory for forecasts
+#   if [[ ! -d $OUTDIR ]] 
+#   then
 # meaming that you are taking the last available analysis and this will be a bkup IC
-      OUTDIR=`ls -dtr $DIR_REST_OIS/OPSLAMB$poce1/RESTARTS/${yy_assim}${mm_assim}*|tail -1`
-      bkup_flag=1
-      nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
-      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
-   fi
+#      OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/
+#      nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+#      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+#   fi
 fi
 mkdir -p $IC_NEMO_CPS_DIR/$st
 TMPNEMOREST=$SCRATCHDIR/nemo_rebuild/restart/$yyyy$st
 mkdir -p $TMPNEMOREST
-listaf=`ls $OUTDIR/*_restart_0???.nc`
-nf=`ls $OUTDIR/*_restart_0???.nc|wc -l`
-rootname=`basename $OUTDIR/*_restart_0000.nc|rev|cut -d '_' -f2-|rev`
+listaf=`ls $OUTDIR/*${tag}*_restart_0???.nc`
+nf=`ls $OUTDIR/*${tag}*_restart_0???.nc|wc -l`
+rootname=`basename $OUTDIR/*${tag}*_restart_0000.nc|rev|cut -d '_' -f2-|rev`
 N=1
  
 # do we want to include the possibility for restart of nemo present and cice missing and viceversa???
@@ -87,12 +87,8 @@ fi
 
 if [[ ! -f $ciceic ]]
 then
-   nf_ice=`ls $OUTDIR/*.cice.r.*.nc |wc -l`
-   if [[ ${nf_ice} -eq 1 ]] ; then
-      mkdir -p ${IC_CICE_CPS_DIR}/$st
-      f_ice=`ls $OUTDIR/*.cice.r.*.nc`  #19930731_SLAMB1.cice.r.1993-08-01-00000.nc  
-      rsync -auv $f_ice $ciceic
-   fi
+   f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
+   rsync -auv $f_ice $ciceic
 fi
 set +euvx
 condafunction deactivate $envcondanemo

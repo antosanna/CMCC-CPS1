@@ -40,7 +40,7 @@ else
    if [ $dbg_push -ge 1 ]
    then
       iyy=1993
-      fyy=1993
+      fyy=2022
    else
       fyy=2022
    fi
@@ -62,11 +62,12 @@ for yyyy in `seq $iyy $fyy` ; do
      mymail="sp1@cmcc.it"
      ccmail=$mymail
      body="launch_push4WMO.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
-     title=${title_debug}"[WMO] ${SPSSystem} warning"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    else
      ccmail=$mymail
+     body="launch_push4WMO.sh. Data push to cmcc ftp"
    fi
+   title=${title_debug}"[WMO] ${SPSSystem} warning"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_wmo_${yyyy}${st}
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year
@@ -76,7 +77,7 @@ for yyyy in `seq $iyy $fyy` ; do
    then
       filedone=test_WMO_${yyyy}${st}_DONE
    fi
-  	anypushC3SDONE=`grep $DIR_LOG/${typeofrun}/$yyyy$st/$filedone | awk '{print $5}' | wc -l`
+  	anypushC3SDONE=`ls -1 $DIR_LOG/${typeofrun}/$yyyy$st/$filedone | wc -l`
   	if [ $anypushC3SDONE -gt 0 ] ; then
 # already pushed: go on with following hindcasts
     		continue
@@ -133,10 +134,10 @@ for yyyy in `seq $iyy $fyy` ; do
 
    ic=0
    while `true`; do
-       echo "sleeping 30' from now "`date`
-       sleep 1800 # 
+       echo "sleeping 5' from now "`date`
+       sleep 300 # 
        ic=$(( $ic + 1 ))
-       anypushC3SDONE=`grep $filedone | awk '{print $5}' | wc -l`
+       anypushC3SDONE=`ls -1 $DIR_LOG/${typeofrun}/$yyyy$st/$filedone | wc -l`
        if [ $anypushC3SDONE -eq 1 ] ; then          
           break
        fi

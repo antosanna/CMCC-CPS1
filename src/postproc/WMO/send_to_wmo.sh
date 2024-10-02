@@ -49,7 +49,7 @@ if [ $dbg_push -eq 1 ]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.bologna << EOF
 set xfer:log true
-set xfer:log-file "/home/${user}/${logfile}"
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
@@ -63,16 +63,29 @@ EOF
          exit 1
       fi        
 else
-      cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp << EOF
+    if [ ! -f $first ]
+    then
+       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 cd $REMOTE_DIR
-mkdir ${yyyy}$st
+mkdir -p ${yyyy}$st
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR/${yyyy}$st || exit 1
 quit
 EOF
+    else
+       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp << EOF
+set xfer:log true
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
+set ftp:list-options -a
+open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
+cd $REMOTE_DIR
+mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR/${yyyy}$st || exit 1
+quit
+EOF
+    fi
       chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp
       stat=$?
@@ -85,6 +98,8 @@ fi
 if [ $dbg_push -eq 1 ]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.bologna << EOF
+set xfer:log true
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/lista_WMO_S${yyyy}$st.log"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 cd $REMOTE_DIR
@@ -94,6 +109,8 @@ EOF
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.bologna |tee $DIR_LOG/${type_fore}/$yyyy$st/ls_WMO_S${yyyy}$st.log
 else
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp << EOF
+set xfer:log true
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/lista_WMO_S${yyyy}$st.log"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 cd $REMOTE_DIR/${yyyy}$st

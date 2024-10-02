@@ -23,6 +23,8 @@ fi
 if [ $dbg -gt 1 ]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp << EOF
+set xfer:log true
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/lista_WMO_S${yyyy}$st.log"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 cd $REMOTE_DIR
@@ -37,6 +39,8 @@ EOF
      fi        
 else
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp << EOF
+set xfer:log true
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/lista_WMO_S${yyyy}$st.log"
 set ftp:list-options -a
 open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 cd $REMOTE_DIR
