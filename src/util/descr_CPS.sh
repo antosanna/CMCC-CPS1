@@ -38,6 +38,7 @@ refcaseHIST=${CPSSYS}_HIST_reference
 refcaseSCEN=${CPSSYS}_SSP585_reference
 envcondanemo=nemo_rebuild
 envcondarclone=rclone_gdrive
+envcondaclm=postpc_CLM_C3S
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
@@ -60,14 +61,13 @@ then
       cores_per_run=288
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondaclm=postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       maxnumbertosubmit=18
       maxnumbertorecover=40
       maxnumberguarantee=7
       env_workflow_tag=cmcc
+      DIR_REST_OIS_FORE=$WORK/OIS2/archive/  #TO BE DEFINED ONCE SET
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
-      DIR_REST_OIS_FORE=$WORK/OIS2/archive/   # TO BE DEFINED?
       DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "zeus" ]]
    then
@@ -200,6 +200,7 @@ elif [[ "$machine" == "leonardo" ]]
 then
    env_workflow_tag=leonardo
    envcondacm3=cmcc-cm_py
+   envcondac3schecker=c3s-nc-checker
    mpirun4py_nemo_rebuild=srun
    mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
 #moved to .bashrc

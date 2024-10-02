@@ -7,11 +7,9 @@ then
    export NCARG_COLORMAPS=$HOME/ncl/colormaps:$NCARG_ROOT/lib/ncarg/colormaps
 elif [[ $machine == "leonardo" ]]
 then
-set +euvx
     . $DIR_UTIL/condaactivation.sh
     condafunction deactivate $envcondacm3
     condafunction activate env_tools
-set -euvx   
 else
    :
 fi

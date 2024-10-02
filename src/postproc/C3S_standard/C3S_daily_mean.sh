@@ -77,7 +77,7 @@ then
       cdo settaxis,$yyyy-$st-01,00:00:00,$incr $option $wkdir/${var}_${yyyy}${st}_${ens}_orig.nc $wkdir/${var}_${yyyy}${st}_${ens}_settax.nc
       cdo setreftime,$yyyy-$st-01,00:00:00 $wkdir/${var}_${yyyy}${st}_${ens}_settax.nc $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc
 
-      nt=`cdo -ntime $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc`
+      nt=`cdo -s -ntime $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc`
 #cdo daily mean - descarding first time step (I.C.)
       cdo -O shifttime,1sec -daymean -shifttime,-1sec -seltimestep,2/$nt $wkdir/${var}_${yyyy}${st}_${ens}_setref.nc  $outdir/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${realm}_day_${level}_${var}_r${ens}i00p00.nc
       rm $wkdir/${var}_${yyyy}${st}_${ens}_*nc

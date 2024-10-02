@@ -58,6 +58,12 @@ set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 
+if [[ $machine == "leonardo" ]] ;then
+set +euvx
+  . $DIR_UTIL/condaactivation.sh
+  condafunction activate env_tools_test
+set -euvx
+fi
 #file name:$caso.clm2.$ft.$yyyy-$st.zip.nc
 
 landcase="clm2.${ftype}"

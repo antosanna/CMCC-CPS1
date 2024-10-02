@@ -154,7 +154,7 @@ do
    if [[ ! -f ${check_oceregrid}_${var} ]] 
    then
        cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 10000 -t "24" -S qos_resv -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 10000 -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
    fi
 done
 while `true`
@@ -196,7 +196,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce1
+done } < $C3Stable_oce1
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
@@ -206,7 +206,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce2
+done } < $C3Stable_oce2
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
@@ -216,7 +216,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce3
+done } < $C3Stable_oce3
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
@@ -226,7 +226,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce4
+done } < $C3Stable_oce4
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
@@ -236,7 +236,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce5
+done } < $C3Stable_oce5
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
@@ -246,7 +246,7 @@ do
    then
       varout+=("$C3S")
    fi
-done } < $C3S_table_oce6
+done } < $C3Stable_oce6
 for v in ${varout[@]}
 do 
    C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc

@@ -21,7 +21,7 @@ elif [[ "${machine}" == "juno" ]] ; then
 # to decompress/uncompress ncks -O -6
 elif [[ "${machine}" == "leonardo" ]] ; then 
   . $DIR_UTIL/condaactivation.sh
-  condafunction activate env_tools  
+  condafunction activate env_tools
   export compress='ncks -O -L 4 -4'
 
   export MANPATH="/usr/local/share/man"
