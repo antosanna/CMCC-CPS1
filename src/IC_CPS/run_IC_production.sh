@@ -253,12 +253,12 @@ for ic in `seq -w 01 $n_ic_cam`
 do
     if [[ ! -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc ]]
     then
-        mv $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc
         body="CAM: CAM IC $ic was not correctly produced. You are going to use the back-up"
         title="[CAMIC] ${CPSSYS} forecast notification"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
      else
-        rm $IC_CAM_CPS_DIR/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc 
+        rm $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.bkup.nc 
     fi
 done
 #
@@ -267,14 +267,14 @@ for ic in `seq -w 01 $n_ic_clm`
 do
     if [[ ! -f $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc ]]
     then
-        mv $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc
-        mv $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.nc
         body="CLM: CLM IC $ic was not correctly produced. You are going to use the back-up"
         title="[CLMIC] ${CPSSYS} forecast notification"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
      else
-        rm $IC_CLM_CPS_DIR/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc
-        rm $IC_CLM_CPS_DIR/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.bkup.nc
     fi
 done
 # replace missing NEMO ICs with backup
@@ -282,19 +282,19 @@ for ic in `seq -w 01 $n_ic_nemo`
 do
     if [[ ! -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc ]]
     then
-        mv $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
-        mv $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
         body="NEMO: NEMO IC $ic was not correctly produced. You are going to use the back-up both for NEMO and CICE"
         title="[NEMO/CICEIC] ${CPSSYS} forecast notification"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
     elif [[ ! -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc ]]
     then
-        mv $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
-        mv $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
+        mv $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
         body="CICE: CICE IC $ic was not correctly produced. You are going to use the back-up both for NEMO and CICE"
         title="[NEMO/CICEIC] ${CPSSYS} forecast notification"
      else
-        rm $IC_NEMO_CPS_DIR/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc
-        rm $IC_CICE_CPS_DIR/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc
+        rm $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc
     fi
 done

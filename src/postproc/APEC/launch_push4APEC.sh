@@ -27,8 +27,8 @@ else
    iyy=1993
    if [ $dbg_push -ge 1 ] 
    then
-      iyy=1993
-      fyy=1996
+      iyy=1998
+      fyy=2022
    else
       fyy=2022
    fi  
@@ -37,6 +37,7 @@ fi
 if [ $dbg_push -ge 1 ]
 then
    mymail=andrea.borrelli@cmcc.it
+   ccmail=$mymail
    title_debug="TEST "
 else
    title_debug=" "
@@ -47,12 +48,6 @@ for yyyy in `seq $iyy $fyy` ; do
 
     . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-    if [ $debug_push -ge 1 ]
-    then
-       mymail="sp1@cmcc.it"
-       ccmail=$mymail
-    fi   
-    
     nfdone=`ls -1 ${DIR_LOG}/${typeofrun}/${yyyy}${st}/push_${yyyy}${st}_APEC_DONE | wc -l`
     if [ $nfdone -eq 0 ]
     then
@@ -60,7 +55,6 @@ for yyyy in `seq $iyy $fyy` ; do
        body=${title_debug}"APEC: Starting of data transfer ${yyyy}${st}"
        title=${title_debug}"[APEC] ${SPSSystem} ${typeofrun} notification"
        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
-
 
 # Submit push over APEC ftp	
        input="${yyyy} ${st} ${typeofrun} ${dbg_push}"

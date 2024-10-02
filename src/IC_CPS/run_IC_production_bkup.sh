@@ -156,3 +156,26 @@ do
   input="$yyyy $st $pp $yyIC $mmIC $ddEDA $casoIC $ppland"
   ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
 done     #loop on perturbations
+
+while `true`
+do
+    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n firstGuess -a PEND -c yes`
+    if [[ $n_job_make_atm_ic -eq 0 ]]
+    then
+       break
+    fi
+    sleep 60
+done
+sleep 1800 # assuming root_casoIC takes almost 40'
+# wait until completion of all CAM ICs
+while `true`
+do
+    root_casoIC=${SPSSystem}_EDACAM_IC
+    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
+    if [[ $n_job_ICCAM -eq 0 ]]
+    then
+       break
+    fi
+    sleep 60
+done
+${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st 1

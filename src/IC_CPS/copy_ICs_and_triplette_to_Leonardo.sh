@@ -19,16 +19,30 @@ realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 
 yyyy=$1
 st=$2
+bkup=${3:-0}
 for rea in $realm ; do
 
-   checkf=$DIR_TEMP/ICs_${st}_${rea}_done
+   if [[ $bkup -eq 0 ]]
+   then
+      checkf=$DIR_TEMP/ICs_${yyyy}${st}_${rea}_done
+   else
+      checkf=$DIR_TEMP/ICs_${yyyy}${st}_${rea}_bkup_done
+   fi
    if [[ -f $checkf ]]
    then 
       continue
    fi
-   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/
+   if [[ $bkup -eq 0 ]]
+   then
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/
+   else
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.bkup.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/
+   fi
    touch $checkf
 
 done
 # now copy triplette file
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${TRIP_DIR}/triplette.random.$yyyy$st.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_trip_dir}
+if [[ $bkup -eq 0 ]]
+then
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${TRIP_DIR}/triplette.random.$yyyy$st.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_trip_dir}
+fi
