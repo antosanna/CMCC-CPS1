@@ -77,9 +77,8 @@ srun -c16 -A ${account_name} --qos=qos_lowprio -p dcgp_usr_prod -t 0:30:00 $SCRA
 
 EOF2
       chmod u+x $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/${header}_${yyyy}${st}_${nrun3}.sh
-      nrun=`expr $nrun + 1`
-      cd $DIR_CPS 
    fi
-   nrun=$(($nrun + 1))
+    nrun=`expr $nrun + 1`
+    cd $DIR_CPS 
 done  # loop over ensemble members
 

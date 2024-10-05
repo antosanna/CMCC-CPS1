@@ -106,7 +106,7 @@ if [[ $typeofrun == "hindcast" ]]
 then
    ./xmlchange --subgroup case.checklist prereq=0
 else
-   ./xmlchange --subgroup case.checklist prereq=1
+   ./xmlchange --subgroup case.checklist prereq=0
 fi
 
 #20240715 - test

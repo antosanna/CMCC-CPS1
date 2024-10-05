@@ -83,7 +83,7 @@ for yyyy in `seq $iyy $fyy` ; do
          then
             body="elapsed hours $elapsedh for push4ECMWF_${yyyy}${st}. Too much. Going to kill it"
   	         title="[C3S] ${SPSSystem} ${typeofrun} warning"
-           	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+           	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
             $DIR_UTIL/killjobs.sh -m $machine -i $jobID
          fi
       else
@@ -109,7 +109,7 @@ for yyyy in `seq $iyy $fyy` ; do
       body="C3S: successive attempt of the start-date $yyyy$st transfer on acq.ecmwf.int"
    fi
    title="[C3S] ${SPSSystem} ${typeofrun} notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
 
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
@@ -149,7 +149,7 @@ for yyyy in `seq $iyy $fyy` ; do
              fi
   	          body="C3S: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
   	          title="[C3S] ${SPSSystem} ${typeofrun} notification"
-            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
      #        if [[ $debug_push -eq 0 ]]
      #        then
              if [[ "$machine" == "juno" ]]

@@ -88,15 +88,15 @@ if [[ $typeofrun == "forecast" ]]
 then
   if [ $allcheckersok -ge $nrunC3Sfore ] 
   then
-      ns=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n submit_tar_and_push${startdate} -c yes`
-      nt=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n tar_and_push_${startdate} -c yes`
+      ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_and_push${startdate} -c yes`
+      nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_and_push_${startdate} -c yes`
       if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
       then
          body="$startdate forecast completed. \n
                        Now submitting submit_tar_and_push.sh"
-         title="${SPSSYS} $startdate FORECAST COMPLETED"
+         title="${CPSSYS} $startdate FORECAST COMPLETED"
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-    	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -t "6" -r $sla_serialID -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st" 
+    	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st" 
       fi
   fi  
 fi  

@@ -12,15 +12,15 @@
 . $DIR_UTIL/descr_CPS.sh
 set -u
 
-cd $DIR_CASES
 curryear=`date +%Y`
-lista=`ls -altr |grep ${SPSSystem}_${curryear}|awk '{print $9}'` 
+cd $DIR_CASES
+lista=`ls -altr |grep ${SPSSystem}|grep -v $curryear|awk '{print $9}'` 
 
 for dd in $lista
 do
    n_done=`ls $dd/logs/*DONE |wc -l`
    if [[ $n_done -eq 1 ]]
    then
-      echo $dd >> $SCRATCHDIR/list_forecast_`date +%Y%m%d`
+      echo $dd >> $SCRATCHDIR/list_`date +%Y%m%d`
    fi
 done

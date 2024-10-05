@@ -134,7 +134,7 @@ if [ $ncnumber -ne $filetobechecked ]; then
     		
     title="SPS4 FORECAST ERROR - QA CHECKER"   
     body="Something probably went wrong with check of member ${SPSSystem}_${startdate}_${ens}. Uncorrect number of netcdf files, ncnumber should be $filetobechecked but is $ncnumber."
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $startdate
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
     exit 1
 fi
 
@@ -168,7 +168,7 @@ for ns in ${namespace}; do
     fi
     memlimit=${memory[$mem_idx]}
 
-cat > launch_c3s_qa_checker.${ns}.sh << EOF3
+cat > launch_c3s_qa_checker.${ns}.sh << EOF
 #!/bin/sh -l
 #-------------------------------------------------------------------------------
 # Script to check produced forecast
@@ -215,7 +215,15 @@ for ncfile in \$netcdf2check ; do
 
     # copy to tempdir
     cp \$ncfile tempdir_\$namespace
+    if [  \$varname == "tasmin" ] ; then 
+       netcdfaux_sic=\`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member}*.nc\`
+       rsync -auv \$netcdfaux_sic tempdir_\$namespace 
+
+       netcdfaux_mask=\`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member}*.nc\`
+       rsync -auv \$netcdfaux_mask tempdir_\$namespace 
+    fi
     
+
     scratch4outl=$SCRATCHDIR/checker_\$startdate/\$member/\$namespace/
     if [[ -d \$scratch4outl ]] ; then
         rm -r \$scratch4outl
@@ -258,7 +266,7 @@ fi
 
 exit 0
 
-EOF3
+EOF
 
     chmod u+x launch_c3s_qa_checker.${ns}.sh
 # modified 20201021 from serialq_s to serialq_l for priority reasons
@@ -298,7 +306,7 @@ while `true` ; do
         echo "Something probably went wrong with checker. Check in logs for missing NSDONE_ files production."
         title="SPS4 FORECAST ERROR - QA CHECKER"	
         body="Something probably went wrong with checker of member ${SPSSystem}_${startdate}_${ens}. Check in logs for NSDONE_ files production."
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $startdate
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
         exit 1
     fi
 
@@ -364,7 +372,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
         # send mail
         body+="\n This piece of information may be found on the WARNING REPORT $warningreport."
         body+="\n For further information, use the checker with the option --verbose." 
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $startdate
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
 
     fi
 
@@ -377,17 +385,27 @@ if [ $cnt_files -ge $filetobechecked ]; then
         rm -f $check_c3s_qa_err
     fi
 
+   
     cnterror=`grep -Ril ERROR\] *.txt | wc -l`
-    if [ $cnterror -eq 0 ]; then
+    #list_spikes_on_ice_199311_12.txt
+    cntspike=`ls list_spikes_on_ice_*.txt |wc -l` 
+    if [[ $cnterror -eq 0 ]] && [[ $cntspike -eq 0 ]] ; then
         touch $check_c3s_qa_ok
     else
-        errormsg=`grep -Ril ERROR\] *.txt`
-        
-        title="${CPSSYS} FORECAST ERROR - QA CHECKER"         	
-        body="For member  ${SPSSystem}_${startdate}_${ens} errors on $cnterror files have been found on the $cnt_files C3S standardized files checked. \n Please check the output log in $wdir/output. \n Here you may found the list of error: \n  ${errormsg} \n For further information, use the checker with the --verbose option active."
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $startdate
-        touch $check_c3s_qa_err
-        exit
+       if [[ $cnterror -ne 0 ]] ; then 
+            errormsg=`grep -Ril ERROR\] *.txt`
+            title="${CPSSYS} FORECAST ERROR - QA CHECKER"         	
+            body="For member  ${SPSSystem}_${startdate}_${ens} errors on $cnterror files have been found on the $cnt_files C3S standardized files checked. \n Please check the output log in $wdir/output. \n Here you may found the list of error: \n  ${errormsg} \n For further information, use the checker with the --verbose option active."
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+       fi
+       if [[ $cntspike -ne 0 ]] ;then
+           spikelog_file=`ls list_spikes_on_ice*txt`
+           title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S "          
+           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spikelog_file}." 
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+       fi 
+       touch $check_c3s_qa_err
+       exit
     fi
 
     filenamerr_num=`ls $wdir/output/clim_error_list_*_${startdate}_${ens}.outlier | wc -l` 
@@ -417,7 +435,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
                        attachment="$plot4mail $outlierf"
                        title="${CPSSYS} FORECAST ALERT - QA CHECKER"    
                        body="For case ${SPSSystem}_${startdate}_${ens}, c3s_qa_checker has found ${nmb_out_tol} out of the climatological interval for variable ${var} exceeding the accepted tolerance interval. Please check the list and the plots attached, and decide wethere to update the climatological files once the forecast is over."
-                       ${DIR_UTIL}/sendmail.sh -m $machine  -a "$attachment" -e $mymail -M "$body" -t "$title" -r yes -s $startdate
+                       ${DIR_UTIL}/sendmail.sh -m $machine  -a "$attachment" -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
                   fi
                fi
                if [[ $nmb_ins_tol -ne 0 ]] ; then
@@ -437,7 +455,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
                        attachment="$plot4mail $outlierf"
                        title="${CPSSYS} FORECAST WARNING - QA CHECKER"     
                        body="For case ${SPSSystem}_${startdate}_${ens}, c3s_qa_checker has found ${nmb_ins_tol} out of the climatological interval for variable ${var}, but inside the accepted tolerance interval. Please check the list and the plots attached."
-                       ${DIR_UTIL}/sendmail.sh -m $machine -a "$attachment" -e $mymail -M "$body" -t "$title" -r yes -s $startdate
+                       ${DIR_UTIL}/sendmail.sh -m $machine -a "$attachment" -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
                    fi
                fi
          done
