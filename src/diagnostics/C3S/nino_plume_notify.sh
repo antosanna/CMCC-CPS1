@@ -1,8 +1,8 @@
 #!/bin/sh -l
 
 . $HOME/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
-. $DIR_TEMPL/load_cdo
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_cdo
 
 set -evxu
 
@@ -13,52 +13,42 @@ st=$2
 if [ $st = "01" ] ; then
     yyyy2=$(($yyyy - 1))
 fi
-refperiod=$3
-nrun=$4
-workdir=$5
-var=$6
-ncep_dir=$7
-dbg=$8
+workdir=$3
+var=$4
+ncep_dir=$5
+dbg=$6
 
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+set +euvx
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
 
 
-enslist=`ls -1 ${workdir}/anom/${var}_${SPSSYS}_sps_${yyyy}${st}_0??_ano.${refperiod}.nc | rev | cut -d '_' -f2 |rev`
+refperiod=$iniy_hind-$endy_hind
+enslist=`ls -1 ${workdir}/anom/${var}_${SPSSystem}_${yyyy}${st}_0??_ano.${refperiod}.nc | rev | cut -d '_' -f2 |rev`
 
-DIR="${workdir}/anom"
+DIR="${DIR_FORE_ANOM}/$yyyy$st"
 for en in $enslist ; do
   
-  ncrcat -O $REPOSITORY/miss_12.nc ${DIR}/${var}_${SPSSYS}_sps_${yyyy}${st}_${en}_ano.${refperiod}.nc $DIR/${var}_${SPSSYS}_sps_${yyyy}${st}_${en}_ano.${refperiod}_miss.nc
-  $DIR_UTIL/fixtimedd $yyyym1 ${st} 15 12:00 1mon $DIR/${var}_${SPSSYS}_sps_${yyyy}${st}_${en}_ano.${refperiod}_miss.nc
+  ncrcat -O $REPOSITORY/miss_12.nc ${DIR}/${var}_${SPSSystem}_${yyyy}${st}_${en}_ano.${refperiod}.nc $DIR/${var}_${SPSSystem}_${yyyy}${st}_${en}_ano.${refperiod}_miss.nc
+  $DIR_UTIL/fixtimedd $yyyym1 ${st} 15 12:00 1mon $DIR/${var}_${SPSSystem}_${yyyy}${st}_${en}_ano.${refperiod}_miss.nc
   touch ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_${en}_DONE
 
 done
 
 nsstfilesDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_0??_DONE | wc -l`
-if [ $nsstfilesDONE -eq $nrun ] ; then
+if [ $nsstfilesDONE -eq $nrunC3Sfore ] ; then
 
- 	ncecat -O $DIR/${var}_${SPSSYS}_sps_${yyyy}${st}_0??_ano.${refperiod}_miss.nc ${DIR}/${var}_${SPSSYS}_sps_${yyyy}${st}_all_ano.${refperiod}_miss.nc
+ 	ncecat -O $DIR/${var}_${SPSSystem}_${yyyy}${st}_0??_ano.${refperiod}_miss.nc ${DIR}/${var}_${SPSSystem}_${yyyy}${st}_all_ano.${refperiod}_miss.nc
 	touch ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_DONE
 	rm ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_0??_DONE
-
-mkdir -p $DIR_FORE_ANOM/monthly/${var}/C3S/anom/
- if [[ $dbg -eq  0 ]] ; then
-    #rsync to $DIR_CLIM
-    rsync -auv --remove-source-files ${DIR}/${var}_${SPSSYS}_sps_${yyyy}${st}_all_ano.${refperiod}_miss.nc $DIR_FORE_ANOM/monthly/${var}/C3S/anom/ 
- fi
 
 else
 	set +e
 	nsstyyyystDONEfound=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/sst_enso_${yyyy}${st}_0??_DONE* | wc -l`
 	set -e
-	title="[diags] ${SPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
-	body="$nsstyyyystDONEfound files sst for ENSO found of the $nrun expected for $yyyy${st}. \n See in $DIR_DIAG_C3S/nino_plume_notify.sh"
- ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+	title="[diags] ${CPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
+	body="$nsstyyyystDONEfound files sst for ENSO found of the $nrunC3Sfore expected for $yyyy${st}. \n See in $DIR_DIAG_C3S/nino_plume_notify.sh"
+ ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
 	exit 1
 fi  
 
@@ -92,12 +82,7 @@ curryyyy=$(date +%Y)
 currst=$(date +%m)
 currstartdate=$curryyyy$currst
 startdate=$yyyy$st
-if [ $st -lt 10 ]  ; then
-	stnumtmp=`echo $currst | cut -c2-2`
- stnum=`echo " $stnumtmp"`
-else
-	stnum=$currst
-fi
+stnum=$((10#$currst))
 if [ $startdate -eq $currstartdate ]; then
 	# If we are in a forecast (curr sd == startdate) do nothing
 	:
@@ -113,8 +98,8 @@ fi
 if [ -f sstoi.indices ] ; then
    touch sstobs_${yyyy}${st}_DONE
 else
-   title="[diags] ${SPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
+   title="[diags] ${CPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
    body="Nothing NCEP sst file for $yyyy$st found. \n Check in $DIR_DIAG_C3S/nino_plume_notify.sh between 79-105 lines."
-   ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit 1
 fi

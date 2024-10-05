@@ -20,6 +20,15 @@ realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 yyyy=$1
 st=$2
 bkup=${3:-0}
+if [[ $bkup -eq 0 ]]
+then
+#-------------------------------------------
+# send a notice to HSM to release the resources asked through SC_c3s2
+#-------------------------------------------
+   body="Dear HSM \n \n this is to inform you that you can release the resources allocated for SC_c3s2. \n \n Thank you for your help \n \n SPS group"
+   title="SC_c3s2 notification"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $hsmmail -M "$body" -t "$title"
+fi
 for rea in $realm ; do
 
    if [[ $bkup -eq 0 ]]

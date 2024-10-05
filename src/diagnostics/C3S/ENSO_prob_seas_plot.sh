@@ -1,28 +1,30 @@
 #!/bin/sh -l
 
 . $HOME/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
+. $DIR_UTIL/descr_CPS.sh
+. ${DIR_UTIL}/load_ncl
 
-set -evx
+set -evxu
 
 export yyyy=$1
 export st=$2
 export REG=$3
 export dirplots=$4
 export workdir=$5
+export anomdir=$6
 datadir=$DIR_CLIM/monthly
 export varm=sst
 
 
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
-
+set +evxu
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -evxu
+export SPSSystem
+export nrunhind
+export nyearhc=$(($endy_hind-$iniy_hind + 1))
+export nens=$nrunC3Sfore
 # do not modify
-export refperiod=1993-2016
+export refperiod=$iniy_hind-$endy_hind
 export yym1=`date -d "${yyyy}${st}01 -1 month" +%Y`
 export stm1=`date -d "${yyyy}${st}01 -1 month" +%m`  #$((10#$st - 1))
 export yymp1=`date -d "${yyyy}${st}01 +1 month" +%Y`
@@ -37,8 +39,8 @@ export lt1=0
 export lt2=0
 export lg1=0
 export lg2=0
-export inputmall="$workdir/anom/${varm}_${SPSSYS}_sps_${yyyy}${st}_all_ano.1993-2016.nc"
-export inputmclimall="$datadir/${varm}/C3S/anom/${varm}_${SPSSYS}_${st}_all_ano.1993-2016.nc"
+export inputmall="$anomdir/${varm}_${SPSSystem}_${yyyy}${st}_all_ano.$refperiod.nc"
+export inputmclimall="$DIR_CLIM/monthly/$varm/C3S/anom/${varm}_${SPSSystem}_${st}_all_ano.$refperiod.nc"
 case $REG
   in
     Nino1+2)   lt1=-10 ; lt2=0 ;lg1=270 ; lg2=280 ;;

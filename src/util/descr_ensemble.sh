@@ -5,14 +5,15 @@
 yyyy=$1
 n_ic_cam=10
 n_ic_clm=3
+nrunhind=30  # 30 number of realizations required in hindcast
 if [[ $yyyy -lt 2023 ]]
 then
    n_ic_nemo=4
    nmax4modify_trip=40 #line from which modify_triplette acts
    #in hindcast different from $nrunmax to avoid possibility of running twice the same members
    #for startdate initially launched for 40 members
-   nrunmax=30      # 40 number of realizations you want to produce
-   nrunC3Sfore=30  # 40 number of realizations required to C3S forecast
+   nrunmax=30      # 30 number of realizations you want to produce
+   nrunC3Sfore=$nrunhind  # 30 number of realizations required to C3S forecast
    typeofrun="hindcast"
    debug_push=0    # if 0 you are going to send results to ECMWF
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY +

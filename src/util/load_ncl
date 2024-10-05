@@ -10,6 +10,7 @@ then
     . $DIR_UTIL/condaactivation.sh
     condafunction deactivate $envcondacm3
     condafunction activate env_tools
+    export NCARG_COLORMAPS=$HOME/ncl/colormaps:$NCARG_ROOT/lib/ncarg/colormaps
 else
    :
 fi
