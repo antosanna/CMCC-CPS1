@@ -295,7 +295,7 @@ begin
   if (varm .eq. "tso") then
    
      fmsk=addfile(landmask,"r")
-     masklndtmp=fmsk->LANDFRAC(0,:,:)
+     masklndtmp=fmsk->lsm
      masklndtmp@_FillValue=1.e+20
      masklnd=where(masklndtmp.gt.0.,template@_FillValue,1)
      copy_VarMeta(masklndtmp,masklnd)

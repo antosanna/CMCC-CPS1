@@ -22,8 +22,12 @@ dirplots  = getenv("dirplots")
 refperiod   = getenv("refperiod")
 print("before nens")
 nensstr=getenv("nens")
-nens=tointeger(nensstr)
 print("after nens")
+nens=tointeger(nensstr)
+nyearhc=toint(getenv("nyearhc"))
+nenshc=toint(getenv("nrunhind"))
+print("nyearhc "+nyearhc)
+print("nenshc "+nenshc)
 figtype=getenv("figtype")
 
 ;if ( REG.eq."Nino3.4") then
@@ -37,7 +41,7 @@ inputmclimall=getenv("inputmclimall")
 vclim  = addfile (inputmclimall,"r")
 tstmp_clim  = vclim->tso(:,:,0:5,:,:)
 ts_seas=new((/nens,4,180,360/),typeof(tstmp),tstmp@_FillValue)
-ts_clim_seas=new((/24,40,4,180,360/),typeof(tstmp_clim),tstmp_clim@_FillValue)
+ts_clim_seas=new((/nyearhc,nenshc,4,180,360/),typeof(tstmp_clim),tstmp_clim@_FillValue)
 do lead = 0,3
    ts_seas(:,lead,:,:)  = dim_avg_n_Wrap(tstmp(:,lead:lead+2,:,:),1)
    ts_clim_seas(:,:,lead,:,:)  = dim_avg_n_Wrap(tstmp_clim(:,:,lead:lead+2,:,:),2)
@@ -45,7 +49,7 @@ end do
 timetmp  = v1->time(0:5)
 tstmp@_FillValue=-9999.
 ts=new((/nens,6,180,360/),typeof(tstmp),tstmp@_FillValue)
-ts_clim=new((/24,40,6,180,360/),typeof(tstmp),tstmp@_FillValue)
+ts_clim=new((/nyearhc,nenshc,6,180,360/),typeof(tstmp),tstmp@_FillValue)
 ts(:,1:4,:,:)=ts_seas  ;(:,1:4,:,:)
 ts_clim(:,:,1:4,:,:)=ts_clim_seas  ;(:,1:4,:,:)
 time=new((/6/),typeof(timetmp))
@@ -105,9 +109,9 @@ nino3_clim=wgt_areaave_Wrap(ts_clim(:,:,:,{lt1:lt2},{lg1:lg2}),1,1,0)
 nino3_clim_occ_blw=where(nino3_clim.lt.-0.5,1,0)
 nino3_clim_occ_nrm=where(nino3_clim.ge.-0.5 .and. nino3_clim.le.0.5,1,0)
 nino3_clim_occ_abv=where(nino3_clim.gt.0.5,1,0)
-nina_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_blw,(/40*24,6/)),0)*100
-nino_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_abv,(/40*24,6/)),0)*100
-neutr_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_nrm,(/40*24,6/)),0)*100
+nina_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_blw,(/nyearhc*nenshc,6/)),0)*100
+nino_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_abv,(/nyearhc*nenshc,6/)),0)*100
+neutr_clim_prob=dim_avg_n_Wrap(reshape(nino3_clim_occ_nrm,(/nyearhc*nenshc,6/)),0)*100
 
 print("nina_prob   neutr_prob   nino_prob")
 print(nina_prob+" "+neutr_prob+" "+nino_prob)

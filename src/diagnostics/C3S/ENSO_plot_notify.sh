@@ -1,5 +1,8 @@
 #!/bin/sh -l
 
+. ${HOME}/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh 
+. ${DIR_UTIL}/load_ncl
 set -evxu
 
 export yyyy=$1
@@ -7,19 +10,19 @@ export st=$2
 export REG=$3
 export dirplots=$4
 workdir=$5
-export ncep_dir=$6
+export anomdir=$6
+export ncep_dir=$7
+export SPSSystem
 #
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+set +evxu
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -evxu
 export nens=$nrunC3Sfore
-export workdir_anom=$workdir/anom
+export nrunhind
+export nyearhc=$(($endy_hind-$iniy_hind + 1))
 
 # do not modify
-export refperiod=1993-2016
+export refperiod=$iniy_hind-$endy_hind
 export yyyym1=$(($yyyy - 1))
 export figtype="png"
 

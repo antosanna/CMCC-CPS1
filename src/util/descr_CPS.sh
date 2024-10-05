@@ -147,7 +147,6 @@ then
    OUTDIR_DIAG=$WORK/diagnostics/
 #   DIR_WEB=/data/products/C3S/sp2/webpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
-#   DIR_FORE_ANOM=/work/csp/${operational_user}/CMCC-${CPSSYS}/forecast_anom
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
    DIR_ARCHIVE=$WORK_CPS/archive
@@ -190,8 +189,10 @@ then
 	     ccmail=silvio.gualdi@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it
    fi
-#   CLIM_DIR_DIAG=/work/csp/sp2/${CPSSYS}/CESM/monthly/
-#   PCTL_DIR_DIAG=/work/csp/sp2/${CPSSYS}/CESM/pctl/
+   VALIDATION=$WORK/CPS/VALIDATION
+   CLIM_OBS_DIR_DIAG=$VALIDATION/OBS/monthly
+   CLIM_DIR_DIAG=$VALIDATION/CMCC-SPS4/monthly
+   PCTL_DIR_DIAG=$VALIDATION/CMCC-SPS4/pctl/
    #directory for CLM restart clim/std dev (for check on ICs)
 #   clm_clim_dir=${DIR_CLIM}/CLM_restart
 
@@ -286,7 +287,7 @@ DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 DIR_CPS=$DIR_ROOT/src/scripts_oper
 DIR_RECOVER=$DIR_ROOT/src/recover
-pushdir=$WORK/CPS/CMCC-CPS1/push
+pushdir=$WORK/CPS/CMCC-${CPSSYS}/push
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -328,7 +329,7 @@ DIR_SRC=$DIR_ROOT/src
 DIR_CHECK=$DIR_ROOT/checklists
 # DIR_TEST_SUITE=$DIR_SRC/test_suite
 DIR_UTIL=$DIR_SRC/util
-dictionary=$DIR_UTIL/CPS1_checkfile_dictionary.txt
+dictionary=$DIR_UTIL/${CPSSYS}_checkfile_dictionary.txt
 DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
@@ -360,6 +361,10 @@ IC_CPS_guess=$WORK/CPS/CMCC-${CPSSYS}/IC_CPS_guess
 WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
+DIR_ROOT_SCORES=$HOME/CPS/CMCC-SPS_SKILL_SCORES
+WORK_SCORES=$WORK/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
+DIR_CLIM=$WORK_SCORES
+DIR_FORE_ANOM=$WORK/CPS/CMCC-${CPSSYS}/forecast_anom
 
 
 set +a

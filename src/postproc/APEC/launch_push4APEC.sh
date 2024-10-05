@@ -56,13 +56,20 @@ for yyyy in `seq $iyy $fyy` ; do
        title=${title_debug}"[APEC] ${SPSSystem} ${typeofrun} notification"
        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
 
+       njsd=`${DIR_UTIL}/findjobs.sh -m $machine -q $serialq_push -c yes`
+       if [ $njsd -lt 4 ] 
+       then
+          queue=$serialq_push
+       else
+          queue=$serialq_s
+       fi
 # Submit push over APEC ftp	
        input="${yyyy} ${st} ${typeofrun} ${dbg_push}"
-       ${DIR_UTIL}/submitcommand.sh -M 1000 -m $machine -d $DIR_POST/APEC -q $serialq_push -n 1 -j push4APEC_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4APEC.sh -i "$input"
+       ${DIR_UTIL}/submitcommand.sh -M 1000 -m $machine -d $DIR_POST/APEC -q $queue -n 1 -j push4APEC_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4APEC.sh -i "$input"
 
        while `true` ; do
 	         sleep 5
-	         njobs=`${DIR_UTIL}/findjobs.sh -m $machine -q $serialq_push -n "push4APEC_"  -c yes`
+	         njobs=`${DIR_UTIL}/findjobs.sh -m $machine -q $queue -n "push4APEC_"  -c yes`
 
 	         if [ ${njobs} -eq 0 ]; then
         	   	break

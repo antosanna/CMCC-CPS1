@@ -1,5 +1,7 @@
 #!/bin/sh -l
 . ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+. ${DIR_UTIL}/load_ncl
 
 set -evxu
 
@@ -9,21 +11,17 @@ export mmfore=$2
 mfore=$((10#$mmfore))
 
 set +euvx
-if [ $yyyyfore -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+. ${DIR_UTIL}/descr_ensemble.sh $yyyyfore
 set -evxu
 export nens=$nrunC3Sfore
 export varm=$3
 terclist="low mid up"
 reglist="$4"
-export dirplots=$5
-export flgmnth=$6
-flgmnth_fname=$7
-leadlist="$8"
+export anomdir=$5
+export dirplots=$6
+export flgmnth=$7
+flgmnth_fname=$8
+leadlist="$9"
 export varobs=$varm
 case $varm
 in
@@ -75,8 +73,8 @@ do
   then
        export lead=$(($l - 1))
        export SS=${S[$l]}
-       export probupfile="${DIR_CLIM}/pctl/${varm}_${mmfore}_l${lead}_66.nc"
-       export problowfile="${DIR_CLIM}/pctl/${varm}_${mmfore}_l${lead}_33.nc"
+       export probupfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_66.nc"
+       export problowfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_33.nc"
        frequency="season"
   else
        export lead=$(($l  - 1))
@@ -86,10 +84,10 @@ do
        export problowfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_33.nc"
        frequency="month"
   fi
-  export inputm="$dirplots/anom/${varm}_${SPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.1993-2016.nc"
-  export inputmall="$dirplots/anom/${varm}_${SPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.1993-2016.nc"
-  export landmask="$CESMDATAROOT/CMCC-${SPSSYS}/files4${SPSSYS}/landfrac_1x1.nc"
-  export inputclim_mm="${DIR_CLIM}/monthly/${varm}/C3S/clim/${varm}_SPS3.5_clim_1993-2016.${mmfore}.nc"
+  export inputm="$anomdir/${varm}_${SPSSystem}_${yyyyfore}${mmfore}_ens_ano.1993-${endy_hind}.nc"
+  export inputmall="$anomdir/${varm}_${SPSSystem}_${yyyyfore}${mmfore}_all_ano.1993-${endy_hind}.nc"
+  export landmask="$MYCESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}/lsm_C3S.nc"
+  export inputclim_mm="${DIR_CLIM}/monthly/${varm}/C3S/clim/${varm}_${SPSSystem}_clim_1993-$endy_hind.${mmfore}.nc"
 
   export wks_type=png
   for region in $reglist 
@@ -241,15 +239,25 @@ do
           ncl forecast_prob_month_terc_summary_lead_newproj.ncl
       fi
     
-      # this is to trim the picture
-      #convert_opt="-geometry 1000x1000 -rotate -90 -density 300 -trim +repage"
-      convert_opt="-trim +repage"
  
-      case $varobs
-      in
-      z500) varfile=hgt500 ;;
-      *)    varfile=$varobs ;;
-      esac
+
+  done #end for region
+done #end for leadlist
+#
+. $DIR_UTIL/load_convert
+# this is to trim the picture
+#convert_opt="-geometry 1000x1000 -rotate -90 -density 300 -trim +repage"
+convert_opt="-trim +repage"
+case $varobs
+in
+   z500) varfile=hgt500 ;;
+   *)    varfile=$varobs ;;
+esac
+for l in $leadlist
+do
+  export lead=$(($l - 1))
+  for region in $reglist 
+  do
       convert ${convert_opt} $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
       convert ${convert_opt} $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
      
@@ -258,7 +266,7 @@ do
       convert ${convert_opt} $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
       convert ${convert_opt} $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
       convert ${convert_opt} $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
-      if [[ $varfile = "hgt500" ]]
+      if [[ $varfile == "hgt500" ]]
       then
           rm $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
           rm $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
@@ -267,7 +275,6 @@ do
           rm $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
           rm $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       fi
-
   done #end for region
 done #end for leadlist
 # -------------------------------

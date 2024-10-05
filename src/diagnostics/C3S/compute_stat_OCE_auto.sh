@@ -9,19 +9,17 @@ set -euvx
 
 yyyy=$1
 st=$2 
-refperiod=$3
-export varm=$4  # var name in the model
-nrun=$5
-typefore=$6
-dirlog=$7
-filetype=$8
-make_statistics=${9}
-make_anom=${10}
-make_plot=${11}
-flag_done=${12}
-dbg=${13}
+export varm=$3  # var name in the model
+dirlog=$4
+filetype=$5
+make_statistics=${6}
+make_anom=${7}
+make_plot=${8}
+flag_done=${9}
+dbg=${10}
 #
 climdir=$DIR_CLIM/daily/$varm 
+refperiod=$iniy_hind-$endy_hind
 
 if [ $yyyy -lt ${iniy_fore} ]
 then
@@ -44,9 +42,9 @@ set -e
 ###
 # THIS IS NOT NEEDED ANYMORE because now there is the removal of extramembers in change_realization so that at this point we only have the correct members in the correct order from 1 to $nrunC3Sfore
 #
-#lista_ens=`ls -ltr $WORK_C3S/$yyyy$st/all_checkers_ok_0?? |head -n $nrun |rev |cut -d '_' -f1 |rev `
-#lista_ens=`ls -1tr $WORK_C3S/$yyyy$st/all_checkers_ok_0?? |head -n $nrun |rev |cut -d '_' -f1 |rev `
-lista_ens=`ls -1 $WORK_C3S1/$yyyy$st/all_checkers_ok_0?? |head -n $nrun |rev |cut -d '_' -f1 |rev `
+#lista_ens=`ls -ltr $WORK_C3S/$yyyy$st/all_checkers_ok_0?? |head -n $nrunC3Sfore |rev |cut -d '_' -f1 |rev `
+#lista_ens=`ls -1tr $WORK_C3S/$yyyy$st/all_checkers_ok_0?? |head -n $nrunC3Sfore |rev |cut -d '_' -f1 |rev `
+lista_ens=`ls -1 $WORK_C3S1/$yyyy$st/all_checkers_ok_0?? |head -n $nrunC3Sfore |rev |cut -d '_' -f1 |rev `
 #ANTO AND ZHIQI 20220221-
 
 if [ $ncapsuleyyyystDONE -eq 0 ] ; then
@@ -56,11 +54,11 @@ if [ $ncapsuleyyyystDONE -eq 0 ] ; then
        if [[ ! -f $dirlog/capsule_${yyyy}${st}_${ppp}_oce_${varm}_DONE ]]
        then
 		        input="$yyyy $st $ppp $workdir_ens $workdir $varm $dirlog $filetype"
-          $DIR_SPS35/submitcommand.sh -r $sla_serialID -S qos_resv -M 20000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
+          $DIR_SPS35/submitcommand.sh -S $qos -M 20000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
        fi
 		     while `true` ; do
            ncapsjob=`$DIR_SPS35/findjobs.sh -m $machine -n capsule_oce -c yes`
-           if [ $ncapsjob -lt $nrun ] ; then
+           if [ $ncapsjob -lt $nrunC3Sfore ] ; then
 				          break
 			        fi
 		         sleep 6
@@ -84,21 +82,21 @@ if [ ! -f ${dirlog}/capsule_${yyyy}${st}_oce_${varm}_DONE ] ; then
     set +e
     ncapsuleyyyystDONE=`ls -1 $dirlog/capsule_${yyyy}${st}_???_oce_${varm}_DONE* | wc -l`
     set -e
-    if [ $ncapsuleyyyystDONE -eq $nrun ] ; then
+    if [ $ncapsuleyyyystDONE -eq $nrunC3Sfore ] ; then
        rm $dirlog/capsule_${yyyy}${st}_???_oce_${varm}_DONE*
        touch $dirlog/capsule_${yyyy}${st}_oce_${varm}_DONE
     else
       	ncapsyyyystDONEfound=`ls -1 $dirlog/capsule_${yyyy}${st}_???_oce_${varm}_DONE | wc -l`
  	     ###SENDMAIL
        title="[diags OCE] ${SPSSYS} ${typeofrun} capsule ERROR"
-       body="$ncapsyyyystDONEfound file $varm found of the $nrun expected for $yyyy$st $typefore"
+       body="$ncapsyyyystDONEfound file $varm found of the $nrunC3Sfore expected for $yyyy$st $typeofrun"
        ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
        exit 1
     fi
 fi 
 
 if [ $make_anom -eq 1 ] ; then
-	  $DIR_DIAG_C3S/anom_${SPSSYS}_oce.sh $yyyy $st $refperiod $nrun $climdir $varm $workdir $dbg
+	  $DIR_DIAG_C3S/anom_${SPSSYS}_oce.sh $yyyy $st $refperiod $nrunC3Sfore $climdir $varm $workdir $dbg
 fi
 
 if [ $make_plot -eq 1 ] ; then

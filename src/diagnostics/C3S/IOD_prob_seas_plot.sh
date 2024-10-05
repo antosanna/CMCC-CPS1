@@ -14,7 +14,7 @@ datadir=${DIR_CLIM}/monthly
 
 
 # do not modify
-export refperiod=1993-2016
+export refperiod=$iniy_hind-$endy_hind
 export yym1=`date -d "${yyyy}${st}01 -1 month" +%Y`
 export stm1=`date -d "${yyyy}${st}01 -1 month" +%m`  #$((10#$st - 1))
 export yymp1=`date -d "${yyyy}${st}01 +1 month" +%Y`
@@ -22,8 +22,8 @@ export stp1=`date -d "${yyyy}${st}01 +1 month" +%m`  #$((10#$st - 1))
 
 export figtype="png"
 
-export inputmall="$anomdir/${varm}_${SPSSYS}_sps_${yyyy}${st}_all_ano.1993-2016.nc"
-export inputmclimall="$datadir/${varm}/C3S/anom/${varm}_${SPSSYS}_${st}_all_ano.1993-2016.nc"
+export inputmall="$anomdir/${varm}_${SPSSystem}_${yyyy}${st}_all_ano.$refperiod.nc"
+export inputmclimall=$DIR_CLIM/monthly/$varm/C3S/anom/${varm}_${SPSSystem}_${st}_all_ano.$refperiod.nc"
 
 echo "PLOTTING IOD"
 cd ${DIR_DIAG_C3S}/ncl
