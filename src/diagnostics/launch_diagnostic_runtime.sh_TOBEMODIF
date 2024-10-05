@@ -13,8 +13,8 @@
 #-- parameters -----------------------------------------------------------------
 set -euxv
 dbg=1
-# to run in dbg mode you must provide $WORK_SPS3/archive/$caso/rest
-# and $WORK_SPS3/archive/$caso/atm/hist
+# to run in dbg mode you must provide $WORK_CPS/archive/$caso/rest
+# and $WORK_CPS/archive/$caso/atm/hist
 
 today=`date +%d`
 if [ `whoami` == "$operational_user" ] 
@@ -60,8 +60,8 @@ then
       m3=`date -d "${start_date}01 + 3 months" +%m`
       y3=`date -d "${start_date}01 + 3 months" +%Y`
 # testi first month
-      mkdir -p $WORK_SPS3/archive/${caso}/rest/$y1-$m1-01-00000
-      mkdir -p $WORK_SPS3/archive/${caso}/rest/$y3-$m3-01-00000
+      mkdir -p $WORK_CPS/archive/${caso}/rest/$y1-$m1-01-00000
+      mkdir -p $WORK_CPS/archive/${caso}/rest/$y3-$m3-01-00000
    done
 fi
 firstmonth=`date -d "${start_date}01 + 1 months" +%Y%m`
@@ -85,17 +85,17 @@ for ens2d in `seq -w 01 $nrunmax`
 do
    caso=${SPSSystem}_${start_date}_0${ens2d}
    
-   if [[ ! -d $WORK_SPS3/archive/${caso}/rest ]]
+   if [[ ! -d $WORK_CPS/archive/${caso}/rest ]]
    then
    #skip it
       continue
    fi  
    # Get last restart file
    last_rest=""
-   nf=$(ls -1 $WORK_SPS3/archive/${caso}/rest 2>/dev/null|wc -l)
+   nf=$(ls -1 $WORK_CPS/archive/${caso}/rest 2>/dev/null|wc -l)
    if [ $nf -ne 0 ]
    then
-   file=$(ls -1 $WORK_SPS3/archive/${caso}/rest 2>/dev/null)
+   file=$(ls -1 $WORK_CPS/archive/${caso}/rest 2>/dev/null)
       if [ $? -eq 0 ] ; then
           last_rest=$(echo $file |  tr ' ' '\n'| tail -n 1 | awk '{print substr($1,1,4) substr($1,6,2)}')
       fi

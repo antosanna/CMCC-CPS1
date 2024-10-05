@@ -1,6 +1,6 @@
 #!/bin/sh -l
 # load variables from descriptor
-# SUBMISSION FROM JUNO (crontab)
+# SUBMISSION FROM JUNO (crontab) NOT WORKING WITH LEONARDO WITH submitcommand
 #30 10 * * * . /etc/profile; . /users_home/cmcc/cp1/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j SPS4_submissione_FORECAST -l $DIR_LOG/hindcast/ -d $DIR_CPS -s SPS4_submission_FORECAST.sh
 
 . $HOME/.bashrc
@@ -23,6 +23,19 @@ then
    then
       echo "already running"
       exit
+   else
+      lastlog=`ls -rt $SCRATCHDIR/cases_${st}/${header}_${yyyy}${st}*log|tail -1`
+      check_aborted=`grep aborted $lastlog|wc -l`
+# takes into account the possibility that for misterious reasons srun commnad failed
+      if [[ $check_aborted -ne 0 ]]
+      then
+         ens_aborted=`echo $lastlog|rev|cut -d '.' -f2|cut -d '_' -f1|rev`
+         $DIR_UTIL/clean_caso.sh ${SPSSystem}_${yyyy}${st}_${ens_aborted}
+         title="[${CPSSYS} WARNING] case ${SPSSystem}_${yyyy}${st}_${ens_aborted} not submitted due to srun issues"
+
+         body="${SPSSystem}_${yyyy}${st}_${ens_aborted} cleaned and going to be resubmitted"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+      fi
    fi
 else
    np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_FORECAST -c yes`
@@ -46,6 +59,8 @@ else
       fi
    fi
 fi
+# this can be redundant on Juno
+$IC_CPS/set_forecast_ICs.sh $yyyy $st
 # Input **********************
 $DIR_CPS/make_ensemblescripts.sh $yyyy $st
 stlist=$st

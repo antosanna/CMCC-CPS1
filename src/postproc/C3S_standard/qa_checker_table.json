@@ -198,7 +198,6 @@
 
         "spike_checked_vars" : [ 
             "tasmin",
-            "tas",
             "TREFMNAV"
         ],  
 

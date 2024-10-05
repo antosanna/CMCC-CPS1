@@ -62,10 +62,9 @@ then
    usage
 fi
 
-if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
+message=${message//'\n'/<br>}
+if [ ! -z $report ]
 then
-   if [ ! -z $report ]
-   then
       runtype=$report
       mkdir -p ${DIR_LOG}/report/$runtype
       echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
@@ -74,8 +73,10 @@ then
       then
          exit
       fi
-   fi
+fi
 
+if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
+then
    if [ ! -z $bcc ]
    then
       b=" -b $bcc"
@@ -104,22 +105,8 @@ then
    exit 0
 fi
 
-# marconi
 if [  "$machine" = "leonardo" ]
 then
-   message=${message//'\n'/<br>}
-   if [ ! -z $report ]
-   then
-      runtype=$report
-      mkdir -p ${DIR_LOG}/report/$runtype
-      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      if [ "$report" = "only" ]
-      then
-         exit
-      fi
-   fi
-
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT
   if [[ $title == *"CPS1"* ]]; then
     oldString="CPS1"

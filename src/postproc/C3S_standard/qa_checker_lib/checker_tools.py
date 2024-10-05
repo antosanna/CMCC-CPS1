@@ -236,9 +236,10 @@ def check_temp_spike(maskfield,sicfield,varn,shortn,timen,lab_std, lab_mem, erro
     if len(spk_pos_c2[:,1]>0) and len(spk_pos_c1[:,1])>0:
           print("if c1&c2")
           spk_pos_c1andc2=np.array([x for x in (c1set & c2set)])
-          point_list_c1andc2=["c1&c2: T<"+str(min_limit1)+" DT>"+str(delta_limit1)+"\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_c1andc2)))+";\n"+
+          if (len(spk_pos_c1andc2) > 0):
+             point_list_c1andc2=["c1&c2: T<"+str(min_limit1)+" DT>"+str(delta_limit1)+"\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos_c1andc2)))+";\n"+
                     "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n"  ]        
-          point_list_c1andc2.append([
+             point_list_c1andc2.append([
                     str(spk_pos_c1andc2[i,0])+";"+str(spk_pos_c1andc2[i,1])+";"+str(spk_pos_c1andc2[i,2])+";"+
                     str(data1[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
                     str(delta1[spk_pos_c1andc2[i,0],spk_pos_c1andc2[i,1],spk_pos_c1andc2[i,2]])+";"+
@@ -262,13 +263,14 @@ def check_temp_spike(maskfield,sicfield,varn,shortn,timen,lab_std, lab_mem, erro
     if len(spk_pos_c2[:,1]) > 0 and len(spk_pos_c3[:,1]) > 0 :
             print("original condition") 
             spk_pos = np.array([x for x in (c2set & c3set)])
-            if verbose or very_verbose:
-                print('[INFO] N. Points found (( TMIN delta>'+str(delta_limit1)+'TMIN(DT2) delta<'+str(delta_limit2)+' ): '+str(len(list(spk_pos))))
-            if very_verbose:
-                print('Locations (c2&c3):',spk_pos)
-            point_list=[str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos)))+";\n"+
+            if len(spk_pos) > 0:
+              if verbose or very_verbose:
+                  print('[INFO] N. Points found (( TMIN delta>'+str(delta_limit1)+'TMIN(DT2) delta<'+str(delta_limit2)+' ): '+str(len(list(spk_pos))))
+              if very_verbose:
+                  print('Locations (c2&c3):',spk_pos)
+              point_list=[str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos)))+";\n"+
                     "Time;Lat:Lon;Tmin;ddelta1;ddelta2;mask;sic"+"\n"  ]
-            point_list.append([
+              point_list.append([
                     str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+str(spk_pos[i,2])+";"+
                     str(data1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
                     str(delta1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+

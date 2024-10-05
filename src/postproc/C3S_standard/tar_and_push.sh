@@ -148,7 +148,7 @@ if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
 then
     body="C3S: $DIR_C3S/tar_and_push.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
     title="[C3S] ${CPSSYS} $typeofrun ERROR"
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
     exit 2
 fi
 #
@@ -187,7 +187,7 @@ then
       then
           body="C3S: $DIR_C3S/tar_and_push.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
           title="[C3S] ${CPSSYS} forecast ERROR"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
           exit 1
       else
          echo "number of days in file $nstep correct"
@@ -208,7 +208,7 @@ then
      then
         body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
         title="[C3S] ${CPSSYS} forecast ERROR"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
         exit 1
      else
         echo "number of timesteps in file $nstep correct"
@@ -227,7 +227,7 @@ if [[ $islista12hrly -ne 0 ]] ; then
       then
          body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
          title="[C3S] ${CPSSYS} forecast ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
          exit 1
       else
          echo "number of timesteps in file $nstep correct"
@@ -277,7 +277,7 @@ do
      then
          body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunC3Sfore * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
          title="[C3S] ${CPSSYS} $typeofrun ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
          exit 3
      fi
      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar $listafile2tar
@@ -295,7 +295,7 @@ do
 #mail MACHINE DEPENDENT chek if present
       body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
       title="[C3S] ${CPSSYS} $typeofrun ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s ${yyyy}${st}
       donotsend=1
       exit
    fi
@@ -317,7 +317,7 @@ do
          then
               body="nrunC3Sfore set to $nrunC3Sfore instead of the required for operations. Exiting from tar_and_push.sh"
               title="[C3S] ${CPSSYS} $typeofrun ERROR"
-              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
               exit 2
          fi
          list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0*`
@@ -387,7 +387,7 @@ do
    else
       body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
       title="[C3S] ${CPSSYS} $typeofrun ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
       donotsend=1
       exit
    fi #if on number of var
@@ -400,18 +400,21 @@ if [ $stat -eq 0 ]
 then
    body="C3S: $DIR_LOG/tar_and_push.sh completed for ${start_date}."
    title="[C3S] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    touch $WORK_C3S/${start_date}/tar_and_push_${start_date}_DONE
 else
    body="C3S: $DIR_C3S/check_tarC3S.sh failed for ${start_date}. Exiting now. Check and fix"
    title="[C3S] ${CPSSYS} $typeofrun ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    exit
 fi   
 
 #--------------------------------------------
 # NOW SUBMIT PUSH4ECMWF (only forecast)
 #--------------------------------------------
+skip=1
+if [[ $skip -eq 0 ]]
+then
 if [[ $typeofrun == "forecast" ]]
 then
    input="$yyyy $st"
@@ -421,6 +424,7 @@ then
    title="[C3S] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
+fi
 fi
 
 #--------------------------------------------
