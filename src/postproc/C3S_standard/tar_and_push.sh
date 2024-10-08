@@ -155,7 +155,7 @@ fi
 # change_realization if needed
 #----------------------------
 ####MB 20240825 - COMMENTED for now
-#${DIR_C3S}/change_realization.sh $yyyy $st
+${DIR_C3S}/change_realization.sh $yyyy $st
 
 # nel caso in cui change_realization.sh e' ridondante
 listatocheck=" "

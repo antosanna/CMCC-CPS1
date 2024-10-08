@@ -23,7 +23,7 @@ then
    then
       body="Error in ${script1}. Exiting from $DIR_C3S/push4ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
    exit 1
 fi
 }
@@ -67,7 +67,7 @@ if [ $cntfirst -eq 1 ]
 then
    body="Successive attempt push4ECMWF.sh for startdate $yyyy$st started `date` "
 fi
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
 
 start_date=$yyyy$st
 cd $pushdir/$start_date
@@ -164,7 +164,7 @@ if [ $nline -lt $ntarandsha ] ; then
    then
       body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
    exit 1
 fi
 # END OF PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
@@ -208,7 +208,7 @@ if [ $cntmanifest -gt 1 ]; then
    then
       body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected" 
    fi  
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
    exit 1
 fi
 
@@ -240,7 +240,7 @@ if [ $cntmanifest -ne 1 ]; then
    then
       body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
    exit 1
 else
 # do check dimensions of transferred files
@@ -254,7 +254,7 @@ else
       then
          title=${title_debug}"[C3S] ${SPSSystem} ERROR"
          body="ACHTUNG!!! In $DIR_C3S/push4ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
          exit 5
       fi
    done
@@ -298,7 +298,7 @@ then
 fi
 if [ $checkpushdone -eq 1 ]; then
    #${DIR_UTIL}/sendmail.sh -m $machine -e $ecmwfmail -M "$body" -t "$title" -c $ccecmwfmail -b $mymail 
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail-r $typeofrun
    if [[ "$machine" == "juno" ]]
    then
       touch $filedone

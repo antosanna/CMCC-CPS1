@@ -644,6 +644,6 @@ else
 end if
 end if
 end if
-system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+ plname+".png "+plname+".png")
+;system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+ plname+".png "+plname+".png")
 system( "touch "+plname+"_DONE")
 end

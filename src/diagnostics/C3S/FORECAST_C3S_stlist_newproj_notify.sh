@@ -15,11 +15,11 @@ flag_done=$3
 dbg=$4
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-if [ ! -f $WORK_C3S1/${start_date}/tar_and_push_${start_date}_DONE ]
-then
-   echo "forecast not completed yet"
-   exit
-fi
+#if [ ! -f $WORK_C3S1/${start_date}/tar_and_push_${start_date}_DONE ]
+#then
+#   echo "forecast not completed yet"
+#   exit
+#fi
 
 dirlog=${DIR_LOG}/${typeofrun}/${start_date}/diagnostics
 mkdir -p $dirlog
@@ -31,7 +31,8 @@ typefore="fc"
 export reglist="global Europe Tropics NH SH"
 ensorgl="Nino1+2 Nino3 Nino3.4 Nino4"
 #varlist="mslp z500 t850 t2m precip sst u200 v200"
-varlist="mslp z500 t2m precip sst"
+varlist="sic"
+#"mslp z500 t2m precip sst"
 for var in $varlist
 do
      cd $DIR_DIAG_C3S

@@ -23,6 +23,7 @@ export flgmnth=$7
 flgmnth_fname=$8
 leadlist="$9"
 export varobs=$varm
+export varname=$varm
 case $varm
 in
    t2m)   export varname=tas;;
@@ -36,7 +37,7 @@ in
 esac
 case $varobs
 in
-   t2m|sst|t850|z500|u200|v200|mslp) export ensmColormap="prob_t2m_new" ;;
+   t2m|sst|t850|z500|u200|v200|mslp|sic) export ensmColormap="prob_t2m_new" ;;
    precip) export ensmColormap="prob_prec" ;;
 esac
 
@@ -152,7 +153,11 @@ do
          case $diag
          in
             ensmean) case $varobs
-                     in 
+                     in
+                     sic)  export ensmeanLevels="-2,-1,-.5,-.2,.2,.5,1,2"
+                           export ensmeanColors="5,4,3,2,0,6,7,8,9"
+                           export ensmeanlabel='"<-2","-2:-1","-1:-0.5","-0.5:-0.2","-0.2:0.2","0.2:0.5","0.5:1","1:2",">2"'
+                          export strvar="SIC anomalies [frac]" ;;
                      t2m) export ensmeanLevels="-2,-1,-.5,0.,.5,1,2"
                           export ensmeanColors="5,4,3,2,6,7,8,9"
                           export ensmeanlabel='"<-2","-2:-1","-1:-0.5","-0.5:0","0:0.5","0.5:1","1:2",">2"' 
@@ -182,7 +187,12 @@ do
                      esac ;;
             spread)  case $varobs
                      in
-                     t2m) export spreadLevels="0.25,0.75,1.25,1.85,2.25,2.75,3.25"
+                     sic) export spreadLevels="0.25,0.75,1.25,1.85,2.25,2.75,3.25"
+                          export spreadColors="2,16,13,12,11,10,8,6,4"
+                          export spreadlabel='"0-0.5","0.5-1","1-1.5","1.5-2","2-2.5","2.5-3","3-3.5",">3.5"'
+                       			export strvar="SIC spread [frac]" ;;
+
+                      t2m) export spreadLevels="0.25,0.75,1.25,1.85,2.25,2.75,3.25"
                        			export spreadColors="2,16,13,12,11,10,8,6,4"
                        			export spreadlabel='"0-0.5","0.5-1","1-1.5","1.5-2","2-2.5","2.5-3","3-3.5",">3.5"' 
                        			export strvar="T2m spread [~S~o~N~C]" ;;
@@ -258,14 +268,14 @@ do
   export lead=$(($l - 1))
   for region in $reglist 
   do
-      convert ${convert_opt} $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
-      convert ${convert_opt} $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
      
-      convert ${convert_opt} $dirplots/${varobs}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
 
-      convert ${convert_opt} $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
-      convert ${convert_opt} $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
-      convert ${convert_opt} $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
       if [[ $varfile == "hgt500" ]]
       then
           rm $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
@@ -280,3 +290,12 @@ done #end for leadlist
 # -------------------------------
 # ALL DONE
 # -------------------------------
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
+listafig=`ls ${dirplots}/*${yyyyfore}_${mmfore}*png`
+#rclone mkdir my_drive:SPS4_webpage_plots/$yyyyfore$mmfore
+for fig in $listafig
+do
+   rclone copy $fig my_drive:SPS4_webpage_plots
+done

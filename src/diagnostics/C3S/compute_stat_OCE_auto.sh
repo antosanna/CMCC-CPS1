@@ -90,7 +90,7 @@ if [ ! -f ${dirlog}/capsule_${yyyy}${st}_oce_${varm}_DONE ] ; then
  	     ###SENDMAIL
        title="[diags OCE] ${SPSSYS} ${typeofrun} capsule ERROR"
        body="$ncapsyyyystDONEfound file $varm found of the $nrunC3Sfore expected for $yyyy$st $typeofrun"
-       ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+       ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
        exit 1
     fi
 fi 
@@ -102,7 +102,7 @@ fi
 if [ $make_plot -eq 1 ] ; then
    export yyyyfore=$yyyy
    export mmfore=$st
-   export diroce="$workdir/anom/"
+   export diroce="$DIR_FORE_ANOM"
    export maskoce="$REPOSITORY/mesh_mask_from2000.nc"
    export dirlogo="$DIR_DIAG_C3S/ncl/"
    export plname="$workdir/temperature_pac_trop_ensmean_${yyyyfore}_${mmfore}"
@@ -116,7 +116,7 @@ if [ $make_plot -eq 1 ] ; then
    else
      title="[diags-oce] ${SPSSYS} ${typeofrun} ERROR"
      body=" Something goes wrong with ocean diagnostic plots ($DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl). \n" 
-     ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+     ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r $typeofrun
      exit 1   
    fi
 fi

@@ -39,6 +39,7 @@ in
 	  t850)    varC3S=ta ; option="-sellevel,85000"   ; hour="00:00:00" ; incr="12hour";;
    u200)    varC3S=ua    ; option="-sellevel,20000"  ; hour="00:00:00" ; incr="12hour";;
    v200)    varC3S=va    ; option="-sellevel,20000"  ; hour="00:00:00" ; incr="12hour";;
+   sic)    varC3S=sic    ; option=""  ; hour="12:00:00" ; incr="1day";;
 esac
 
 

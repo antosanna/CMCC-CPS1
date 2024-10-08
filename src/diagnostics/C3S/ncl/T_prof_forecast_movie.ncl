@@ -142,14 +142,14 @@ dirlogo=getenv("dirlogo")
 do n=0,ntime-1
     nn=n+1
     nnstr=sprinti("%0.6i", nn)
-    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
+;    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
  
 end do
 
-cmd = "convert -delay 25 "+plname+"*png "+plname+".gif"
-system(cmd)
-cmd = "rm "+plname+"*png"
-system(cmd)
+;cmd = "magick convert -delay 25 "+plname+"*png "+plname+".gif"
+;system(cmd)
+;cmd = "rm "+plname+"*png"
+;system(cmd)
 
 
 ;frame(wks)

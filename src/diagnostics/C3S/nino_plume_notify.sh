@@ -24,7 +24,7 @@ set -euvx
 
 
 refperiod=$iniy_hind-$endy_hind
-enslist=`ls -1 ${workdir}/anom/${var}_${SPSSystem}_${yyyy}${st}_0??_ano.${refperiod}.nc | rev | cut -d '_' -f2 |rev`
+enslist=`ls -1 ${DIR_FORE_ANOM}/$yyyy$st/${var}_${SPSSystem}_${yyyy}${st}_0??_ano.${refperiod}.nc | rev | cut -d '_' -f2 |rev`
 
 DIR="${DIR_FORE_ANOM}/$yyyy$st"
 for en in $enslist ; do
@@ -48,7 +48,7 @@ else
 	set -e
 	title="[diags] ${CPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
 	body="$nsstyyyystDONEfound files sst for ENSO found of the $nrunC3Sfore expected for $yyyy${st}. \n See in $DIR_DIAG_C3S/nino_plume_notify.sh"
- ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+ ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
 	exit 1
 fi  
 
@@ -70,10 +70,13 @@ esac
 
 # Download sstoi.indices
 cd  $ncep_dir
-[ -f sstoi.indices ] && rm sstoi.indices
-wget -4 --no-check-certificate https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
-cat sstoi.indices | uniq > sstoi.indices.tmp
-mv sstoi.indices.tmp sstoi.indices
+# TEMPORARILY COMMENTED (NOT WORKING ON LEONARD)
+#[ -f sstoi.indices ] && rm sstoi.indices
+#wget -4 --no-check-certificate https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+#cat sstoi.indices | uniq > sstoi.indices.tmp
+#mv sstoi.indices.tmp sstoi.indices
+# END OF TEMPORARY COMMENT
+
 #MB/AB 20220109 cat added to fix possible repeated lines in the original noaa file
 #this works only if the replicated lines are consecutive!!! 
 
@@ -100,6 +103,6 @@ if [ -f sstoi.indices ] ; then
 else
    title="[diags] ${CPSSYS} ${typeofrun} sst ENSO anomalies ERROR"
    body="Nothing NCEP sst file for $yyyy$st found. \n Check in $DIR_DIAG_C3S/nino_plume_notify.sh between 79-105 lines."
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
    exit 1
 fi

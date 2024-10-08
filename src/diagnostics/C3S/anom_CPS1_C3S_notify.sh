@@ -71,7 +71,7 @@ if [ $nanomDONE -eq $nrunC3Sfore ] ; then
 else
    body="Something wrong with $typeofrun anomalies ${yyyy}${st} for ${var}. $nanomDONE anomalies computed instead of ${nrunC3Sfore}. \n Check in $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh"   
    title="[diags] ${CPSSYS} $typeofrun anomalies ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"     
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"     -r $typeofrun
    exit 1
 fi
   

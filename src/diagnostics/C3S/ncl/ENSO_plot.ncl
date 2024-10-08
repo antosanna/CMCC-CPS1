@@ -289,7 +289,7 @@ frame(wks)    ; advance frame
 geom_value=" 80x80+930+670" 
 system("pwd")
 print(plname+".png")
-system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+plname+".png "+plname+".png")
+;system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+plname+".png "+plname+".png")
 system( "touch "+plname+"_DONE")
 
 end

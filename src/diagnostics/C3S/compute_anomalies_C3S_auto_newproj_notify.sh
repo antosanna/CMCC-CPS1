@@ -50,7 +50,7 @@ if [ $all -eq 3 ] ; then #case all=3 -> compute capsule, anomalies and plot
             ncapsyyyystDONEfound=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/capsule_${yyyy}${st}_???_${varm}_DONE | wc -l`            
    	        title="[diags] ${CPSSYS} $typeofrun capsule ERROR"
             body="$ncapsyyyystDONEfound file $varm found of the $nrunC3Sfore expected for $yyyy$st $typeofrun"
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
             exit 1
          fi     
        fi
@@ -90,7 +90,7 @@ if [[ "$varm" == "sst" ]] ; then
 	  if [[ $nENSOplotDONE -ne 4 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun ENSO plot ERROR"
 	        body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_plot.ncl went wrong"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
 	        rm ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE
 	        exit 1
 	  fi
@@ -99,7 +99,7 @@ if [[ "$varm" == "sst" ]] ; then
    if [[ $nENSOplotDONE_prob -ne 4 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun ENSO plot ERROR"
          body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_prob_seas_plot.ncl went wrong"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
          rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
          exit 1
    fi
@@ -110,7 +110,7 @@ if [[ "$varm" == "sst" ]] ; then
    if [[ $machine == "zeus" ]] ; then
    #### Now IOD 
      regIOD="IOD"
-     dir=$workdir/anom
+     dir=$DIR_FORE_ANOM
      dirobs=$SCRATCHDIR/NOAA_SST
      mkdir -p $dirobs
      $DIR_DIAG_C3S/make_update_sst_series.sh $yyyy $st $dirobs
@@ -119,7 +119,7 @@ if [[ "$varm" == "sst" ]] ; then
      if [[ $nIODplotDONE -ne 1 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun IOD plot ERROR"
 	        body="Something in $DIR_DIAG_C3S/ncl/IOD_plot.ncl went wrong"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
          rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
 	        exit 1
      fi
@@ -129,7 +129,7 @@ if [[ "$varm" == "sst" ]] ; then
      if [[ $nIODplotDONE_prob -ne 1 ]] ; then
          title="[diags] ${CPSSYS} $typeofrun IOD plot ERROR"
          body="Something in $DIR_DIAG_C3S/ncl/IOD_prob_seas_plot.ncl went wrong"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
          rm ${dirplots}/sst_IOD_prob_${yyyy}_${st}_DONE
          exit 1
      fi
@@ -183,7 +183,7 @@ for flgmnth in 0 ; do
   if [ $nfcplotDONE -ne $nplotexpected ] ; then
      title="[diags] ${CPSSYS} $typeofrun plot ERROR"
      body="Something in ${DIR_DIAG_C3S}/ncl/forecast_prob_season_lead_newproj.ncl \n or $DIR_DIAG_C3S/ncl/forecast_deterministic_season_lead_newproj.ncl went wrong"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
      rm ${dirplots}/${varm}_*_${yyyy}_${st}_*l?_DONE
      exit 1
   else
@@ -193,22 +193,21 @@ for flgmnth in 0 ; do
         list2=$(ls -1 ${dirplots}/hgt500_global_*summary*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
         list3=$(ls -1 ${dirplots}/hgt500_global_*prob*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
         list4=$(ls -1 ${dirplots}/hgt500_global_*spread*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
-        convert $list1 $list2 $list3 $list4 $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf
+        magick convert $list1 $list2 $list3 $list4 $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf
      else
         list1=$(ls -1 ${dirplots}/${varm}_global_*ens_anom*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
         list2=$(ls -1 ${dirplots}/${varm}_global_*summary*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
         list3=$(ls -1 ${dirplots}/${varm}_global_*prob*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
         list4=$(ls -1 ${dirplots}/${varm}_global_*spread*_${yyyy}_${st}_${flgmnth_fname}_l?.png )
 
-        convert $list1 $list2 $list3 $list4 $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf
+        magick convert $list1 $list2 $list3 $list4 $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf
      fi
 
 
      title="[diags] ${CPSSYS} ${varm} $typeofrun notifications plot"
      body="In allegato le figure del $typeofrun ${yyyy}${st} per la variabile ${varm} (solo sul dominio globale)."
      app="${dirplots}/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app
-     rm $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/${varm}_*_${yyyy}_${st}_${flgmnth_fname}_l?_DONE
      touch ${flag_done}_${varm}_${flgmnth_fname}
   fi
@@ -216,22 +215,31 @@ for flgmnth in 0 ; do
 # sst IOD
   if [[ $varm == "sst" ]]
   then
-     convert $list1_IOD $list2_IOD ${dirplots}/IOD_${yyyy}_${st}.pdf
+     magick convert $list1_IOD $list2_IOD ${dirplots}/IOD_${yyyy}_${st}.pdf
      title="[diags] ${CPSSYS} forecast notifications IOD plot"
      body="In allegato le figure per il forecast ${yyyy}${st} di IOD index. \n \n SPS staff"
      app="${dirplots}/IOD_${yyyy}_${st}.pdf"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
      rm ${dirplots}/sst_IOD_prob_${yyyy}_${st}_DONE
 # sst Nino
-     convert $list1_nino $list2_nino ${dirplots}/ElNino_${yyyy}_${st}.pdf
+     magick convert $list1_nino $list2_nino ${dirplots}/ElNino_${yyyy}_${st}.pdf
      title="[diags] ${CPSSYS} ${typeofrun} notifications ENSO plot"
      body="In allegato le figure per il ${typeofrun} ${yyyy}${st} di El Nino index."
      app="${dirplots}/ElNino_${yyyy}_${st}.pdf"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app
-     rm ${dirplots}/ElNino_${yyyy}_${st}.pdf
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE
      rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
   fi
-  exit 0
+done
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondarclone
+listafig=`ls ${dirplots}/*${yyyy}_${st}*pdf`
+rclone mkdir my_drive:SPS4_forecast/$yyyy$st
+rclone mkdir my_drive:SPS4_forecast/$yyyy$st/$varm
+for fig in $listafig
+do
+   rclone copy $fig my_drive:SPS4_forecast/$yyyy$st/$varm
+   rm $fig
 done

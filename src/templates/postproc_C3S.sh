@@ -3,7 +3,6 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/load_nco.sh
 set -evxu
 
 caso=EXPNAME
@@ -11,8 +10,11 @@ ic="DUMMYIC"
 
 st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
 yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+
+#load_nco after xmlquery to avoid conflict with conda environmens on leonardo
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+   . ${DIR_UTIL}/load_nco
 set -euvx
 #
 startdate=$yyyy$st

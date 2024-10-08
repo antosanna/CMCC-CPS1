@@ -843,7 +843,7 @@ end if
 end if
 system("pwd")
 print(plname+".png")
-system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+plname+".png "+plname+".png")
+;system( "composite -geometry "+geom_value+" cmcc_logo_bw.jpg "+plname+".png "+plname+".png")
 system( "touch "+plname+"_DONE")
 
 end
