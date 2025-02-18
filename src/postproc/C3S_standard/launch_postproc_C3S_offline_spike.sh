@@ -12,7 +12,6 @@ set -euvx
 LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-st=$1  #stdate as input
 
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab
@@ -32,14 +31,29 @@ touch ${flag_running}
 cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
-listofcases=`ls -d sps4_????${st}_0??`
+
+listofcases="sps4_199311_012 sps4_199311_029 sps4_199511_004 sps4_199511_025 sps4_199611_002 sps4_199611_017 sps4_199611_018 sps4_199611_024 sps4_199711_014 sps4_199811_007 sps4_199811_009 sps4_199811_010 sps4_199911_023 sps4_200011_005 sps4_200111_012 sps4_200211_002 sps4_200211_027 sps4_200311_010 sps4_200311_014 sps4_200311_017 sps4_200511_025 sps4_200511_027 sps4_200611_024 sps4_200611_026 sps4_200711_005 sps4_200711_009 sps4_200811_009 sps4_201011_018 sps4_201111_015 sps4_201211_008 sps4_201211_026 sps4_201211_028 sps4_201411_020 sps4_201411_029 sps4_201411_030 sps4_201511_026 sps4_201611_001 sps4_201611_029 sps4_201711_023 sps4_201711_026 sps4_201711_027 sps4_201711_028 sps4_201811_014 sps4_201811_015 sps4_201811_016 sps4_201911_004 sps4_201911_010 sps4_202011_006 sps4_202111_003 sps4_202111_018 sps4_202111_024 sps4_202111_028 sps4_202111_030 sps4_202211_017 sps4_202211_023 sps4_202211_029 sps4_199711_008 sps4_199911_027 sps4_202211_028" 
 
 for caso in $listofcases
 do
-   isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
+   isspike=${DIR_TEMP}/${caso}.redone4spike
+   if [[ ! -f $isspike ]] 
+   then
+      echo "$caso not copied yet from Leonardo"
+      continue
+   fi
+   iscleaned=${DIR_TEMP}/clean4C3S_spike_${caso}_DONE
+   if [[ ! -f $iscleaned ]] 
+   then
+    title="${CPSSYS} warning launch_postproc_C3S_offline_spike.sh"
+    body="$caso rerun for spike copied from Leonardo to Juno, but old C3S files not cleaned yet. Use $DIR_C3S/clean4C3S_spikes.sh"
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+    continue
+   fi
+   isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE |wc -l`
    if [[ ${isremote} -eq 1 ]] 
    then
-        flag=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE`
+        flag=`ls $DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE`
         mach=`echo $flag |rev |cut -d '_' -f2|rev`
         echo "$caso is a remote case run on $mach"
         dir_cases=/work/cmcc/$USER/CPS/CMCC-CPS1/cases_from_${mach}

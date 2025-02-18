@@ -51,6 +51,7 @@ for caso in $lista ; do
    stat=$?
    if [[ $stat -eq 0 ]]
    then
+      chmod -R ug-w ${DIR_ARCHIVE}/$caso
       touch $checkfile
       rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`

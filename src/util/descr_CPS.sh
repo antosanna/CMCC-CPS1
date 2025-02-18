@@ -145,7 +145,7 @@ then
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
 #   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
    OUTDIR_DIAG=$WORK/diagnostics/
-#   DIR_WEB=/data/products/C3S/sp2/webpage
+   DIR_WEB=$WORK/CPS/C3Swebpage/validation_dev
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
@@ -190,7 +190,7 @@ then
 	     hsmmail=hsm@cmcc.it
    fi
    VALIDATION=$WORK/CPS/VALIDATION
-   CLIM_OBS_DIR_DIAG=$VALIDATION/OBS/monthly
+   CLIM_OBS_DIR_DIAG=$VALIDATION/OBS/
    CLIM_DIR_DIAG=$VALIDATION/CMCC-SPS4/monthly
    PCTL_DIR_DIAG=$VALIDATION/CMCC-SPS4/pctl/
    #directory for CLM restart clim/std dev (for check on ICs)
@@ -362,6 +362,7 @@ WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
 DIR_ROOT_SCORES=$HOME/CPS/CMCC-SPS_SKILL_SCORES
+DIR_PCTL=$HOME/CPS/CMCC-SPS_PCTL
 WORK_SCORES=$WORK/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
 DIR_CLIM=$WORK_SCORES
 DIR_FORE_ANOM=$WORK/CPS/CMCC-${CPSSYS}/forecast_anom

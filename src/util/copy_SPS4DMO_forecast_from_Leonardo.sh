@@ -1,18 +1,18 @@
 #!/bin/sh -l
-#BSUB -J copy_SPS4DMO_from_Leonardo2
+#BSUB -J copy_SPS4DMO_forecast_from_Leonardo
 #BSUB -q s_download
-#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo2.out.%J  
-#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo2.err.%J  
+#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_forecast_from_Leonardo.out.%J  
+#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_forecast_from_Leonardo.err.%J  
 #BSUB -P 0490
 #BSUB -M 1000
 
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 # First check that no other this script is running
-if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]
-then
-   exit
-fi
+#if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]
+#then
+#   exit
+#fi
 #load module for sshpass
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
@@ -20,28 +20,12 @@ set -uvx
 leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
 leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover1.leonardo.cineca.it:/leonardo_work/CMCC_reforeca/scratch/list_`date +%Y%m%d` $DIR_TEMP
 
-lista=""
 cnt=0
-while read -r LINE
-do
-    if [[ -f $DIR_ARCHIVE/$LINE.transfer_from_Leonardo_DONE ]] ; then
-       continue
-    fi  
-    cnt=$(( $cnt +1 ))
-    if [[ $cnt -le 9 ]] ; then
-       continue
-    fi
-    lista+=" $LINE"
-    if [[ $cnt -eq 18 ]] ; then
-       break 
-    fi
-done < $DIR_TEMP/list_`date +%Y%m%d`
 
-echo $lista
-lista_today_2=" "
-for caso in $lista ; do
+for ens in {001..054}
+do
+   caso=sps4_202410_${ens}
 
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
    if [[ -f $checkfile ]]
@@ -61,9 +45,13 @@ for caso in $lista ; do
       then
          continue
       fi
-      lista_today_2+=" $caso"
+      lista_today_1+=" $caso"
+   fi
+   cnt=$(( $cnt +1 ))
+   if [[ $cnt -eq 9 ]] ; then
+      break
    fi
 
 done
-echo $lista_today_2 > $DIR_TEMP/list2_cases_transferred_`date +%Y%m%d`.txt
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $DIR_TEMP/list2_cases_transferred_`date +%Y%m%d`.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/
+echo $lista_today_1 > $DIR_TEMP/list_cases_forecast_transferred_`date +%Y%m%d`.txt
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $DIR_TEMP/list_cases_forecast_transferred_`date +%Y%m%d`.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/

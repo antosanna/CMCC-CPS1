@@ -9,10 +9,13 @@ def sostituisci_valore(file_input, file_output, numero_riga, ncol, nuovo_valore,
     if 0 <= numero_riga < len(data):
         # Sostituisci il valore dalla seconda colonna in poi nella riga specificata
 #        e nelle colonne definite in input
-        for i in range(1, ncol):
-            data[numero_riga][i] = nuovo_valore
-        if tot_done != 0:
-            data[numero_riga][ncol]=tot_done
+        if ncol != 9:
+            for i in range(1, ncol):
+                data[numero_riga][i] = nuovo_valore
+        else:
+            if tot_done != 0:
+                data[numero_riga][ncol]=tot_done
+            
     else:
         print("Numero di riga non valido.")
 

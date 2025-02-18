@@ -41,34 +41,39 @@ set -euvx
 cp $DIR_CHECK/${hindcasts_list} ${DIR_TEMP}/${hindcasts_list}_`date +%Y%m%d`
 cp $DIR_CHECK/${hindcasts_list} ${DIR_TEMP}/$listfiletocheck
 
-remote_mach_list="Zeus Leonardo"   #will be also leonardo, cassandra
-
-for mach in ${remote_mach_list} ; do
-
 #   DIR_CASES_remote=${DIR_CASES}/cases/cases_from_${mach}
 
-   listadone=`ls $DIR_ARCHIVE/*.transfer_from_${mach}_DONE|rev|cut -d '/' -f1|rev|cut -d '.' -f1`
-   n_year=0
-   for caso in $listadone 
-   do 
+listadone=`ls $DIR_ARCHIVE/*.transfer_from_*_DONE|rev|cut -d '/' -f1|rev|cut -d '.' -f1`
+n_year=0
+for caso in $listadone 
+do 
+#to prevent from checking on cases run for test with ense number greater than the requested
+      ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
+      if [[ $ens -gt 40 ]]
+      then
+         continue
+      fi
       yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
+      if [[ $yyyy -gt $endy_hind ]]
+      then
+         break
+      fi
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
       python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN 
       yyyylast=$yyyy
-   done #listofcases
-   for yyyy in {1993..2022}
-   do
+done #listofcases
+for yyyy in `seq $iniy_hind $endy_hind`
+do
       for st in {01..12}
       do
          caso=sps4_${yyyy}${st}_001
-         n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_${mach}_DONE|wc -l`
+         n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_*_DONE|wc -l`
          LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
          python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
       done 
-   done 
+done 
   
 
-done #remote_mach_list
 
 
 #now on juno
@@ -87,6 +92,12 @@ do
    cd $DIR_CASES
    for caso in $listofcases
    do
+#to prevent from checking on cases run for test with ense number greater than the requested
+      ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
+      if [[ $ens -gt 40 ]]
+      then
+         continue
+      fi
 #to avoid checking on cases run on remote and only transfered to juno 
       if [[ ! -d $DIR_CASES/$caso ]] ; then
          continue
@@ -120,10 +131,10 @@ do
          fi
        fi
    done #listofcases
-   for yyyy in {1993..2022}
+   for yyyy in `seq $iniy_hind $endy_hind`
    do
       caso=sps4_${yyyy}${st}_001
-      n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_${mach}_DONE|wc -l`
+      n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_*_DONE|wc -l`
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
       python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
    done 
