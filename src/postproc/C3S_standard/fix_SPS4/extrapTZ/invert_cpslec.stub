@@ -1,0 +1,7 @@
+C NCLFORTSTART
+       subroutine invert_cpslec (ni,nj, oro, ps, TS, psl)
+       real oro(ni,nj)      ! Surface geopotential (m**2/sec**2)
+       real psl(ni,nj)        ! Sea Level pressure (pascals)
+       real TS(ni,nj)    ! Tstar
+       real ps(ni,nj)       ! Surface pressures (pascals)
+C NCLEND

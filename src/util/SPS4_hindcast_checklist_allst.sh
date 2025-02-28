@@ -49,7 +49,7 @@ for caso in $listadone
 do 
 #to prevent from checking on cases run for test with ense number greater than the requested
       ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
-      if [[ $ens -gt 40 ]]
+      if [[ $((10#$ens)) -gt 40 ]]
       then
          continue
       fi
@@ -59,7 +59,7 @@ do
          break
       fi
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
-      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN 
+      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $nmonfore $LN 
       yyyylast=$yyyy
 done #listofcases
 for yyyy in `seq $iniy_hind $endy_hind`
@@ -68,8 +68,10 @@ do
       do
          caso=sps4_${yyyy}${st}_001
          n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_*_DONE|wc -l`
+         echo "Total number of cases completed for ${yyyy}${st} is $n_year"
          LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
-         python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
+         echo "It will be printed on line number $LN and column $(($nmonfore + 2))"
+         python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN  $n_year
       done 
 done 
   
@@ -124,7 +126,7 @@ do
       set -euvx
          if [[ -f $check_run_moredays ]]
          then
-            python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN
+            python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN
          else
             python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $ndone $LN
 
@@ -136,7 +138,9 @@ do
       caso=sps4_${yyyy}${st}_001
       n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_*_DONE|wc -l`
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"
-      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 2)) $LN  $n_year
+      n_year=`ls $DIR_ARCHIVE/*${yyyy}${st}*.transfer_from_*_DONE|wc -l`
+      echo "It will be printed on line number $LN and column $(($nmonfore + 2))"
+      python $DIR_UTIL/sostituisci_colonna_csv.py ${DIR_TEMP}/$listfiletocheck $(($nmonfore + 1)) $LN  $n_year
    done 
 done #st running
 
