@@ -52,4 +52,7 @@ if [ -d $DIR_ARCHIVE_C3S/$startdate ] ; then
             rm -fr $SCRATCHDIR/regrid_C3S/$caso
          fi
 fi # end 7)
-
+# remove flag for transfer from Leonardo
+if [ -f ${DIR_ARCHIVE}/${caso}.transfer_from_Leonardo_DONE ] ; then
+   rm ${DIR_ARCHIVE}/${caso}.transfer_from_Leonardo_DONE
+fi

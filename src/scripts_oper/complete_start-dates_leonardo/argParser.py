@@ -13,5 +13,7 @@ def argParser():
             help="year to parse for")
     parser.add_argument("-st", "--startdate",
             help="climatological start date")
+    parser.add_argument("-m", "--mode",
+            help="if 0 computes missing cases; if 1 completed ones")
     args=parser.parse_args()
     return(args)

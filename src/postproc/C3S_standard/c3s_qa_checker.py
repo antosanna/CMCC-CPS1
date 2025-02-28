@@ -72,7 +72,8 @@ from qa_checker_lib.checker_tools import (
             check_consistency_all_field_not_encoded, 
             check_2d_field, 
             check_field, 
-            check_temp_spike)
+            check_temp_spike,
+            check_temp_spike_std)
 
 from qa_checker_lib.clim_checker_tools import (
             check_minmax_interval,
@@ -295,7 +296,7 @@ def main():
                             # then I am checking DMO or similar and I have TREFMAX, ICEFRAC in the same file
                             ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, field3=DS['ICEFRAC'], max_limit1=313, delta_limit1=40, min_limit2=5, delta_limit2=60,  max_limit3=0, verbose=args.verbose, very_verbose=args.very_verbose)
 
-                        elif shortname=='tasmin' or shortname=='TREFMNAV':
+                        elif shortname=='tasmin':
                             #test 20240925 
                             #ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=173, delta_limit2=40, verbose=args.verbose, very_verbose=args.very_verbose)
                             #sicfile to be redfiend for DMO case - not implemented yet
@@ -307,7 +308,18 @@ def main():
                             DS_sic=xr.open_dataset(os.path.join(args.path,filesic), decode_times=False )
                             maskfield=DS_mask['sftlf']
                             sicfield=DS_sic['sic']
-                            list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
+                            ice_spike_list, spike_error_list = check_temp_spike_std(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], mult=3, verbose=args.verbose, very_verbose=args.very_verbose)
+                            #list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
+
+                        elif shortname=='TREFMNAV':
+                            pathmask=os.environ['MYCESMDATAROOT']+'/CMCC-CPS1/files4CPS1'
+                            filemask="sps4_LANDFRAC.nc"
+                            DS_mask = xr.open_dataset(os.path.join(pathmask,filemask), decode_times=False )
+                            maskfield=DS_mask['LANDFRAC']
+                            #icefrac in the same DMO file as TREFMNAV
+                            sicfield=DS['ICEFRAC']
+                            ice_spike_list, spike_error_list = check_temp_spike_std(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], mult=8, verbose=args.verbose, very_verbose=args.very_verbose)
+                            #list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
 
                         #elif shortname=='tas':
                         #    ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=183, delta_limit2=50, verbose=args.verbose, very_verbose=args.very_verbose)

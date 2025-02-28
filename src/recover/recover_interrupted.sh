@@ -29,13 +29,14 @@ function write_help_leonardo
   echo "     (if hindcast only st else also yyyy)"
   echo ""
   echo "CAVEAT"
-  echo "First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+  echo "---First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+  echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
   echo ""
   echo "SUBMISSION COMMAND WITH dbg=2:"
-  echo "./recover_interrupted.sh 2 $st"
+  echo "./recover_interrupted.sh 2 \$st"
   echo ""
   echo "SUBMISSION COMMAND EXAMPLE (every 30'):"
-  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0 $st"
+  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0 \$st"
 }
 #set -euxv
 function write_help
@@ -47,7 +48,8 @@ function write_help
   echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_${stmain}_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"\$dbg \$stmain\""
   echo ""
   echo "CAVEAT"
-  echo "First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+  echo "---First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
+  echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
 }
 #set -euxv
 if [[ "$1" == "-h" ]]
@@ -92,7 +94,8 @@ cd $DIR_CASES/
 
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
-listofcases="sps4_202105_005 sps4_202105_006 sps4_202105_007 sps4_202105_008 sps4_202105_009 sps4_202105_010 sps4_202105_011 sps4_202105_012 sps4_202105_013 sps4_202105_014 sps4_202105_015 sps4_202105_016 sps4_202105_017 sps4_202105_020 sps4_202105_021 sps4_202105_022 sps4_202105_023"
+#listofcases="sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200305_010 sps4_200605_016 sps4_201005_007 sps4_199605_001 sps4_199605_004 sps4_199605_014 sps4_199605_016 sps4_200105_004 sps4_200205_001 sps4_200405_023 sps4_201405_009 sps4_201505_020"
+listofcases="sps4_200305_010 sps4_201005_007 sps4_202105_013 sps4_202105_020 sps4_202105_021 sps4_202105_022 sps4_202205_027"
 
 #"sps4_200802_013 sps4_200802_021 sps4_200802_022 sps4_200802_023 sps4_200802_024 sps4_200802_025 sps4_200802_026 sps4_200802_027 sps4_200802_029 sps4_200802_030 sps4_200902_001 sps4_200902_002 sps4_200902_012 sps4_200902_018 sps4_200902_020 sps4_200902_024"  
 #"sps4_199711_018 sps4_199811_003 sps4_199811_012 sps4_200411_007 sps4_200411_015 sps4_200711_028 sps4_200811_013 sps4_201011_023 sps4_201411_025" 
@@ -159,7 +162,6 @@ fi
 #now the script runs from crontab with submitcommand.sh
 echo "SPANNING $listofcases"
 
-
 ###LIST OF CASES YOU WANT TO PROCESS or PROCESS ENTIRE START-DATE
 cd $DIR_CASES
 
@@ -186,7 +188,8 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
+lista_caso_ignored=" "
+#"sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative

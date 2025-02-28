@@ -205,7 +205,7 @@ for flgmnth in 0 ; do
 
 
      title="[diags] ${CPSSYS} ${varm} $typeofrun notifications plot"
-     body="In allegato le figure del $typeofrun ${yyyy}${st} per la variabile ${varm} (solo sul dominio globale)."
+     body="Figures from $typeofrun ${yyyy}${st} and variable ${varm} produced and available here: $dirplots/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf"
      app="${dirplots}/${varm}_${yyyy}_${st}_${flgmnth_fname}.pdf"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/${varm}_*_${yyyy}_${st}_${flgmnth_fname}_l?_DONE
@@ -216,8 +216,8 @@ for flgmnth in 0 ; do
   if [[ $varm == "sst" ]]
   then
      magick convert $list1_IOD $list2_IOD ${dirplots}/IOD_${yyyy}_${st}.pdf
-     title="[diags] ${CPSSYS} forecast notifications IOD plot"
-     body="In allegato le figure per il forecast ${yyyy}${st} di IOD index. \n \n SPS staff"
+     title="[diags] ${CPSSYS} $typeofrun notifications IOD plot"
+     body="IOD plots for $typeofrun ${yyyy}${st} produced and avaialble here ${dirplots}/IOD_${yyyy}_${st}.pdf"
      app="${dirplots}/IOD_${yyyy}_${st}.pdf"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
@@ -225,7 +225,7 @@ for flgmnth in 0 ; do
 # sst Nino
      magick convert $list1_nino $list2_nino ${dirplots}/ElNino_${yyyy}_${st}.pdf
      title="[diags] ${CPSSYS} ${typeofrun} notifications ENSO plot"
-     body="In allegato le figure per il ${typeofrun} ${yyyy}${st} di El Nino index."
+     body="El Nino indices figures for ${typeofrun} ${yyyy}${st} produced and available here ${dirplots}/ElNino_${yyyy}_${st}.pdf"
      app="${dirplots}/ElNino_${yyyy}_${st}.pdf"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
      rm ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE
@@ -243,3 +243,6 @@ do
    rclone copy $fig my_drive:SPS4_forecast/$yyyy$st/$varm
    rm $fig
 done
+title="[diags] ${CPSSYS} ${typeofrun} notifications C3S plots"
+body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory SPS4_forecast/$yyyy$st/$varm"
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun

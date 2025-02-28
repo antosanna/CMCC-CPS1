@@ -1,7 +1,7 @@
 #!/bin/sh -l
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-
+. $DIR_UTIL/descr_ensemble.sh 1993
 set -euvx
 st=$1
 LOG_FILE=$DIR_LOG/hindcast/complete_${st}_hindcast_leonardo.`date +%Y%m%d%H%M`.log
@@ -14,7 +14,7 @@ then
    exit
 fi
 
-n_run=`$DIR_UTIL/findjobs.sh -m $machine -n run.sps4 -c yes`
+n_run=`$DIR_UTIL/findjobs.sh -m $machine -n st_archive.sps4 -c yes`
 if [[ $n_run -gt $maxnumbertosubmit ]]
 then
      exit
@@ -25,7 +25,7 @@ conda activate $envcondacm3
 dbg=0
 here=$DIR_CPS/complete_start-dates_leonardo
 
-for yyyy in {1993..2022} 
+for yyyy in `seq $iniy_hind $endy_hind`
 
 #20240711
 #For november stdate, many years were run with half ensemble run 
@@ -33,10 +33,18 @@ for yyyy in {1993..2022}
 #for yyyy in 2022
 do
    cd $here
-   list_casi=`python read_csv.py sps4_hindcast_list.csv -y $yyyy -st $st `
-   echo $list_casi
+   list_casi_done=`python read_csv_done.py sps4_hindcast_list.csv -y $yyyy -st $st -m 1`
+   n_done=`echo ${list_casi_done} |wc -w`
+   if [[ $n_done -ge $nrunmax ]]
+   then
+      continue
+   else
+      n_still2run=$(($nrunmax - $n_done))
+   fi
    
+   list_casi=`python read_csv_done.py sps4_hindcast_list.csv -y $yyyy -st $st -m 0`
    cd $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/CINECA/
+   ic=0
    for caso in $list_casi
    do 
       i=`echo $caso|cut -d '_' -f3|cut -c 2-3`
@@ -51,12 +59,18 @@ do
       fi
       mkdir -p $SCRATCHDIR/cases_${st}
       ./ensemble4_${yyyy}${st}_0${i}.sh >& $SCRATCHDIR/cases_${st}/ensemble4_${yyyy}${st}_0${i}.log
+      ic=$(($ic + 1))
+      if [[ $ic -ge $n_still2run ]]
+      then
+         break
+      fi
+      
       if [[ $dbg -eq 1 ]]
       then
           exit
       fi
       sleep 10
-      n_run=`$DIR_UTIL/findjobs.sh -m $machine -n run.sps4 -c yes`
+      n_run=`$DIR_UTIL/findjobs.sh -m $machine -n st_archive.sps4 -c yes`
       if [[ $n_run -gt $maxnumbertosubmit ]]
       then
          exit

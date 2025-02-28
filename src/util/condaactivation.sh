@@ -1,7 +1,7 @@
 #!/bin/sh -l
+set +evxu
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-set +evxu
 if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then	
 condafunction() {
    local comm=$1

@@ -103,6 +103,45 @@ def check_2d_field(field, filling_value, constant_limit):
         raise FieldError('All field = not finite')
     if (difs < constant_limit):
         raise FieldError('All field = constant')
+def check_temp_spike_std(maskfield,sicfield,varn,shortn,timen,lab_std, lab_mem, error_list, field1,mult=3,verbose=False, very_verbose=False):
+    mask=maskfield.data
+    sic=sicfield.data
+    point_list=[]
+    spk_pos=None
+    
+    # compute delta T
+    data1=field1.data
+    data_lowperc=np.min(data1,axis=0) #np.percentile(data1,1,axis=0)
+    data_upperc=np.max(data1,axis=0)  #np.percentile(data1,99,axis=0)
+    data4stdev=np.where(np.logical_or(data1<data_upperc[None,:,:],data1>data_lowperc[None,:,:]),data1,np.nan)
+    std_dev=np.nanstd(data4stdev,axis=0)
+    
+    delta1 = np.zeros_like(data1)
+    #the difference t(i+1)-t(i) is assigned to delta1 at t(i+1)
+    delta1[1:len(delta1)]=data1[1:len(data1)]-data1[0:-1]
+    delta1[0]=data1[1]-data1[0]
+
+    spk_pos = np.transpose(np.nonzero((delta1 > mult*std_dev)))
+    if len(spk_pos[:,1]) > 0:
+          point_list=["std_dev test: DT>"+str(mult)+"*std_dev\n"+str(lab_std)+";"+str(lab_mem) +";"+str(len(list(spk_pos)))+";\n"+
+                    "Time;Lat:Lon;Tmin;ddelta1;stdev;mask;sic"+"\n"  ]
+          point_list.append([
+                    str(spk_pos[i,0])+";"+str(spk_pos[i,1])+";"+str(spk_pos[i,2])+";"+
+                    str(data1[spk_pos[i,0]-1,spk_pos[i,1],spk_pos[i,2]])+";"+
+                    str(delta1[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
+                    str(std_dev[spk_pos[i,1],spk_pos[i,2]])+";"+
+                    str(mask[spk_pos[i,1],spk_pos[i,2]])+";"+
+                    str(sic[spk_pos[i,0],spk_pos[i,1],spk_pos[i,2]])+";"+
+                    "\n" for i in range(len(spk_pos[:,1]))])
+    try:
+        if len(list(spk_pos)) == 0:
+            print('no spikes found')
+    except FieldError as e:
+        error_list=print_error(error_message=e, error_list=error_list, loc1=[shortn, varn])
+    finally:
+        #return point_list_c1,point_list_c2,point_list_c1andc2,point_list_noc3,point_list, error_list
+        return point_list, error_list
+
 
 def check_temp_spike(maskfield,sicfield,varn,shortn,timen,lab_std, lab_mem, error_list, field1, min_limit1=183, delta_limit1=50, delta_limit2=30,verbose=False, very_verbose=False):
     """
