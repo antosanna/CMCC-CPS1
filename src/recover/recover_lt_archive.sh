@@ -58,7 +58,8 @@ do
   #this is needed to remove the dependency from model run
   if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
   then
-     cmd_nodep="$(echo "${cmd/"-ti -w 'done(2)'"/}")"
+     #cmd_nodep="$(echo "${cmd/"-ti -w 'done(2)'"/}")"
+     cmd_nodep="$(echo "${cmd/"-w 'done(2)'"/}")"
   elif [[ $machine == "leonardo" ]]  
   then
      cmd_nodep="$(echo "${cmd/"--dependency=afterok:2"/}")"  #--dependency=afterok:2

@@ -144,7 +144,7 @@ flist=`ls -1 cmcc_sic_${yyyy}${st}_0??_${seas}_daily.nc |head -$nrunC3Sfore`
 for ff in $flist 
 do
     pp=`echo $ff | cut -d '.' -f1 |cut -d '_' -f4`
-    export outfile=$outdircon/cmcc_${pp}_concentration.nc
+    export outfile=$outdircon/cmcc_${pp}_${yyyy}${st}01_${yyyyp1}0228_concentration.nc
     if [ -f $outfile ]
     then
        continue

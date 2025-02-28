@@ -4,6 +4,7 @@ def somma_colonne(file_input, file_output):
     with open(file_input, 'r') as file_in:
         reader = csv.reader(file_in)
         data = list(reader)
+    print(len(data[0]))
 
     # Inizializza una lista vuota per contenere le somme delle colonne
     sum_columns = [0] * (len(data[0]) - 1)
