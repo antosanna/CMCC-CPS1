@@ -101,21 +101,9 @@ fi
 
 export checkfile=${check_regridC3S_type}_${type}_DONE
 
-if [[ -f $checkfile ]]
+if [[ -f $checkfile ]] && [[ $inputFV -nt $checkfile ]]
 then
-   if [[ $inputFV -nt $checkfile ]]
-   then
-      if [[ $dbg -eq 0 ]]
-      then
-# in operational mode rm to recompute
-         rm $checkfile
-      else
-# otherwise just send informative email
-         body="$inputFV newer than $checkfile"
-         title="[C3S] ${CPSSYS} forecast warning "
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-      fi
-   fi    
+    rm $checkfile
 fi    
 # if check file does not exist run the ncl script
 if [ ! -f ${checkfile} ] 
