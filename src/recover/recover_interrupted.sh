@@ -95,7 +95,7 @@ cd $DIR_CASES/
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
 #listofcases="sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200305_010 sps4_200605_016 sps4_201005_007 sps4_199605_001 sps4_199605_004 sps4_199605_014 sps4_199605_016 sps4_200105_004 sps4_200205_001 sps4_200405_023 sps4_201405_009 sps4_201505_020"
-listofcases="sps4_200305_010 sps4_201005_007 sps4_202105_013 sps4_202105_020 sps4_202105_021 sps4_202105_022 sps4_202205_027"
+listofcases="sps4_200005_018"
 
 #"sps4_200802_013 sps4_200802_021 sps4_200802_022 sps4_200802_023 sps4_200802_024 sps4_200802_025 sps4_200802_026 sps4_200802_027 sps4_200802_029 sps4_200802_030 sps4_200902_001 sps4_200902_002 sps4_200902_012 sps4_200902_018 sps4_200902_020 sps4_200902_024"  
 #"sps4_199711_018 sps4_199811_003 sps4_199811_012 sps4_200411_007 sps4_200411_015 sps4_200711_028 sps4_200811_013 sps4_201011_023 sps4_201411_025" 
@@ -384,19 +384,20 @@ then
 fi
 
 
-echo "starting conversion with python on CMCC machines (NOT YET IMPLEMENTED ON Leonardo) "`date`
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-#   set -euvx
-set -eux
-python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-rclone copy ${filexls} my_drive:recover
-set +euvx
-condafunction deactivate $envcondarclone
-#   set -euvx
-set -eux
-echo "end of conversion with python on CMCC machines "`date`
+if [[ $dbg -eq 2 ]]
+then
+echo "starting conversion to xls and copy with rclone to google drive "`date`
+   set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondarclone
+   set -eux
+   python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+   rclone copy ${filexls} my_drive:recover
+   set +euvx
+   condafunction deactivate $envcondarclone
+   set -eux
+   echo "end of conversion to xls and copy with rclone to google drive "`date`
+fi
 
 if [[ $dbg -eq 2 ]]
 then
