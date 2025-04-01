@@ -1,7 +1,0 @@
-First run
-monPS2vertextrap_forecast.sh
-to compute the monthly mean PS for each start-date
-
-Then launch
-submit_masksPS2vertextrap_forecast.sh
-to compute the masks needed for the vertical extrapolation

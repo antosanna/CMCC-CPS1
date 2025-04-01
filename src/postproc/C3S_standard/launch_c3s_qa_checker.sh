@@ -134,7 +134,7 @@ if [ $ncnumber -ne $filetobechecked ]; then
     		
     title="SPS4 FORECAST ERROR - QA CHECKER"   
     body="Something probably went wrong with check of member ${SPSSystem}_${startdate}_${ens}. Uncorrect number of netcdf files, ncnumber should be $filetobechecked but is $ncnumber."
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
     exit 1
 fi
 
@@ -306,7 +306,7 @@ while `true` ; do
         echo "Something probably went wrong with checker. Check in logs for missing NSDONE_ files production."
         title="SPS4 FORECAST ERROR - QA CHECKER"	
         body="Something probably went wrong with checker of member ${SPSSystem}_${startdate}_${ens}. Check in logs for NSDONE_ files production."
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
         exit 1
     fi
 
@@ -372,7 +372,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
         # send mail
         body+="\n This piece of information may be found on the WARNING REPORT $warningreport."
         body+="\n For further information, use the checker with the option --verbose." 
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
 
     fi
 
@@ -396,13 +396,13 @@ if [ $cnt_files -ge $filetobechecked ]; then
             errormsg=`grep -Ril ERROR\] *.txt`
             title="${CPSSYS} FORECAST ERROR - QA CHECKER"         	
             body="For member  ${SPSSystem}_${startdate}_${ens} errors on $cnterror files have been found on the $cnt_files C3S standardized files checked. \n Please check the output log in $wdir/output. \n Here you may found the list of error: \n  ${errormsg} \n For further information, use the checker with the --verbose option active."
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
        fi
        if [[ $cntspike -ne 0 ]] ;then
            spikelog_file=`ls list_spikes_on_ice*txt`
            title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S "          
            body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spikelog_file}." 
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
        fi 
        touch $check_c3s_qa_err
        exit

@@ -13,11 +13,6 @@ LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 st=$1  #stdate as input
-if [[ $st == "05" ]]
-then
-   echo "This is a special case and must be handled through launch_postproc_C3S_offline_May.sh"
-   exit
-fi 
 
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab
@@ -47,7 +42,7 @@ do
         flag=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE`
         mach=`echo $flag |rev |cut -d '_' -f2|rev`
         echo "$caso is a remote case run on $mach"
-        dir_cases=/work/cmcc/$USER/CPS/CMCC-CPS1/cases_from_${mach}
+        dir_cases=$ROOT_CASES_WORK/cases_from_${mach}
         mkdir -p ${dir_cases}
     elif [[ ${isremote} -gt 1 ]] 
     then
@@ -75,7 +70,7 @@ do
     fi  
 
     mkdir -p $DIR_LOG/hindcast/C3S_postproc
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "$caso ${dir_cases}"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "$caso ${dir_cases}"
 
 
     if [[ $dbg -eq 1 ]]

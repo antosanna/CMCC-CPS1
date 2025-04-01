@@ -11,7 +11,9 @@ set +uevx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 if [[ -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_and_push_${yyyy}${st}_started ]] ; then
-   echo "submit_tar_and_push.sh ALREADY SUBMITTED!"
+   title="${CPSSYS} forecast warning"
+   body="submit_tar_and_push.sh ALREADY RUNNING!"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit
 fi
 touch ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_and_push_${yyyy}${st}_started

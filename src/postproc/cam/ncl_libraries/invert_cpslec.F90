@@ -1,3 +1,4 @@
+!module load gcc-12.2.0/12.2.0
 !compile WRAPIT invert_cpslec.stub invert_cpslec.F90
 subroutine invert_cpslec (ni,nj, oro, ps, TS, psl)
 
@@ -29,7 +30,7 @@ real :: ps(ni,nj)       ! Surface pressures (pascals)
 !-----------------------------------------------------------------------
 
 !-----------------------------Parameters--------------------------------
-real :: xlapse = 6.5e-3_r8   ! Temperature lapse rate (K/m)
+real :: xlapse    ! Temperature lapse rate (K/m)
 real :: gravit           ! Gravitational acceleration
 real :: rair             ! gas constant for dry air
 !-----------------------------------------------------------------------
@@ -43,31 +44,34 @@ real alph          ! Power to raise P/Ps to get rate of increase of T with press
 real beta          ! alpha*oro/(R*T) term used in approximation of PSL
 !-----------------------------------------------------------------------
 !
+rair=1.38065e-23*6.02214e26/28.966
+xlapse = 6.5e-3   ! Temperature lapse rate (K/m)
+gravit=9.80616
 phis=oro*gravit
 alpha = rair*xlapse/gravit
 do j=1,nj
      do i=1,ni
-        if ( abs(oro(i,j)) < 1.e-4_r8 )then
+        if ( abs(oro(i,j)) .lt. 1.e-4 )then
            ps(i,j)=psl(i,j)
         else
            Tstar=TS(i,j)
 
            TT0=Tstar + xlapse*oro(i,j)                  ! pg 8 eq 13
 
-           if ( Tstar<=290.5_r8 .and. TT0>290.5_r8 ) then           ! pg 8 eq 14.1
-              alph=rair/phis(i,j)*(290.5_r8-Tstar)  
-           else if (Tstar>290.5_r8  .and. TT0>290.5_r8) then        ! pg 8 eq 14.2
-              alph=0._r8
-              Tstar= 0.5_r8 * (290.5_r8 + Tstar)  
+           if ( Tstar.le.290.5 .and. TT0.gt.290.5 ) then           ! pg 8 eq 14.1
+              alph=rair/phis(i,j)*(290.5-Tstar)  
+           else if (Tstar.gt.290.5  .and. TT0.gt.290.5) then        ! pg 8 eq 14.2
+              alph=0.
+              Tstar= 0.5 * (290.5 + Tstar)  
            else  
               alph=alpha  
-              if (Tstar<255._r8) then  
-                 Tstar= 0.5_r8 * (255._r8 + Tstar)                  ! pg 8 eq 14.3
-              endif
-           endif
+              if (Tstar.lt.255.) then  
+                 Tstar= 0.5 * (255. + Tstar)                  ! pg 8 eq 14.3
+              end if
+           end if
 
            beta = phis(i,j)/(rair*Tstar)
-           ps(i,j)=psl(i,j)/exp( beta*(1._r8-alph*beta/2._r8+((alph*beta)**2)/3._r8))
+           ps(i,j)=psl(i,j)/exp( beta*(1.-alph*beta/2.+((alph*beta)**2)/3.))
         end if
      enddo
 enddo

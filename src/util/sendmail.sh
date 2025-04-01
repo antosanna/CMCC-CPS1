@@ -2,9 +2,9 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>] [-E <member number OPTIONAL]" 1>&2; exit 1; }
 
-while getopts ":m:e:M:t:c:a:b:r:s:" o; do
+while getopts ":m:e:M:t:c:a:b:r:s:E:" o; do
     case "${o}" in
         m)
             machine=${OPTARG}
@@ -20,6 +20,9 @@ while getopts ":m:e:M:t:c:a:b:r:s:" o; do
             ;;
         s)
             startdate=${OPTARG}
+            ;;
+        E)
+            ensemble=${OPTARG}
             ;;
         c)
             cc=${OPTARG}
@@ -65,14 +68,21 @@ fi
 message=${message//'\n'/<br>}
 if [ ! -z $report ]
 then
-      runtype=$report
-      mkdir -p ${DIR_LOG}/report/$runtype
-      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
+   if [ ! -z $startdate ]
+   then
+      outlog=${DIR_LOG}/report/$startdate/report_${machine}.${SPSSystem}_${startdate}
+      if [ ! -z $ensemble ]
+      then
+         outlog=${DIR_LOG}/report/$startdate/report_${machine}.${SPSSystem}_${startdate}_${ensemble}
+      fi
+      mkdir -p ${DIR_LOG}/report/$startdate
+      echo "${message} `date`" >> ${outlog}.`date +%Y%m%d`.txt
+      echo " " >> ${outlog}.`date +%Y%m%d`.txt
       if [ "$report" = "only" ]
       then
          exit
       fi
+   fi
 fi
 
 if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]

@@ -5,7 +5,7 @@
 set -euvx
 
 
-st=12
+st=05
 LOG_FILE=$DIR_LOG/hindcast/clean4C3S_${st}_`date +%Y%m%d%H%M`.log
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
@@ -16,6 +16,11 @@ cnt=0
 for dd in $listacasi ; do
    caso=`basename $dd` 
    echo $caso
+# remove temporary directory for spike "treatment"
+   if [[ -d $HEALED_DIR_ROOT/$caso ]]
+   then
+      rm -rf $HEALED_DIR_ROOT/$caso
+   fi
 #   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
    yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
    member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
@@ -24,6 +29,22 @@ for dd in $listacasi ; do
 
    #sps4_201312_023.transfer_from_Leonardo_DONE
    flag_from_remote=`ls $DIR_ARCHIVE/${caso}.transfer_from_*_DONE |wc -l`
+   if [[ -f $DIR_ARCHIVE/${caso}.transfer_from_Leonardo_DONE ]]
+   then
+# define a working DIR_CASES for logs
+       DIR_CASES=$ROOT_CASES_WORK/cases_from_Leonardo
+   fi
+# flag for isobaric level extrapolation
+   if [[ -f $DIR_CASES/$caso/logs/extrapT_SPS4_${caso}_DONE ]]
+   then
+      rm $DIR_CASES/$caso/logs/extrapT_SPS4_${caso}_DONE 
+   fi
+# flag for spike treatment
+   if [[ -f $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE ]]
+   then
+      rm $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE 
+   fi
+   
    if [[ -f $DIR_CASES/$caso/logs/run_moredays_${caso}_DONE ]] || [[ ${flag_from_remote} -eq 1 ]] ; then
          if [[ -f $DIR_TEMP/C3S_postproc_offline_$caso ]] ; then
             echo "cleaning $DIR_TEMP/C3S_postproc_offline_$caso"

@@ -148,7 +148,7 @@ if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
 then
     body="C3S: $DIR_C3S/tar_and_push.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
     title="[C3S] ${CPSSYS} $typeofrun ERROR"
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date 
     exit 2
 fi
 #

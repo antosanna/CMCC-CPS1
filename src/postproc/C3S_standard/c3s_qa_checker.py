@@ -71,9 +71,9 @@ from qa_checker_lib.checker_tools import (
             check_tsd_34dfield,
             check_consistency_all_field_not_encoded, 
             check_2d_field, 
-            check_field, 
-            check_temp_spike,
-            check_temp_spike_std)
+            check_field) 
+from qa_checker_lib.checker_tools_onlyspike import (
+            check_temp_spike)
 
 from qa_checker_lib.clim_checker_tools import (
             check_minmax_interval,
@@ -141,6 +141,7 @@ def main():
             tsd_checked_vars   = json_table["checks"]["tsd_checked_vars"]
             spike_checked_vars = json_table["checks"]["spike_checked_vars"]
             clim_checked_vars  = json_table["checks"]["clim_checked_vars"]
+            
     except:
         raise InputError("Cannot read json file or its content")
         if args.verbose:
@@ -210,7 +211,7 @@ def main():
                 if v is not None and (v not in excluded_vars) and ((v in C3Svars) or (v in DMOvars)):
                     # Initialize error list variables for each variable in file
                     error_in_var=False
-                    list_only_c1=[];list_only_c2=[];list_c1_c2=[];ice_spike_list=[]; spike_error_list=[]
+                    ice_spike_list=[]; spike_error_list=[]
                     output_list=[]; consistency_list=[]; generallist=[]; 
                     climlist=[]; table_values=[]; table_header=[]
                     # TODO REMOVE ALL climlist2 
@@ -250,20 +251,25 @@ def main():
                     print(lab_mem)
               
                     # set flags for var min/max/time sd that must be checked
-                    check_min   = False #var_in_list(v, min_checked_vars)
-                    check_max   = False #var_in_list(v, max_checked_vars)
-                    check_tsd   = False #var_in_list(v, tsd_checked_vars)
+                    check_min   = var_in_list(v, min_checked_vars)
+                    check_max   = var_in_list(v, max_checked_vars)
+                    check_tsd   = var_in_list(v, tsd_checked_vars)
                     check_spike = var_in_list(v, spike_checked_vars)
                     print(spike_checked_vars)
-                    check_clim  = False #var_in_list(v,clim_checked_vars)
+                    check_clim  = var_in_list(v,clim_checked_vars)
                     # get min/max limits for var
                     minlim = min_checked_vars[shortname] if (check_min) else None
                     maxlim = max_checked_vars[shortname] if (check_max) else None
                     #get level for climatological check
                     lev4check=clim_checked_vars[shortname][0]  if(check_clim) else None
                     tolerance=clim_checked_vars[shortname][1]  if(check_clim) else None
-                    
-
+                    only_spike=args.only_spike
+                    if only_spike:
+                       check_min=False
+                       check_max=False
+                       check_tsd=False
+                       check_clim=False    
+                
                     # get fill_value or default
                     var_ismasked   = var_in_list(v, masked_vars)
                     if var_ismasked:
@@ -285,45 +291,10 @@ def main():
                     # Spike check
                     if check_spike:
                         if args.verbose:
-                            print('[INFO] Performing spike diagnostic')
+                            print('[INFO] Performing spike diagnostic with threshold d1='+str(args.delta1)+' and d2='+str(args.delta2))
 
-                        if shortname=='TREFHT':
-                            # then I am checking DMO and I have TREF, QREF and ICEFRAC in the same file
-                            #check_temp_spike(args.logdir, lab_std, lab_mem,field1=DS[args.var], field2=DS['RHREFHT'], field3=DS['ICEFRAC'], max_limit1=323, delta_limit1=30,  min_limit2=5, delta_limit2=60,max_limit3=0) # includes also the check on humidity
-                            ice_spike_list, spike_error_list= check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, field3=DS['ICEFRAC'], max_limit1=313, delta_limit1=30,  min_limit2=5, delta_limit2=60,max_limit3=0,verbose=args.verbose, very_verbose=args.very_verbose)
-
-                        elif shortname=='TREFMXAV' or shortname=='TREFHTMX':
-                            # then I am checking DMO or similar and I have TREFMAX, ICEFRAC in the same file
-                            ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, field3=DS['ICEFRAC'], max_limit1=313, delta_limit1=40, min_limit2=5, delta_limit2=60,  max_limit3=0, verbose=args.verbose, very_verbose=args.very_verbose)
-
-                        elif shortname=='tasmin':
-                            #test 20240925 
-                            #ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=173, delta_limit2=40, verbose=args.verbose, very_verbose=args.very_verbose)
-                            #sicfile to be redfiend for DMO case - not implemented yet
-                            filesic="cmcc_CMCC-CM3-v20231101_"+lab_tmp[2]+"_S"+lab_std+"0100_seaIce_day_surface_sic_r"+lab_mem+"i00p00.nc"
-                            filemask="cmcc_CMCC-CM3-v20231101_"+lab_tmp[2]+"_S"+lab_std+"0100_atmos_fix_surface_sftlf_r"+lab_mem+"i00p00.nc"
-                            #filesic="cmcc_CMCC-CM3-v20231101_hindcast_S"+lab_std+"0100_seaIce_day_surface_sic_r"+lab_mem+"i00p00.nc"
-                            #filemask="cmcc_CMCC-CM3-v20231101_hindcast_S"+lab_std+"0100_atmos_fix_surface_sftlf_r"+lab_mem+"i00p00.nc"
-                            DS_mask = xr.open_dataset(os.path.join(args.path,filemask), decode_times=False )
-                            DS_sic=xr.open_dataset(os.path.join(args.path,filesic), decode_times=False )
-                            maskfield=DS_mask['sftlf']
-                            sicfield=DS_sic['sic']
-                            ice_spike_list, spike_error_list = check_temp_spike_std(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], mult=3, verbose=args.verbose, very_verbose=args.very_verbose)
-                            #list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
-
-                        elif shortname=='TREFMNAV':
-                            pathmask=os.environ['MYCESMDATAROOT']+'/CMCC-CPS1/files4CPS1'
-                            filemask="sps4_LANDFRAC.nc"
-                            DS_mask = xr.open_dataset(os.path.join(pathmask,filemask), decode_times=False )
-                            maskfield=DS_mask['LANDFRAC']
-                            #icefrac in the same DMO file as TREFMNAV
-                            sicfield=DS['ICEFRAC']
-                            ice_spike_list, spike_error_list = check_temp_spike_std(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], mult=8, verbose=args.verbose, very_verbose=args.very_verbose)
-                            #list_only_c1,list_only_c2,list_c1_c2,ice_spike_list, spike_error_list = check_temp_spike(maskfield,sicfield,varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=-35,delta_limit2=25, verbose=args.verbose, very_verbose=args.very_verbose)
-
-                        #elif shortname=='tas':
-                        #    ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename,lab_std, lab_mem, spike_error_list, field1=DS[v], field2=None, min_limit1=183, delta_limit1=40,  min_limit2=183, delta_limit2=50, verbose=args.verbose, very_verbose=args.very_verbose)
-
+                        if shortname=='TREFMNAV' or shortname=='tasmin':
+                           ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
                         else:
                             raise InputError('Spike check in this variable has not been implemented')
 
@@ -526,18 +497,8 @@ def main():
                 write_log(logname, files[f], file_output_list, args.verbose, args.very_verbose)
                 if args.verbose:
                     print('[INFO] Log file written: '+logname)
-#list_only_c1,list_c1_c2
-            if list_only_c1:
-                logname=os.path.join(args.logdir,"list_only_c1"+exp+real+file_suffix+".txt")
-                write_log(logname, files[f], list_only_c1, args.verbose, args.very_verbose)
-            if list_only_c2:
-                logname=os.path.join(args.logdir,"list_only_c2"+exp+real+file_suffix+".txt")
-                write_log(logname, files[f], list_only_c2, args.verbose, args.very_verbose)
-            if list_c1_c2:
-                logname=os.path.join(args.logdir,"list_c1_c2"+exp+real+file_suffix+".txt")
-                write_log(logname, files[f],list_c1_c2, args.verbose, args.very_verbose)
             if ice_spike_list:
-                logname=os.path.join(args.logdir,"list_spikes_on_ice"+exp+real+file_suffix+".txt")
+                logname=os.path.join(args.logdir,"list_spikes"+exp+real+file_suffix+".txt")
                 write_log(logname, files[f], ice_spike_list, args.verbose, args.very_verbose)
                 if args.verbose:
                     print('[INFO] Log file written: '+logname)

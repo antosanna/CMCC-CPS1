@@ -34,9 +34,9 @@ then
    ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
 else
 
-#"$ppp $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
+#"$ens $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
    CLM_OUTPUT_FV=$1
-   ppp=$2
+   ens=$2
    startdate=$3
    outdirC3S=$4  # where python write finalstandardized  output 
    caso=$5
@@ -49,7 +49,7 @@ fi
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
-pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
+pp=`echo $ens | cut -c2-3` # two digits member ie 001 -> 01
 
 #**********************************************************
 # Load vars depending on hindcast/forecast
@@ -147,7 +147,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ppp $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # intermidiate product
@@ -156,7 +156,7 @@ then
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
       exit 1
    fi  
    
@@ -172,7 +172,7 @@ else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postpcclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
    
 fi
 

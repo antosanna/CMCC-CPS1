@@ -88,7 +88,7 @@ else
      title="[C3S] ${CPSSYS} forecast ERROR"
      body="ERROR in standardization of CICE files for case CASO. 
            Script is ${DIR_POST}/cice/$scriptname"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
      exit
    else
      rm $inputfile

@@ -3,6 +3,7 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
+. ${DIR_UTIL}/load_nco
 set -evxu
 
 caso=EXPNAME
@@ -21,6 +22,8 @@ startdate=$yyyy$st
 ens=`echo $caso|cut -d '_' -f 3 `
 member=`echo $ens|cut -c2,3` 
 
+HEALED_DIR=$HEALED_DIR_ROOT/$caso
+#HEALED_DIR_ROOT=/work/cmcc/cp1/CPS/CMCC-CPS1/fixed_from_spikes/
 # SECTION FORECAST TO BE TESTED
 set +euvx
 . $dictionary
@@ -63,7 +66,7 @@ mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
     #logdir as input to manage remote vs local cases (online vs offline postproc)
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$DIR_CASES/$caso/logs"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$DIR_CASES/$caso/logs"
 
 fi
 # get   check_iceregrid from dictionary
@@ -95,7 +98,7 @@ then
       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
       if [[ ! -f $finalfile_clm ]]
       then
-            input="$caso $ft $yyyy $st ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
+            input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
             # ADD the reservation for serial !!!
             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
 
@@ -110,15 +113,6 @@ then
            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -S qos_resv -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
       fi
     done 
-    while `true`
-    do
-       if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 2 ]]
-       then
-          touch ${check_all_postclm}
-          break
-       fi  
-       sleep 60
-    done   
  
 fi
 
@@ -133,42 +127,78 @@ mkdir -p ${wkdir_cam}
 #get check_all_camC3S_done from dictionary
 if [[ ! -f $check_all_camC3S_done ]]
 then
+
    filetyp="h0 h1 h2 h3"
    for ft in $filetyp
-   do
-      case $ft in
-          h0)req_mem=500;;
-          h1)req_mem=9000;;
-          h2)req_mem=4000;;
-          h3)req_mem=1500;;
-      esac
+   do  
    #get check_regridC3S_type from dictionary
       if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
       then
-   # meaning that preproc files have been done by create_cam_files.sh
-   # and regridded by regridFV_C3S.sh
+#   # meaning that preproc files have been done by create_cam_files.sh
+#   # and regridded by regridFV_C3S.sh
          continue
       fi
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       if [[ ! -f $finalfile ]]
       then
-         input="$caso $ft $yyyy $st $member ${wkdir_cam} $finalfile $ic" 
+         input="$caso $ft ${wkdir_cam} $finalfile $ic"
              # ADD the reservation for serial !!!
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
-             # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M ${req_mem} -p create_cam_files_${ft}_${caso} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
-      else
-   # meaning that preproc files have been done by create_cam_files.sh
-   # so submit without dependency
-         input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
-             # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
       fi
-            
    done
-   
-   # now wait that all of the ft files have been regridded
+   while [[ ! -f ${check_merge_cam_files}_h1 ]] || [[ ! -f ${check_merge_cam_files}_h2 ]] || [[ ! -f ${check_merge_cam_files}_h3 ]]
+   do
+      sleep 600
+   done
+             #now fix for spikes on $HEALED_DIR
+             # we want to archive the DMO with spikes
+             # this is an iterative procedure that might requires a few cycles (up to 3 I guess)
+   input="$caso $HEALED_DIR"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 19000 -p create_cam_files_h3_${caso} -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st -E $ens
+   while [[ ! -f $HEALED_DIR/${caso}.cam.h1.DONE ]] || [[ ! -f $HEALED_DIR/${caso}.cam.h2.DONE ]] || [[ ! -f $HEALED_DIR/${caso}.cam.h3.DONE ]]
+   do
+      sleep 600
+   done
+   ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR
+# TREATMENT COMPLETED
+   touch $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE
+# h2 is the file requiring more time to be postprocessed
+   for ft in h0 h1 h3 h2
+   do
+
+      case $ft in
+          h1)req_mem=9000;;
+          h2)req_mem=4000;;
+          h3)req_mem=1500;;
+      esac
+      finalfile=$HEALED_DIR/$caso.cam.$ft.$yyyy-$st.zip.nc
+      if [[ $ft == "h0" ]]
+      then
+          finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+      fi
+# $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
+      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
+             # ADD the reservation for serial !!!
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+
+   done
+#  now apply fix for isobaric level T on ft=h2 
+   WKDIR=$SCRATCHDIR/extrapT/${caso}
+   mkdir -p $WKDIR
+   checkfileextrap=$DIR_CASES/$caso/logs/${yyyy}${st}_extrapT_DONE
+   inputextrap="$caso $checkfileextrap $WKDIR"
+   req_mem=8000
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st -E $ens
+   while `true`
+   do
+      if [[ -f ${checkfileextrap} ]]
+      then
+         break
+      fi
+      sleep 120
+   done
    while `true`
    do
       if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
@@ -178,7 +208,19 @@ then
       fi
       sleep 60
    done
+
 fi # if on $check_all_camC3S_done 
+
+while `true`
+do
+    if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 2 ]]
+    then
+       touch ${check_all_postclm}
+       break
+    fi  
+    sleep 60
+done   
+
 while `true`
 do
    if [[ -f $check_all_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
@@ -200,12 +242,12 @@ else
    then
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the case $caso does not contain SOLIN. Must be created"
       title="[CPS1] ERROR! postproc_C3S.sh exiting before no SOLIN in $caso"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -E $ens
       exit 2
    else
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the number of postprocessed files is $allC3S instead of required $nfieldsC3S"
       title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -E $ens
       exit 1
    fi
 fi
@@ -296,6 +338,16 @@ do
       rm -rf $SCRATCHDIR/regrid_C3S/$caso/$realm/*nc
    fi  
 done
+#
+if [[ -d $SCRATCHDIR/extrapT/${caso} ]]
+then
+   rm -rf $SCRATCHDIR/extrapT/${caso}
+fi
+if [[ -d $HEALED_DIR ]]
+then
+   rm -rf $HEALED_DIR 
+fi
+
 
 echo "Done."
 

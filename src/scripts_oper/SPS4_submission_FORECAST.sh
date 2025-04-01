@@ -22,6 +22,9 @@ then
    if [[ $cnt_this_script_running -gt 2 ]]
    then
       echo "already running"
+      title="[${CPSSYS} WARNING] script SPS4_submission_FORECAST.sh exited!"
+      body="SPS4_submission_FORECAST.sh already running exited"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       exit
    else
       lastlog=`ls -rt $SCRATCHDIR/cases_${st}/${header}_${yyyy}${st}*log|tail -1`
@@ -34,7 +37,7 @@ then
          title="[${CPSSYS} WARNING] case ${SPSSystem}_${yyyy}${st}_${ens_aborted} not submitted due to srun issues"
 
          body="${SPSSystem}_${yyyy}${st}_${ens_aborted} cleaned and going to be resubmitted"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       fi
    fi
 else
@@ -51,10 +54,13 @@ else
 # it often occurs that if a job is in unknown status others too are in the same.
          title="WARNING!!! FORECAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
          body="Check if other jobs are in unknown status too!!"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       else
 # otherwise exit
          echo "there is one SPS4_submission_FORECAST already running! Exiting now!"
+         title="[${CPSSYS} WARNING] script SPS4_submission_FORECAST.sh exited!"
+         body="SPS4_submission_FORECAST.sh already running exited"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
          exit
       fi
    fi
@@ -314,7 +320,7 @@ then
    exit
 fi
 title="NEW FORECAST JOBS SUBMITTED on $machine"
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 
 
 exit 0

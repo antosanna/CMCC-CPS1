@@ -65,5 +65,7 @@ for caso in $lista ; do
    fi
 
 done
-echo $lista_today_2 > $DIR_TEMP/list2_cases_transferred_`date +%Y%m%d`.txt
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $DIR_TEMP/list2_cases_transferred_`date +%Y%m%d`.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/
+idjob=`$DIR_UTIL/findjobs.sh -n copy_SPS4DMO_from_Leonardo2 -i yes`
+logfile=$DIR_TEMP/list2_cases_transferred_`date +%Y%m%d`.$idjob.txt
+echo $lista_today_2 > $logfile
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $logfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/

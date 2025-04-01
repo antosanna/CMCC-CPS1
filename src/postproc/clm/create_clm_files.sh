@@ -11,14 +11,15 @@ set -evxu
 
 caso=$1
 ft=$2
+wkdir_clm=$3
+finalfile=$4
+checkfile=$5
+ic=$6
+mult=$7
 
-yyyy=$3
-st=$4
-wkdir_clm=$5
-finalfile=$6
-checkfile=$7
-ic=$8
-mult=$9
+st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
+yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
+ens=`echo $caso|cut -d '_' -f 3 `
 set +evxu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -evxu
@@ -51,7 +52,7 @@ then
       then
           body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.$yyyy-$st.zip.nc , ne to $expected_ts but is $nt. Exit "
           title="${CPSSYS} forecast notification - ERROR "
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
           exit 1
       elif [ $nt -gt $expected_ts  ]
       then

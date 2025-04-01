@@ -47,7 +47,7 @@ then
 fi
 if [ $dbg_push -eq 1 ]
 then
-      cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.bologna << EOF
+      cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
@@ -55,17 +55,17 @@ open -p 21322 -u gpc_bologna,gpcbologna@! sftp://210.98.49.66
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
 quit
 EOF
-      chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.bologna
-      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.bologna
+      chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
+      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       stat=$?
       if [ $stat -eq 1 ]; then
-         echo "error on  attempt send.lftp.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
+         echo "error on  attempt send.lftp.wmo.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
          exit 1
       fi        
 else
     if [ ! -f $first ]
     then
-       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp << EOF
+       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
@@ -76,7 +76,7 @@ mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR/
 quit
 EOF
     else
-       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp << EOF
+       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
@@ -86,11 +86,11 @@ mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR/
 quit
 EOF
     fi
-      chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp
-      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp
+      chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo
+      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo
       stat=$?
       if [ $stat -eq 1 ]; then
-         echo "error on  attempt send.lftp ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
+         echo "error on  attempt send.lftp.wmo ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
          exit 1
       fi         
 fi
@@ -124,10 +124,10 @@ if [ $ntarandsha -eq 1 ]
 then 
    if [ $dbg_push -eq 1 ]
    then
-      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.bologna
+      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.bologna |tee $DIR_LOG/${type_fore}/$yyyy$st/ls_WMO_S${yyyy}$st.log
    else
-      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp
+      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp |tee $DIR_LOG/${type_fore}/$yyyy$st/ls_WMO_S${yyyy}$st.log
    fi
    echo "sending manifest ${yyyy}$st"|mail -s "[WMO] ${SPSSYS} ${type_fore} notification" $mymail

@@ -85,7 +85,7 @@ then
              echo "NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file."
              body="NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file. Exiting now. When at least one member in $outdirC3S will have completed SOLIN postproc, delete $DIR_TEMP/C3S_postproc_offline_${caso} to allow automatic resubmission. "
              title="[C3S] ${CPSSYS} forecast warning "
-             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
              if [[ -f ${DIR_TEMP}/C3S_postproc_offline_${caso} ]] 
              then
                   #kill the launcher to allow for new submission
@@ -121,7 +121,7 @@ else
    touch ${check_regridC3S_type}_${type}_ERROR
    body="regridFV_C3S.ncl anomalously exited for start-date ${yyyy}${st}, file type $type and member $real "
    title="[C3S] ${CPSSYS} forecast ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
    exit
 fi
 echo "$0 completed"

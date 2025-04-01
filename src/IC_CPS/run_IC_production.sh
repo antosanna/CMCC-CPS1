@@ -122,7 +122,7 @@ then
              rsync -auv $bkup_ic_hydros $actual_ic_hydros
              body="Using $bkup_ic_clm and $bkup_ic_hydros for CAM ICs computation. Operational CLM IC procedures do not complete correctly"
              title="[CLMIC] ${CPSSYS} forecast warning"
-             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
              break
          fi
             
@@ -157,7 +157,7 @@ then
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $nemoic_ctr not produced."
 
    title="[NEMOIC] ${CPSSYS} forecast warning"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 # we replace both operational ICs with backup (backup ICs will be removed if not used)
 # here we evaluate the case where CICE IC was produced but Nemo was not 
 # and for consistency we replace both
@@ -167,7 +167,7 @@ elif [[ ! -f $ciceic_ctr ]]
 then
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $ciceic_ctr not present."
    title="[NEMOIC] ${CPSSYS} forecast warning"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 # we replace both operational ICs with backup (backup ICs will be removed if not used)
 # here we evaluate the case where Nemo IC was produced but CICE was not 
 # and for consistency we replace both

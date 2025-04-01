@@ -1,0 +1,6 @@
+To compile fortran scripts for ncl we need to
+
+. ~/load_miniconda
+conda activate miniconda_ncl
+module load gcc-12.2.0/12.2.0
+compile WRAPIT extrapTZ_SPS4.stub extrapTZ_SPS4.f90

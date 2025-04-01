@@ -1,8 +1,8 @@
 #!/bin/sh -l
-#BSUB -J copy_SPS4DMO_from_Leonardo_202010
+#BSUB -J copy_SPS4DMO_from_Leonardo_200705
 #BSUB -q s_download
-#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo_202010.out.%J  
-#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo_202010.err.%J  
+#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo_200705.out.%J  
+#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMO_from_Leonardo_200705.err.%J  
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -19,14 +19,9 @@ set -uvx
 
 leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
 
-caso=sps4_202010_001
+caso=sps4_200705_001
 
 checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
-if [[ -f $checkfile ]]
-then
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
-      continue
-fi
 rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
 stat=$?
 if [[ $stat -eq 0 ]]
@@ -37,7 +32,8 @@ then
       if [[ dim -lt 256 ]]
       then
          continue
+      else
+         echo "something wrong"
+         exit 1
       fi
 fi
-
-

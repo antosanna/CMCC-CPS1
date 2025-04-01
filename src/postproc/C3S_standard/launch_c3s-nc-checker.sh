@@ -127,7 +127,7 @@ if [[ $list_error != "" ]];then
     body="C3S standardization of member ${SPSSystem}_${startdate}_0${real} has reported `echo $list_error|wc -w` errors in ${c3s_checker_cmd} checker. Logs are: $dir_log_checker: $list_error 
 "
     title="${CPSSYS} ${typeofrun} ERROR - ${c3s_checker_cmd} CHECK"
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E 0$real
     touch $check_c3s_meta_err
     exit 0
 else

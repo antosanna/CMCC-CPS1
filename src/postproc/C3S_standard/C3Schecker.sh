@@ -56,11 +56,10 @@ if [ -f $check_c3s_meta_ok ]
 then
    title="C3S ${c3s_checker_cmd} ok for member $real"
    body="C3S ${c3s_checker_cmd} ok for member $real"
-# 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 else
    title="[C3S ERROR] ${c3s_checker_cmd} KO for member $real"
    body="C3S ${c3s_checker_cmd} Ko for member $real"
- 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+ 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$real
    exit
    
 fi

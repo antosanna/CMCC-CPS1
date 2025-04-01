@@ -120,7 +120,7 @@ else
    ./xmlchange --subgroup case.checklist prereq=1
 fi
 
-sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
+sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g;s/member/$nrun/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 outdirC3S=${WORK_C3S}/$yyyy$st/
 sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
