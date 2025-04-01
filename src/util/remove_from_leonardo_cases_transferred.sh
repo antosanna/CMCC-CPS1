@@ -27,16 +27,25 @@ set -euvx
 listacasi=""
 for i in {1..4}
 do
-   infile=$DIR_TEMP/list${i}_cases_transferred_`date +%Y%m%d`.txt
-   if [[ ! -f $infile ]]
+   data=`date +%Y%m%d`
+   n_infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt|wc -l`
+   if [[ $n_infiles -eq 0 ]]
    then
       continue
    fi
-   while read line
+   infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt`
+   for ff in $infiles
    do
-      echo $line
-      listacasi+=" $line"
-   done <$infile
+      if [[ ! -f $ff ]]
+      then
+         continue
+      fi
+      while read line
+      do
+         echo $line
+         listacasi+=" $line"
+      done <$ff
+   done
 done
 echo $listacasi
 if [[ $dbg -eq 1 ]]
