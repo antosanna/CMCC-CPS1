@@ -20,14 +20,12 @@ set -euvx
 export caso=$1
 HEALED_DIR=$2
 #export caso=sps4_199305_001
-#wkdir=$wkdir_cam
-wkdir=$HEALED_DIR
-mkdir -p $wkdir
+mkdir -p $HEALED_DIR
 
 #----------------------------------
 # RELEVANT DIRECTORIES
 #----------------------------------
-logdir=$wkdir/logs
+logdir=$HEALED_DIR/logs
 mkdir -p $logdir
 
 #----------------------------------
@@ -47,29 +45,29 @@ set -euvx
 
 
 # where the spike indices are stored each time the checker is passed through
-export inputascii=$wkdir/list_spikes.txt
+export inputascii=$HEALED_DIR/list_spikes.txt
 # where all the spike indices are stored
 export inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
 #first file to check
 file2check=${caso}.cam.h3.${yyyy}-${st}.zip.nc
 # copied for safety reasons to working directory
-rsync -auv $DIR_ARCHIVE/$caso/atm/hist/${file2check} $wkdir
+rsync -auv $DIR_ARCHIVE/$caso/atm/hist/${file2check} $HEALED_DIR
 var="TREFMNAV"
 logfile=$logdir/log_${var}_spikes_${yyyy}${st}_${ens}
 if [[ -f $logfile ]]
 then
     rm $logfile
 fi
-python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $wkdir -v ${var} -spike True -l ${wkdir} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -sl $inputascii -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
 message="$caso First check for spikes performed"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
 if [[ ! -f $inputascii ]]
 then
 #TEMPORARY +
-   rsync -auv $wkdir/${file2check} $HEALED_DIR
-#   mv $wkdir/$caso/${file2check} $HEALED_DIR
+   rsync -auv $HEALED_DIR/${file2check} $HEALED_DIR
+#   mv $HEALED_DIR/$caso/${file2check} $HEALED_DIR
 #TEMPORARY -
    for ftype in h1 h2
    do
@@ -80,6 +78,7 @@ then
    touch $HEALED_DIR/${caso}.cam.h1.DONE
    touch $HEALED_DIR/${caso}.cam.h2.DONE
    touch $HEALED_DIR/${caso}.cam.h3.DONE
+   touch $HEALED_DIR/${caso}.NO_SPIKE
    exit
 else
    message="$caso spikes found"
@@ -101,10 +100,10 @@ do
    then
       break
    fi
-   export inputFV=$wkdir/$file2check
-   export outputFV=$wkdir/$fixedfile
+   export inputFV=$HEALED_DIR/$file2check
+   export outputFV=$HEALED_DIR/$fixedfile
 
-   checkfile=$wkdir/${caso}.cam.h3.DONE
+   checkfile=$HEALED_DIR/${caso}.cam.h3.DONE
    $DIR_POST/cam/poisson_daily_values.sh h3 $caso $inputascii $inputFV $outputFV $checkfile $HEALED_DIR
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$body" -r "only" -s $yyyy$st -E $ens
    rm $inputascii
@@ -112,7 +111,7 @@ do
 # now recheck for the presence of spikes after treatment
 # At this stage the treatment is performed only to the daily values (actually it could be limited to TMAX)
    file2check=$fixedfile
-   python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $wkdir -v ${var} -spike True -l ${wkdir} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+   python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -sl $inputascii -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
    message="$caso successive check for spikes performed"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 # concatenate the single checker output lists skipping the first 5 lines (header)
@@ -123,6 +122,15 @@ do
    awk 'NR > 5 { print }' $inputascii >> $inputascii_all
    rsync -auv $inputascii ${inputascii}_${it}
    it=$(($it + 1))
+   if [[ $it -gt 5 ]]
+   then
+      body="FATAL WARNING!! $caso iterative healing undergoes infinite loop"
+      message="$caso more than 5 attempts! Check if treatment effectively needed or false-spike! EXIT NOW"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "yes" -s $yyyy$st -E $ens
+      touch $HEALED_DIR/${caso}.too_many_it.EXIT
+      exit
+   fi
+
    fixedfile=$caso.cam.h3.${yyyy}-${st}.fix${it}.nc
    body="$caso $it treatment on h3done"
 done
@@ -130,13 +138,13 @@ done
 # now perform poisson treatment to all files
 # the output dir is created only at this stage for in principle the file could not be affected by spikes at all
 mkdir -p $HEALED_DIR
-rm $wkdir/${caso}.cam.h3.DONE
+rm $HEALED_DIR/${caso}.cam.h3.DONE
 for ftype in h1 h2 h3
 do
    file2check=${caso}.cam.$ftype.${yyyy}-${st}.zip.nc
    inputFV=$DIR_ARCHIVE/$caso/atm/hist/$file2check
    fixedfinal=$file2check
-   checkfile=$wkdir/${caso}.cam.$ftype.DONE
+   checkfile=$HEALED_DIR/${caso}.cam.$ftype.DONE
    export outputFV=$HEALED_DIR/$fixedfinal
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile $HEALED_DIR"
    message="$caso poisson treatment submitted for $ftype file"
@@ -144,7 +152,7 @@ do
 done
 
 
-checkfile=$wkdir/${caso}.cam.h3.DONE
+checkfile=$HEALED_DIR/${caso}.cam.h3.DONE
 while `true`
 do
     if [[ -f $checkfile ]]
@@ -154,15 +162,8 @@ do
 done
 
 file2check=${caso}.cam.h3.${yyyy}-${st}.zip.nc
-# copied for safety reasons to working directory
-rsync -auv $HEALED_DIR/${file2check} $wkdir
 var="TREFMNAV"
-logfile=$logdir/log_${var}_spikes_${yyyy}${st}_${ens}
-if [[ -f $logfile ]]
-then
-    rm $logfile
-fi
-python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $wkdir -v ${var} -spike True -l ${wkdir} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
 message="$caso last check for spike done h3 file"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
@@ -171,8 +172,8 @@ then
    body="oh oh you should not get here!! treatment needed!! "
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "ERROR!!! $caso still spikes present in h3 file" -r yes -s $yyyy$st -E $ens
 else
-   body="Healing succesfully completed"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "EVVOVAAAA!!! $caso healed" -r yes -s $yyyy$st -E $ens
+   body="$caso Healing succesfully completed"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$body" -r "only" -s $yyyy$st -E $ens
 fi
 
 #----------------------------------------

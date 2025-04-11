@@ -181,7 +181,8 @@ mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM
 #${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "24" -q $serialq_l -j CAMICs.${yyyy}${st} -d ${DIR_ATM_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CAM -s launch_make_atm_ic_op.sh -i "$inputatm"
 yyIC=`date -d $yyyy${st}'15 - 1 month' +%Y`  # IC year
 mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
-dd=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC day
+last_dd_mmIC=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC month last day
+dd=$(($last_dd_mmIC - 1))
 t_analysis=00
 for pp in {0..9}
 do
@@ -207,9 +208,9 @@ do
     mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM
     echo "---> going to produce first guess for CAM and start date $yyyy $st"
     input="$yyyy $st $pp $t_analysis $inputECEDA $dd"
-    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j makeICsGuess4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
     input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
-    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p makeICsGuess4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
 done     #loop on pp
 
 # loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
@@ -234,5 +235,24 @@ do
     fi
     sleep 60
 done
+# TEMPORARY COMMENTED
+# remove temporary work spaces
+#for pp in {0..9}
+#do
+#   if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
+#   then
+#      if [[ -d $DIR_CASES/$casoIC ]]
+#      then
+#         rm -rf $DIR_CASES/$casoIC
+#      fi
+#      if [[ -d $DIR_ARCHIVE/$casoIC ]]
+#      then
+#         rm -rf $DIR_ARCHIVE/$casoIC
+#      fi
+#      if [[ -d $WORK_CPS/$casoIC ]]
+#      then
+#         rm -rf $WORK_CPS/$casoIC
+#      fi
+#  fi
 # replace missing ICs with backup
 $IC_CPS/set_forecast_ICs.sh $yyyy $st

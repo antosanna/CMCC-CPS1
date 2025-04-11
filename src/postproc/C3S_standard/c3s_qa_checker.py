@@ -73,7 +73,7 @@ from qa_checker_lib.checker_tools import (
             check_2d_field, 
             check_field) 
 from qa_checker_lib.checker_tools_onlyspike import (
-            check_temp_spike)
+            check_temp_spike, check_temp_spike_new)
 
 from qa_checker_lib.clim_checker_tools import (
             check_minmax_interval,
@@ -212,6 +212,7 @@ def main():
                     # Initialize error list variables for each variable in file
                     error_in_var=False
                     ice_spike_list=[]; spike_error_list=[]
+                    dropT_list=[]
                     output_list=[]; consistency_list=[]; generallist=[]; 
                     climlist=[]; table_values=[]; table_header=[]
                     # TODO REMOVE ALL climlist2 
@@ -294,7 +295,7 @@ def main():
                             print('[INFO] Performing spike diagnostic with threshold d1='+str(args.delta1)+' and d2='+str(args.delta2))
 
                         if shortname=='TREFMNAV' or shortname=='tasmin':
-                           ice_spike_list, spike_error_list = check_temp_spike(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
+                           ice_spike_list, dropT_list, spike_error_list = check_temp_spike_new(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
                         else:
                             raise InputError('Spike check in this variable has not been implemented')
 
@@ -497,8 +498,11 @@ def main():
                 write_log(logname, files[f], file_output_list, args.verbose, args.very_verbose)
                 if args.verbose:
                     print('[INFO] Log file written: '+logname)
+            if args.dropTlist & any(dropT_list):
+                logname=args.dropTlist
+                write_log(logname, files[f], dropT_list, args.verbose, args.very_verbose)
             if ice_spike_list:
-                logname=os.path.join(args.logdir,"list_spikes"+exp+real+file_suffix+".txt")
+                logname=args.spikelist
                 write_log(logname, files[f], ice_spike_list, args.verbose, args.very_verbose)
                 if args.verbose:
                     print('[INFO] Log file written: '+logname)

@@ -146,7 +146,11 @@ then
          ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       fi
    done
-   while [[ ! -f ${check_merge_cam_files}_h1 ]] || [[ ! -f ${check_merge_cam_files}_h2 ]] || [[ ! -f ${check_merge_cam_files}_h3 ]]
+# not using the checkfiles for consistency with the offline procedure
+   merged_file_h1=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h1.$yyyy-$st.zip.nc
+   merged_file_h2=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h2.$yyyy-$st.zip.nc
+   merged_file_h3=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.$yyyy-$st.zip.nc
+   while [[ ! -f ${merged_file_h1} ]] || [[ ! -f ${merged_file_h2} ]] || [[ ! -f ${merged_file_h3} ]] || [[ `${DIR_UTIL}/findjobs.sh -N ${caso} -n create_cam_files -c yes` -ne 0 ]]
    do
       sleep 600
    done
@@ -154,13 +158,24 @@ then
              # we want to archive the DMO with spikes
              # this is an iterative procedure that might requires a few cycles (up to 3 I guess)
    input="$caso $HEALED_DIR"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 19000 -p create_cam_files_h3_${caso} -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st -E $ens
-   while [[ ! -f $HEALED_DIR/${caso}.cam.h1.DONE ]] || [[ ! -f $HEALED_DIR/${caso}.cam.h2.DONE ]] || [[ ! -f $HEALED_DIR/${caso}.cam.h3.DONE ]]
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -p create_cam_files_h3_${caso} -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st 
+   while `true`
    do
+      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+      then
+         break
+      fi
       sleep 600
    done
-   ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR
+   if [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
+   then
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Exited for too many iterations of treament" -t "${caso} treatment exited for exceeded iteration limit" -r "yes" -s $yyyy$st
+      exit
+   fi
+   if [[ ! -f $HEALED_DIR/${caso}.NO_SPIKE ]] ; then
+      ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR
+   fi
 # TREATMENT COMPLETED
    touch $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE
 # h2 is the file requiring more time to be postprocessed
@@ -186,11 +201,11 @@ then
 #  now apply fix for isobaric level T on ft=h2 
    WKDIR=$SCRATCHDIR/extrapT/${caso}
    mkdir -p $WKDIR
-   checkfileextrap=$DIR_CASES/$caso/logs/${yyyy}${st}_extrapT_DONE
+   checkfileextrap=$DIR_CASES/$caso/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap $WKDIR"
    req_mem=8000
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st -E $ens
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
       if [[ -f ${checkfileextrap} ]]
@@ -242,12 +257,12 @@ else
    then
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the case $caso does not contain SOLIN. Must be created"
       title="[CPS1] ERROR! postproc_C3S.sh exiting before no SOLIN in $caso"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -E $ens
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st 
       exit 2
    else
       body="$caso exited before C3Schecker.sh in postproc_C3S.sh because the number of postprocessed files is $allC3S instead of required $nfieldsC3S"
       title="[CPS1] ERROR! $caso exiting before $DIR_C3S/C3Schecker.sh"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -E $ens
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st 
       exit 1
    fi
 fi

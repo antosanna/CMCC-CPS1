@@ -7,6 +7,8 @@
 begin
 
   npoints=toint(getenv("npoints"))
+  npoints_lon=npoints
+  npoints_lat=npoints
   checkfile=getenv("checkfile")
   srcFileName   = getenv("inputFV")
   dstFileName   = getenv("outputFV")
@@ -84,8 +86,8 @@ begin
      if(nn.ge.3)then
         do is=0,n_spike-1
            print("----now processing "+it_spike(is,0))
-           print("-----i indices  "+i_spike(is,0))
-           print("-----j indices  "+j_spike(is,0))
+           print("-----i index  "+i_spike(is,0))
+           print("-----j index  "+j_spike(is,0))
            itnow=it_spike(is,0)
            spike_date=cd_calendar(timeday(itnow),-3)
 
@@ -139,6 +141,10 @@ begin
                    print("spike value was "+invar(actual_ind_spike,jnow,inow))
                    invar(actual_ind_spike,jmin:jmax,imin:imax)=invar@_FillValue
                    poisson_grid_fill( invar(actual_ind_spike,:,:), is_cyclic, guess, nscan, eps, relc, opt)
+                   invar(actual_ind_spike,max((/0,jmin-2/)):jmin+2,imin:imax)=smth9_Wrap(invar(actual_ind_spike,max((/0,jmin-2/)):jmin+2,imin:imax),0.5,0.25,False)
+                   invar(actual_ind_spike,jmax-2:min((/jmax+2,jmax/)),imin:imax)=smth9_Wrap(invar(actual_ind_spike,jmax-2:min((/jmax+2,jmax/)),imin:imax),0.5,0.25,False)
+                   invar(actual_ind_spike,jmin:jmax,max((/0,imin-2/)):imin+2)=smth9_Wrap(invar(actual_ind_spike,jmin:jmax,max((/0,imin-2/)):imin+2),0.5,0.25,False)
+                   invar(actual_ind_spike,jmin:jmax,imax-2:min((/imax+2,imax/)))=smth9_Wrap(invar(actual_ind_spike,jmin:jmax,imax-2:min((/imax+2,imax/))),0.5,0.25,False)
                    print("after treatment is "+invar(actual_ind_spike,jnow,inow))
 
                 end do

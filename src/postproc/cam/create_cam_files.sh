@@ -41,7 +41,8 @@ then
    #--------------------------------------------
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
-   if [ ! -f $finalfile ]
+   inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
+   if [ -f $inputfile -a $st == "05" -a $typeofrun == "hindcast" ] || [ ! -f $finalfile ]
    then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc ]]

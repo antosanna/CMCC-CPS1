@@ -123,7 +123,7 @@ for cnt in $( seq 1 $nmonfore );do
 	  listofall+=" $filelist"
   	filename=${caso}.cam.h.${year}-${mon}.tar
 	# copy README in $dir_caso/atm/hist
-	  chmod -R u+wx $dir_caso/atm/hist
+	  chmod -R u+wX $dir_caso/atm/hist
 	  cd $dir_caso/atm/hist
   	cp $CESMDATAROOT/CMCC-${CPSSYS}/files4${CPSSYS}/README_atm .
 	# tar all
@@ -169,7 +169,7 @@ for dom in lnd rof;do
     		ice) suff=".cice.h." ;; 
   	esac
 
-	  chmod -R u+wx $dir_caso/$dom/hist
+	  chmod -R u+wX $dir_caso/$dom/hist
   	rsync -auv $dir_caso/$dom/hist/${caso}.${suff}.h* $workdir/$domain/
 	  if [ $? -ne 0 ];then   
 		    body="Script is $DIR_UTIL/iDas_case_tape_archive.sh. Logfile $LOG_FILE. Error on rsync for $dir_caso/$dom/hist/${caso}.${suff}.h"
@@ -228,7 +228,7 @@ for dom in ocn ice;do
 		    ice) suff=".cice.h." ;; 
   	esac
 
-	  chmod -R u+wx $dir_caso/$dom/hist
+	  chmod -R u+wX $dir_caso/$dom/hist
   	rsync -auv $dir_caso/$dom/hist/${caso}${suff}* $workdir/$domain/
 	  if [ $? -ne 0 ];then
 		    body="Script is $DIR_UTIL/iDas_case_tape_archive.sh. Logfile $LOG_FILE. Error on rsync for $dir_caso/$dom/hist/${caso}${suff}"
@@ -597,7 +597,7 @@ archivedir="$(dirname "${dir_caso}")"
 cd $archivedir
 
 if [ $dbg -eq 0 ]; then
-	  chmod -R u+wx $caso
+	  chmod -R u+wX $caso
   	rm -r $caso
 	  if [ $? -ne 0 ]; then
     		body="Error, ${dir_caso} removing procedure failed \n

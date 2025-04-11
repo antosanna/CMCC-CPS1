@@ -41,7 +41,7 @@ do
       touch $checkfile
       rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
-      if [[ dim -lt 193 ]]
+      if [[ $dim -lt 193 ]]
       then
          continue
       fi

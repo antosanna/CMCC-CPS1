@@ -103,7 +103,7 @@ memory[10]="20000M" #"4000M " #"atmos_12hr_pressure_ta "
 memory[11]="20000M" #"5000M " #"atmos_12hr_pressure_hus "
 memory[12]="20000M" #"3500M " #"atmos_12hr_pressure_ua "
 memory[13]="20000M" #"3500M " #"atmos_12hr_pressure_va "
-memory[14]="7500M" #"5000M "  #"atmos_day "
+memory[14]="10000M" #"7500M" #"5000M "  #"atmos_day "
 memory[15]="2000M " #"atmos_fix "
 # land
 memory[16]="5000M" #"2500M " #"land_6hr "
@@ -147,6 +147,7 @@ cd $ACTDIR
 # ***************************************************************************
 # *********************************************§******************************
 output=$wdir/output
+spike_list=$output/list_spikes.txt
 
 mkdir -p $wdir/output
 
@@ -234,7 +235,7 @@ for ncfile in \$netcdf2check ; do
     #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pqval 0.01 -mf 1. -pclim \$OUTDIR_DIAG/C3S_statistics -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 # WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
     #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-    python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
+    python c3s_qa_checker.py \$ncfile -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 
     # remove files
     if [ \$? -eq 0 ] ; then
@@ -323,8 +324,8 @@ filetobechecked=1
 if [ $cnt_files -ge $filetobechecked ]; then
 
     # look for warnings
-    mkdir -p ${DIR_LOG}/REPORTS/${startdate}
-    warningreport="${DIR_LOG}/REPORTS/${startdate}/${SPSSystem}_${startdate}_${ens}_checker_warnings.txt"
+    mkdir -p ${DIR_REP}/${startdate}
+    warningreport="${DIR_REP}/${startdate}/${SPSSystem}_${startdate}_${ens}_checker_warnings.txt"
     if [ -f $warningreport ] 
     then
         rm -f $warningreport
@@ -341,11 +342,10 @@ if [ $cnt_files -ge $filetobechecked ]; then
         title="${CPSSYS} FORECAST WARNING - QA CHECKER" 
      
         #since $warninmsg and $warninlist are arrays, the body message is created by parts
-        body="For member ${SPSSystem}_${startdate}_${ens} $cntwarning warnings files have been found over the $cnt_files C3S standardized files checked."
-        body+="\n\n Here the warning list"
+        body="For member ${SPSSystem}_${startdate}_${ens} $cntwarning warnings files have been found over the $cnt_files C3S standardized files checked. \n\n Here the warning list"
         for w in ${warninmsg}; do
             if [ "$w" == "[FIELDWARNING]" ];then
-                body+=" \n${w}"
+                body+=" \n ${w}"
             else
                 body+=" ${w}"
             fi
@@ -387,9 +387,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
 
    
     cnterror=`grep -Ril ERROR\] *.txt | wc -l`
-    #list_spikes_on_ice_199311_12.txt
-    cntspike=`ls list_spikes_on_ice_*.txt |wc -l` 
-    if [[ $cnterror -eq 0 ]] && [[ $cntspike -eq 0 ]] ; then
+    if [[ $cnterror -eq 0 ]] && [[ ! -f $spike_list ]] ; then
         touch $check_c3s_qa_ok
     else
        if [[ $cnterror -ne 0 ]] ; then 
@@ -398,10 +396,9 @@ if [ $cnt_files -ge $filetobechecked ]; then
             body="For member  ${SPSSystem}_${startdate}_${ens} errors on $cnterror files have been found on the $cnt_files C3S standardized files checked. \n Please check the output log in $wdir/output. \n Here you may found the list of error: \n  ${errormsg} \n For further information, use the checker with the --verbose option active."
             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
        fi
-       if [[ $cntspike -ne 0 ]] ;then
-           spikelog_file=`ls list_spikes_on_ice*txt`
+       if [[ -f $spike_list ]] ;then
            title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S "          
-           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spikelog_file}." 
+           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spike_list}." 
            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
        fi 
        touch $check_c3s_qa_err

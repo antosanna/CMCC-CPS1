@@ -9,7 +9,7 @@ lista2rm=" "
 for dd in $lista
 do
    dim=`du -hs $dd|cut -c 1-3`
-   if [[ dim -lt 256 ]]
+   if [[ $dim -lt 256 ]]
    then
       continue
    fi

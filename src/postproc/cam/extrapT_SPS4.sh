@@ -44,17 +44,10 @@ export typeofrun
 
 mkdir -p $WKDIR
 
-export inputts=$WKDIR/TS.$caso.C3S.12hr.nc
-if [[ ! -f $inputts ]]
-then
-   cdo selvar,TS $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/TS.$caso.nc
-   cdo selhour,0,12 $WKDIR/TS.$caso.nc $WKDIR/TS.$caso.12hr.nc
-   cdo remapbil,$REPOGRID1/griddes_C3S.txt $WKDIR/TS.$caso.12hr.nc $inputts
-fi
 export inputpsl=$WKDIR/PSL.$caso.C3S.12hr.nc
 if [[ ! -f $inputpsl ]]
 then
-   cdo selvar,PSL $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/PSL.$caso.nc
+   cdo selvar,PSL $HEALED_DIR_ROOT/$caso/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/PSL.$caso.nc
    cdo selhour,0,12 $WKDIR/PSL.$caso.nc $WKDIR/PSL.$caso.12hr.nc
    cdo remapbil,$REPOGRID1/griddes_C3S.txt $WKDIR/PSL.$caso.12hr.nc $inputpsl
 fi
@@ -84,7 +77,7 @@ mkdir -p $OUTDIR
 # create TREFHT on C3S grid
 if [[ ! -f $WKDIR/TREFH.$caso.C3S.nc ]]
 then
-   cdo selvar,TREFHT $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/TREFHT.$caso.nc
+   cdo selvar,TREFHT $HEALED_DIR_ROOT/$caso/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/TREFHT.$caso.nc
    cdo remapbil,$REPOGRID1/griddes_C3S.txt $WKDIR/TREFHT.$caso.nc $WKDIR/TREFHT.$caso.C3S.nc
 fi
 # make it conform to the required output in time axis
