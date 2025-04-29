@@ -6,13 +6,10 @@ begin
 st=getenv("st") ;"05"
 year=getenv("year") ;"2017"
 EE=getenv("member") ;"02"
-;inputta="/work/cmcc/cp1/CMCC-CM/archive/C3S/201705/cmcc_CMCC-CM3-v20231101_hindcast_S2017050100_atmos_12hr_pressure_ta_r02i00p00.nc" ; getenv("inputta")
 inputta=getenv("inputta")
 print("---TA from "+inputta)
-;inputts="/work/cmcc/cp1/scratch/extrapT/sps4_201705_002/TREFHT.sps4_201705_002.C3S.12h.nc" ;getenv("inputts")
-inputts=getenv("inputts")
-print("---TREFHT from "+inputts)
-;inputoro="/work/cmcc/cp1/CMCC-CM/archive/C3S/201705/cmcc_CMCC-CM3-v20231101_hindcast_S2017050100_atmos_fix_surface_orog_r02i00p00.nc" ;getenv("inputoro")
+inputt2m=getenv("inputt2m")
+print("---TREFHT from "+inputt2m)
 inputoro=getenv("inputoro")
 print("---orography from "+inputoro)
 filePS=getenv("inputPS")
@@ -27,7 +24,7 @@ fccm = addfile (inputta , "r")  ; a CCM file
 T3    = tofloat(fccm->ta(:,:,:,:)) ;read all levels
 time = fccm->time
 uc_date=cd_calendar(time,0)
-fccm = addfile (inputts,"r")
+fccm = addfile (inputt2m,"r")
 TS    = tofloat(fccm->TREFHT(:,:,:)) 
 dimTS=dimsizes(TS)
 

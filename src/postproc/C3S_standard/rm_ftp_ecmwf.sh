@@ -47,10 +47,10 @@ elif [[ $debug_rm -eq 0 ]] || [[ $debug_rm -eq 2 ]]
 then
    if [[ "$machine" == "juno" ]]
    then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp
+      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.ecmwf
    elif [[ "$machine" == "leonardo" ]]
    then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp
+      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.ecmwf
    fi
    cat > $script << EOF
 set ftp:list-options -a

@@ -44,7 +44,7 @@ then
    ccecmwfmail=$mymail
    title_debug="TEST"
 else
-   ccecmwfmail="adrien.owono@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
+   ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
    title_debug=""
 fi
 
@@ -281,7 +281,7 @@ done
 
 # AT LAST SEND notification both to sp1 and to ECMWF
 title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-body="Dear Adrien, \n
+body="Dear Volkan, \n
 \n
 this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
 \n

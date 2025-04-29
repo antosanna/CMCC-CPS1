@@ -61,6 +61,10 @@ esac
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CAM
 if [[ $type == "h3" ]]
 then
+   if [[ -f $check_no_SOLIN ]]
+   then
+      rm $check_no_SOLIN 
+   fi
    isSOLINin=`ncdump -h $inputFV|grep SOLIN|wc -l`
    if [[ $isSOLINin -eq 0 ]]
    then

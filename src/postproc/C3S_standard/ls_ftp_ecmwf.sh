@@ -56,11 +56,11 @@ elif [[ $debug_ls -eq 2 ]] || [[ $debug_ls -eq 0 ]]
 then
    if [[ "$machine" == "juno" ]]
    then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp
+      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
       log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
    elif [[ "$machine" == "leonardo" ]]
    then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp
+      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
       log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
    fi
    cat > $lftp_cmd << EOF

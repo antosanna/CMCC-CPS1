@@ -7,7 +7,7 @@
 #BSUB -q s_medium
 #--------------------------------
 #--------------------------------
-# this script identifies the spikes in a daily timeseries of TMAX, performs a poisson extrapolation in the points nearby the spikes, setting to mask an arbitrary selected region (3 ponts) around the spike and filling it through poisson.
+# this script identifies the spikes in a daily timeseries of TMIN, performs a poisson extrapolation in the points nearby the spikes, setting to mask an arbitrary selected region (3 ponts) around the spike and filling it through poisson.
 # It might be necessary to run it iteratively, for a value which was not a spike in the algorithm definition, could become so after the treatment.
 # treated DMO MUST be stored separately on /work and not overwrite the oroginal ones.
 #DESTINATION DIR IS
@@ -18,7 +18,8 @@
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
 export caso=$1
-HEALED_DIR=$2
+dir_cases=$2
+HEALED_DIR=$HEALED_DIR_ROOT/$caso
 #export caso=sps4_199305_001
 mkdir -p $HEALED_DIR
 
@@ -43,7 +44,6 @@ set +euvx
 condafunction activate qachecker
 set -euvx
 
-
 # where the spike indices are stored each time the checker is passed through
 export inputascii=$HEALED_DIR/list_spikes.txt
 # where all the spike indices are stored
@@ -60,15 +60,19 @@ then
     rm $logfile
 fi
 python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -sl $inputascii -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+
+cnterror=`grep -Ril ERROR\] ${logfile} | wc -l`
+if [[ $cnterror -ne 0 ]] ; then
+   message="ERROR in c3s_qa_checker for caso $caso" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
+   exit 1
+fi
+
 message="$caso First check for spikes performed"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
 if [[ ! -f $inputascii ]]
 then
-#TEMPORARY +
-   rsync -auv $HEALED_DIR/${file2check} $HEALED_DIR
-#   mv $HEALED_DIR/$caso/${file2check} $HEALED_DIR
-#TEMPORARY -
    for ftype in h1 h2
    do
       file2check=${caso}.cam.$ftype.${yyyy}-${st}.zip.nc
@@ -104,14 +108,20 @@ do
    export outputFV=$HEALED_DIR/$fixedfile
 
    checkfile=$HEALED_DIR/${caso}.cam.h3.DONE
-   $DIR_POST/cam/poisson_daily_values.sh h3 $caso $inputascii $inputFV $outputFV $checkfile $HEALED_DIR
+   $DIR_POST/cam/poisson_daily_values.sh h3 $caso $inputascii $inputFV $outputFV $checkfile
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$body" -r "only" -s $yyyy$st -E $ens
-   rm $inputascii
+   mv $inputascii ${inputascii}_0
 #  successive attempt of treatments: the cycle relies on the assumption that the $inputascii is not created of no spikes are detected so it is removed after any test
 # now recheck for the presence of spikes after treatment
-# At this stage the treatment is performed only to the daily values (actually it could be limited to TMAX)
+# At this stage the treatment is performed only to the daily values (actually it could be limited to TMIN)
    file2check=$fixedfile
    python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -sl $inputascii -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+   cnterror=`grep -Ril ERROR\] ${logfile} | wc -l`
+   if [[ $cnterror -ne 0 ]] ; then
+      message="ERROR in c3s_qa_checker for caso $caso" 
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
+      exit 1
+   fi
    message="$caso successive check for spikes performed"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 # concatenate the single checker output lists skipping the first 5 lines (header)
@@ -119,15 +129,19 @@ do
    then
       break
    fi
-   awk 'NR > 5 { print }' $inputascii >> $inputascii_all
+   awk 'NR > 3 { print }' $inputascii >> $inputascii_all
    rsync -auv $inputascii ${inputascii}_${it}
    it=$(($it + 1))
    if [[ $it -gt 5 ]]
    then
-      body="FATAL WARNING!! $caso iterative healing undergoes infinite loop"
-      message="$caso more than 5 attempts! Check if treatment effectively needed or false-spike! EXIT NOW"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "yes" -s $yyyy$st -E $ens
+#   here plot timeseries
+      body="MANUAL INTERVENTION REQUIRED!! $caso iterative healing infinite loop"
+      sed -e "s:CASO:$caso:g;s:dummy_DIR_CASES:$dir_cases:g" $DIR_TEMPL/launch_postproc_C3S_after_it_limit.sh > $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh 
+      chmod u+x $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh
+      message="$caso more than 5 attempts! Check if treatment effectively needed or false-spike! EXIT NOW AND INSPECT PLOTS IN GDRIVE:SPIKES_warning_${yyyy}${st}. \n If the plots do not show spikes, resubmit the postprocessing with $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$body" -r "yes" -s $yyyy$st -E $ens
       touch $HEALED_DIR/${caso}.too_many_it.EXIT
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_${caso} -s plot_timeseries_spike.sh -l $logdir -i "$caso 0 $HEALED_DIR/list_spikes.txt_5"
       exit
    fi
 
@@ -146,7 +160,7 @@ do
    fixedfinal=$file2check
    checkfile=$HEALED_DIR/${caso}.cam.$ftype.DONE
    export outputFV=$HEALED_DIR/$fixedfinal
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile $HEALED_DIR"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile"
    message="$caso poisson treatment submitted for $ftype file"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 done
@@ -164,6 +178,14 @@ done
 file2check=${caso}.cam.h3.${yyyy}-${st}.zip.nc
 var="TREFMNAV"
 python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
+cnterror=`grep -Ril ERROR\] ${logfile} | wc -l`
+if [[ $cnterror -ne 0 ]] ; then
+   message="ERROR in c3s_qa_checker for caso $caso" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
+   exit 1
+fi
+
+
 message="$caso last check for spike done h3 file"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
@@ -176,6 +198,3 @@ else
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$body" -r "only" -s $yyyy$st -E $ens
 fi
 
-#----------------------------------------
-# END OF redundant: this check is actually conceived for TMAX 
-#----------------------------------------

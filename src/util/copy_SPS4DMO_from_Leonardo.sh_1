@@ -64,6 +64,6 @@ for caso in $lista ; do
 
 done
 idjob=`$DIR_UTIL/findjobs.sh -n copy_SPS4DMO_from_Leonardo1 -i yes`
-logfile=$DIR_TEMP/list1_cases_transferred_`date +%Y%m%d`.$idjobs.txt
+logfile=$DIR_TEMP/list1_cases_transferred_`date +%Y%m%d`.$idjob.txt
 echo $lista_today_1 > $logfile
 rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $logfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/

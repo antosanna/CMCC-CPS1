@@ -6,12 +6,15 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
-real=$1
-outdirC3S=$2
-startdate=$3
-dir_cases=$4
+caso=$1
+
+yyyy=`echo $caso|cut -d '_' -f2|cut -c1-4`
+st=`echo $caso|cut -d '_' -f2|cut -c5-6`
+real=`echo $caso|cut -d '_' -f3|cut -c2,3` 
+outdirC3S=${WORK_C3S}/${yyyy}${st}  #for dictionary
+startdate=${yyyy}${st}  #for dictionary
 member=$real #for dictionary consistency
-yyyy=`echo ${startdate:0:4}`
+
 set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
@@ -22,47 +25,24 @@ set +euvx
 . $dictionary
 set -euvx
 
-st=`echo "${startdate}" | cut -c5-6`
+ens=$(printf "%.3d" $((10#$member)))  #3digit member tag
+
 #**********************************************************
 # Load vars depending on hindcast/forecast
 #**********************************************************
-dir_log_checker=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$real/
-# try and do it everytime (if too slow add the exception)
-if [[ -d $dir_log_checker ]]
-then
-   rm -rf $dir_log_checker
-fi
-mkdir -p $dir_log_checker
-#if [ ! -f $outdirC3S/qa_checker_ok_0${real} ] 
-#then
-# if not already launched
-#   ${DIR_C3S}/launch_c3s_qa_checker_1ens.sh $startdate $real $outdirC3S
-#fi
-# others checkers 
-# try and do it everytime (if too slow add the exception)
-${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
+ACTDIR=$SCRATCHDIR/qa_checker/$startdate/CHECKER_${ens}
+output=$ACTDIR/CHECK/output
+spike_list=$output/list_spikes.txt
 
-# BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
-# to be rewritten
-#if [ ! -f $outdirC3S/dmoc3s_checker_ok_0${real} ]
-#then 
-#			${DIR_C3S}/launch_checkdmoC3S-pdf-chain.sh $startdate $real $outdirC3S
-#fi
-#cd $outdirC3S
 
-if [ -f $check_c3s_meta_ok ] 
+if [ -f ${check_c3s_meta_ok} ] && [  -f ${spike_list} ]
 then
-   title="C3S ${c3s_checker_cmd} ok for member $real"
-   body="C3S ${c3s_checker_cmd} ok for member $real"
-else
-   title="[C3S ERROR] ${c3s_checker_cmd} KO for member $real"
-   body="C3S ${c3s_checker_cmd} Ko for member $real"
- 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$real
-   exit
-   
+   if [ -f $check_c3s_qa_err ] ; then
+       rm $check_c3s_qa_err
+   fi
+   touch $check_c3s_qa_ok
 fi
-$DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases
-#if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
+
 if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
 then
 #-------------------------------------------

@@ -1,7 +1,6 @@
 #!/bin/sh -l
 #-------------------------------------------------------------------------------
 # Script to check 1 member of produced forecast 
-#  launched by CMCC-SPS3/src/postproc/C3S_standard/tar_and_push.sh
 #  input arguments: 
 #	$1 startdate:	YYYYMM
 #	$2 memberlist:	i
@@ -20,6 +19,7 @@ set -evxu
 startdate=$1 # 202001
 memberlist=$2 # define member to check explicitly
 outdirC3S=$3
+dir_cases=$4
 #
 st=${startdate:4:6}
 yyyy=${startdate:0:4}
@@ -39,6 +39,8 @@ set +euvx
 . $dictionary
 set -euvx
 ens=$(printf "%.3d" $((10#$memberlist))) #member with 3 digits
+
+caso=${SPSSystem}_${startdate}_${ens}
 
 ACTDIR=$SCRATCHDIR/qa_checker/$startdate/CHECKER_${ens}
 wdir=$ACTDIR/CHECK/
@@ -148,7 +150,10 @@ cd $ACTDIR
 # *********************************************§******************************
 output=$wdir/output
 spike_list=$output/list_spikes.txt
-
+spike_list_dmo=${HEALED_DIR_ROOT}/${caso}/list_spikes_DMO.txt
+if [[ -f $spike_list_dmo ]] ; then
+   mv $spike_list_dmo ${spike_list_dmo}_`date +%Y%m%d%H%M`
+fi
 mkdir -p $wdir/output
 
 # json file
@@ -235,7 +240,7 @@ for ncfile in \$netcdf2check ; do
     #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pqval 0.01 -mf 1. -pclim \$OUTDIR_DIAG/C3S_statistics -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 # WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
     #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-    python c3s_qa_checker.py \$ncfile -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
+    python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 
     # remove files
     if [ \$? -eq 0 ] ; then
@@ -396,10 +401,34 @@ if [ $cnt_files -ge $filetobechecked ]; then
             body="For member  ${SPSSystem}_${startdate}_${ens} errors on $cnterror files have been found on the $cnt_files C3S standardized files checked. \n Please check the output log in $wdir/output. \n Here you may found the list of error: \n  ${errormsg} \n For further information, use the checker with the --verbose option active."
             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
        fi
-       if [[ -f $spike_list ]] ;then
-           title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S "          
-           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spike_list}." 
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
+       if [[ -f ${spike_list} ]] ; then
+
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l $DL -i "$caso 1 ${spike_list}"            
+#           . $DIR_C3S/plot_timeseries_spike_c3s.sh ${SPSSystem}_${startdate}_${ens} ${spike_list} $wdir/output/
+           title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S  MANUAL INTERVENTION REQUIRED!!"          
+           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spike_list} and the plots on google drive. \n In case of false spike, recover it launching $DIR_C3S/launch_recover_false_spike.sh for the case $caso" 
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r only -s $startdate -E $ens
+           #counting repetition by looking at number of DMO list produced, if more than 5 interrupt automatic resubmission
+           nlist_dmo=`ls ${spike_list_dmo}* |wc -l` 
+           if [[ $nlist_dmo -ge 5 ]]  
+           then 
+                 title="MANUAL INTERVENTION REQUIRED C3S ${caso} spike infinite loop!!"
+                 body="For member ${caso} a spike has been found on C3S standardized files, and there have been 5 attempts of healing. \n Please check the output log in $wdir/output/${spike_list} and the plots on google drive. \n In case of false spike, recover it launching $DIR_C3S/launch_recover_false_spike.sh for the case $caso"             
+                 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
+           else
+             while `true`
+             do
+                nt=`$DIR_UTIL/findjobs.sh -n postproc_C3S_offline_${caso} -c yes`
+                if [[ $nt -eq 0 ]]
+                then
+                   break
+                fi
+                sleep 300
+             done
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_resume_${caso} -s postproc_C3S_offline_resume.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$caso ${dir_cases} 2" 
+# in this case we do not want the checkfile with error $check_c3s_qa_err
+             exit
+          fi
        fi 
        touch $check_c3s_qa_err
        exit

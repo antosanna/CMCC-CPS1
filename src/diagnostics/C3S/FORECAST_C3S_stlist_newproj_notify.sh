@@ -15,7 +15,7 @@ flag_done=$3
 dbg=$4
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-#if [ ! -f $WORK_C3S1/${start_date}/tar_and_push_${start_date}_DONE ]
+#if [ ! -f $WORK_C3S1/${start_date}/tar_C3S_${start_date}_DONE ]
 #then
 #   echo "forecast not completed yet"
 #   exit

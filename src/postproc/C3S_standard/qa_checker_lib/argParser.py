@@ -28,8 +28,16 @@ def argParser():
             help="default value to activate/disactivate only_spike mode")
     parser.add_argument("-sl","--spikelist", default=False, 
             help="realpath of txt containing the list of spikes")
+    parser.add_argument("-ll","--leftlist", default=False, 
+            help="realpath of txt containing the list of spikes with detailed temp values (from left to right)")
+    parser.add_argument("-rl","--rightlist", default=False, 
+            help="realpath of txt containing the list of spikes with detailed temp values (from right to left)")
     parser.add_argument("-dT","--dropTlist", default=False, 
             help="realpath of txt containing the list of temperature drops (greater than 30)")
+    parser.add_argument("-dmo","--dmoFile", default=False, 
+            help="realpath of template of DMO file for coordinate reference")
+    parser.add_argument("-sld","--spikelistdmo", default=False, 
+            help="realpath of txt containing the list of spikes in DMO coordinates in case of C3S spike")
     parser.add_argument("-std", "--std_thresh", default=2.,
             help="default value for spike check std_dev")
     parser.add_argument("-exp","--log_exp_suffix", default="",

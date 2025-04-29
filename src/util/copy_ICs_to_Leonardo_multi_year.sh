@@ -22,9 +22,9 @@ jun_dir=/data/cmcc/cp1/archive/IC/
 
 realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 
-for yyyy in `seq 2013 2022`
+for yyyy in `seq 2015 2022`
 do
-  for st in 01
+  for st in 09
   do
      for rea in $realm ; do
 

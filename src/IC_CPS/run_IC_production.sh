@@ -45,7 +45,7 @@ for poce in `seq -w 01 $n_ic_nemo`;do
    dirciceic=${IC_CICE_CPS_DIR}/$st/
 #
 # compute only if operational or not existing  ANTO 20210319
-   if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirnemoic/$ciceic ]]
+   if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirciceic/$ciceic ]]
    then
 
       mkdir -p  $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO

@@ -20,7 +20,8 @@ export inputascii=$3
 export inputFV=$4
 export outputFV=$5
 export checkfile=$6
-export HEALED_DIR=$7
+
+export HEALED_DIR=$HEALED_DIR_ROOT/$caso
 
 yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
 st=`echo $caso|cut -d '_' -f2|cut -c 5-6`

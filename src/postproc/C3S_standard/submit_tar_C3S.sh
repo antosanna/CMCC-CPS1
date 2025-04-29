@@ -10,19 +10,19 @@ st=$2
 set +uevx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
-if [[ -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_and_push_${yyyy}${st}_started ]] ; then
+if [[ -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started ]] ; then
    title="${CPSSYS} forecast warning"
-   body="submit_tar_and_push.sh ALREADY RUNNING!"
+   body="submit_tar_C3S.sh ALREADY RUNNING!"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit
 fi
-touch ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_and_push_${yyyy}${st}_started
+touch ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started
 
 yyyymmtoday=`date +%Y%m`
-if [ -f $WORK_C3S/$yyyy$st/tar_and_push_${yyyy}${st}_DONE ] 
+if [ -f $WORK_C3S/$yyyy$st/tar_C3S_${yyyy}${st}_DONE ] 
 then
    title="${CPSSYS} forecast warning"
-   body="$DIR_C3S/tar_and_push.sh already done for this start-date. $WORK_C3S/$yyyy$st/tar_and_push_${yyyy}${st}_DONE exists. If you want to redo first delete it"
+   body="$DIR_C3S/tar_C3S.sh already done for this start-date. $WORK_C3S/$yyyy$st/tar_C3S_${yyyy}${st}_DONE exists. If you want to redo first delete it"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit
 fi
@@ -32,7 +32,7 @@ startdate=$yyyy$st
 cd ${WORK_C3S}/$startdate   
 
 # here kill every process with start-date $startdate except this job
-jobIDthisJOB=`${DIR_UTIL}/findjobs.sh -m $machine -N submit_tar_and_push$startdate -i yes`
+jobIDthisJOB=`${DIR_UTIL}/findjobs.sh -m $machine -N submit_tar_C3S$startdate -i yes`
 jobIDall=`${DIR_UTIL}/findjobs.sh -m $machine -N $startdate  -i yes`
 set +e    #this is necessary because the job can be ended 
 for jobID in $jobIDall
@@ -55,7 +55,7 @@ listaens=`ls all_checkers_ok_0*|cut -d '_' -f4|cut -c 2,3`
 $DIR_UTIL/check_production_time.sh -m $machine -s $st -y $yyyy -e $listaens
 # 
 input="$yyyy $st"
-$DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -M 5000 -j tar_and_push_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_and_push.sh -i "$input"
+$DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -M 5000 -j tar_C3S_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_C3S.sh -i "$input"
 sleep 60
 
 exit 0

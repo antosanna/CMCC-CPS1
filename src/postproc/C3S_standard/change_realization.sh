@@ -46,7 +46,7 @@ dim=`echo ${ensemble[@]}|wc -w`
 
 if [ $dim -ne $nrunC3Sfore ]
 then
-   body="$DIR_C3S/tar_and_push.sh in change_realization.sh you selected the wrong number of members! needed $nrunC3Sfore but selected $dim"
+   body="$DIR_C3S/tar_C3S.sh in change_realization.sh you selected the wrong number of members! needed $nrunC3Sfore but selected $dim"
    title="[C3S] ${CPSSYS} forecast ERROR"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 fi
@@ -89,7 +89,7 @@ then
    if [ $dim -ne 0 ]
    then
       mkdir -p $DIR_LOG/$typeofrun/${yyyy}${st}/change_realization
-      body="Starting renumbering for $dim members in forecast $yyyy$st from ${tochange[@]} to ${tobecome[@]}. Script is $DIR_C3S/tar_and_push.sh"
+      body="Starting renumbering for $dim members in forecast $yyyy$st from ${tochange[@]} to ${tobecome[@]}. Script is $DIR_C3S/tar_C3S.sh"
       title="[C3S] ${CPSSYS} forecast notification"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
       
@@ -209,7 +209,7 @@ then
    #RECOMPUTE daily C3S for these members
          checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${tobecome[$i]}_ok
          #checkfile_daily=$FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${tobecome[$i]}
-   # this is needed so that if in any case the tar_and_push.sh is relaunched it will not try to redo the renumbering (see section 1.)
+   # this is needed so that if in any case the tar_C3S.sh is relaunched it will not try to redo the renumbering (see section 1.)
          touch $WORK_C3S/$yyyy$st/all_checkers_ok_0${tobecome[$i]}
    # rm the previously compute checkfile_daily
          if [ -f $checkfile_daily ]

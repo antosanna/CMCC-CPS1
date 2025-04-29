@@ -11,7 +11,8 @@ set -euvx
 LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-listofcases="sps4_200910_028"
+#listofcases="sps4_200005_001"
+listofcases="sps4_200805_022"
 nmaxsubmit=1     #up to 30 yet consistent with listofcases
 
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab

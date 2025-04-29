@@ -7,7 +7,7 @@
 begin
 
   inputascii=getenv("inputascii")
-  data = readAsciiTable(inputascii,1,"string",5)
+  data = readAsciiTable(inputascii,1,"string",3)
   it_spike    = tointeger(str_get_field(data,1,";"))
   nn   = dimsizes(it_spike)  ; this has rank=2
   n_spike   = nn(0)
@@ -16,7 +16,7 @@ begin
 
   checkfile=getenv("checkfile_tmin_t2m")
   srcFileNameh1   = getenv("inputh1") ;6hourly outputs
-  dstFileName   = getenv("outputh1")
+  dstFileName   = getenv("dstFileName")
 
   print("-----procedure to treat spikes "+n_spike)
 
@@ -114,7 +114,7 @@ begin
      end do
   else
      print("no action needed!")
-     system("touch "+checkfile)
-     print("touched file "+checkfile)
   end if
+  system("touch "+checkfile)
+  print("touched file "+checkfile)
 end

@@ -22,14 +22,14 @@ if [[ $# -ne 0 ]]
 then
    export caso=$1
    export checkfile=$2
-   WKDIR=$3
 #
 else
    typeofrun=hindcast
    checkfile="pino.done"
    export caso=sps4_199301_002
-   WKDIR=$SCRATCHDIR/extrapT/${caso}
+   HEALED_DIR=$SCRATCHDIR/extrapT/${caso}
 fi
+HEALED_DIR=$HEALED_DIR_ROOT/$caso
 set +exvu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -exvu
@@ -38,26 +38,40 @@ export yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
 ens=`echo $caso|cut -d '_' -f 3 `
 export member=`echo $ens|cut -c2,3`
 
-mkdir -p $WKDIR
 export typeofrun
 
-
-mkdir -p $WKDIR
-
-export inputpsl=$WKDIR/PSL.$caso.C3S.12hr.nc
+export inputpsl=$HEALED_DIR/PSL.$caso.C3S.12hr.nc
 if [[ ! -f $inputpsl ]]
 then
-   cdo selvar,PSL $HEALED_DIR_ROOT/$caso/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/PSL.$caso.nc
-   cdo selhour,0,12 $WKDIR/PSL.$caso.nc $WKDIR/PSL.$caso.12hr.nc
-   cdo remapbil,$REPOGRID1/griddes_C3S.txt $WKDIR/PSL.$caso.12hr.nc $inputpsl
+   cdo selvar,PSL $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/PSL.$caso.nc
+   cdo selhour,0,12 $HEALED_DIR/PSL.$caso.nc $HEALED_DIR/PSL.$caso.12hr.nc
+   cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/PSL.$caso.12hr.nc $inputpsl
+fi
+# create TS on C3S grid
+if [[ ! -f $HEALED_DIR/TS.$caso.C3S.nc ]]
+then
+   cdo selvar,TS $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/TS.$caso.nc
+   cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/TS.$caso.nc $HEALED_DIR/TS.$caso.C3S.nc
+fi
+# make it conform to the required output in time axis
+export inputts=$HEALED_DIR/TS.$caso.C3S.12h.nc
+if [[ ! -f $inputts ]]
+then
+   cdo selhour,0,12 $HEALED_DIR/TS.$caso.C3S.nc $inputts
 fi
 
-export outputPS=$WKDIR/PS.$caso.12hr.nc
-export inputoro=$WORK_C3S/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_fix_surface_orog_r"$member"i00p00.nc
 
-rsync -av $DIR_POST/cam/compute_PS_from_PSL_template.ncl $WKDIR/compute_PS_from_PSL_$caso.ncl
-rsync -av $DIR_POST/cam/ncl_libraries $WKDIR/
-cd $WKDIR
+export outputPS=$HEALED_DIR/PS.$caso.12hr.nc
+export inputoro=$REPOSITORY/sps4_orog_C3S.nc
+
+
+OUTDIR=$HEALED_DIR
+mkdir -p $OUTDIR 
+
+
+rsync -av $DIR_POST/cam/compute_PS_from_PSL_template.ncl $HEALED_DIR/compute_PS_from_PSL_$caso.ncl
+rsync -av $DIR_POST/cam/ncl_libraries $HEALED_DIR/
+cd $HEALED_DIR
 ncl compute_PS_from_PSL_${caso}.ncl
 if [ ! -f $outputPS ] 
 then
@@ -70,25 +84,22 @@ fi
 # second one compute extrapolation from lowest reliable isobaric level
 # and TREFHT
 #--------------------------------
-
-OUTDIR=$WKDIR
-mkdir -p $OUTDIR 
-
 # create TREFHT on C3S grid
-if [[ ! -f $WKDIR/TREFH.$caso.C3S.nc ]]
+if [[ ! -f $HEALED_DIR/TREFHT.$caso.C3S.nc ]]
 then
-   cdo selvar,TREFHT $HEALED_DIR_ROOT/$caso/$caso.cam.h1.$yyyy-$st.zip.nc $WKDIR/TREFHT.$caso.nc
-   cdo remapbil,$REPOGRID1/griddes_C3S.txt $WKDIR/TREFHT.$caso.nc $WKDIR/TREFHT.$caso.C3S.nc
+   cdo selvar,TREFHT $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/TREFHT.$caso.nc
+   cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/TREFHT.$caso.nc $HEALED_DIR/TREFHT.$caso.C3S.nc
 fi
 # make it conform to the required output in time axis
-export inputts=$WKDIR/TREFHT.$caso.C3S.12h.nc
-if [[ ! -f $inputts ]]
+export inputt2m=$HEALED_DIR/TREFHT.$caso.C3S.12h.nc
+if [[ ! -f $inputt2m ]]
 then
-   cdo selhour,0,12 $WKDIR/TREFHT.$caso.C3S.nc $inputts
+   cdo selhour,0,12 $HEALED_DIR/TREFHT.$caso.C3S.nc $inputt2m
 fi
+
+
 #define inputs
 export inputta=$WORK_C3S/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_12hr_pressure_ta_r"$member"i00p00.nc
-export inputoro=$WORK_C3S/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_fix_surface_orog_r"$member"i00p00.nc
 export inputPS=$outputPS
 
 #define outputs

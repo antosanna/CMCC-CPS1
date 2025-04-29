@@ -39,10 +39,10 @@ cd ${WORK_CPS}/$caso/run
 #to deal with the first month of land only simulations
 if [[ -d $DIR_ARCHIVE/$caso/rest ]] ;  then
    set +e
-   #rm *  ???
+#   rm -f ${WORK_CPS}/$caso/run/*  #???
    startclm_1=${yy}-${mm2d}-01
    chmod u+w  $DIR_ARCHIVE/$caso/rest/${startclm_1}-00000/
-   rsync -auv $DIR_ARCHIVE/$caso/rest/${startclm_1}-00000/* .
+   rsync -av $DIR_ARCHIVE/$caso/rest/${startclm_1}-00000/* .
    gunzip -f $caso*.gz
    gunzip -f rpointer*.gz 
    chmod u-w $DIR_ARCHIVE/$caso/rest/${startclm_1}-00000/

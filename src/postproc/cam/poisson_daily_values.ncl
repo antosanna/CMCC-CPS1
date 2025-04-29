@@ -14,7 +14,7 @@ begin
   dstFileName   = getenv("outputFV")
   caso   = getenv("caso")
   inputascii=getenv("inputascii")
-  data = readAsciiTable(inputascii,1,"string",5)
+  data = readAsciiTable(inputascii,1,"string",3)
 
   it_spike    = tointeger(str_get_field(data,1,";"))
   j_spike = stringtointeger(str_get_field(data,2,";"))

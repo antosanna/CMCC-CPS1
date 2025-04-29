@@ -79,7 +79,7 @@ elif [[ $dbg_push -eq 2 ]] || [[ $dbg_push -eq 0 ]]
 then
    if [[ "$machine" == "juno" ]]
    then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
+      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.ecmwf
       cat > $script_send << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
@@ -90,7 +90,7 @@ quit
 EOF
    elif [[ "$machine" == "leonardo" ]]
    then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
+      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.ecmwf
       cat > $script_send << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
@@ -140,7 +140,7 @@ elif [[ $dbg_push -eq 2 ]] || [[ $dbg_push -eq 0 ]]
 then
    if [[ "$machine" == "juno" ]]
    then
-      script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp
+      script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
       log_script=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
       cat > $script_ls << EOF
 set ftp:list-options -a
@@ -151,7 +151,7 @@ quit
 EOF
    elif [[ "$machine" == "leonardo" ]]
    then
-      script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp
+      script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
       log_script=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
       cat > $script_ls << EOF
 set ftp:list-options -a

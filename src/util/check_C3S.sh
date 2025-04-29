@@ -51,6 +51,6 @@ do
    done
    if [ $flag_wrong -ne 1 ]
    then
-       echo "everything ok for startdate $yyyy$st ! go on with tar_and_push.sh"
+       echo "everything ok for startdate $yyyy$st ! go on with tar_C3S.sh"
    fi
 done

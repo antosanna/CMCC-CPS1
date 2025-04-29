@@ -497,8 +497,12 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
     print("inside check_temp_spike_new")
 
     point_list=[]
+    point_list_tmp=[]
     point_list_c2=[]
+    point_list_left=[]
+    point_list_right=[]
     spk_pos=None
+    spk_pos_sym=None
     data_all=field1.data
     
     #dimension of time axis of original data - needed to define interval
@@ -517,21 +521,16 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
     #right_interval[right_interval>max_time_dim-1]=max_time_dim-1
 
     time_around=np.array([ind_timemin_data_all for t in range(5)])
-    print(np.shape(time_around))
     for t in range(len(time_around)):
        time_around[t]=time_around[t]-2+t
     time_around[time_around<=0]=0
     time_around[time_around>max_time_dim-1]=max_time_dim-1
 
-    print("interval defined")
-    #data1=data_all[left_interval[:,:]:right_interval[:,:],j,k]
     data1=np.zeros_like(data_all[0:5,:,:])
-    print(np.shape(data1))
     for t in range(5):
       for j in range(np.shape(data_all)[1]):
        for i in range(np.shape(data_all)[2]):
           data1[t,j,i]=data_all[int(time_around[t,j,i]),j,i]
-    print("defined data1") 
     #if spike in t2, here we will have t0-t1-t2-t3-t4
     # SPIKE EXAMPLE
     #   
@@ -549,13 +548,15 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
     #  ddelta1=0   --> return after spike
     # dddelta1=0   --> return after spike on successive time (for 2-day spike)
     #dddeltam1=0   --> return after spike on 2 time back (for multiple healing- t1 too high)
-    print("data1 shape--should be 5xNLATxNLON")
-    print(np.shape(data1))
     delta1=data1[2]-data1[1]
     ddelta1=data1[3]-data1[1]
     dddelta1=data1[4]-data1[1]
     dddeltam1=data1[3]-data1[0]
-    print(np.shape(delta1))
+    
+    delta1s=data1[2]-data1[3]
+    ddelta1s=data1[1]-data1[3]
+    dddelta1s=data1[0]-data1[3]
+    dddeltam1s=data1[1]-data1[4]
 #------------------------------------------------------------
 #------------------------------------------------------------
     if verbose or very_verbose:
@@ -580,7 +581,14 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
        c2set = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c2]) 
        print("defined c2set")
    # condition 3 #deltaT(Dt2)> -5 (go up more than 25deg wrt the original point)
-    
+   
+    spk_pos_c2sym = np.transpose(np.nonzero(delta1s < delta_limit1)) 
+    if verbose or very_verbose:
+        print(f"dim spk_pos_c2sym {len(spk_pos_c2sym[:,1])}")
+    if len(spk_pos_c2sym[:,1]) > 0:
+        #c2set = set([tuple(x) for x in spk_pos_c2])
+       c2set_sym = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c2sym]) 
+ 
     spk_pos_c3 = np.transpose(np.nonzero(ddelta1 > - delta_limit2)) 
     if verbose or very_verbose:
         print(f"dim spk_pos_c3 {len(spk_pos_c3[:,1])}")
@@ -596,6 +604,13 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
         #c4set = set([tuple(x) for x in spk_pos_c4])
        c4set = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c4]) 
 
+    spk_pos_c4sym = np.transpose(np.nonzero(dddelta1s > - delta_limit2))
+    if verbose or very_verbose:
+        print(f"dim spk_pos_c4sym{len(spk_pos_c4sym[:,1])}")
+    if len(spk_pos_c4sym[:,1]) > 0:
+        #c4set = set([tuple(x) for x in spk_pos_c4])
+       c4set_sym = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c4sym])
+
     # condition 5 #deltaT(Dt2)> -5 (go up more than 25deg wrt the original point)
     spk_pos_c5 = np.transpose(np.nonzero(dddeltam1 > - delta_limit2))
     if verbose or very_verbose:
@@ -603,6 +618,14 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
     if len(spk_pos_c5[:,1]) > 0:
         #c5set = set([tuple(x) for x in spk_pos_c5])
        c5set = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c5]) 
+
+    spk_pos_c5sym = np.transpose(np.nonzero(dddeltam1s > - delta_limit2))
+    if verbose or very_verbose:
+        print(f"dim spk_pos_c5 {len(spk_pos_c5sym[:,1])}")
+    if len(spk_pos_c5sym[:,1]) > 0:
+        #c5set = set([tuple(x) for x in spk_pos_c5])
+       c5set_sym = set([tuple([ind_timemin_data_all[x[0],x[1]],x[0],x[1]]) for x in spk_pos_c5sym])
+
 
     # combine filters
     if len(spk_pos_c2[:,1]) > 0 :
@@ -631,9 +654,9 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
                   print('[INFO] N. Points found (( TMIN delta>'+str(delta_limit1)+' TMIN(DT3) delta>-'+str(delta_limit2)+' ): '+str(len(list(spk_pos))))
               if verbose or very_verbose:
                   print('Locations (c2&c4) or (c2&c5):',spk_pos)
-              point_list=[str(filename)+";"+str(len(list(spk_pos)))+";\n"+
+              point_list_left=[str(filename)+";"+str(len(list(spk_pos)))+";\n"+
                     "Time;Lat:Lon;Tmin;ddelta1;ddelta2;ddelta3;ddeltam1"+"\n"  ]
-              point_list.append([
+              point_list_left.append([
                     str(ind_timemin_data_all[spk_pos[i,1],spk_pos[i,2]])+";"+str(spk_pos[i,1])+";"+str(spk_pos[i,2])+";"+
                     str(data_all[ind_timemin_data_all[spk_pos[i,1],spk_pos[i,2]],spk_pos[i,1],spk_pos[i,2]])+";"+
                     str(delta1[spk_pos[i,1],spk_pos[i,2]])+";"+
@@ -641,20 +664,54 @@ def check_temp_spike_new(varn,shortn,timen,filename, error_list, field1, min_lim
                     str(dddelta1[spk_pos[i,1],spk_pos[i,2]])+";"+
                     str(dddeltam1[spk_pos[i,1],spk_pos[i,2]])+";"+
                     "\n" for i in range(len(spk_pos[:,1]))])
+              [point_list_tmp.append((str(ind_timemin_data_all[spk_pos[i,1],spk_pos[i,2]])+";"+str(spk_pos[i,1])+";"+str(spk_pos[i,2])+";"+"\n")) for i in range(len(spk_pos[:,1]))]
 
-
+    if (len(spk_pos_c2sym[:,1]) > 0 and len(spk_pos_c4sym[:,1]) > 0 ) or (len(spk_pos_c2sym[:,1]) > 0 and len(spk_pos_c5sym[:,1]) > 0 ):
+            if very_verbose:
+                print("original condition only on deltat3")
+            spk_pos_sym = np.array([x for x in ((c2set_sym & c4set_sym) or (c2set_sym & c5set_sym)) ])
+            if len(spk_pos_sym) > 0:
+              if verbose or very_verbose:
+                  print('[INFO] N. Points found (( TMIN delta>'+str(delta_limit1)+' TMIN(DT3) delta>-'+str(delta_limit2)+' ): '+str(len(list(spk_pos_sym))))
+              if verbose or very_verbose:
+                  print('Locations (c2&c4) or (c2&c5):',spk_pos_sym)
+              point_list_right=[str(filename)+";"+str(len(list(spk_pos_sym)))+";\n"+
+                      "Time;Lat:Lon;Tmin;ddelta1;ddelta2;ddelta3;ddeltam1"+"\n"  ]
+              point_list_right.append([
+                    str(ind_timemin_data_all[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+str(spk_pos_sym[i,1])+";"+str(spk_pos_sym[i,2])+";"+
+                    str(data_all[ind_timemin_data_all[spk_pos_sym[i,1],spk_pos_sym[i,2]],spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+
+                    str(delta1s[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+
+                    str(ddelta1s[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+
+                    str(dddelta1s[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+
+                    str(dddeltam1s[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+
+                    "\n" for i in range(len(spk_pos_sym[:,1]))])
+              [point_list_tmp.append((str(ind_timemin_data_all[spk_pos_sym[i,1],spk_pos_sym[i,2]])+";"+str(spk_pos_sym[i,1])+";"+str(spk_pos_sym[i,2])+";"+"\n")) for i in range(len(spk_pos_sym[:,1]))] 
+    point_list=list(set(point_list_tmp))
+    
     if verbose or very_verbose:
         print('returning list')
     # if list of spikes is full, then raise and error, finally write the list of all spikes and error list for log
     try:
-        if len(list(spk_pos)) == 0:
+        if len(list(spk_pos)) == 0 and len(list(spk_pos_sym))==0 :
             print('no spikes found') 
     except FieldError as e:
         error_list=print_error(error_message=e, error_list=error_list, loc1=[shortn, varn])
     finally:    
-        return point_list, point_list_c2, error_list
+        return point_list, point_list_right,point_list_left,point_list_c2, error_list
 
 
+def find_coord_dmo(spike_list,DS_DMO,DS_C3S,verbose=False,very_verbose=False):
+  
+     lat_dmo=np.array(DS_DMO.lat)
+     lon_dmo=np.array(DS_DMO.lon)
+     lat_c3s=np.array(DS_C3S.lat)
+     lon_c3s=np.array(DS_C3S.lon)
 
-
+     dmo_list=[]
+     for spike in spike_list:
+#         print(int(spike.split(";")[1])) 
+         ind_lat_dmo=(np.abs(lat_dmo - lat_c3s[int(spike.split(";")[1])])).argmin()
+         ind_lon_dmo=(np.abs(lon_dmo - lon_c3s[int(spike.split(";")[2])])).argmin()
+         dmo_list.append([spike.split(";")[0]+";"+str(ind_lat_dmo)+";"+str(ind_lon_dmo)+";"+"\n"])
+     return dmo_list
 

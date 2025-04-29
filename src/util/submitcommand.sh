@@ -4,7 +4,7 @@
 . ~/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 set -eu
-usage() { echo "Usage: $0 [-m <machine string >] [-q <queue string>] [-s <scriptname string >] [-j <jobname string >] [-d <scriptdir string >] [-l <logdir string >] [-i <input string OPTIONAL>] [-R <cores in the same node OPTIONAL BUT REQUIRES ntask>] [-f <is this the model? OPTIONAL>] [-p <previousjob string OPTIONAL>] [-w <second previousjob string OPTIONAL>] [-e <previousjobi-exited string OPTIONAL>] [-f <previousjob-exited string OPTIONAL>] [-Z <no arg string OPTIONAL>] [-M <memory integer OPTIONAL >] [-P <partition string OPTIONAL>] [-r <reservation string OPTIONAL>] [-n <ntask string OPTIONAL>] [-t <duration string OPTIONAL>] [-S <qos quality of service string OPTIONAL>] [-E <string to require exlusivity of nodesOPTIONAL >] [-B <starting-time string OPTIONAL (format yyyy:mm:dd:hh:mm)>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-q <queue string>] [-s <scriptname string >] [-j <jobname string >] [-d <scriptdir string >] [-l <logdir string >] [-i <input string OPTIONAL>] [-R <cores in the same node OPTIONAL BUT REQUIRES ntask>] [-f <is this the model? OPTIONAL>] [-J <previousjobID number OPTIONAL>] [-p <previousjob string OPTIONAL>] [-w <second previousjob string OPTIONAL>] [-e <previousjobi-exited string OPTIONAL>] [-f <previousjob-exited string OPTIONAL>] [-Z <no arg string OPTIONAL>] [-M <memory integer OPTIONAL >] [-P <partition string OPTIONAL>] [-r <reservation string OPTIONAL>] [-n <ntask string OPTIONAL>] [-t <duration string OPTIONAL>] [-S <qos quality of service string OPTIONAL>] [-E <string to require exlusivity of nodesOPTIONAL >] [-B <starting-time string OPTIONAL (format yyyy:mm:dd:hh:mm)>]" 1>&2; exit 1; }
 
 if [[ $# -eq 0 ]]
 then
@@ -22,9 +22,10 @@ jobname="None"
 input="None"
 logdir="None"
 scriptdir="None"
-prev="None"
 exited="None"
 exited2="None"
+prevID="None"
+prev="None"
 prev2="None"
 prev3="None"
 memdefault=1000
@@ -37,7 +38,7 @@ ntask="None"
 localtime="None"
 basic="None"
 
-while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:W:Z:B:S:E:" o; do
+while getopts ":m:M:q:Q:f:P:r:R:n:s:t:J:j:i:l:d:e:f:p:w:W:Z:B:S:E:" o; do
     case "${o}" in
         S)
             qos=${OPTARG}
@@ -77,6 +78,9 @@ while getopts ":m:M:q:Q:f:P:r:R:n:s:t:j:i:l:d:e:f:p:w:W:Z:B:S:E:" o; do
             ;;
         p)
             prev=${OPTARG}
+            ;;
+        J)
+            prevID=${OPTARG}
             ;;
         e)
             exited=${OPTARG}
@@ -211,6 +215,10 @@ then
       exit 0
    else
       command+=" -rn -Ep '$DIR_UTIL/Job_report_email.sh $mymail' -J $jobname -o $logdir/${jobname}_%J.out -e $logdir/${jobname}_%J.err"
+      if [[ "$prevID" != "None" ]]
+      then
+         command+=' -ti -w "done($prev)"'
+      fi
       if [[ "$prev" != "None" ]]
       then
          if [[ "$prev2" != "None" ]]

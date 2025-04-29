@@ -199,12 +199,12 @@ then
 
    done
 #  now apply fix for isobaric level T on ft=h2 
-   WKDIR=$SCRATCHDIR/extrapT/${caso}
-   mkdir -p $WKDIR
-   checkfileextrap=$DIR_CASES/$caso/logs/extrapT_${caso}_DONE
+   WKDIR=${HEALED_DIR_ROOT}/${caso}
+   mkdir -p $WKDIR/logs
+   checkfileextrap=$WKDIR/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap $WKDIR"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $WKDIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
@@ -251,7 +251,7 @@ allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate ${DIR_CASES}"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then
@@ -354,14 +354,6 @@ do
    fi  
 done
 #
-if [[ -d $SCRATCHDIR/extrapT/${caso} ]]
-then
-   rm -rf $SCRATCHDIR/extrapT/${caso}
-fi
-if [[ -d $HEALED_DIR ]]
-then
-   rm -rf $HEALED_DIR 
-fi
 
 
 echo "Done."

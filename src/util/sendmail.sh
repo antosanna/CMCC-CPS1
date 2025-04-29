@@ -69,12 +69,12 @@ if [ ! -z $report ]
 then
    if [ ! -z $startdate ]
    then
-      outlog=${DIR_LOG}/report/$startdate/REPORT_${machine}.${SPSSystem}_${startdate}
+      outlog=${DIR_REP}/$startdate/REPORT_${machine}.${SPSSystem}_${startdate}
       if [ ! -z $ensemble ]
       then
-         outlog=${DIR_LOG}/report/$startdate/report_${machine}.${SPSSystem}_${startdate}_${ensemble}
+         outlog=${DIR_REP}/$startdate/report_${machine}.${SPSSystem}_${startdate}_${ensemble}
       fi
-      mkdir -p ${DIR_LOG}/report/$startdate
+      mkdir -p ${DIR_REP}/$startdate
 #      message=${message//'\n'/<br>}
       echo "${message} `date`" >> ${outlog}.`date +%Y%m%d`.txt
       echo " " >> ${outlog}.`date +%Y%m%d`.txt

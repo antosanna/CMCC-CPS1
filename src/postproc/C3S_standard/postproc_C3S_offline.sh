@@ -12,7 +12,7 @@ set -evxu
 caso=$1
 # only in this special case DIR_CASES must be redefined for it can be different
 # for the different machines the case could have been done on.
-DIR_CASES=$2
+dir_cases=$2
 # this modification will affect $dictionary too!!!!
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
@@ -33,7 +33,7 @@ set +euvx
 . $dictionary
 set -euvx
 mkdir -p $outdirC3S
-dirlog=$DIR_CASES/$caso/logs
+dirlog=$dir_cases/$caso/logs
 mkdir -p $dirlog
 
 #***********************************************************************
@@ -42,10 +42,10 @@ mkdir -p $dirlog
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
-    sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
-    chmod u+x $DIR_CASES/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
+    chmod u+x $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
 
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$dirlog"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$dirlog"
 
 fi
 # 
@@ -55,9 +55,9 @@ fi
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
 if [[ ! -f $check_iceregrid ]]
 then
-   sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
-   chmod u+x $DIR_CASES/$caso/interp_cice2C3S_${caso}.sh
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh
+   sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $dir_cases/$caso/interp_cice2C3S_${caso}.sh
+   chmod u+x $dir_cases/$caso/interp_cice2C3S_${caso}.sh
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_cice2C3S_${caso}.sh
 fi
 
 #***********************************************************************
@@ -84,13 +84,13 @@ then
        then
             input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
             # ADD the reservation for serial !!!
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
 
 
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
 
        else
        # meaning that preproc files have been done by create_clm_files.sh
@@ -99,7 +99,7 @@ then
              echo "start of postpc_clm "`date`
              input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
              # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv  -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv  -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
        fi
    done
 fi
@@ -132,7 +132,7 @@ then
       then
          input="$caso $ft ${wkdir_cam} $finalfile $ic" 
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       fi
    done
 # before running this script it maybe happen that clean4C3S.sh has been run so those flags might have been deleted
@@ -147,8 +147,24 @@ then
              #now fix for spikes on $HEALED_DIR
              # we want to archive the DMO with spikes
              # this is an iterative procedure that might requires a few cycles (up to 3 I guess)
-   input="$caso $HEALED_DIR"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
+   if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h1.DONE
+   fi
+   if [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h2.DONE
+   fi
+   if [[ -f  $HEALED_DIR/${caso}.cam.h3.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h3.DONE
+   fi
+   if [[ -f $HEALED_DIR/${caso}.NO_SPIKE ]]
+   then
+      rm $HEALED_DIR/${caso}.NO_SPIKE
+   fi
+   input="$caso $dir_cases"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
@@ -160,7 +176,6 @@ then
    done  
    if [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
    then
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Exited for too many iterations of treament" -t "${caso} treatment exited for exceeded iteration limit" -r "yes" -s $yyyy$st
       exit
    fi
 
@@ -168,12 +183,13 @@ then
       ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR
    fi 
 # TREATMENT COMPLETED
-   touch $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE
+   touch $dir_cases/$caso/logs/spike_treatment_${caso}_DONE
 # h2 is the file requiring more time to be postprocessed
    for ft in h0 h1 h3 h2
    do
       
       case $ft in
+          h0)req_mem=1000;;
           h1)req_mem=9000;;
           h2)req_mem=4000;;
           h3)req_mem=1500;;
@@ -186,16 +202,14 @@ then
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
             
    done
 #  now apply fix for isobaric level T on ft=h2 
-   WKDIR=$SCRATCHDIR/extrapT/${caso}
-   mkdir -p $WKDIR
-   checkfileextrap=$DIR_CASES/$caso/logs/extrapT_${caso}_DONE
-   inputextrap="$caso $checkfileextrap $WKDIR"
+   checkfileextrap=$HEALED_DIR/logs/extrapT_${caso}_DONE
+   inputextrap="$caso $checkfileextrap"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
    while `true`
@@ -227,11 +241,6 @@ do
    sleep 60
 done
 
-#SHALL WE ADD THIS TOO?
-# now check for inconsistencies between tasmin (fixed through poisson) and tas
-#${DIR_POST}/C3S_standard/check_minima_tasmin_tas.sh $caso $outdirC3S 
-#modified for test
-
 while `true`
 do
    if [[ -f $check_all_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
@@ -240,14 +249,17 @@ do
    fi
    sleep 60
 done
-touch $check_pp_C3S
+#
+#check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE - it is $check_pp_C3S in dictionary, here explicit for remote cases
+touch $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE 
+
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
 allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]]
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then
@@ -279,15 +291,6 @@ do
          fi
    fi
 done
-# THIS WILL BE UNCOMMENTED ONCE EXAUSTIVELY TESTED
-#if [[ -d $SCRATCHDIR/extrapT/${caso} ]]
-#then
-#   rm -rf $SCRATCHDIR/extrapT/${caso}
-#fi
-#if [[ -d $HEALED_DIR ]]
-#then
-#   rm -rf $HEALED_DIR 
-#fi
 
 # now rm file not necessary for archiving
 for realm in clm2 cam hydros

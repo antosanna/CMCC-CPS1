@@ -1,8 +1,8 @@
 #!/bin/sh -l 
 #BSUB -q s_long
-#BSUB -J submit_tar_and_push_hindcast
-#BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_and_push%J.err
-#BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_and_push%J.out
+#BSUB -J submit_tar_C3S_offline
+#BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.err
+#BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.out
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=12 # startdate
-onlycheckfileok=1  #if 0 does tar_and_push
+st=05 # startdate
+onlycheckfileok=0  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -84,7 +84,8 @@ var_array=("${var_array2d[@]} ${var_array3d[@]}")
 echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
-for yyyy in  `seq $iniy_hind $endy_hind`
+#for yyyy in  `seq $iniy_hind $endy_hind`
+for yyyy in `seq 2020 2022` 
 do
   
   startdate=$yyyy$st
@@ -101,7 +102,7 @@ do
   allC3Sfiles=`ls ${outdirC3S}/cmcc*.nc|wc -l`
   set -vx
   #allC3S=`ls *i00p00.nc|wc -l`
-  # IF ALL VARS HAVE BEEN COMPUTED FOR ALL MEMBERS tar_and_push
+  # IF ALL VARS HAVE BEEN COMPUTED FOR ALL MEMBERS tar_C3S
   if [ $allC3Schecks -ge $nrunC3Sfore ]  && [ $allC3Sfiles -ge $(($nfieldsC3S * $nrunC3Sfore)) ]
   then
   # check that no job are running for the startdate
@@ -118,18 +119,18 @@ do
         submit_list+=" $startdate"
         if [ $onlycheckfileok -eq 0 ]
         then 
-           echo "Submitting tar_and_push for $startdate"     
-           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_and_push_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_and_push.sh -i "$input"
+           echo "Submitting tar_C3S for $startdate"     
+           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_C3S_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_C3S.sh -i "$input"
         fi    
      else
        body="something is still running. Retry"
-       title="${CPSSYS} tar_and_push for $startdate not submitted by submit_tar_and_push"
+       title="${CPSSYS} tar_C3S for $startdate not submitted by submit_tar_C3S"
        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
      fi
   else
      body="MISSING FILES FOR STARTDATE $startdate"
-     title="${CPSSYS} tar_and_push for $startdate not submitted by submit_tar_and_push"
+     title="${CPSSYS} tar_C3S for $startdate not submitted by submit_tar_C3S"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
   
   # checker files

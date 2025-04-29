@@ -1,7 +1,6 @@
 #!/bin/sh -l
 #-------------------------------------------------------------------------------
 # Script to check 1 member of produced forecast 
-#  launched by CMCC-SPS3/src/postproc/C3S_standard/tar_and_push.sh
 #  input arguments: 
 #	$1 startdate:	YYYYMM
 #	$2 memberlist:	i

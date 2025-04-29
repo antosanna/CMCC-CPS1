@@ -24,7 +24,7 @@ fi
 
 nmaxsubmit=30
 nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_C3S -c yes`
-if [[ $nsubmit -eq $nmaxsubmit ]]
+if [[ $nsubmit -ge $nmaxsubmit ]]
 then
     echo "already $nmaxsubmit postproc on the queue, exiting now"
     exit
@@ -83,7 +83,7 @@ do
              exit
        fi
        nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_C3S -c yes`
-       if [[ $nsubmit -eq $nmaxsubmit ]]
+       if [[ $nsubmit -ge $nmaxsubmit ]]
        then
              rm ${flag_running}
              exit

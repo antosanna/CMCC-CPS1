@@ -42,8 +42,16 @@ then
    rm $dstFileName
 fi
 
-rsync -auv $DIR_POST/cam/check_minima_TREFMNAV_TREFHT.ncl $HEALED_DIR/check_minima_TREFMNAV_TREFHT.ncl
+rsync -av $DIR_POST/cam/check_minima_TREFMNAV_TREFHT.ncl $HEALED_DIR/check_minima_TREFMNAV_TREFHT.ncl
 ncl $HEALED_DIR/check_minima_TREFMNAV_TREFHT.ncl
+
+if [[ ! -f $checkfile_tmin_t2m ]] 
+then
+   body="$HEALED_DIR/check_minima_TREFMNAV_TREFHT.ncl did not complete successfully"
+   title=$body
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r "only" -E 0$mem
+   exit 1
+fi
 
 if [[ -f $checkfile_tmin_t2m ]] && [[ ! -f $HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.nc ]]
 then

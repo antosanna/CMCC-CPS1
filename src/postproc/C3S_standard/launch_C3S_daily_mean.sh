@@ -76,7 +76,8 @@ do
       cntall=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
       if [ $cntall -gt 0 ] ; then
         cnt_C3Scheck=`${DIR_UTIL}/findjobs.sh -m $machine -n C3Schecker_${caso} -c yes`
-        if [ ${cnt_C3Scheck} -eq ${cntall}  ] ; then
+        cnt_C3Srecover=`${DIR_UTIL}/findjobs.sh -m $machine -n recover_false_spike_c3s_${caso} -c yes`
+        if [ ${cnt_C3Scheck} -eq ${cntall}  ] || [ ${cnt_C3Srecover} -eq ${cntall} ] ; then
         # if it is the father job go on with C3S_daily_mean    
             echo "just C3Schecker present on queue for $caso - go on"
         else
