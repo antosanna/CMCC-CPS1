@@ -12,8 +12,8 @@
 
 set -euvx
 
-yyyy_in=2024
-mm_in=12
+yyyy_in=2025
+mm_in=01
 
 newyy=${yyyy_in}                   # year start-date
 newmm=${mm_in}                     # month start-date
