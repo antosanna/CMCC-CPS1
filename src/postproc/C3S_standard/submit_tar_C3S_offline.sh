@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=05 # startdate
-onlycheckfileok=0  #if 0 does tar_C3S
+st=07 # startdate
+onlycheckfileok=1  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -85,7 +85,7 @@ echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
 #for yyyy in  `seq $iniy_hind $endy_hind`
-for yyyy in `seq 2020 2022` 
+for yyyy in `seq 1993 2022` 
 do
   
   startdate=$yyyy$st

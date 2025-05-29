@@ -25,12 +25,12 @@ else
    export caso=sps4_199301_002
    HEALED_DIR=$SCRATCHDIR/extrapT/${caso}
 fi
+export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 HEALED_DIR=$HEALED_DIR_ROOT/$caso
 set +exvu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -exvu
 export st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
-export yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
 ens=`echo $caso|cut -d '_' -f 3 `
 export member=`echo $ens|cut -c2,3`
 

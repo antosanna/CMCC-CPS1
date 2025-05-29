@@ -38,6 +38,12 @@ fi
 if [ -d $DIR_ARCHIVE/$caso ] ; then
          cd $DIR_ARCHIVE
          rm -rf $caso
+
+fi
+if [ -d $WORK/CPS/CMCC-CPS1/cases_from_Leonardo/$caso ] ; then
+   
+   cd $WORK/CPS/CMCC-CPS1/cases_from_Leonardo/
+   rm -rf $caso
 fi
 # 7) remove $caso data from C3S/..
 if [ -d $DIR_ARCHIVE_C3S/$startdate ] ; then
@@ -51,6 +57,11 @@ if [ -d $DIR_ARCHIVE_C3S/$startdate ] ; then
          then
             rm -fr $SCRATCHDIR/regrid_C3S/$caso
          fi
+         if [[ -d $HEALED_DIR_ROOT/$caso ]]
+         then
+            rm -fr $HEALED_DIR_ROOT/$caso
+         fi
+
 fi # end 7)
 # remove flag for transfer from Leonardo
 if [ -f ${DIR_ARCHIVE}/${caso}.transfer_from_Leonardo_DONE ] ; then

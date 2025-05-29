@@ -4,15 +4,15 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco                # to get command $compress
-. ${DIR_UTIL}/descr_ensemble.sh 1993  #THIS SCRIPT SHOULD RUN
+. ${DIR_UTIL}/descr_ensemble.sh $1  #THIS SCRIPT SHOULD RUN
                                       #ONLY FOR HINDCASTS
 
 set -evxu
 
-caso=$1
+caso=$2
 # only in this special case DIR_CASES must be redefined for it can be different
 # for the different machines the case could have been done on.
-dir_cases=$2
+dir_cases=$3
 # this modification will affect $dictionary too!!!!
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
@@ -330,7 +330,7 @@ do
             do
                finalf=`echo "${ff/$suff/.zip.nc}"`
                echo "compress $ff $finalf"
-               ${DIR_UTIL/compress.sh $ff $finalf
+               $compress $ff $finalf
                rm $ff
                echo "$ff removed"
             done

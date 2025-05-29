@@ -195,12 +195,12 @@ then
       if [[ "$queue" == *"p_"* ]]; then
          command+=' -sla $slaID -app $apprun'
       # $queue is defined and contains string serial -> serial        
-      elif [[ "$queue" == *"s_"* ]]; then
+      elif [[ "$queue" == *"s_"* ]]  && [[ "$queue" != *"s_download"* ]] ; then
          if [[ `whoami` == $operational_user ]]
          then
 # TEMPORARY
-#            command+=' -sla ${sla_serialID} -app $S_apprun'
-            :
+            command+=' -sla ${sla_serialID} -app $S_apprun'
+        
          fi
       fi
    fi
@@ -349,12 +349,11 @@ then
 #         command+=' -app $apprun'
          :
       # $queue is defined and contains string serial -> serial        
-      elif [[ "$queue" == *"s_"* ]]; then
-         if [[ `whoami` == $operational_user ]]
+      elif [[ "$queue" == *"s_"* ]] && [[ "$queue" != *"s_download"* ]]  ; then
+         if [[ `whoami` == $operational_user ]] 
          then
 #not defined yet
-#            command+=' -app $S_apprun'
-            :
+            command+=' -sla ${sla_serialID} -app $S_apprun'
          fi
       fi
    fi

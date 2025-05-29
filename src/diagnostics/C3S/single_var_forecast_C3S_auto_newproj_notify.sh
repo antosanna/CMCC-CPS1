@@ -74,15 +74,15 @@ do
   then
        export lead=$(($l - 1))
        export SS=${S[$l]}
-       export probupfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_66.nc"
-       export problowfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_33.nc"
+       export probupfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_66.$iniy_hind-$endy_hind.nc"
+       export problowfile="${DIR_CLIM}/pctl/${mmfore}/${varm}_${mmfore}_l${lead}_33.$iniy_hind-$endy_hind.nc"
        frequency="season"
   else
        export lead=$(($l  - 1))
        #MB 20230204 - forced tag to be in english
        export SS=`LANG=en_us_88591 date -d "$yyyyfore${mmfore}01 + ${lead} month" +%B`
-       export probupfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_66.nc"
-       export problowfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_33.nc"
+       export probupfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_66.$iniy_hind-$endy_hind.nc"
+       export problowfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_33.$iniy_hind-$endy_hind.nc"
        frequency="month"
   fi
   export inputm="$anomdir/${varm}_${SPSSystem}_${yyyyfore}${mmfore}_ens_ano.1993-${endy_hind}.nc"

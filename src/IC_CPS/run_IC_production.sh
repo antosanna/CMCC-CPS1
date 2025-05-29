@@ -75,11 +75,15 @@ do
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
          
    else   #operationally or for incomplete eda recover
-         inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
-         ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
-         body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
-         title="[CLMIC] ${CPSSYS} forecast notification"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+     
+      if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]
+      then
+          inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+          body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
+          title="[CLMIC] ${CPSSYS} forecast notification"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+      fi
    fi
 done
 
@@ -216,7 +220,7 @@ done     #loop on pp
 # loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
 while `true`
 do
-    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n firstGuess -a PEND -c yes`
+    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_ -a PEND -c yes`
     if [[ $n_job_make_atm_ic -eq 0 ]]
     then
        break

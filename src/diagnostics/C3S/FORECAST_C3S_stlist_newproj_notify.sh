@@ -30,9 +30,8 @@ typefore="fc"
 ###HERE WE KEEP JUST SEASONAL - IF THIS WILL BE MODIFIED IN THE FUTURE, CHECK NUMBER OF FLAG CONTROL in $DIR_UTIL/launch_diagnostic_website.sh 
 export reglist="global Europe Tropics NH SH"
 ensorgl="Nino1+2 Nino3 Nino3.4 Nino4"
-#varlist="mslp z500 t850 t2m precip sst u200 v200"
-varlist="sic"
-#"mslp z500 t2m precip sst"
+varlist="mslp z500 t850 t2m precip sst u200 v200"
+#varlist="sic"
 for var in $varlist
 do
      cd $DIR_DIAG_C3S

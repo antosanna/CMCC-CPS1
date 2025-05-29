@@ -27,19 +27,17 @@ anomdir=$DIR_FORE_ANOM/$yyyy$st
 mkdir -p $anomdir $dirplots
 
 if [ $all -eq 3 ] ; then #case all=3 -> compute capsule, anomalies and plot
-       set +e
+#       set +e
        ncapsuleyyyystDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/capsule_${yyyy}${st}_${varm}_DONE* | wc -l`
-       set -e
-       if [ $ncapsuleyyyystDONE -eq 0 ] ; then
+#       set -e
 
-	          $DIR_DIAG_C3S/C3S_lead2Mmonth_capsule_notify.sh  $yyyy $st $workdir $anomdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
-       fi
+	      $DIR_DIAG_C3S/C3S_lead2Mmonth_capsule_notify.sh  $yyyy $st $workdir $anomdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
        
        # if this flag is missing: you are running for the first time
        if [ ! -f ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/capsule_${yyyy}${st}_${varm}_DONE ] ; then
-         set +e
+#         set +e
          ncapsuleyyyystDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/capsule_${yyyy}${st}_0??_${varm}_DONE* | wc -l`  
-	        set -e
+#	        set -e
          #if flags for single members are all present - remove them and put the one for entire startdate
          if [ $ncapsuleyyyystDONE -eq $nrunC3Sfore ] ; then
             rm ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/capsule_${yyyy}${st}_0??_${varm}_DONE*
@@ -56,22 +54,17 @@ if [ $all -eq 3 ] ; then #case all=3 -> compute capsule, anomalies and plot
        fi
 
        #now check if anomalies have been computed -same logic as before
-       set +e
+#       set +e
        nanomyyyystDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/anom_${SPSSystem}_${yyyy}${st}_${varm}_DONE* | wc -l`
-       set -e
+#       set -e
        #if this flag is missing - is the first time you run this routine
-       if [ $nanomyyyystDONE -eq 0 ] ; then
-           
-	            $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh $yyyy $st $climdir $workdir $anomdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
-       fi
+       $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh $yyyy $st $climdir $workdir $anomdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
 
 elif [ $all -eq 2 ] ; then #case all=2  -> compute anomalies +plot
-       set +e
+#       set +e
        nanomyyyystDONE=`ls -1 ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics/anom_${SPSSystem}_${yyyy}${st}_${varm}_DONE* | wc -l`
-       set -e
-       if [ $nanomyyyystDONE -eq 0 ] ; then
-	         $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh $yyyy $st $climdir $workdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
-       fi	
+#       set -e
+        $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh $yyyy $st $climdir $workdir $varm $dbg ${DIR_LOG}/${typeofrun}/$yyyy$st/diagnostics
 fi 
 
 ###FROM HERE - plot routines !!!
@@ -162,8 +155,7 @@ done
 
 # must be loaded here to not raise conflicts among conda envs
 . $DIR_UTIL/load_convert
-#for flgmnth in {0..1} ; do
-for flgmnth in 0 ; do
+for flgmnth in {0..1} ; do
    if [[ $flgmnth -eq 0 ]]  ; then
       leadlist="1 2 3 4"
       flgmnth_fname="seasonal"

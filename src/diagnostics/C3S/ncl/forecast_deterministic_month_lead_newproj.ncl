@@ -336,9 +336,9 @@ else if ( varobs .eq. "z500" ) .or. ( varobs .eq. "t850" ) .or. ( varobs .eq. "u
      copy_VarMeta(template(0,:,:),sstspread)
 else
    if (varobs .eq. "precip") then
-      ts=tstmp*90
+      ts=tstmp*30
       copy_VarMeta(tstmp,ts)
-      sst=b->$varm$(:,l1,:,:)*90
+      sst=b->$varm$(:,l1,:,:)*30
    else if (varobs .eq. "mrlsl") then
       ts=tstmp
       tmp=b->$varm$

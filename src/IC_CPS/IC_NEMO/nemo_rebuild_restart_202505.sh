@@ -49,7 +49,7 @@ then
 else
 # forecast
 #   OUTDIR=/work/cmcc/aspect/CESM2/OPSLAMB$poce1/run/
-   OUTDIR=/work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/run/
+   OUTDIR=/work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/2025041900/run/
    tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3|rev`
 # temporarily disabled because there is not a defined directory for forecasts
 #   if [[ ! -d $OUTDIR ]] 
@@ -88,7 +88,7 @@ fi
 
 if [[ ! -f $ciceic ]]
 then
-   f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
+   f_ice=`ls -rt $OUTDIR/*.cice.r.$yyyy-??-??-00000.nc|tail -1`
    rsync -auv $f_ice $ciceic
 fi
 set +euvx

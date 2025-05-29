@@ -96,9 +96,11 @@ then
    WORK=/work/$HEAD/$USER/
    WORK1=/work/$HEAD/$operational_user/
    DIR_CESM=/users_home/$HEAD/${operational_user}/CMCC-CM/
-#   S_apprun=??? #SERIAL_sps35 Zeus
+   S_apprun=SERIAL_sps35 #Zeus
+   apprun=sps35 #Zeus
 #now suppressed because redundant
-#   sla_serialID=SC_SERIAL_sps35 #Zeus
+   sla_serialID=SC_SERIAL_sps35 #Zeus
+   slaID=SC_sps35 #Zeus
    BATCHUNKNOWN="UNKN"
    BATCHRUN="RUN"
    BATCHPEND="PEND"
@@ -274,10 +276,8 @@ then
    	ecmwfmail=$mymail
     ccmail=$mymail
     hsmmail=$mymail
-#    CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
     CLIM_DIR_DIAG=$WORK_SCORES/monthly/
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
-#    PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
 WORK_C3S=$WORK_C3S1
@@ -370,6 +370,10 @@ DIR_PCTL=$HOME/CPS/CMCC-SPS_PCTL
 WORK_SCORES=$WORK/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
 DIR_CLIM=$WORK_SCORES
 DIR_FORE_ANOM=$WORK/CPS/CMCC-${CPSSYS}/forecast_anom
-
+#
+if [[ $machine == "juno" ]]
+then
+   . ~/load_conda;conda activate $envcondacm3
+fi
 
 set +a

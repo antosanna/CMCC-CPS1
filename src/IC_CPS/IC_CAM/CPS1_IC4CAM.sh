@@ -40,7 +40,7 @@ else
    refcase=$refcaseHIST
 fi
 # WILL BE A MODULE
-cesmexe=$DIR_EXE1/cesm.exe.CPS1
+cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 #
 #----------------------------------------------------------
 # clean everything

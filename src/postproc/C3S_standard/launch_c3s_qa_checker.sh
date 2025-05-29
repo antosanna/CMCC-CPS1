@@ -404,16 +404,18 @@ if [ $cnt_files -ge $filetobechecked ]; then
        if [[ -f ${spike_list} ]] ; then
 
             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l $DL -i "$caso 1 ${spike_list}"            
-#           . $DIR_C3S/plot_timeseries_spike_c3s.sh ${SPSSystem}_${startdate}_${ens} ${spike_list} $wdir/output/
-           title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S  MANUAL INTERVENTION REQUIRED!!"          
-           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. \n Please check the output log in $wdir/output/${spike_list} and the plots on google drive. \n In case of false spike, recover it launching $DIR_C3S/launch_recover_false_spike.sh for the case $caso" 
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r only -s $startdate -E $ens
            #counting repetition by looking at number of DMO list produced, if more than 5 interrupt automatic resubmission
            nlist_dmo=`ls ${spike_list_dmo}* |wc -l` 
+           title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S  MANUAL INTERVENTION REQUIRED!!"          
+           body="For member  ${SPSSystem}_${startdate}_${ens} a spike has been found on C3S standardized files. Healing attempt number ${nlist_dmo}/5." 
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r only -s $startdate -E $ens
            if [[ $nlist_dmo -ge 5 ]]  
-           then 
+           then
+                 mkdir -p ${HEALED_DIR_ROOT}/${caso}
+                 sed -e "s:CASO:$caso:g" $DIR_TEMPL/launch_recover_false_spike_onC3S.sh > ${HEALED_DIR_ROOT}/${caso}/launch_recover_false_spike_onC3S.sh 
+                 chmod u+x  ${HEALED_DIR_ROOT}/${caso}/launch_recover_false_spike_onC3S.sh
                  title="MANUAL INTERVENTION REQUIRED C3S ${caso} spike infinite loop!!"
-                 body="For member ${caso} a spike has been found on C3S standardized files, and there have been 5 attempts of healing. \n Please check the output log in $wdir/output/${spike_list} and the plots on google drive. \n In case of false spike, recover it launching $DIR_C3S/launch_recover_false_spike.sh for the case $caso"             
+                 body="For member ${caso} a spike has been found on C3S standardized files, and there have been 5 attempts of healing. \n Please check the output log in $wdir/output/${spike_list} and the plots on google drive. \n In case of false spike, recover it launching ${HEALED_DIR_ROOT}/${caso}/launch_recover_false_spike_onC3S.sh from prompt."             
                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
            else
              while `true`

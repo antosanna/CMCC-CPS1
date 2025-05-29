@@ -1,3 +1,10 @@
+#--#-- touchfiles defined in $DIR_C3S/launch_push4ECMWF.sh
+check_push_done=$DIR_LOG/${typeofrun}/$yyyy$st/push_${yyyy}${st}_DONE
+
+#--#-- touchfiles defined in $DIR_C3S/submit_tar_C3S.sh
+check_tar_started=${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started
+check_tar_done=$WORK_C3S/$yyyy$st/tar_C3S_${yyyy}${st}_DONE 
+
 #--#-- checklist files
 listfileIC_NEMO=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
@@ -43,11 +50,11 @@ check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_do
 check_IC_CAMguess=$IC_CPS_guess/CAM/$st/$yyyy${st}_${ppcam}_done
 
 #--#-- touchfiles defined in $IC_CPS/randomizer.sh
-check_IC_Nemo_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO/${poce}_IC_missing
-check_IC_CICE_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
+#check_IC_Nemo_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO/${poce}_IC_missing
+#check_IC_CICE_miss=$DIR_LOG/$typeofrun/$yyyy$st/IC_CICE/${poce}_IC_missing
 
 #--#-- touchfiles defined in $DIR_UTIL/notificate.sh
-check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK
+#check_SIEplot=$DIR_LOG/$typeofrun/$yyyy$st/SIEplot_${yyyy}${st}_OK
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.nemo_rebuild4cmcc-cm
 check_nemo_rebuild=$CASEROOT/logs/nemo_rebuild_${curryear}${currmon}_done
@@ -57,6 +64,3 @@ checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
 
 #--#-- touchfiles defined in $DIR_CPS/SPS4_step1_ICs.sh
 checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
-
-#--#-- touchfiles defined in $DIR_C3S/launch_postproc_C3S_offline.sh
-checkfile_C3S_offline=$DIR_TEMP/C3S_postproc_offline_${caso}

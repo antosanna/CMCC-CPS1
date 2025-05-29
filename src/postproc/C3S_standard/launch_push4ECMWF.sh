@@ -30,7 +30,10 @@ fi
 # ---------------------------
 for yyyy in `seq $iyy $fyy` ; do
 
+set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+   . ${dictionary}
+set -euvx
    if [ $debug_push -ge 1 ]
    then
      mymail="sp1@cmcc.it"
@@ -47,7 +50,7 @@ for yyyy in `seq $iyy $fyy` ; do
 #--------------------------------------------------------------------
    if [[ "$machine" == "juno" ]]
    then
-      filedone=$DIR_LOG/${typeofrun}/$yyyy$st/push_${yyyy}${st}_DONE
+      filedone=$check_push_done
       if [ $debug_push -ge 1 ]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
@@ -55,7 +58,7 @@ for yyyy in `seq $iyy $fyy` ; do
       cmd_anypushC3SDONE="ls $filedone | wc -l"
    elif [[ "$machine" == "leonardo" ]]
    then
-      filedone=$DIR_LOG/${typeofrun}/$yyyy$st/push_${yyyy}${st}_DONE
+      filedone=$check_push_done
       if [ $debug_push -ge 1 ]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE

@@ -1,4 +1,5 @@
 #!/bin/sh -l 
+#yyyy=2025;st=05;typeofrun=forecast; ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -j submit_tar_C3S${yyyy}$st -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st"
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 
@@ -9,20 +10,21 @@ st=$2
 # this script should work only in operational mode
 set +uevx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
+. $dictionary
 set -uexv
-if [[ -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started ]] ; then
+if [[ -f ${check_tar_started} ]] ; then
    title="${CPSSYS} forecast warning"
    body="submit_tar_C3S.sh ALREADY RUNNING!"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit
 fi
-touch ${DIR_LOG}/${typeofrun}/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started
+touch ${check_tar_started}
 
 yyyymmtoday=`date +%Y%m`
-if [ -f $WORK_C3S/$yyyy$st/tar_C3S_${yyyy}${st}_DONE ] 
+if [ -f $check_tar_done ] 
 then
    title="${CPSSYS} forecast warning"
-   body="$DIR_C3S/tar_C3S.sh already done for this start-date. $WORK_C3S/$yyyy$st/tar_C3S_${yyyy}${st}_DONE exists. If you want to redo first delete it"
+   body="$DIR_C3S/tar_C3S.sh already done for this start-date. $check_tar_done exists. If you want to redo first delete it"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit
 fi
