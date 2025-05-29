@@ -57,3 +57,6 @@ checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
 
 #--#-- touchfiles defined in $DIR_CPS/SPS4_step1_ICs.sh
 checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
+
+#--#-- touchfiles defined in $DIR_C3S/launch_postproc_C3S_offline.sh
+checkfile_C3S_offline=$DIR_TEMP/C3S_postproc_offline_${caso}

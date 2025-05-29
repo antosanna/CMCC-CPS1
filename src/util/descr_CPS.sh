@@ -274,8 +274,10 @@ then
    	ecmwfmail=$mymail
     ccmail=$mymail
     hsmmail=$mymail
-    CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
-    PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
+#    CLIM_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/monthly/
+    CLIM_DIR_DIAG=$WORK_SCORES/monthly/
+    PCTL_DIR_DIAG=$WORK_SCORES/pctl//
+#    PCTL_DIR_DIAG=$SCRATCHDIR1/${CPSSYS}/CESM/pctl//
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
 WORK_C3S=$WORK_C3S1

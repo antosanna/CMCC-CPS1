@@ -95,7 +95,9 @@ cd $DIR_CASES/
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
 #listofcases="sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200305_010 sps4_200605_016 sps4_201005_007 sps4_199605_001 sps4_199605_004 sps4_199605_014 sps4_199605_016 sps4_200105_004 sps4_200205_001 sps4_200405_023 sps4_201405_009 sps4_201505_020"
-listofcases="sps4_200005_018"
+
+####MARI 20250521 - list to be recovered AFTER POP!!!
+listofcases="sps4_202209_019 sps4_201609_017 sps4_200409_018 sps4_201809_003 sps4_201809_004 sps4_201809_005 sps4_201809_007 sps4_201809_008 sps4_201809_009 sps4_201809_011 sps4_201809_012 sps4_201809_013 sps4_201809_014 sps4_201809_016 sps4_201809_017 sps4_201809_018 sps4_201809_020 sps4_201809_026 sps4_201809_028 sps4_201909_018 sps4_201909_028 sps4_202009_004 sps4_202009_005 sps4_202009_014 sps4_202109_012 sps4_202109_020 sps4_202109_027 sps4_202209_010 sps4_202209_024 sps4_200809_009 sps4_201109_006 sps4_201109_010 sps4_201109_029 sps4_201209_008 sps4_201609_009 sps4_201609_012 sps4_201609_015 sps4_201609_023 sps4_201609_025 sps4_201609_027 sps4_201609_030 sps4_201709_001 sps4_201709_002 sps4_201709_004 sps4_201709_009 sps4_201709_014 sps4_201709_016 sps4_201709_018 sps4_201709_022 sps4_201709_025 sps4_201709_028 sps4_201709_029 sps4_200709_007 sps4_200709_010 sps4_200709_011 sps4_200709_012 sps4_200709_014 sps4_201109_024 sps4_201709_003 sps4_201709_008 sps4_201709_026 sps4_202009_028 sps4_202109_013 sps4_201809_022 sps4_201709_030 sps4_200809_021 sps4_201109_019 sps4_201209_020 sps4_201609_002"
 
 #"sps4_200802_013 sps4_200802_021 sps4_200802_022 sps4_200802_023 sps4_200802_024 sps4_200802_025 sps4_200802_026 sps4_200802_027 sps4_200802_029 sps4_200802_030 sps4_200902_001 sps4_200902_002 sps4_200902_012 sps4_200902_018 sps4_200902_020 sps4_200902_024"  
 #"sps4_199711_018 sps4_199811_003 sps4_199811_012 sps4_200411_007 sps4_200411_015 sps4_200711_028 sps4_200811_013 sps4_201011_023 sps4_201411_025" 
@@ -254,8 +256,18 @@ set -eux
            lista_first_month+=" $caso"
         fi
      else
-        is_starch=`ls -ltr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
-        if [[ ${is_starch} -eq 1 ]] ; then
+
+        last_cesm=`ls -tr $DIR_CASES/$caso/logs/${caso}.run_*.err |tail -n 1` 
+        last_star=`ls -tr $DIR_CASES/$caso/logs/st_archive*.err |tail -n 1`
+        #in this case the run is finished, the new restart are present in the rundir but the job complation is not recorded by the slurm scheduler 
+        #by relaunching the case as interrupted there is the risk of running an extra-month:
+        #in rundir the new restart are already there, but the RESUBMIT value has not been updated (it is done by st_archive)
+        errstring=`grep -r 'error: Unable to send job complete message:' $last_cesm |wc -l`
+        is_starch=`ls -tr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
+        if [[ ${last_cesm} -nt ${last_star} ]] && [[ $errstring -ne 0 ]] ; then
+          cnt_st_archive=$(($cnt_st_archive + 1)) 
+          lista_st_archive+=" $caso"
+        elif [[ ${is_starch} -eq 1 ]] ; then
            cnt_st_archive=$(($cnt_st_archive + 1))
            lista_st_archive+=" $caso"
         else
@@ -425,6 +437,147 @@ set +euv
 #set -euvx
 set -eux
    caso=""
+
+# lt_archive
+   if [[ $cnt_moredays -ne 0 ]] ; then
+      echo "RELAUNCH lt_archive to resubmit moredays FOR CASES:"
+      echo "$lista_moredays"
+      echo ""
+   fi
+   for caso in $lista_moredays
+   do
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
+
+      cd $DIR_CASES/$caso
+      stopoption=`./xmlquery STOP_OPTION|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
+      resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
+      if [[ $resubmit -eq 0 ]] && [[ $stopoption=="ndays" ]]
+      then
+         ./xmlchange STOP_OPTION=nmonths
+      fi
+      now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+      if [[ $machine == "leonardo" ]]
+      then
+         salloc -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00
+         srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+# 20240627 G.F.Marras  does not work
+#         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+      else
+         $DIR_RECOVER/recover_lt_archive.sh $caso
+      fi
+      ncount=$(($ncount + 1))
+      if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+      then
+         if [[ -f ${check_recover_running} ]] ; then
+             rm ${check_recover_running}
+         fi
+         exit
+      fi
+
+      if [[ $dbg -eq 1 ]] ; then break ; fi
+   done
+
+
+# resubmit monthly run
+   if [[ $cnt_resubmit -ne 0 ]] ; then
+      echo "RESUBMIT FOLLOWING CASES FROM THEIR $DIR_CASES/CASO:"
+      echo "$lista_resubmit"
+      echo ""
+   fi
+
+   for caso in ${lista_resubmit}
+   do
+      echo "going to relaunch case $caso"
+
+      domodify=0
+      isrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| wc -l`
+      if [[ $isrunlog -ge 1 ]]
+      then
+          #take the last one
+          lastrunlog=`ls -tr $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
+          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
+          if [[ $ismoderr -ne 0 ]]
+          then
+             domodify=1
+             if [[ $machine == "leonardo" ]]
+             then
+                domodify=0
+                logff=`grep 'See log file for details: ' $lastrunlog | cut -d ':' -f 2`
+                clmerr=`grep "h2osoi_ice has gone significantly negative" $logff |wc -l`
+                #since on Leonardo the 'ERROR: RUN FAIL:' string can be also due to machine issue, we allow modify_triplette just in case of clm instability 
+                #(the most frequent one)
+                if [[ $clmerr -ne 0 ]] ; then
+                   domodify=1
+                fi
+             fi
+          fi
+      fi
+
+      if [[ $domodify -eq 1 ]]
+      then
+          echo "$caso facing some numerical issue, going to modify triplette" 
+          #numerical failure of the model (instability, conservation check failure etc)
+          #we change ICs with modify_triplette
+          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+          log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
+          mkdir -p $log_dir_modify  #probably redundant
+          while `true`
+          do
+               #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
+               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
+               if [[ $np -eq 0 ]]
+               then
+                  if [[ $machine == "leonardo" ]]
+                  then
+                     $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
+                  else
+                     ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                  fi
+                  break
+               fi
+               sleep 60
+          done
+      else
+          echo "going to resubmit $caso from last restart in run directory" 
+          $DIR_RECOVER/refresh_all_scripts.sh $caso
+          $DIR_RECOVER/recover_lt_archive.sh $caso
+          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+          member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
+          CASEROOT=$DIR_CASES/$caso/
+          outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
+          set +uevx
+          . $dictionary
+#          set -euvx
+set -eux
+          cd ${DIR_CASES}/$caso
+# workaround in order to keep the syntax highlights correct (case is a shell command)
+          command="case.submit"
+          echo $command
+          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+          if [[ $machine == "leonardo" ]]
+          then
+#does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00
+             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
+          else
+             ./$command
+          fi
+          echo "$command done"
+          ncount=$(($ncount + 1))
+          if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+          then
+             if [[ -f ${check_recover_running} ]] ; then
+                 rm ${check_recover_running}
+             fi
+             exit
+          fi
+      fi
+      if [[ $dbg -eq 1 ]] ; then break ; fi
+   done
+
+
 # first month
    if [[ $cnt_first_month -ne 0 ]] ; then
       echo "RELAUNCH first month FOR CASES:"
@@ -518,44 +671,6 @@ set -eux
       fi
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
-# lt_archive
-   if [[ $cnt_moredays -ne 0 ]] ; then
-      echo "RELAUNCH lt_archive to resubmit moredays FOR CASES:"
-      echo "$lista_moredays"
-      echo ""
-   fi
-   for caso in $lista_moredays 
-   do
-      $DIR_RECOVER/refresh_all_scripts.sh $caso
-      
-      cd $DIR_CASES/$caso
-      stopoption=`./xmlquery STOP_OPTION|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
-      resubmit=`./xmlquery RESUBMIT|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
-      if [[ $resubmit -eq 0 ]] && [[ $stopoption=="ndays" ]]
-      then
-         ./xmlchange STOP_OPTION=nmonths
-      fi
-      now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
-      if [[ $machine == "leonardo" ]]
-      then
-         salloc -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
-         srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
-# 20240627 G.F.Marras  does not work
-#         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
-      else
-         $DIR_RECOVER/recover_lt_archive.sh $caso
-      fi
-      ncount=$(($ncount + 1))
-      if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
-      then
-         if [[ -f ${check_recover_running} ]] ; then
-             rm ${check_recover_running}
-         fi 
-         exit
-      fi
-      
-      if [[ $dbg -eq 1 ]] ; then break ; fi
-   done
   
 # st_archive
    if [[ $cnt_st_archive -ne 0 ]] ; then
@@ -573,105 +688,6 @@ set -eux
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
  
-# resubmit monthly run
-   if [[ $cnt_resubmit -ne 0 ]] ; then
-      echo "RESUBMIT FOLLOWING CASES FROM THEIR $DIR_CASES/CASO:"
-      echo "$lista_resubmit"
-      echo ""
-   fi
-   
-   for caso in ${lista_resubmit}
-   do 
-      echo "going to relaunch case $caso"
-
-      domodify=0
-      isrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| wc -l`
-      if [[ $isrunlog -ge 1 ]]
-      then
-          #take the last one
-          lastrunlog=`ls -tr $DIR_CASES/$caso/logs/$caso.run_*.err| tail -n 1`
-          ismoderr=`grep 'ERROR: RUN FAIL:' $lastrunlog |wc -l`
-          if [[ $ismoderr -ne 0 ]]
-          then
-             domodify=1
-             if [[ $machine == "leonardo" ]]
-             then 
-                domodify=0
-                logff=`grep 'See log file for details: ' $lastrunlog | cut -d ':' -f 2`
-                clmerr=`grep "h2osoi_ice has gone significantly negative" $logff |wc -l`
-                #since on Leonardo the 'ERROR: RUN FAIL:' string can be also due to machine issue, we allow modify_triplette just in case of clm instability 
-                #(the most frequent one)
-                if [[ $clmerr -ne 0 ]] ; then
-                   domodify=1
-                fi 
-             fi
-          fi
-      fi
-
-      if [[ $domodify -eq 1 ]]
-      then
-          echo "$caso facing some numerical issue, going to modify triplette" 
-          #numerical failure of the model (instability, conservation check failure etc)
-          #we change ICs with modify_triplette
-          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-          log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
-          mkdir -p $log_dir_modify  #probably redundant
-          while `true`
-          do
-               #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
-               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
-               if [[ $np -eq 0 ]]
-               then
-                  if [[ $machine == "leonardo" ]]
-                  then
-                     $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
-                  else
-                     ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
-                  fi
-                  break
-               fi
-               sleep 60
-          done
-      else
-          echo "going to resubmit $caso from last restart in run directory" 
-          $DIR_RECOVER/refresh_all_scripts.sh $caso
-          $DIR_RECOVER/recover_lt_archive.sh $caso
-          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-          yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-          member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`
-          CASEROOT=$DIR_CASES/$caso/
-          outdirC3S=$DIR_ARCHIVE/C3S/$yyyy$st/
-          set +uevx
-          . $dictionary
-#          set -euvx
-set -eux
-          cd ${DIR_CASES}/$caso
-# workaround in order to keep the syntax highlights correct (case is a shell command)
-          command="case.submit"
-          echo $command
-          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
-          if [[ $machine == "leonardo" ]]
-          then
-#does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
-             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-          else
-             ./$command
-          fi
-          echo "$command done"
-          ncount=$(($ncount + 1))
-          if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
-          then
-             if [[ -f ${check_recover_running} ]] ; then
-                 rm ${check_recover_running}
-             fi 
-             exit
-          fi
-      fi
-      if [[ $dbg -eq 1 ]] ; then break ; fi
-   done
-   
    
 # resubmit lt_archive_moredays
    if [[ $cnt_pp_C3S -ne 0 ]] ; then

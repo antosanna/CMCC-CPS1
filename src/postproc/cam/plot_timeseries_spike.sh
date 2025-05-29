@@ -1,10 +1,4 @@
 #!/bin/sh -l
-#BSUB -J plot_timeseries_spike
-#BSUB -e logs/plot_timeseries_spike_%J.err
-#BSUB -o logs/plot_timeseries_spike_%J.out
-#BSUB -P 0490
-#BSUB -M 40000
-#BSUB -q s_medium
 #--------------------------------
 #--------------------------------
 # this script identifies the spikes in a daily timeseries of TMAX, performs a poisson extrapolation in the points nearby the spikes, setting to mask an arbitrary selected region (3 ponts) around the spike and filling it through poisson.
@@ -51,6 +45,10 @@ else
    export pltname_root=$HEALED_DIR/$caso.DMO.it5
 fi
 cp $DIR_POST/cam/plot_timeseries_spike.ncl $HEALED_DIR
+
+if [[ $machine == "leonardo" ]] ; then
+   $DIR_UTIL/load_ncl
+fi
 
 ncl $HEALED_DIR/plot_timeseries_spike.ncl
 

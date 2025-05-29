@@ -1,19 +1,15 @@
 #!/bin/sh -l
 #--------------------------------
-#BSUB -J extrapT_SPS4
-#BSUB -o logs/extrapT_SPS4.%J.out
-#BSUB -e logs/extrapT_SPS4.%J.err
-#BSUB -P 0490
-#BSUB -M 20000
 
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_cdo
 #module load gcc-12.2.0/12.2.0
-. $HOME/load_miniconda
-conda activate miniconda_ncl
-
+if [[ $machine == "juno" ]] ; then
+  . $HOME/load_miniconda
+  conda activate miniconda_ncl
+fi
 #---------------------------------
 # first part computes PS from PSL
 #---------------------------------
@@ -70,7 +66,12 @@ mkdir -p $OUTDIR
 
 
 rsync -av $DIR_POST/cam/compute_PS_from_PSL_template.ncl $HEALED_DIR/compute_PS_from_PSL_$caso.ncl
-rsync -av $DIR_POST/cam/ncl_libraries $HEALED_DIR/
+
+#rsync -av $DIR_POST/cam/ncl_libraries $HEALED_DIR/
+mkdir -p $HEALED_DIR/ncl_libraries
+rsync -av $DIR_POST/cam/ncl_libraries_${machine}/* $HEALED_DIR/ncl_libraries/.
+
+
 cd $HEALED_DIR
 ncl compute_PS_from_PSL_${caso}.ncl
 if [ ! -f $outputPS ] 

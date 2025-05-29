@@ -22,7 +22,8 @@ then
    . $dictionary
    set -euvx
    touch $check_run_moredays
-   if [[ $typeofrun == "hindcast" ]]
+   exit
+   if [[ $typeofrun == "hindcast" ]] 
    then
       exit 0 #disabled for hindcast and done off-line
    fi

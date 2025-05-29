@@ -38,7 +38,7 @@ then
           
       if [[ ! -f pre.$caso.clm2.$ft.$yyyy-$st.zip.nc ]] 
       then 
-         $compress $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
       fi
       ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
 

@@ -100,7 +100,7 @@ if [ -f $WORK_IC4CAM/$output_checkZIP ]
 then
     rm -f $WORK_IC4CAM/$output_checkZIP
 fi
-$compress ${output_check} $WORK_IC4CAM/$output_checkZIP
+$DIR_UTIL/compress.sh ${output_check} $WORK_IC4CAM/$output_checkZIP
 rm -f ${output_check}
 
 echo 'ended compression check level fields and begin compression IC CAM ' `date`echo ''

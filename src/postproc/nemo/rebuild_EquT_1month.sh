@@ -140,7 +140,7 @@ set -euvx
 if [ -f $outfile ]
 then
    rootname=`basename $outfile |rev |cut -d '.' -f1 --complement|rev`
-   $compress $EquTfile $outdir/${rootname}.zip.nc
+   $DIR_UTIL/compress.sh $EquTfile $outdir/${rootname}.zip.nc
    ncatted -O -a ic,global,a,c,"$ic" $outdir/${rootname}.zip.nc
    if [ -f $outdir/${rootname}.zip.nc ]
    then

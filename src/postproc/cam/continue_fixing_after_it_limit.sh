@@ -1,10 +1,4 @@
 #!/bin/sh -l
-#BSUB -J continue_after_it_limit
-#BSUB -e logs/continue_after_it_limit_%J.err
-#BSUB -o logs/continue_after_it_limit_%J.out
-#BSUB -P 0490
-#BSUB -M 20000
-#BSUB -q s_medium
 #--------------------------------
 #--------------------------------
 # this script identifies the spikes in a daily timeseries of TMAX, performs a poisson extrapolation in the points nearby the spikes, setting to mask an arbitrary selected region (3 ponts) around the spike and filling it through poisson.

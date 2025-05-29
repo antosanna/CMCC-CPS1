@@ -9,10 +9,12 @@ set -evxu
 caso=EXPNAME
 ic="DUMMYIC"
 
-st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
-yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 
-#load_nco after xmlquery to avoid conflict with conda environmens on leonardo
+#st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+#yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
    . ${DIR_UTIL}/load_nco
@@ -157,8 +159,27 @@ then
              #now fix for spikes on $HEALED_DIR
              # we want to archive the DMO with spikes
              # this is an iterative procedure that might requires a few cycles (up to 3 I guess)
-   input="$caso $HEALED_DIR"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -p create_cam_files_h3_${caso} -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
+   
+
+   if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h1.DONE
+   fi  
+   if [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h2.DONE
+   fi  
+   if [[ -f  $HEALED_DIR/${caso}.cam.h3.DONE ]]
+   then
+      rm $HEALED_DIR/${caso}.cam.h3.DONE
+   fi  
+   if [[ -f $HEALED_DIR/${caso}.NO_SPIKE ]]
+   then
+      rm $HEALED_DIR/${caso}.NO_SPIKE
+   fi  
+
+   input="$caso $DIR_CASES"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
@@ -183,6 +204,7 @@ then
    do
 
       case $ft in
+          h0)req_mem=1000;;
           h1)req_mem=9000;;
           h2)req_mem=4000;;
           h3)req_mem=1500;;
@@ -199,12 +221,11 @@ then
 
    done
 #  now apply fix for isobaric level T on ft=h2 
-   WKDIR=${HEALED_DIR_ROOT}/${caso}
-   mkdir -p $WKDIR/logs
-   checkfileextrap=$WKDIR/logs/extrapT_${caso}_DONE
-   inputextrap="$caso $checkfileextrap $WKDIR"
+   mkdir -p ${HEALED_DIR}/logs
+   checkfileextrap=${HEALED_DIR}/logs/extrapT_${caso}_DONE
+   inputextrap="$caso $checkfileextrap"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $WKDIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l ${HEALED_DIR}/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
@@ -323,7 +344,7 @@ do
             do
                finalf=`echo "${ff/$suff/.zip.nc}"`
                echo "compress $ff $finalf"
-               $compress $ff $finalf
+               ${DIR_UTIL}/compress.sh $ff $finalf
                rm $ff
                echo "$ff removed"
             done

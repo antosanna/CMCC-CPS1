@@ -52,13 +52,6 @@ do
                fi
             fi
             continue
-            if [[ ! -f $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${ffzip}.zip.nc ]]
-            then
-               title="[ERROR CPS1]-unrecoverable error in nemo_rebuild"
-               message="Merging Nemo domains underwent an unrecoverable error for ${curryear}${currmon}!!. Output ${frq}_${curryear}${currmon}*grid_${grd} not present. Stop now case $CASE!!"
-               $DIR_UTIL/sendmail.sh -t $title -M $message -e $mymail
-               exit
-            fi
          fi
 
          set +euxv
@@ -148,7 +141,7 @@ do
          continue
       fi
       pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
-      $compress $pref.nc $pref.zip.nc
+      $DIR_UTIL/compress.sh $pref.nc $pref.zip.nc
    #   rm $pref.nc  useless because copied from restdir each month
       ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
    done
@@ -162,7 +155,7 @@ do
       fi
       pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
       if [[ -f $pref.nc ]] ; then
-         $compress $pref.nc $pref.zip.nc
+         $DIR_UTIL/compress.sh $pref.nc $pref.zip.nc
          rm $pref.nc
       fi
       ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
@@ -177,7 +170,7 @@ do
       if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc|wc -l` -eq 1 ]]
       then
          rootname=`basename $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc  |rev |cut -d '.' -f1 --complement|rev`
-         $compress $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.nc $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
+         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.nc $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
          ncatted -O -a ic,global,a,c,"$ic" $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
          continue
       fi

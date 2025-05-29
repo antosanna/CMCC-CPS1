@@ -98,10 +98,10 @@ for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
    do
-       if [[ $yyyy -eq 2014 ]]
-       then
-          continue
-       fi
+       #if [[ $yyyy -eq 2014 ]]
+       #then
+       #   continue
+       #fi
        echo "YEAR $yyyy *****************************"
        
        #check how many members done per year

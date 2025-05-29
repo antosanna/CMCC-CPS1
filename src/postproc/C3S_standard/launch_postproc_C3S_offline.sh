@@ -39,7 +39,11 @@ do
 
    for caso in $listofcases
    do
-      flag_postproc_offline_on=$DIR_TEMP/C3S_postproc_offline_${caso}
+set +euvx 
+# source the dictionary for checkfile
+      . $dictionary
+set -euvx 
+      flag_postproc_offline_on=$checkfile_C3S_offline
       if [[ -f ${flag_postproc_offline_on} ]]  
       then
            #postproc already submitted - continue

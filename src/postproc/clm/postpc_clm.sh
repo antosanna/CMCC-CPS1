@@ -170,7 +170,7 @@ then
    touch ${check_postclm}
 else
    body="$startdate postprocessing CLM already completed. \n
-         ${check_postpcclm} exists. If you want to recomputed first delete it"
+         ${check_postclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
    

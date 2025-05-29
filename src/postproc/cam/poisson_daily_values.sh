@@ -1,11 +1,5 @@
 #!/bin/sh -l
 #--------------------------------
-#BSUB -J poisson
-#BSUB -P 0490
-#BSUB -M 25000
-#BSUB -o logs/poisson.%J.out
-#BSUB -e logs/poisson.%J.err
-#BSUB -q s_medium
 
 # this script identifies the spikes in a daily timeseries, derives from it the corresponding index in the appropriate actual timeseries (daily, 6hourly or 12hourly) and fixes through poisson extrapolation, setting to mask an arbitrary selected region around the spike and filling it through poisson.
 . ~/.bashrc

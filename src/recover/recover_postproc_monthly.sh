@@ -48,7 +48,7 @@ do
             continue
          fi
          pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
-         $compress $pref.nc $pref.zip.nc
+         $DIR_UTIL/compress.sh $pref.nc $pref.zip.nc
       #   rm $pref.nc  useless because copied from restdir each month
          ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc
       done
@@ -62,7 +62,7 @@ do
          fi
          pref=`ls $file |rev |cut -d '.' -f1 --complement|rev`
          if [[ -f $pref.nc ]] ; then
-            $compress $pref.nc $pref.zip.nc
+            $DIR_UTIL/compress $pref.nc $pref.zip.nc
             rm $pref.nc
          fi
          ncatted -O -a ic,global,a,c,"$ic" $pref.zip.nc

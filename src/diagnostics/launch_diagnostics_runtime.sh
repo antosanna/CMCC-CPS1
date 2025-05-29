@@ -2,7 +2,7 @@
 #WARNING!!! now the script can work only for leads because the pctl for monthly var new (t850, z500 and u-v200) have not been computed yet
 #-------------------------------------------------------------------------------
 # Script to submit (through crontab) run-time diagnostics on monthly fields:
-# t2m, sst, mslp, precip, t850, z500, v and u200
+# t2m, sst, mslp, precip, t850, z500
 #
 #-------------------------------------------------------------------------------
 # CAVEAT
@@ -29,7 +29,7 @@ yyyy=`date +%Y`
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euxv
-LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_forecast_diag_`date +%Y%m%d%H%M`.out
+LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 checkfile1=$DIR_LOG/forecast/$start_date/first_month_diagnostics_${start_date}_DONE
@@ -129,16 +129,18 @@ then
 fi
 echo ""
 echo ""
-if [ $n_first_month_done -lt $nrunC3Sfore ] 
+nrundiagmin=40
+if [ $n_first_month_done -lt $nrundiagmin ] 
 then
    echo "not enough month completed to run diagnostics. Bye"
    exit
 fi
 #
-if [ $n_first_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile1 ]
+if [ $n_first_month_done -ge $nrundiagmin ] && [ ! -f $checkfile1 ]
 then
    mkdir -p $DIR_LOG/forecast/$start_date/
-   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_1m
+   mkdir -p $DIR_TEMP/$start_date
+   inputfile=$DIR_TEMP/$start_date/list_of_cases_1m
    echo $list_of_cases_1m > $inputfile
    nproc0=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
    if [ $nproc0 -eq 0 ]
@@ -147,7 +149,7 @@ then
       flgmnth=1
       monthstr=`date -d "$yyyy${st}01 " +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
+      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit
@@ -167,9 +169,10 @@ else
 fi
 # run the diagnostics only if enough outputs $n_first_month_done and not yet done ($checkfile1 created exiting from plot_forecast_all_vars.sh)
 ## run the diagnostics only if not yet launched and running
-if [ $n_third_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile2 ]
+if [ $n_third_month_done -ge $nrundiagmin ] && [ ! -f $checkfile2 ]
 then
-   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_lead0
+   mkdir -p $DIR_TEMP/$start_date
+   inputfile=$DIR_TEMP/$start_date/list_of_cases_lead0
    echo $list_of_cases_lead0 > $inputfile
    nproc1=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
    if [ $nproc1 -eq 0 ]
@@ -179,7 +182,7 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile2 $inputfile $dbg"
+      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile2 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 # Only one $DIR_UTIL/diag/plot_forecast_all_vars.sh allowed at a time!
 set -euvx
@@ -202,9 +205,10 @@ fi
 # run the diagnostics only if enough outputs $n_first_month_done and not yet done ($checkfile1 created exiting from plot_forecast_all_vars.sh)
 # diagnostcs for lead 1
 #END PRESENT VERSION
-if [ $n_forth_month_done -ge $nrunC3Sfore ] && [ ! -f $checkfile3 ]
+if [ $n_forth_month_done -ge $nrundiagmin ] && [ ! -f $checkfile3 ]
 then
-   inputfile=$DIR_LOG/forecast/$start_date/list_of_cases_lead1
+   mkdir -p $DIR_TEMP/$start_date
+   inputfile=$DIR_TEMP/$start_date/list_of_cases_lead1
    echo $list_of_cases_lead1 > $inputfile
    nproc2=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
    if [ $nproc2 -eq 0 ]
@@ -214,7 +218,7 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrunC3Sfore $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg"
+      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg "
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
       exit

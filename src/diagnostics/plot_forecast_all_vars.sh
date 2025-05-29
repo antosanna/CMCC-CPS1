@@ -1,9 +1,9 @@
 #!/bin/sh -l
-#BSUB -q s_medium
-#BSUB -J plot_test
-#BSUB -e logs/plot_test_%J.err
-#BSUB -o logs/plot_test_%J.out
-#BSUB -P 0490
+##BSUB -q s_medium
+##BSUB -J plot_test
+##BSUB -e logs/plot_test_%J.err
+##BSUB -o logs/plot_test_%J.out
+##BSUB -P 0490
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -58,7 +58,10 @@ pctldir=$PCTL_DIR_DIAG
 #****************************** 
 # Main var loop
 #****************************** 
-varlist="t2m sst precip mslp z500 u200 v200 t850"
+#varlist="t2m sst precip mslp z500 u200 v200 t850"
+varlist="t2m sst precip z500"
+#invarlist="TREFHT TS PRECT PSL Z500 U200 V200 T850"
+invarlist="TREFHT TS PRECT Z500"
 # now postprocess files 
 if [ $flgmnth -eq 1 ] ; then
 #      checkdiagfile=$logdir/${nmf}_diag_DONE
@@ -75,7 +78,17 @@ mkdir -p $pldir
 set -evx
 
 # all vars at once
-$DIR_DIAG/assembler_${CPSSYS}_runtime.sh $yyyy $st $nrun $scriptdir $nmf $WKDIR $inputfile $dbg
+$DIR_DIAG/launch_remap_var_diag_runtime.sh $yyyy $st $nrun $scriptdir $nmf $WKDIR $inputfile $dbg "$invarlist"
+while `true` ; do
+
+   nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n remap_var_diag_runtime -c yes`
+   if [ $nproc -eq 0 ] ; then
+      break
+   fi
+   sleep 30
+
+done
+
 cd $WKDIR
 for var in $varlist
 do
@@ -91,13 +104,13 @@ do
        v200) pctlvar="v200";colormap="prob_t2m";units="[m/s]";unitsl="[m/s]"    ;fact=1 ;;
    esac
    if [ $flgmnth -eq 1 ] ; then
-      count=`ls $pctldir/monthly/${var}_${st}_l?_??.nc|wc -l`
+      count=`ls $pctldir/monthly/$st/${var}_${st}_l?_??.${iniy_hind}-${endy_hind}.nc|wc -l`
       nmaxcount=12
       export checkfilevar=$DIR_LOG/$typeofrun/$yyyy$st/${var}_month_plot_ok 
    else
       l=$(($nmf - 3))     #lead season from nmf
       export checkfilevar=$DIR_LOG/$typeofrun/$yyyy$st/${var}_l${l}_plot_ok 
-      count=`ls $pctldir/${var}_${st}_l?_??.nc|wc -l`
+      count=`ls $pctldir/$st/${var}_${st}_l?_??.${iniy_hind}-${endy_hind}.nc|wc -l`
       nmaxcount=8
    fi
    if [ $count -lt $nmaxcount ]

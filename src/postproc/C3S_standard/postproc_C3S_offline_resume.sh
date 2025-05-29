@@ -258,7 +258,7 @@ do
             do
                finalf=`echo "${ff/$suff/.zip.nc}"`
                echo "compress $ff $finalf"
-               $compress $ff $finalf
+               ${DIR_UTIL}/compress.sh $ff $finalf
                rm $ff
                echo "$ff removed"
             done

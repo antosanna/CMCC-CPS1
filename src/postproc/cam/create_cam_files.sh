@@ -47,7 +47,7 @@ then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc ]]
       then
-         $compress $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
+         ${DIR_UTIL}/compress.sh $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
       fi
 #         ic=(from txt in casedir)
       ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc

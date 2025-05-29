@@ -28,7 +28,7 @@ if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-cesmexe=$DIR_EXE1/cesm.exe.CPS1
+cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''

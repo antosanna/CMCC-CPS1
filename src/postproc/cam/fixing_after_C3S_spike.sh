@@ -1,10 +1,4 @@
 #!/bin/sh -l
-#BSUB -J fixing_after_C3S_spike
-#BSUB -e logs/fixing_after_C3S_spike_%J.err
-#BSUB -o logs/fixing_after_C3S_spike_%J.out
-#BSUB -P 0490
-#BSUB -M 20000
-#BSUB -q s_medium
 #--------------------------------
 #--------------------------------
 # this script identifies the spikes in a daily timeseries of TMIN, performs a poisson extrapolation in the points nearby the spikes, setting to mask an arbitrary selected region (3 ponts) around the spike and filling it through poisson.
