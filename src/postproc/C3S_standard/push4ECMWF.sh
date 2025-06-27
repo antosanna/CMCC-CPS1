@@ -15,7 +15,7 @@ stat=$1
 script1=$2
 if [ $stat -ne 0 ]
 then
-   title=${title_debug}"[C3S] ${SPSSystem} ERROR"
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
    then
       body="Error in ${script1}. Exiting from $DIR_C3S/push4ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
@@ -23,7 +23,7 @@ then
    then
       body="Error in ${script1}. Exiting from $DIR_C3S/push4ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 fi
 }
@@ -44,13 +44,13 @@ then
    ccecmwfmail=$mymail
    title_debug="TEST"
 else
-   ccecmwfmail="adrien.owono@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
+   ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
    title_debug=""
 fi
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-title="${title_debug} [C3S] ${SPSSystem} forecast notification"
+title="${title_debug} [CERISE] ${SPSSystem} forecast notification"
 
 body="push4ECMWF.sh for startdate $yyyy$st started `date` "
 
@@ -67,7 +67,7 @@ if [ $cntfirst -eq 1 ]
 then
    body="Successive attempt push4ECMWF.sh for startdate $yyyy$st started `date` "
 fi
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
 start_date=$yyyy$st
 cd $pushdir/$start_date
@@ -156,7 +156,7 @@ fi
 # Check if the files pushed are as expected
 nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/${log_script} | wc -l`
 if [ $nline -lt $ntarandsha ] ; then
-   title=${title_debug}"[C3S] ${SPSSystem} ERROR"
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
    then
       body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
@@ -164,7 +164,7 @@ if [ $nline -lt $ntarandsha ] ; then
    then
       body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 fi
 # END OF PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
@@ -200,7 +200,7 @@ cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100
 
 if [ $cntmanifest -gt 1 ]; then
    # Raise error
-   title=${title_debug}"[C3S] ${SPSSystem} ERROR"
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
    then
       body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
@@ -208,7 +208,7 @@ if [ $cntmanifest -gt 1 ]; then
    then
       body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected" 
    fi  
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 fi
 
@@ -232,7 +232,7 @@ fi
 cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
 if [ $cntmanifest -ne 1 ]; then
    # Raise error
-   title=${title_debug}"[C3S] ${SPSSystem} ERROR"
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
    then
       body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
@@ -240,7 +240,7 @@ if [ $cntmanifest -ne 1 ]; then
    then
       body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
    fi
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 else
 # do check dimensions of transferred files
@@ -252,9 +252,9 @@ else
       remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
       if [ $localdim -ne $remotedim ]
       then
-         title=${title_debug}"[C3S] ${SPSSystem} ERROR"
+         title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
          body="ACHTUNG!!! In $DIR_C3S/push4ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
          exit 5
       fi
    done
@@ -281,7 +281,7 @@ done
 
 # AT LAST SEND notification both to sp1 and to ECMWF
 title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-body="Dear Adrien, \n
+body="Dear Volkan, \n
 \n
 this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
 \n
@@ -297,8 +297,7 @@ then
    checkpushdone=`ls ${filedone} | wc -l`
 fi
 if [ $checkpushdone -eq 1 ]; then
-   #${DIR_UTIL}/sendmail.sh -m $machine -e $ecmwfmail -M "$body" -t "$title" -c $ccecmwfmail -b $mymail 
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
    if [[ "$machine" == "juno" ]]
    then
       touch $filedone

@@ -17,6 +17,8 @@ condafunction() {
           fi
           module load $mpilib4py_nemo_rebuild
        fi
+   else
+       . $HOME/load_conda
    fi
    if [  $comm == "activate"  ]; then
       	conda $comm $env

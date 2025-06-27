@@ -17,26 +17,32 @@ fi
 
 # ---------------------------
 # Parameters to be set by user
-st=$1 #2 figures  # SET BY CRONTAB
-isforecast=$2
+#st=$1 #2 figures  # SET BY CRONTAB
+#isforecast=$2
+st=11 #2 figures  # SET BY CRONTAB
+isforecast=0
 if [ $isforecast -eq 1 ]
 then
    iyy=`date +%Y`
    fyy=$iyy
 else
    iyy=1993 
-   fyy=2022
+   fyy=1993
+#   fyy=2022
 fi
 # ---------------------------
 for yyyy in `seq $iyy $fyy` ; do
 
+set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+   . ${dictionary}
+set -euvx
    if [ $debug_push -ge 1 ]
    then
      mymail="sp1@cmcc.it"
      ccmail=$mymail
      body="launch_push4ECMWF.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
-     title="[C3S] ${SPSSystem} warning"
+     title="[CERISE] ${SPSSystem} warning"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    else
      ccmail=$mymail
@@ -47,7 +53,7 @@ for yyyy in `seq $iyy $fyy` ; do
 #--------------------------------------------------------------------
    if [[ "$machine" == "juno" ]]
    then
-      filedone=$DIR_LOG/${typeofrun}/$yyyy$st/push_${yyyy}${st}_DONE
+      filedone=$check_push_done
       if [ $debug_push -ge 1 ]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
@@ -55,7 +61,7 @@ for yyyy in `seq $iyy $fyy` ; do
       cmd_anypushC3SDONE="ls $filedone | wc -l"
    elif [[ "$machine" == "leonardo" ]]
    then
-      filedone=$DIR_LOG/${typeofrun}/$yyyy$st/push_${yyyy}${st}_DONE
+      filedone=$check_push_done
       if [ $debug_push -ge 1 ]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
@@ -66,6 +72,20 @@ for yyyy in `seq $iyy $fyy` ; do
    if [ $anypushC3SDONE -gt 0 ] ; then
 # already pushed: go on with following hindcasts
      	continue
+   fi
+   if [[ ! -f $check_tar_done ]] ; then
+       
+       if [[ ${typeofrun} == "hindcast" ]] ; then
+           body="Missing ${check_tar_done} push4ECMWF going on for the following year"
+           title="[CERISE] ${SPSSystem} ${typeofrun} warning"
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
+           continue
+       else
+           body="Missing ${check_tar_done}. launch_push4ECMWF exiting now."
+           title="[CERISE] ${SPSSystem} ${typeofrun} error"
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun 
+           exit
+       fi
    fi
 #--------------------------------------------------------------------
 
@@ -82,8 +102,8 @@ for yyyy in `seq $iyy $fyy` ; do
          if [ $debug_push -eq 0 ]
          then
             body="elapsed hours $elapsedh for push4ECMWF_${yyyy}${st}. Too much. Going to kill it"
-  	         title="[C3S] ${SPSSystem} ${typeofrun} warning"
-           	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+  	         title="[CERISE] ${SPSSystem} ${typeofrun} warning"
+           	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
             $DIR_UTIL/killjobs.sh -m $machine -i $jobID
          fi
       else
@@ -96,7 +116,7 @@ for yyyy in `seq $iyy $fyy` ; do
    fi		
 #--------------------------------------------------------------------
 
-   body="C3S: Begin of the start-date $yyyy$st transfer on acq.ecmwf.int"
+   body="CERISE: Begin of the start-date $yyyy$st transfer on acq.ecmwf.int"
    if [[ "$machine" == "juno" ]]
    then
       cntfirst=`ls $firstdtn03 |wc -l `
@@ -106,10 +126,10 @@ for yyyy in `seq $iyy $fyy` ; do
    fi
    if [[ $cntfirst -eq 1 ]]
    then
-      body="C3S: successive attempt of the start-date $yyyy$st transfer on acq.ecmwf.int"
+      body="CERISE: successive attempt of the start-date $yyyy$st transfer on acq.ecmwf.int"
    fi
-   title="[C3S] ${SPSSystem} ${typeofrun} notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+   title="[CERISE] ${SPSSystem} ${typeofrun} notification"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
 
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
@@ -147,9 +167,9 @@ for yyyy in `seq $iyy $fyy` ; do
                 jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -i yes `
                 $DIR_UTIL/killjobs.sh -m $machine -i $jobID
              fi
-  	          body="C3S: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
-  	          title="[C3S] ${SPSSystem} ${typeofrun} notification"
-            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes -c $ccmail
+  	          body="CERISE: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
+  	          title="[CERISE] ${SPSSystem} ${typeofrun} notification"
+            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
      #        if [[ $debug_push -eq 0 ]]
      #        then
              if [[ "$machine" == "juno" ]]

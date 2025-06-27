@@ -20,28 +20,15 @@ lpushdir=${10}
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
 nstreams=18
-REMOTE_DIR="/DATA/CMCC_C3S"
+REMOTE_DIR="/DATA/CMCC_CERISE"
 # WARNING!! DO NOT PUT / AT THE END
-if [[ $dbg_push -ge 1 ]]
-then
-# - dbg_push=1 data sent on cmccbo ftp
-# - dbg_push=2 data sent on ecmwf ftp (in test directory!!)
-
-# WARNING!! DO NOT PUT / AT THE END
-   REMOTE_DIR="/DATA/CMCC_C3S/TEST"
-fi
 
 # WARNING!! DO NOT PUT / AT THE END
 datestr=`date +%Y%m%d%H%M%S`
 LOCAL_DIR=$lpushdir/${yyyy}${st}
-logfile="push_${type_fore}_S${yyyy}${st}.$datestr.log"
+logfile="push_CERISE_${type_fore}_S${yyyy}${st}.$datestr.log"
 
-#old ftp server Bologna
-#cmd_ftp_cmccbo="open -u c3s,cDx52!lst ftp://downloads.cmcc.bo.it"
-#new ftp server Bologna
-#cmd_ftp_cmccbo="open -u cp1,dpw937045+B ftp://downloads.cmcc.bo.it"
-cmd_ftp_cmccbo="open -u c3s,YhjDf733 ftp://ftp4.cmcc.it"
-cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
+cmd_ftp_ecmwf="open -u cmcc_cerise,ZZ6e0O1B ftp://acq.ecmwf.int"
 
 
 if [ ! -f $first ]
@@ -88,17 +75,6 @@ $cmd_ftp_ecmwf
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
 quit
 EOF
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
-      cat > $script_send << EOF
-set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
-set ftp:list-options -a
-$cmd_ftp_ecmwf
-mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
-quit
-EOF
    fi
    chmod 744 $script_send
 
@@ -106,7 +82,7 @@ fi  #if dbg
 lftp -f $script_send
 stat=$?
 if [ $stat -eq 1 ]; then
-      echo "error on  attempt $script_send ${yyyy}$st"|mail -s "[C3S] ${SPSSystem} forecast ERROR" $mymail
+      echo "error on  attempt $script_send ${yyyy}$st"|mail -s "[CERISE] ${SPSSystem} forecast ERROR" $mymail
       exit 1
 fi         
 
@@ -169,5 +145,5 @@ if [ $ntarandsha -eq 1 ]
 then 
    lftp -f $script_send
    lftp -f $script_ls |tee $log_script
-   echo "sending manifest ${yyyy}$st"|mail -s "[C3S] ${SPSSystem} forecast notification" $mymail
+   echo "sending manifest ${yyyy}$st"|mail -s "[CERISE] ${SPSSystem} forecast notification" $mymail
 fi

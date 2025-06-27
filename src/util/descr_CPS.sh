@@ -1,7 +1,6 @@
 #!/bin/sh -l
 set -a
-mymail=sp1@cmcc.it
-#mymail=antonella.sanna@cmcc.it
+mymail=antonella.sanna@cmcc.it
 #mymail=andrea.borrelli@cmcc.it
 #ncheck=`grep Juno /etc/mtab|wc -l`
 #ncheckbackup=`grep marconi /etc/mtab|wc -l`
@@ -60,7 +59,7 @@ then
       cores_per_run=288
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondaclm=postpc_CLM_C3S
+      envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
       maxnumbertosubmit=18
       maxnumbertorecover=40
@@ -284,7 +283,7 @@ DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
 DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
 DIR_CPS=$DIR_ROOT/src/scripts_oper
 DIR_RECOVER=$DIR_ROOT/src/recover
-pushdir=$WORK/CPS/CMCC-CPS1/push
+pushdir=$WORK/CPS/CMCC-CPS1/push_CERISE
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,8 +296,8 @@ nmonfore=6      # number of forecast months
 fixsimdays=185  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
- natm3d=5    # number of required fields for C3S 3d atmospheric
- nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
+ natm3d=6    # number of required fields for C3S 3d atmospheric
+ nfieldsC3S=54    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
@@ -343,10 +342,11 @@ DIR_POST=$DIR_SRC/postproc
 DIR_C3S=$DIR_POST/C3S_standard
 WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
-DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
+DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases_for_CERISE
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
+WORK_CERISE=$DIR_ARCHIVE/CERISE
 WORK_C3S=$DIR_ARCHIVE_C3S
 # ####### WORK DIRS FOR ICs
 WORKDIR_LAND=$DIR_TEMP/WORK_LAND_IC
@@ -358,6 +358,6 @@ IC_CPS_guess=$WORK/CPS/CMCC-${CPSSYS}/IC_CPS_guess
 WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
-
+HEALED_DIR_ROOT1=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
 
 set +a
