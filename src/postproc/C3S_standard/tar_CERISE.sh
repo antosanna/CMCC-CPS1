@@ -15,24 +15,21 @@ st=$2   #10
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+. ${dictionary}
 set -euvx
 
 start_date=${yyyy}${st}
-if [ -f $WORK_C3S/${start_date}/tar_and_push_${start_date}_DONE ]
+if [ -f ${check_tar_done} ]
 then
-   body="C3S: tar_and_push already done for ${start_date}. Exiting from $DIR_C3S/tar_and_push.sh now"
-   title="[C3S] ${CPSSYS} $typeofrun notification"
+   body="CERISE: tar_CERISE already done for ${start_date}. Exiting from $DIR_C3S/tar_CERISE.sh now"
+   title="[CERISE] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    exit
 fi
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
-C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
-C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
-C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
-C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
-C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
-C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
-C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
+C3Stable_clm=~cp1/CPS/CMCC-CPS1/src/postproc/clm/C3S_table_clm.txt
+CERISEtable_cam=$DIR_POST/cam/CERISE_table.txt
+CERISEtable_clm=$DIR_POST/clm/CERISE_table_clm.txt
 #
 {
 read 
@@ -46,46 +43,27 @@ do
    fi
 done } < $C3Stable_cam
 {
+read 
+while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
+do
+   if [ $freq == "12hr" ]
+   then
+      var_array3d+=("$C3S")
+   else
+      var_array2d+=("$C3S")
+   fi
+done } < $CERISEtable_cam
+# now for clm
+{
 while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
    var_array2d+=("$C3S")
 done } < $C3Stable_clm
 {
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
+while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
    var_array2d+=("$C3S")
-done } < $C3Stable_oce1
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_oce2
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_oce3
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_oce4
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_oce5
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_oce6
+done } < $CERISEtable_clm
 #var_array3d=(hus ta ua va zg)
 # AA +
 #var_array=("${var_array2d[@]} ${var_array3d[@]}" "rsdt")
@@ -121,11 +99,11 @@ do
        fi
    fi
    echo "cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*"
-   cd $WORK_C3S/${start_date}
-   nmb_tar_wkdir=`ls $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar |wc -l`
+   cd $WORK_CERISE/${start_date}
+   nmb_tar_wkdir=`ls $WORK_CERISE/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar |wc -l`
    if [[ ${nmb_tar_wkdir} -ne 0 ]]
    then
-        rm $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar
+        rm $WORK_CERISE/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar
    fi  
 
    listatocheck+="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc | head -n $nrunC3Sfore` "
@@ -134,7 +112,7 @@ done
 echo $listatocheck
 
 
-cd $WORK_C3S/${start_date}
+cd $WORK_CERISE/${start_date}
 if [[ `ls $listatocheck|wc -l` -eq 0 ]]
 then
    echo "$listatocheck is empty! Please check if this is really what you want"
@@ -146,16 +124,12 @@ fi
 
 if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
 then
-    body="C3S: $DIR_C3S/tar_and_push.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
-    title="[C3S] ${CPSSYS} $typeofrun ERROR"
-    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+    body="CERISE: $DIR_C3S/tar_CERISE.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
+    title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date 
     exit 2
 fi
 #
-# change_realization if needed
-#----------------------------
-####MB 20240825 - COMMENTED for now
-#${DIR_C3S}/change_realization.sh $yyyy $st
 
 # nel caso in cui change_realization.sh e' ridondante
 listatocheck=" "
@@ -164,12 +138,6 @@ do
   listatocheck+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc |head -n $nrunC3Sfore`"
 done
 #
-# clean pushdir
-#-----------------------
-$DIR_C3S/clean_pushdir.sh $yyyy $st
-pushdir_hc=${pushdir}/${start_date}
-mkdir -p ${pushdir_hc}
-
 #----------------------------------------------
 # CHECK THE TIME LENGTH OF EACH FILE
 #----------------------------------------------
@@ -185,9 +153,9 @@ then
       nstep=`cdo -ntime $file`
       if [ $nstep -ne $fixsimdays ]
       then
-          body="C3S: $DIR_C3S/tar_and_push.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-          title="[C3S] ${CPSSYS} forecast ERROR"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+          body="CERISE: $DIR_C3S/tar_CERISE.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+          title="[CERISE] ${CPSSYS} forecast ERROR"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
           exit 1
       else
          echo "number of days in file $nstep correct"
@@ -206,9 +174,9 @@ then
      nstep=`cdo -ntime $file`
      if [ $n6hr -ne $nstep ]
      then
-        body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-        title="[C3S] ${CPSSYS} forecast ERROR"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+        body="CERISE: $DIR_C3S/tar_CERISE.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+        title="[CERISE] ${CPSSYS} forecast ERROR"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
         exit 1
      else
         echo "number of timesteps in file $nstep correct"
@@ -225,9 +193,9 @@ if [[ $islista12hrly -ne 0 ]] ; then
       nstep=`cdo -ntime $file`
       if [ $n12hr -ne $nstep ]
       then
-         body="C3S: $DIR_C3S/tar_and_push.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-         title="[C3S] ${CPSSYS} forecast ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+         body="CERISE: $DIR_C3S/tar_CERISE.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+         title="[CERISE] ${CPSSYS} forecast ERROR"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
          exit 1
       else
          echo "number of timesteps in file $nstep correct"
@@ -254,7 +222,7 @@ NUMB_CHECK=`expr $nrunC3Sfore + $nrunC3Sfore` # for each field we have the .nc f
 
 
 #----------------------------------------------
-# CHECK THROUGH ALL THE C3S VARIABLES IF NUMBER OF FILES IS CORRECT
+# CHECK THROUGH ALL THE CERISE VARIABLES IF NUMBER OF FILES IS CORRECT
 # THE PRODUCE TAR AND SHA256
 #----------------------------------------------
 echo "NOW PRODUCE  CHECK NUMBER OF FILES AND sha256 AND DO .tar"
@@ -275,9 +243,9 @@ do
      done
      if [ `echo $listafile2tar|wc -w` -ne $(($nrunC3Sfore * 2)) ]
      then
-         body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunC3Sfore * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-         title="[C3S] ${CPSSYS} $typeofrun ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+         body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunC3Sfore * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+         title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
          exit 3
      fi
      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar $listafile2tar
@@ -293,9 +261,9 @@ do
 
    else
 #mail MACHINE DEPENDENT chek if present
-      body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-      title="[C3S] ${CPSSYS} $typeofrun ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+      title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s ${yyyy}${st}
       donotsend=1
       exit
    fi
@@ -315,9 +283,9 @@ do
       if [[ $nrunC3Sfore -lt 10 ]] ; then  #SHOULD BE THE TEST CASE
          if [[ `whoami` == "$operational_user" ]] && [[ "$machine" == "juno" ]]
          then
-              body="nrunC3Sfore set to $nrunC3Sfore instead of the required for operations. Exiting from tar_and_push.sh"
-              title="[C3S] ${CPSSYS} $typeofrun ERROR"
-              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+              body="nrunC3Sfore set to $nrunC3Sfore instead of the required for operations. Exiting from tar_CERISE.sh"
+              title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
               exit 2
          fi
          list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0*`
@@ -385,48 +353,27 @@ do
          fi
       fi
    else
-      body="C3S: standardisation error in script $DIR_C3S/tar_and_push.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_and_push..."
-      title="[C3S] ${CPSSYS} $typeofrun ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r yes
+      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+      title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
       donotsend=1
       exit
    fi #if on number of var
 done  #end loop on var_array3d
 
 #check if everything is ok inside the tarfiles
-$DIR_C3S/check_tarC3S.sh $yyyy $st
+$DIR_C3S/check_tarCERISE.sh $yyyy $st
 stat=$?
 if [ $stat -eq 0 ]
 then
-   body="C3S: $DIR_LOG/tar_and_push.sh completed for ${start_date}."
-   title="[C3S] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
-   touch $WORK_C3S/${start_date}/tar_and_push_${start_date}_DONE
+   body="CERISE: $DIR_LOG/tar_CERISE.sh completed for ${start_date}."
+   title="[CERISE] ${CPSSYS} $typeofrun notification"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
+   touch ${check_tar_done}
 else
-   body="C3S: $DIR_C3S/check_tarC3S.sh failed for ${start_date}. Exiting now. Check and fix"
-   title="[C3S] ${CPSSYS} $typeofrun ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $start_date
+   body="CERISE: $DIR_C3S/check_tarCERISE.sh failed for ${start_date}. Exiting now. Check and fix"
+   title="[CERISE] ${CPSSYS} $typeofrun ERROR"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    exit
 fi   
 
-#--------------------------------------------
-# NOW SUBMIT PUSH4ECMWF (only forecast)
-#--------------------------------------------
-if [[ $typeofrun == "forecast" ]]
-then
-   input="$yyyy $st"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_UTIL -s launch_diagnostic_webpage.sh -i "$input"
-  
-   body="Diagnostics from C3S just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_SPS35/launch_end_forecast_${CPSSYS}.sh manually"
-   title="[C3S] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-
-fi
-
-#--------------------------------------------
-# NOW COMPRESS ICs RELATIVE TO CURRENT START-DATE
-#--------------------------------------------
-#if [ `whoami` == $operational_user ]
-#then
-#   $IC_SPS35/compress_ICs_current_startdate.sh $st $yyyy
-#fi

@@ -1,0 +1,7 @@
+H2OSOI,mrsolfrac,lnd,f4,leadtime depth lat lon,Water Fraction of Soil Layers,volume_fraction_of_condensed_water_in_soil,1,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h2
+TSOI,tslsl,lnd,f4,leadtime depth lat lon,Temperature of Soil,soil_temperature,K,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h2
+SNOTTOPL,tsn,lnd,f4,leadtime lat lon,Snow internal temperature,temperature_in_surface_snow,K,6hr,surface,atmos,,reftime realization time leadtime lat lon,leadtime: point,h2
+Z0MV,zrlms,lnd,f4,leadtime lat lon,Surface roughness length for momentum,surface_roughness_length_for_momentum_in_air,m,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
+Z0HV,zrlhs,lnd,f4,leadtime lat lon,Surface roughness length for heat,surface_roughness_length_for_heat_in_air,m,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
+TLAI,lai,lnd,f4,leadtime lat lon,Leaf Area Index,leaf_area_index,1,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
+PCT_NATVEG,cnc,lnd,f4,leadtime lat lon,Vegetation Cover Percentage,vegetation_area_fraction,%,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h2

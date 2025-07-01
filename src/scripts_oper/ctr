@@ -1,0 +1,1992 @@
+
+echo "Starting job submission"
++ echo 'Starting job submission'
+Starting job submission
+# Input **********************
+st=$1
++ st=10
+yyyy=$2
++ yyyy=2020
+
+#*************************************
+# Main loop ******************
+#*************************************
+ko=0
++ ko=0
+cnt_run=0
++ cnt_run=0
+cnt_archive=0
++ cnt_archive=0
+cnt_atmICfile=0
++ cnt_atmICfile=0
+cnt_lndIC=0
++ cnt_lndIC=0
+cnt_rtmIC=0
++ cnt_rtmIC=0
+listacasi=""
++ listacasi=
+listaskip=""
++ listaskip=
+listaskip+=" "
++ listaskip+=' '
+cnt_atmICfile=0
++ cnt_atmICfile=0
+cnt_iceIC=0
++ cnt_iceIC=0
+cnt_nemoIC=0
++ cnt_nemoIC=0
+
+submittable_cnt=0
++ submittable_cnt=0
+subm_cnt=0
++ subm_cnt=0
+
+for n in $(seq 1 1 $nrunmax)
+do
+   echo "n $n *****************************"
+   ens=`printf '%.3d' $n`
+   script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
+   if [[ ! -f $script_to_submit ]]
+   then
+      echo "$script_to_submit does not exist!!!"
+   fi
+   submittable_cnt=$(( $submittable_cnt + 1 ))
+   if [ -f $script_to_submit ] ; then
+
+      # Check if belongs to NCEP Initial Condition (if 1 is NCEP statement )
+      lndIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f18`
+      rtmddIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f18`
+      atmIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f17`
+      oceIC=`grep "submitcommand.sh" ${script_to_submit} | cut -d ' ' -f19`
+      # oceIC only digit
+      oceICnum=$(echo $oceIC |  grep -o -E '[0-9]+' )
+
+      lndICfile="${IC_CLM_CPS_DIR1}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${lndIC}`.nc"
+      rtmICfile="${IC_CLM_CPS_DIR1}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${lndIC}`.nc"
+      atmICfile="${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.`printf "%.2d" ${atmIC}`.nc"
+      nemoICfile="${IC_NEMO_CPS_DIR1}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${oceICnum}`.nc"
+      iceICfile="${IC_CICE_CPS_DIR1}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.`printf "%.2d" ${oceICnum}`.nc"
+
+      caso=${SPSSystem}_${yyyy}${st}_${ens}
+
+   # is running?
+      set +e
+      nj=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso}_run -c yes` 
+      set -e
+
+   # if is running, skip
+      if [ $nj -gt 0 ] ; then
+         echo "job running. skip"
+         cnt_run=$(( $cnt_run + 1 )) 
+         ko=1
+      fi
+
+   # if exist in archive, skip
+      if [ -d $DIR_ARCHIVE/$caso ] ; then
+         echo "$DIR_ARCHIVE/$caso exist. skip"  
+         cnt_archive=$(( $cnt_archive + 1 ))            
+         ko=1
+      fi 
+# THIS CHECKS ARE REDUNDANT IN PRINCIPLE (ALREADY DONE BY run_IC_production SCRIPT) BUT KEEP THEM
+   # if atmospheric IC condition not exist, skip
+      if [ ! -f $atmICfile ] ; then
+         echo "atmICfile not exist. skip ************** "
+         cnt_atmICfile=$(( $cnt_atmICfile + 1 ))              
+         listaskip+="$caso "
+         ko=1
+      fi
+
+  # if nemo oce IC condition not exist, skip
+      if [ ! -f $nemoICfile ] ; then
+         echo "nemoIC not exist. skip ************** "
+         cnt_nemoIC=$(( $cnt_nemoIC + 1 ))              
+         listaskip+="$caso "
+         ko=1
+      fi
+
+  # if ice oce IC condition not exist, skip
+      if [ ! -f $iceICfile ] ; then
+         echo "iceICfile not exist. skip ************** "
+         cnt_iceIC=$(( $cnt_iceIC + 1 ))              
+         listaskip+="$caso "
+         ko=1
+      fi       
+             
+  # if land IC condition not exist, skip
+      if [ -f $lndICfile ] ; then
+         echo "lndICfile not exist. skip ************** "
+         cnt_lndIC=$(( $cnt_lndIC + 1 ))              
+           listaskip+="$caso "
+         ko=1
+      fi
+
+  # if rtm IC condition not exist, skip
+      if [ -f $rtmICfile ] ; then
+         echo "rtmICfile not exist. skip ************** "
+         cnt_rtmIC=$(( $cnt_rtmIC + 1 ))              
+           listaskip+="$caso "
+         ko=1
+      fi
+      if [[ $ko -eq 1 ]] ; then
+         continue
+      fi
+
+      subm_cnt=$(( $subm_cnt + 1 ))
+      # Single member submission
+      $script_to_submit
+      echo "submitted $script_to_submit"
+      listacasi+="$caso "
+   fi
+done
+++ seq 1 1 30
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 1 *****************************'
+n 1 *****************************
+++ printf %.3d 1
++ ens=001
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh ]]
++ submittable_cnt=1
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh
+++ cut -d ' ' -f17
++ atmIC=4
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_001.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 4
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_001
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_001_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_001 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=1
++ listaskip+='sps4_202010_001 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=1
++ listaskip+='sps4_202010_001 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 2 *****************************'
+n 2 *****************************
+++ printf %.3d 2
++ ens=002
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh ]]
++ submittable_cnt=2
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh
+++ cut -d ' ' -f17
++ atmIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_002.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 3
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_002
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_002_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_002 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=2
++ listaskip+='sps4_202010_002 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=2
++ listaskip+='sps4_202010_002 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 3 *****************************'
+n 3 *****************************
+++ printf %.3d 3
++ ens=003
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh ]]
++ submittable_cnt=3
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh
+++ cut -d ' ' -f17
++ atmIC=9
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_003.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 9
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_003
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_003_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_003 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=3
++ listaskip+='sps4_202010_003 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=3
++ listaskip+='sps4_202010_003 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 4 *****************************'
+n 4 *****************************
+++ printf %.3d 4
++ ens=004
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh ]]
++ submittable_cnt=4
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh
+++ cut -d ' ' -f17
++ atmIC=10
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_004.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 10
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_004
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_004_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_004 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=4
++ listaskip+='sps4_202010_004 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=4
++ listaskip+='sps4_202010_004 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 5 *****************************'
+n 5 *****************************
+++ printf %.3d 5
++ ens=005
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh ]]
++ submittable_cnt=5
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh
+++ cut -d ' ' -f17
++ atmIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_005.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_005
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_005_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_005 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=5
++ listaskip+='sps4_202010_005 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=5
++ listaskip+='sps4_202010_005 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 6 *****************************'
+n 6 *****************************
+++ printf %.3d 6
++ ens=006
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh ]]
++ submittable_cnt=6
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh
+++ cut -d ' ' -f17
++ atmIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_006.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 3
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_006
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_006_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_006 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=6
++ listaskip+='sps4_202010_006 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=6
++ listaskip+='sps4_202010_006 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 7 *****************************'
+n 7 *****************************
+++ printf %.3d 7
++ ens=007
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh ]]
++ submittable_cnt=7
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh
+++ cut -d ' ' -f17
++ atmIC=5
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_007.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 5
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.05.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_007
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_007_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_007 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.05.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=7
++ listaskip+='sps4_202010_007 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=7
++ listaskip+='sps4_202010_007 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 8 *****************************'
+n 8 *****************************
+++ printf %.3d 8
++ ens=008
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh ]]
++ submittable_cnt=8
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh
+++ cut -d ' ' -f17
++ atmIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_008.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_008
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_008_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_008 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=8
++ listaskip+='sps4_202010_008 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=8
++ listaskip+='sps4_202010_008 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 9 *****************************'
+n 9 *****************************
+++ printf %.3d 9
++ ens=009
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh ]]
++ submittable_cnt=9
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh
+++ cut -d ' ' -f17
++ atmIC=10
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_009.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 10
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_009
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_009_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_009 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=9
++ listaskip+='sps4_202010_009 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=9
++ listaskip+='sps4_202010_009 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 10 *****************************'
+n 10 *****************************
+++ printf %.3d 10
++ ens=010
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh ]]
++ submittable_cnt=10
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh
+++ cut -d ' ' -f17
++ atmIC=4
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_010.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 4
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_010
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_010_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_010 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=10
++ listaskip+='sps4_202010_010 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=10
++ listaskip+='sps4_202010_010 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 11 *****************************'
+n 11 *****************************
+++ printf %.3d 11
++ ens=011
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh ]]
++ submittable_cnt=11
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh
+++ cut -d ' ' -f17
++ atmIC=9
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_011.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 9
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_011
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_011_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_011 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=11
++ listaskip+='sps4_202010_011 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=11
++ listaskip+='sps4_202010_011 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 12 *****************************'
+n 12 *****************************
+++ printf %.3d 12
++ ens=012
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh ]]
++ submittable_cnt=12
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh
+++ cut -d ' ' -f17
++ atmIC=8
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_012.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 8
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_012
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_012_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_012 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=12
++ listaskip+='sps4_202010_012 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=12
++ listaskip+='sps4_202010_012 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 13 *****************************'
+n 13 *****************************
+++ printf %.3d 13
++ ens=013
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh ]]
++ submittable_cnt=13
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh
+++ cut -d ' ' -f17
++ atmIC=9
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_013.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 9
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_013
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_013_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_013 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=13
++ listaskip+='sps4_202010_013 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=13
++ listaskip+='sps4_202010_013 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 14 *****************************'
+n 14 *****************************
+++ printf %.3d 14
++ ens=014
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh ]]
++ submittable_cnt=14
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh
+++ cut -d ' ' -f17
++ atmIC=4
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_014.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 4
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_014
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_014_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_014 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=14
++ listaskip+='sps4_202010_014 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=14
++ listaskip+='sps4_202010_014 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 15 *****************************'
+n 15 *****************************
+++ printf %.3d 15
++ ens=015
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh ]]
++ submittable_cnt=15
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh
+++ cut -d ' ' -f17
++ atmIC=4
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_015.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 4
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_015
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_015_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_015 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=15
++ listaskip+='sps4_202010_015 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=15
++ listaskip+='sps4_202010_015 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 16 *****************************'
+n 16 *****************************
+++ printf %.3d 16
++ ens=016
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh ]]
++ submittable_cnt=16
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh
+++ cut -d ' ' -f17
++ atmIC=6
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_016.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 6
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.06.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_016
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_016_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_016 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.06.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=16
++ listaskip+='sps4_202010_016 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=16
++ listaskip+='sps4_202010_016 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 17 *****************************'
+n 17 *****************************
+++ printf %.3d 17
++ ens=017
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh ]]
++ submittable_cnt=17
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh
+++ cut -d ' ' -f17
++ atmIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_017.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 1
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_017
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_017_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_017 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=17
++ listaskip+='sps4_202010_017 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=17
++ listaskip+='sps4_202010_017 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 18 *****************************'
+n 18 *****************************
+++ printf %.3d 18
++ ens=018
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh ]]
++ submittable_cnt=18
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh
+++ cut -d ' ' -f17
++ atmIC=10
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_018.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 10
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_018
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_018_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_018 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.10.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=18
++ listaskip+='sps4_202010_018 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=18
++ listaskip+='sps4_202010_018 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 19 *****************************'
+n 19 *****************************
+++ printf %.3d 19
++ ens=019
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh ]]
++ submittable_cnt=19
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh
+++ cut -d ' ' -f17
++ atmIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_019.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 1
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_019
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_019_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_019 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=19
++ listaskip+='sps4_202010_019 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=19
++ listaskip+='sps4_202010_019 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 20 *****************************'
+n 20 *****************************
+++ printf %.3d 20
++ ens=020
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh ]]
++ submittable_cnt=20
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh
+++ cut -d ' ' -f17
++ atmIC=8
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_020.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 8
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_020
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_020_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_020 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=20
++ listaskip+='sps4_202010_020 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=20
++ listaskip+='sps4_202010_020 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 21 *****************************'
+n 21 *****************************
+++ printf %.3d 21
++ ens=021
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh ]]
++ submittable_cnt=21
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh
+++ cut -d ' ' -f17
++ atmIC=6
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_021.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 6
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.06.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_021
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_021_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_021 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.06.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=21
++ listaskip+='sps4_202010_021 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=21
++ listaskip+='sps4_202010_021 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 22 *****************************'
+n 22 *****************************
+++ printf %.3d 22
++ ens=022
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh ]]
++ submittable_cnt=22
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh
+++ cut -d ' ' -f17
++ atmIC=5
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_022.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 5
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.05.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_022
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_022_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_022 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.05.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=22
++ listaskip+='sps4_202010_022 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=22
++ listaskip+='sps4_202010_022 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 23 *****************************'
+n 23 *****************************
+++ printf %.3d 23
++ ens=023
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh ]]
++ submittable_cnt=23
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh
+++ cut -d ' ' -f17
++ atmIC=7
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_023.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 7
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.07.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_023
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_023_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_023 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.07.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=23
++ listaskip+='sps4_202010_023 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=23
++ listaskip+='sps4_202010_023 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 24 *****************************'
+n 24 *****************************
+++ printf %.3d 24
++ ens=024
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh ]]
++ submittable_cnt=24
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh
+++ cut -d ' ' -f17
++ atmIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_024.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 3
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_024
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_024_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_024 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=24
++ listaskip+='sps4_202010_024 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=24
++ listaskip+='sps4_202010_024 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 25 *****************************'
+n 25 *****************************
+++ printf %.3d 25
++ ens=025
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh ]]
++ submittable_cnt=25
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh
+++ cut -d ' ' -f17
++ atmIC=9
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_025.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 9
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_025
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_025_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_025 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.09.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=25
++ listaskip+='sps4_202010_025 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=25
++ listaskip+='sps4_202010_025 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 26 *****************************'
+n 26 *****************************
+++ printf %.3d 26
++ ens=026
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh ]]
++ submittable_cnt=26
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh
+++ cut -d ' ' -f17
++ atmIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_026.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 1
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_026
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_026_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_026 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=26
++ listaskip+='sps4_202010_026 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=26
++ listaskip+='sps4_202010_026 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 27 *****************************'
+n 27 *****************************
+++ printf %.3d 27
++ ens=027
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh ]]
++ submittable_cnt=27
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh
+++ cut -d ' ' -f17
++ atmIC=8
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_027.sh
+++ cut -d ' ' -f19
++ oceIC=2
+++ echo 2
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=2
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 8
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc
+++ printf %.2d 2
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc
++ caso=sps4_202010_027
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_027_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_027 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.08.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.02.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=27
++ listaskip+='sps4_202010_027 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=27
++ listaskip+='sps4_202010_027 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 28 *****************************'
+n 28 *****************************
+++ printf %.3d 28
++ ens=028
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh ]]
++ submittable_cnt=28
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh
+++ cut -d ' ' -f18
++ lndIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh
+++ cut -d ' ' -f18
++ rtmddIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh
+++ cut -d ' ' -f17
++ atmIC=3
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_028.sh
+++ cut -d ' ' -f19
++ oceIC=1
+++ echo 1
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=1
+++ printf %.2d 3
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc
+++ printf %.2d 1
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc
++ caso=sps4_202010_028
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_028_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_028 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.01.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.01.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.03.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=28
++ listaskip+='sps4_202010_028 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.03.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=28
++ listaskip+='sps4_202010_028 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 29 *****************************'
+n 29 *****************************
+++ printf %.3d 29
++ ens=029
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh ]]
++ submittable_cnt=29
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh
+++ cut -d ' ' -f18
++ lndIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh
+++ cut -d ' ' -f18
++ rtmddIC=1
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh
+++ cut -d ' ' -f17
++ atmIC=7
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_029.sh
+++ cut -d ' ' -f19
++ oceIC=4
+++ echo 4
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=4
+++ printf %.2d 1
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc
+++ printf %.2d 1
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc
+++ printf %.2d 7
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.07.nc
+++ printf %.2d 4
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc
+++ printf %.2d 4
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc
++ caso=sps4_202010_029
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_029_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_029 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.07.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.04.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.04.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.01.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=29
++ listaskip+='sps4_202010_029 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.01.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=29
++ listaskip+='sps4_202010_029 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
++ for n in $(seq 1 1 $nrunmax)
++ echo 'n 30 *****************************'
+n 30 *****************************
+++ printf %.3d 30
++ ens=030
++ script_to_submit=/work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh
++ [[ ! -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh ]]
++ submittable_cnt=30
++ '[' -f /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh ']'
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh
+++ cut -d ' ' -f18
++ lndIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh
+++ cut -d ' ' -f18
++ rtmddIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh
+++ cut -d ' ' -f17
++ atmIC=2
+++ grep --color=auto submitcommand.sh /work/cmcc/as34319//CPS/CMCC-CPS1/SUBM_SCRIPTS/10/202010_scripts/ensemble4_202010_030.sh
+++ cut -d ' ' -f19
++ oceIC=3
+++ echo 3
+++ grep --color=auto -o -E '[0-9]+'
++ oceICnum=3
+++ printf %.2d 2
++ lndICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ rtmICfile=/data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc
+++ printf %.2d 2
++ atmICfile=/data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.02.nc
+++ printf %.2d 3
++ nemoICfile=/data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc
+++ printf %.2d 3
++ iceICfile=/data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc
++ caso=sps4_202010_030
++ set +e
+++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/findjobs.sh -m juno -n sps4_202010_030_run -c yes
+No unfinished job found
++ nj=0
++ set -e
++ '[' 0 -gt 0 ']'
++ '[' -d /work/cmcc/as34319//CMCC-CM//archive/sps4_202010_030 ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CAM_CPS1//10/CPS1.cam.i.2020-10-01-00000.02.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/NEMO_CPS1//10/CPS1.nemo.r.2020-10-01-00000.03.nc ']'
++ '[' '!' -f /data/cmcc/cp1/archive/IC/CICE_CPS1//10/CPS1.cice.r.2020-10-01-00000.03.nc ']'
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.clm2.r.2020-10-01-00000.02.nc ']'
++ echo 'lndICfile not exist. skip ************** '
+lndICfile not exist. skip ************** 
++ cnt_lndIC=30
++ listaskip+='sps4_202010_030 '
++ ko=1
++ '[' -f /data/cmcc/cp1/archive/IC/CLM_CPS1//10/CPS1.hydros.r.2020-10-01-00000.02.nc ']'
++ echo 'rtmICfile not exist. skip ************** '
+rtmICfile not exist. skip ************** 
++ cnt_rtmIC=30
++ listaskip+='sps4_202010_030 '
++ ko=1
++ [[ 1 -eq 1 ]]
++ continue
+
+echo "Submitted $subm_cnt forecasts"
++ echo 'Submitted 0 forecasts'
+Submitted 0 forecasts
+echo "Submittable $submittable_cnt"
++ echo 'Submittable 30'
+Submittable 30
+totalskipped=$(( $cnt_run +  $cnt_archive + $cnt_atmICfile + $cnt_lndIC  ))
++ totalskipped=30
+echo "Total skipped $totalskipped"
++ echo 'Total skipped 30'
+Total skipped 30
+echo "Land $cnt_lndIC "
++ echo 'Land 30 '
+Land 30 
+echo "archive $cnt_archive "
++ echo 'archive 0 '
+archive 0 
+body="Submitted $subm_cnt forecasts \n
+\n
+${listacasi[@]} \n
+\n
+Submittable $submittable_cnt \n
+\n
+Total skipped $totalskipped \n
+${listaskip[@]} \n
+\n
+Land IC file missing $cnt_lndIC \n
+\n
+Atm IC file missing $cnt_atmICfile \n
+\n
+ICE cice IC file missing $cnt_iceIC \n
+\n
+OCE nemo IC file missing $cnt_nemoIC \n
+\n
+archive $cnt_archive"
++ body='Submitted 0 forecasts \n
+\n
+ \n
+\n
+Submittable 30 \n
+\n
+Total skipped 30 \n
+ sps4_202010_001 sps4_202010_001 sps4_202010_002 sps4_202010_002 sps4_202010_003 sps4_202010_003 sps4_202010_004 sps4_202010_004 sps4_202010_005 sps4_202010_005 sps4_202010_006 sps4_202010_006 sps4_202010_007 sps4_202010_007 sps4_202010_008 sps4_202010_008 sps4_202010_009 sps4_202010_009 sps4_202010_010 sps4_202010_010 sps4_202010_011 sps4_202010_011 sps4_202010_012 sps4_202010_012 sps4_202010_013 sps4_202010_013 sps4_202010_014 sps4_202010_014 sps4_202010_015 sps4_202010_015 sps4_202010_016 sps4_202010_016 sps4_202010_017 sps4_202010_017 sps4_202010_018 sps4_202010_018 sps4_202010_019 sps4_202010_019 sps4_202010_020 sps4_202010_020 sps4_202010_021 sps4_202010_021 sps4_202010_022 sps4_202010_022 sps4_202010_023 sps4_202010_023 sps4_202010_024 sps4_202010_024 sps4_202010_025 sps4_202010_025 sps4_202010_026 sps4_202010_026 sps4_202010_027 sps4_202010_027 sps4_202010_028 sps4_202010_028 sps4_202010_029 sps4_202010_029 sps4_202010_030 sps4_202010_030  \n
+\n
+Land IC file missing 30 \n
+\n
+Atm IC file missing 0 \n
+\n
+ICE cice IC file missing 0 \n
+\n
+OCE nemo IC file missing 0 \n
+\n
+archive 0'
+title="${CPSSYS} notification: FORECAST SUBMITTED"
++ title='CPS1 notification: FORECAST SUBMITTED'
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
++ /users_home/cmcc/as34319/CPS/CMCC-CPS1/src/util/sendmail.sh -m juno -e sp1@cmcc.it -M 'Submitted 0 forecasts \n
+\n
+ \n
+\n
+Submittable 30 \n
+\n
+Total skipped 30 \n
+ sps4_202010_001 sps4_202010_001 sps4_202010_002 sps4_202010_002 sps4_202010_003 sps4_202010_003 sps4_202010_004 sps4_202010_004 sps4_202010_005 sps4_202010_005 sps4_202010_006 sps4_202010_006 sps4_202010_007 sps4_202010_007 sps4_202010_008 sps4_202010_008 sps4_202010_009 sps4_202010_009 sps4_202010_010 sps4_202010_010 sps4_202010_011 sps4_202010_011 sps4_202010_012 sps4_202010_012 sps4_202010_013 sps4_202010_013 sps4_202010_014 sps4_202010_014 sps4_202010_015 sps4_202010_015 sps4_202010_016 sps4_202010_016 sps4_202010_017 sps4_202010_017 sps4_202010_018 sps4_202010_018 sps4_202010_019 sps4_202010_019 sps4_202010_020 sps4_202010_020 sps4_202010_021 sps4_202010_021 sps4_202010_022 sps4_202010_022 sps4_202010_023 sps4_202010_023 sps4_202010_024 sps4_202010_024 sps4_202010_025 sps4_202010_025 sps4_202010_026 sps4_202010_026 sps4_202010_027 sps4_202010_027 sps4_202010_028 sps4_202010_028 sps4_202010_029 sps4_202010_029 sps4_202010_030 sps4_202010_030  \n
+\n
+Land IC file missing 30 \n
+\n
+Atm IC file missing 0 \n
+\n
+ICE cice IC file missing 0 \n
+\n
+OCE nemo IC file missing 0 \n
+\n
+archive 0' -t 'CPS1 notification: FORECAST SUBMITTED' -r hindcast -s 202010
+
+
+exit 0
++ exit 0
+# ~/.bash_logout
+
