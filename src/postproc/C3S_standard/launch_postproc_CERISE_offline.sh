@@ -31,7 +31,7 @@ fi
 touch ${flag_running}
 cd $DIR_ARCHIVE1/
 
-listofcases=`ls -d sps4_????${st}_0??`
+listofcases=`ls -d sps4_????${st}_0??|grep -v 2025`
 
 for caso in $listofcases
 do

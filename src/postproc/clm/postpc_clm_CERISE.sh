@@ -87,29 +87,6 @@ then
       echo "file already regridded"
    else
       if [[ $ftype == "h2" ]] ; then
-        # NCO phase - Create new variables - 4 steps
-        # (I) H2OSOI
-        # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
-#        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
- #       mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
-   
-        # (II) SNOW
-#        ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${rootname}.nc_tmp_RHOSNO
-#        mv ${rootname}.nc_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
-   
-        # (III) Remove extra vars
-#        ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${rootname}.nc_tmp_rm
-#        rm ${rootname}.tmp_RHOSNO.nc
-   	
-        # (IV) Change variable attributes
-#        ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${rootname}.nc_tmp_rm	
-#        ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${rootname}.nc_tmp_rm	
-   
-#        ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${rootname}.nc_tmp_rm	
-#        ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${rootname}.nc_tmp_rm	
-#        export interp_input=${rootname}.nc_tmp_rm
-
-        # Interpolation phase
         # create interpolated file in ./reg1x1 dir
         inputf=`basename ${CLM_OUTPUT_FV}`
         rsync -av ${CLM_OUTPUT_FV} ${DIROUT_REG1x1}
@@ -119,10 +96,93 @@ then
         cdo sellevidx,1/20 TSOI.nc TSOI_cropped.nc
 # rename its dimension accordingly to H2OSOI
         ncrename -O -d levgrnd,levsoi TSOI_cropped.nc TSOI_cropped_levsoi.nc
-        cdo selvar,SNOTTOPL,H2OSOI ${DIROUT_REG1x1}/$inputf other_vars.nc
+        cdo selvar,H2OSOI ${DIROUT_REG1x1}/$inputf h2osoi.nc
+        cdo -O --reduce_dim -sellevidx,1 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=20
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl1.nc
+        #
+        cdo -O --reduce_dim -sellevidx,2 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=40
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl2.nc
+        #
+        cdo -O --reduce_dim -sellevidx,3 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=60
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl3.nc
+        #
+        cdo -O --reduce_dim -sellevidx,4 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=80
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl4.nc
+        #
+        cdo -O --reduce_dim -sellevidx,5 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=120
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl5.nc
+        #
+        cdo -O --reduce_dim -sellevidx,6 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=160
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl6.nc
+        #
+        cdo -O --reduce_dim -sellevidx,7 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=200
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl7.nc
+        #
+        cdo -O --reduce_dim -sellevidx,8 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=240
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl8.nc
+        #
+        cdo -O --reduce_dim -sellevidx,9 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=280
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl9.nc
+        #
+        cdo -O --reduce_dim -sellevidx,10 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=320
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl10.nc
+        #
+        cdo -O --reduce_dim -sellevidx,11 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=360
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl11.nc
+        #
+        cdo -O --reduce_dim -sellevidx,12 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=400
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl12.nc
+        #
+        cdo -O --reduce_dim -sellevidx,13 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=440
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl13.nc
+        #
+        cdo -O --reduce_dim -sellevidx,14 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=540
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl14.nc
+        #
+        cdo -O --reduce_dim -sellevidx,15 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=640
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl15.nc
+        #
+        cdo -O --reduce_dim -sellevidx,16 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=740
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl16.nc
+        #
+        cdo -O --reduce_dim -sellevidx,17 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=840
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl17.nc
+        #
+        cdo -O --reduce_dim -sellevidx,18 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=940
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl18.nc
+        #
+        cdo -O --reduce_dim -sellevidx,19 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=1040
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl19.nc
+        #
+        cdo -O --reduce_dim -sellevidx,20 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
+        lev=1140
+        cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl20.nc
+        fi
+        ncecat mrlsl?.nc mrlsl??.nc mrlsl.nc
+        ncrename -O -d record,levsoi H2OSOI.nc
+        cdo selvar,SNOTTOPL ${DIROUT_REG1x1}/$inputf SNOTTOPL.nc
 # cat the three vars together
         interp_input=CERISE_${inputf}
-        cdo -O merge TSOI_cropped_levsoi.nc other_vars.nc $interp_input
+        cdo -O merge TSOI_cropped_levsoi.nc H2OSOI.nc SNOTTOPL.nc $interp_input
       elif [[ $ftype == "h3" ]] ; then
         inputfname=`basename ${CLM_OUTPUT_FV}` 
         interp_input=cerise.$inputfname
@@ -132,7 +192,7 @@ then
       fi
       export REMAP_EXTRAP="on"
       cdo remapbil,$REPOGRID1/griddes_C3S.txt ${interp_input} $CLM_OUTPUT_REG1x1 
-      if [[ $ftype == "h2" ]] ; then
+      if [[ $ftype == "h3" ]] ; then
         outfile=`basename $CLM_OUTPUT_REG1x1`
         mv $outfile tmp.$outfile
         cdo -O merge $SCRATCHDIR/CERISE/PCT_NATVEG_reg1x1_185days.nc tmp.$outfile $CLM_OUTPUT_REG1x1
@@ -167,8 +227,6 @@ then
       title="${SPSSYS} forecast ERROR "
       ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
-   else
-      rm -rf $DIROUT_REG1x1
    fi  
    
    cd $outdirCERISE
@@ -179,6 +237,7 @@ then
 
    echo "postpc_clm.sh DONE"
    touch ${check_postclm}
+   rm -rf $DIROUT_REG1x1
 else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postclm} exists. If you want to recomputed first delete it"

@@ -1,0 +1,184 @@
+#!/bin/sh -l
+#--------------------------------
+## No need for bsub header, we launch it from launch_pushCERISE2ECMWF, with submitcommand.sh
+# MANCA IL LOG DEL RM
+
+#NEW 202103: tolta ccmail e definita ccecmwfmail e tolto un commento
+# load variables from descriptor
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -euvx
+
+check_status(){
+stat=$1
+script1=$2
+if [ $stat -ne 0 ]
+then
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+   if [[ "$machine" == "juno" ]]
+   then
+      body="Error in ${script1}. Exiting from $DIR_C3S/pushCERISE2ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      body="Error in ${script1}. Exiting from $DIR_C3S/pushCERISE2ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
+   fi
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+   exit 1
+fi
+}
+yyyy=$1
+st=$2
+dbg_push=$3
+filedone=$4
+# check files
+firstdtn03=$5
+
+list2rm=""
+log_script=ls_S${yyyy}${st}.log
+ccecmwfmail=$mymail
+mymail="sp1@cmcc.it"
+ecmwfmail=$mymail
+
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+
+title="${title_debug} [CERISE] ${SPSSystem} forecast notification"
+
+body="pushCERISE2ECMWF.sh for startdate $yyyy$st started `date` "
+
+cmd_cntfirst="ls $firstdtn03 |wc -l "
+cntfirst=`eval $cmd_cntfirst`
+if [ $cntfirst -eq 1 ]
+then
+   body="Successive attempt pushCERISE2ECMWF.sh for startdate $yyyy$st started `date` "
+fi
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+
+start_date=$yyyy$st
+cd $pushdir/$start_date
+#
+
+# PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
+ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d)) #1 per 2d var e 5 per 3d var=136 in hindcast and 146 in forecast
+ntarandsha=$((ntar * 2))
+
+cntfirst=`eval $cmd_cntfirst`
+if [ $cntfirst -eq 1 ]
+then
+# from the second launch it checks if there are still appended processes 
+   
+   if [[ "$machine" == "juno" ]]
+   then
+      $DIR_C3S/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
+      stat=$?
+      check_status $stat ${DIR_C3S}/ls_ftp_ecmwf.sh 
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      ${DIR_C3S}/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
+      stat=$?
+      check_status $stat ${DIR_C3S}/ls_ftp_ecmwf.sh 
+   fi
+# NOW CHECK DIMS
+# do check dimensions of transferred files
+   cd $pushdir/$yyyy$st
+   listafiles=`ls *tar *sha256`
+   for file in $listafiles
+   do
+      localdim=`ls -l $file|awk '{print $5}'`
+      isremotepresent=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|wc -l`
+      if [ $isremotepresent -ne 0 ] 
+      then 
+         remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
+         if [ $localdim -ne $remotedim ]
+         then
+            echo "ACHTUNG!!! this file $file was not correctly transferred!!
+original dimension $localdim, transferred dimension $remotedim. check it"
+            list2rm+=" $file"
+         fi
+      fi
+   done
+#  eseguire la rimozione di $list2rm sul sito ftp
+   if [ `echo $list2rm |wc -w` -ne 0 ]
+   then
+      if [[ "$machine" == "juno" ]]
+      then
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         stat=$?
+      elif [[ "$machine" == "leonardo" ]]
+      then
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         stat=$?
+      fi
+      check_status $stat ${DIR_C3S}/rm_ftp_ecmwf.sh
+   fi
+fi
+# do the first send with mirror;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
+# al secondo tentativo cancella i file incompleti
+# e ricomincia da capo
+input4send="$yyyy $st $mymail $typeofrun $ntarandsha $firstdtn03 $dbg_push $log_script $machine $pushdir"
+
+if [[ "$machine" == "juno" ]]
+then
+   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+   stat=$?
+   check_status $stat "send_to_ecmwf.sh"
+elif [[ "$machine" == "leonardo" ]]
+then
+   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+   stat=$?
+   check_status $stat "send_to_ecmwf.sh"
+fi
+
+
+# Check if the files pushed are as expected
+nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/${log_script} | wc -l`
+if [ $nline -lt $ntarandsha ] ; then
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+   if [[ "$machine" == "juno" ]]
+   then
+      body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
+   fi
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+   exit 1
+fi
+# END OF PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
+
+echo `pwd`
+suffixdate=`date +%Y%m%d`"_"`date +%H%M%S`".txt"
+listaofsha=`ls -1 *S${yyyy}${st}0100*.sha256`
+#
+
+
+# Verify that all files are present in push logs (manifest included)
+cd $DIR_LOG/$typeofrun/$yyyy$st
+
+# do check dimensions of transferred files
+cd $pushdir/$yyyy$st
+listafiles=`ls *tar`
+for file in $listafiles
+do
+   localdim=`ls -l $file|awk '{print $5}'`
+   remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
+   if [ $localdim -ne $remotedim ]
+   then
+      title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+      body="ACHTUNG!!! In $DIR_C3S/pushCERISE2ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+      exit 5
+   fi
+done
+touch $filedone
+
+
+# AT LAST SEND notification both to sp1 and to ECMWF
+title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
+body=""
+checkpushdone=`ls ${filedone} | wc -l`
+if [ $checkpushdone -eq 1 ]; then
+   touch $filedone
+   echo "Done."
+   exit 0
+fi

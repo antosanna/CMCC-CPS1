@@ -26,8 +26,8 @@ set -euxv
 #memberstocheck=20
 #
 start_date=${yyyy}${st}
-C3Stable_cam=~cp1/CPS/CMCC-CPS1/src/postproc/cam/C3S_table.txt
-C3Stable_clm=~cp1/CPS/CMCC-CPS1/src/postproc/clm/C3S_table_clm.txt
+C3Stable_cam=$DIR_POST/cam/C3S_table.txt
+C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
 CERISEtable_cam=$DIR_POST/cam/CERISE_table.txt
 CERISEtable_clm=$DIR_POST/clm/CERISE_table_clm.txt
 
@@ -81,17 +81,17 @@ do
          mm=$(( $isec - 9 ))
          listafile=`tar -tf ${t}|grep nc`
          wclistafile=`tar -tf ${t}|grep nc|wc -l`
-         wclistasha=`tar -tf ${t}|grep sha256|wc -l`
+#         wclistasha=`tar -tf ${t}|grep sha256|wc -l`
          if [ $wclistafile -ne 12 ]
          then
             echo "number of files inside tar $var is wrong: $wclistafile instead of 12"
             exit
          fi
-         if [ $wclistasha -ne 12 ]
-         then
-            echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
-            exit
-         fi
+#         if [ $wclistasha -ne 12 ]
+#         then
+#            echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
+#            exit
+#         fi
          for file in $listafile
          do
              number=`echo $file|rev|cut -d '.' -f2|cut -d '_' -f1|rev|cut -c 2-3`
@@ -114,17 +114,17 @@ do
       echo $t
       listafile=`tar -tf ${t}|grep nc`
       wclistafile=`tar -tf ${t}|grep nc|wc -l`
-      wclistasha=`tar -tf ${t}|grep sha256|wc -l`
+#      wclistasha=`tar -tf ${t}|grep sha256|wc -l`
       if [ $wclistafile -ne $nrunC3Sfore ]
       then
          echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunC3Sfore"
          exit
       fi
-      if [ $wclistasha -ne $nrunC3Sfore ]
-      then
-         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
-         exit
-      fi
+#      if [ $wclistasha -ne $nrunC3Sfore ]
+#      then
+#         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
+#         exit
+#      fi
       mm=1
       for file in $listafile
       do

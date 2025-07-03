@@ -25,7 +25,7 @@ orig_term=cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100
 
 
 mkdir -p $WORK_CERISE/$yyyy$st
-lista=`ls $WORK_C3S1/$yyyy$st/${orig_term}*r${mem}i00p00.nc| grep -v ocean_mon`
+lista=`ls $WORK_C3S1/$yyyy$st/${orig_term}*r${mem}i00p00.nc| grep -v ocean_mon|grep -v seaIce_6hr_surface_sitemptop|grep -v 100m_|grep -v prw|grep -v tsl_|grep -v lweprc_|grep -v 6hr_surface_clt`
 for ff in $lista
 do
    newff=`basename $ff|sed "s/cmcc_/cmcc_CERISE-/"`
@@ -35,6 +35,7 @@ do
    ncatted -O -h -a commit,global,o,c,"2023-11-01T9:35:32Z https://www.cmcc.it/it/publications/tn0301-the-new-cmcc-seasonal-prediction-system-SPS4" $WORK_CERISE/$yyyy$st/$newff
    ncatted -O -h -a summary,global,o,c,"Seasonal Forecast data produced by CMCC as its contribution to the CERISE project. The data has global coverage with a 1-degree horizontal resolution and spans for around 6 months since the start date " $WORK_CERISE/$yyyy$st/$newff
    ncatted -O -h -a title,global,o,c,"CMCC seasonal forecast model output prepared for CERISE project" $WORK_CERISE/$yyyy$st/$newff
+   ncatted -O -h -a title,global,o,c,"cerise-CMCC-CM3-v20231101:  atmos: CAM(fv_0.47x0.63 L83); ocean: NEMOv4.2 (ORCA0.25_z75, 0.25x0.25L75); land: CLM(fv_0.47x0.63 L25); seaice: CICE(same horizontal resolution of NEMO)" $WORK_CERISE/$yyyy$st/$newff
    if [[ $ff =~ "sftlf" ]]
    then
       ncatted -a valid_min,sftlf,o,c,0 $WORK_CERISE/$yyyy$st/$newff

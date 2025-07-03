@@ -170,7 +170,8 @@ done
 touch $dir_cases/$caso/logs/postproc_CERISE_${caso}_DONE
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
-exit
+# no checker needed for CERISE
+exit 0
 
 # test up to here
 

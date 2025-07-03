@@ -31,6 +31,7 @@ else
 #   fyy=2022
 fi
 # ---------------------------
+ccmail=$mymail
 for yyyy in `seq $iyy $fyy` ; do
 
 set +euvx
@@ -40,34 +41,16 @@ set -euvx
    if [ $debug_push -ge 1 ]
    then
      mymail="sp1@cmcc.it"
-     ccmail=$mymail
-     body="launch_push4ECMWF.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
+     body="launch_pushCERISE2ECMWF.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
      title="[CERISE] ${SPSSystem} warning"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
-   else
-     ccmail=$mymail
    fi
    firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_${yyyy}${st}
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year
 #--------------------------------------------------------------------
-   if [[ "$machine" == "juno" ]]
-   then
-      filedone=$check_push_done
-      if [ $debug_push -ge 1 ]
-      then
-         filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
-      fi
-      cmd_anypushC3SDONE="ls $filedone | wc -l"
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      filedone=$check_push_done
-      if [ $debug_push -ge 1 ]
-      then
-         filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
-      fi
-      cmd_anypushC3SDONE="ls $filedone | wc -l"
-   fi
+   filedone=$check_push_done
+   cmd_anypushC3SDONE="ls $filedone | wc -l"
    anypushC3SDONE=`eval $cmd_anypushC3SDONE`
    if [ $anypushC3SDONE -gt 0 ] ; then
 # already pushed: go on with following hindcasts
@@ -75,25 +58,18 @@ set -euvx
    fi
    if [[ ! -f $check_tar_done ]] ; then
        
-       if [[ ${typeofrun} == "hindcast" ]] ; then
-           body="Missing ${check_tar_done} push4ECMWF going on for the following year"
+           body="Missing ${check_tar_done} pushCERISE2ECMWF going on for the following year"
            title="[CERISE] ${SPSSystem} ${typeofrun} warning"
            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
            continue
-       else
-           body="Missing ${check_tar_done}. launch_push4ECMWF exiting now."
-           title="[CERISE] ${SPSSystem} ${typeofrun} error"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun 
-           exit
-       fi
    fi
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 #check if there are transfer processes running and if so exit
 #--------------------------------------------------------------------
-   procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -c yes `
-   jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -i yes `
+   procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n pushCERISE2ECMWF_${yyyy}${st} -c yes `
+   jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n pushCERISE2ECMWF_${yyyy}${st} -i yes `
    if [ $procsRUN -gt 0 ] ; then
 # if another push running check how long it has being running for
       elapsedh=`${DIR_UTIL}/findjobs.sh -m $machine -d $jobID`
@@ -101,7 +77,7 @@ set -euvx
       then
          if [ $debug_push -eq 0 ]
          then
-            body="elapsed hours $elapsedh for push4ECMWF_${yyyy}${st}. Too much. Going to kill it"
+            body="elapsed hours $elapsedh for pushCERISE2ECMWF_${yyyy}${st}. Too much. Going to kill it"
   	         title="[CERISE] ${SPSSystem} ${typeofrun} warning"
            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
             $DIR_UTIL/killjobs.sh -m $machine -i $jobID
@@ -110,20 +86,14 @@ set -euvx
 # else exit from launcher
          echo "jobID $jobID"
          echo "elapsed hours $elapsedh"
-         echo "push4ECMWF already running"
+         echo "pushCERISE2ECMWF already running"
 	        exit 0
       fi		
    fi		
 #--------------------------------------------------------------------
 
    body="CERISE: Begin of the start-date $yyyy$st transfer on acq.ecmwf.int"
-   if [[ "$machine" == "juno" ]]
-   then
-      cntfirst=`ls $firstdtn03 |wc -l `
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      cntfirst=`ls $firstdtn03 |wc -l `
-   fi
+   cntfirst=`ls $firstdtn03 |wc -l `
    if [[ $cntfirst -eq 1 ]]
    then
       body="CERISE: successive attempt of the start-date $yyyy$st transfer on acq.ecmwf.int"
@@ -134,18 +104,7 @@ set -euvx
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
    mkdir -p ${DIR_LOG}/${typeofrun}/${yyyy}${st}
-   #if [[ $debug_push -eq 0 ]]
-   #then
-      if [[ "$machine" == "juno" ]]
-      then
-         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-      else
-         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-      fi
-   #else
-      
-  #    ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-   #fi
+   ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
    ic=0
    while `true`; do
       # each 15' look for $filedone
@@ -161,24 +120,20 @@ set -euvx
           ic=0
           if [ $anypushC3SDONE -eq 0 ] ; then          
 # meaning transfer not completed
-             procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -c yes `
+             procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n pushCERISE2ECMWF_${yyyy}${st} -c yes `
              if [ $procsRUN -ne 0 ] ; then
 # meaning push still running --> too much! kill and resubmit
-                jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -i yes `
+                jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n pushCERISE2ECMWF_${yyyy}${st} -i yes `
                 $DIR_UTIL/killjobs.sh -m $machine -i $jobID
              fi
   	          body="CERISE: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
   	          title="[CERISE] ${SPSSystem} ${typeofrun} notification"
             	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
-     #        if [[ $debug_push -eq 0 ]]
-     #        then
              if [[ "$machine" == "juno" ]]
              then
-                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
              else
-                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-             #else
-             #   ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
+                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
              fi
           fi
        fi

@@ -1,17 +1,10 @@
 Model Name,C3S Name,dimension,long_name,standard_name,units,frequency,level_type,modeling_realm,Arithmetic expr,coordinates,cell_methods,varflg,type
-TS,tso,leadtime lat lon,Sea Surface Temperature,sea_surface_temperature,K,6hr,surface,ocean,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
-TS,tsl,leadtime lat lon,Temperature of Soil,soil_temperature,K,6hr,surface,land,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
-CLDTOT,clt,leadtime lat lon,Total Cloud Fraction,cloud_area_fraction,1,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
 RHREFHT,tdps,leadtime lat lon,2m Dewpoint Temperature,dew_point_temperature,K,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
 PSL,psl,leadtime lat lon,Sea Level Pressure,air_pressure_at_sea_level,Pa,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
 TREFHT,tas,leadtime lat lon,Near-Surface Air Temperature,air_temperature,K,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
 UBOT,uas,leadtime lat lon,Eastward Near-Surface Wind,x_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
 VBOT,vas,leadtime lat lon,Northward Near-Surface Wind,y_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
-UBOT,ua100m,leadtime lat lon,Eastward Wind at 100m,x_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
-VBOT,va100m,leadtime lat lon,Northward Wind at 100m,y_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
 PRECT,lwepr,leadtime lat lon,Liquid Water Equivalent Thickness of Total Precipitation Amount,lwe_thickness_of_precipitation_amount,m,day,surface,atmos,86400,reftime realization time leadtime lat lon,leadtime: sum,0,h3
-TMQ,prw,leadtime lat lon,Water Vapor Path,atmosphere_mass_content_of_water_vapor,kg m-2,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
-PRECC,lweprc,leadtime lat lon,Liquid Water Equivalent Thickness of Convective Precipitation Amount,lwe_thickness_of_convective_precipitation_amount,m,day,surface,atmos,86400,reftime realization time leadtime lat lon,leadtime: sum,0,h3
 PRECSC,lweprsn,leadtime lat lon,Liquid Water Equivalent Thickness of Snowfall Amount,lwe_thickness_of_snowfall_amount,m,day,surface,atmos,86400,reftime realization time leadtime lat lon,leadtime: sum,0,h3
 SHFLX,hfss,leadtime lat lon,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
 LHFLX,hfls,leadtime lat lon,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
