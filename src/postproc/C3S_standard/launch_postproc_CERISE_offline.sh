@@ -16,6 +16,7 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 st=$1  #stdate as input
 
 dbg=1 # dbg=1 -> just one member for test
+mkdir -p $DIR_TEMP
 flag_running=$DIR_TEMP/launch_postproc_CERISE_offline_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
 then

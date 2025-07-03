@@ -197,7 +197,7 @@ then
       if [[ $ftype == "h3" ]] ; then
         outfile=`basename $CLM_OUTPUT_REG1x1`
         mv $outfile tmp.$outfile
-        cdo -O merge $SCRATCHDIR/CERISE/PCT_NATVEG_reg1x1_185days.nc tmp.$outfile $CLM_OUTPUT_REG1x1
+        cdo -O merge /work/cmcc/as34319/scratch/CERISE/PCT_NATVEG_reg1x1_185days.nc tmp.$outfile $CLM_OUTPUT_REG1x1
       fi
    fi
    
