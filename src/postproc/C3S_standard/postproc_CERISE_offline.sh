@@ -53,7 +53,6 @@ then
            h3) mult=1 ; req_mem=1000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
-#       finalfile_clm=$HEALED_DIR_ROOT1/$caso/$caso.clm2.$ft.$yyyy-$st.zip.nc
        finalfile_clm=$DIR_ARCHIVE1/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        if [[ ! -f $finalfile_clm ]]
        then
@@ -126,8 +125,8 @@ then
    # and regridded by regridFV_C3S.sh
          continue
       fi
-#      finalfile=$HEALED_DIR_ROOT1/$caso/$caso.cam.$ft.$yyyy-$st.zip.nc
-      finalfile=$DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+      finalfile=$HEALED_DIR_ROOT1/$caso/$caso.cam.$ft.$yyyy-$st.zip.nc
+#      finalfile=$DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       if [[ ! -f $finalfile ]]
       then
           body="$finalfile does not exist"

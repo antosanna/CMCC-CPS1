@@ -178,6 +178,9 @@ then
         cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl20.nc
         ncecat mrlsl?.nc mrlsl??.nc H2OSOI.nc
         ncrename -O -d record,levsoi H2OSOI.nc
+        ncks --fix_rec_dmn levsoi H2OSOI.nc prova.nc
+        ncks --mk_rec_dmn time  prova.nc prova2.nc
+        ncpdq -O -a time,levsoi,lat,lon prova2.nc H2OSOI.nc
         cdo selvar,SNOTTOPL ${DIROUT_REG1x1}/$inputf SNOTTOPL.nc
 # cat the three vars together
         interp_input=CERISE_${inputf}
