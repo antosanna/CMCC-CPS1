@@ -49,7 +49,7 @@ then
    for ft in $filetyp ; do
 
        case $ft in
-           h2) mult=1 ; req_mem=20000 ;;
+           h2) mult=1 ; req_mem=60000 ;;
            h3) mult=1 ; req_mem=1000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
