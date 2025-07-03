@@ -176,7 +176,7 @@ then
         cdo -O --reduce_dim -sellevidx,20 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
         lev=1140
         cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl20.nc
-        ncecat mrlsl?.nc mrlsl??.nc mrlsl.nc
+        ncecat mrlsl?.nc mrlsl??.nc H2OSOI.nc
         ncrename -O -d record,levsoi H2OSOI.nc
         cdo selvar,SNOTTOPL ${DIROUT_REG1x1}/$inputf SNOTTOPL.nc
 # cat the three vars together
