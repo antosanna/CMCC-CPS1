@@ -13,7 +13,7 @@ set -euvx
 check_status(){
 stat=$1
 script1=$2
-if [ $stat -ne 0 ]
+if [[ $stat -ne 0 ]]
 then
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
@@ -36,7 +36,7 @@ firstdtn03=$5
 
 list2rm=""
 log_script=ls_S${yyyy}${st}.log
-if [ $dbg_push -ge 1 ]
+if [[ $dbg_push -ge 1 ]]
 then
    log_script=ls_S${yyyy}${st}_cmcc.log
    mymail="sp1@cmcc.it"
@@ -63,7 +63,7 @@ then
    cmd_cntfirst="ls $firstdtn03 |wc -l "
 fi
 cntfirst=`eval $cmd_cntfirst`
-if [ $cntfirst -eq 1 ]
+if [[ $cntfirst -eq 1 ]]
 then
    body="Successive attempt push4ECMWF.sh for startdate $yyyy$st started `date` "
 fi
@@ -76,7 +76,7 @@ cd $pushdir/$start_date
 set +euvx
 nf=`ls -1 $DIR_LOG/$typeofrun/$yyyy$st/cmcc*manifest*txt | wc -l`
 set -euvx
-if [ $nf -ne 0 ] ; then
+if [[ $nf -ne 0 ]] ; then
    rm $DIR_LOG/$typeofrun/$yyyy$st/cmcc*manifest*txt
 fi
 # 
@@ -86,7 +86,7 @@ ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d)) #1 per 2d var e 5 per 3d va
 ntarandsha=$((ntar * 2))
 
 cntfirst=`eval $cmd_cntfirst`
-if [ $cntfirst -eq 1 ]
+if [[ $cntfirst -eq 1 ]]
 then
 # from the second launch it checks if there are still appended processes 
    
@@ -109,10 +109,10 @@ then
    do
       localdim=`ls -l $file|awk '{print $5}'`
       isremotepresent=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|wc -l`
-      if [ $isremotepresent -ne 0 ] 
+      if [[ $isremotepresent -ne 0 ]] 
       then 
          remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
-         if [ $localdim -ne $remotedim ]
+         if [[ $localdim -ne $remotedim ]]
          then
             echo "ACHTUNG!!! this file $file was not correctly transferred!!
 original dimension $localdim, transferred dimension $remotedim. check it"
@@ -121,7 +121,7 @@ original dimension $localdim, transferred dimension $remotedim. check it"
       fi
    done
 #  eseguire la rimozione di $list2rm sul sito ftp
-   if [ `echo $list2rm |wc -w` -ne 0 ]
+   if [[ `echo $list2rm |wc -w` -ne 0 ]]
    then
       if [[ "$machine" == "juno" ]]
       then
@@ -155,7 +155,7 @@ fi
 
 # Check if the files pushed are as expected
 nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/${log_script} | wc -l`
-if [ $nline -lt $ntarandsha ] ; then
+if [[ $nline -lt $ntarandsha ]] ; then
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
    then
@@ -198,7 +198,7 @@ fi
 cd $DIR_LOG/$typeofrun/$yyyy$st
 cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_??????.txt $log_script|wc -l`
 
-if [ $cntmanifest -gt 1 ]; then
+if [[ $cntmanifest -gt 1 ]]; then
    # Raise error
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
@@ -212,7 +212,7 @@ if [ $cntmanifest -gt 1 ]; then
    exit 1
 fi
 
-if [ $cntmanifest -lt 1 ]; then
+if [[ $cntmanifest -lt 1 ]]; then
 # last attempt to send manifest TO acquisition.ecmwf.int; send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
    if [[ "$machine" == "juno" ]]
    then
@@ -230,7 +230,7 @@ if [ $cntmanifest -lt 1 ]; then
 
 fi
 cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
-if [ $cntmanifest -ne 1 ]; then
+if [[ $cntmanifest -ne 1 ]]; then
    # Raise error
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
    if [[ "$machine" == "juno" ]]
@@ -250,7 +250,7 @@ else
    do
       localdim=`ls -l $file|awk '{print $5}'`
       remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
-      if [ $localdim -ne $remotedim ]
+      if [[ $localdim -ne $remotedim ]]
       then
          title=${title_debug}"[C3S] ${SPSSystem} ERROR"
          body="ACHTUNG!!! In $DIR_C3S/push4ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
@@ -271,7 +271,7 @@ fi
 cd $pushdir/$start_date
 tarlist=`ls -1 *S${yyyy}${st}0100*.tar`
 attachtxt=${DIR_LOG}/$typeofrun/${yyyy}${st}/tartvf_${yyyy}${st}.txt
-if [ -f ${attachtxt} ] ; then
+if [[ -f ${attachtxt} ]] ; then
    	rm ${attachtxt}
 fi
 for tarf in $tarlist ; do
@@ -296,7 +296,7 @@ elif [[ "$machine" == "leonardo" ]]
 then
    checkpushdone=`ls ${filedone} | wc -l`
 fi
-if [ $checkpushdone -eq 1 ]; then
+if [[ $checkpushdone -eq 1 ]]; then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
    if [[ "$machine" == "juno" ]]
    then

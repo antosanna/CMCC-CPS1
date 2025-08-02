@@ -14,11 +14,4 @@ pes_per_node=`./xmlquery PES_PER_NODE | cut -d '=' -f2`
 ./xmlchange -file env_run.xml -id ATM_NCPL -val 384
 #${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -f yes -n $totcores -R ${pes_per_node} -j CASO_run -l $DIR_CASES/CASO/logs/ -d $DIR_CASES/CASO -s CASO.run
 ./case.submit
-exit
 
-# check if still needed in SPS4
-if [ $cam_guess -eq 1 ]
-then
-   command="`grep done logdir/CASO*err|tail -2|head -3|tail -1|cut -d ' ' -f2-`"
-   eval $command 
-fi

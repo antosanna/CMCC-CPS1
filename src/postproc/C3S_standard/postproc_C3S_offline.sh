@@ -128,7 +128,13 @@ then
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
 # add exception for May where the files are messed up.
-      if [ -f $inputfile -a $st == "05" ] || [[ ! -f $finalfile ]]
+      if [[ ! -f $finalfile ]]
+      then
+         input="$caso $ft ${wkdir_cam} $finalfile $ic" 
+             # ADD the reservation for serial !!!
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      fi
+      if [[ -f $inputfile ]] && [[ $st == "05" ]]
       then
          input="$caso $ft ${wkdir_cam} $finalfile $ic" 
              # ADD the reservation for serial !!!
@@ -168,7 +174,11 @@ then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+      if [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
+      then
+         break
+      fi
+      if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]]
       then
          break
       fi

@@ -2,7 +2,7 @@
 set +evxu
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then	
+if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]; then	
 condafunction() {
    local comm=$1
    local env=$2	
@@ -18,9 +18,9 @@ condafunction() {
           module load $mpilib4py_nemo_rebuild
        fi
    fi
-   if [  $comm == "activate"  ]; then
+   if [[  $comm == "activate"  ]]; then
       	conda $comm $env
-   elif [  $comm == "deactivate"  ]; then
+   elif [[  $comm == "deactivate"  ]]; then
       	conda $comm
    fi
 }
@@ -30,9 +30,9 @@ elif [[ "${machine}" == "leonardo" ]] ; then
 condafunction() {
    local comm=$1
    local env=$2	
-   if [  $comm == "activate"  ]; then
+   if [[  $comm == "activate"  ]]; then
       	conda $comm $env
-   elif [  $comm == "deactivate"  ]; then
+   elif [[  $comm == "deactivate"  ]]; then
       	conda $comm
    fi
 }

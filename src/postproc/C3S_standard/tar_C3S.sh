@@ -19,7 +19,7 @@ set +euvx
 set -euvx
 
 start_date=${yyyy}${st}
-if [ -f ${check_tar_done} ]
+if [[ -f ${check_tar_done} ]]
 then
    body="C3S: tar_C3S already done for ${start_date}. Exiting from $DIR_C3S/tar_C3S.sh now"
    title="[C3S] ${CPSSYS} $typeofrun notification"
@@ -39,7 +39,7 @@ C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 read 
 while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
 do
-   if [ $freq == "12hr" ]
+   if [[ $freq == "12hr" ]]
    then
       var_array3d+=("$C3S")
    else
@@ -97,7 +97,7 @@ var_array=("${var_array2d[@]}" "${var_array3d[@]}")
 echo ${var_array[@]}
 
 dim=${#var_array[@]}
-if [ $dim -ne $nfieldsC3S ]
+if [[ $dim -ne $nfieldsC3S ]]
 then
    echo "!!!!!!!!!!!!!!!!!!!!!"
    echo "you are postprocessing only $dim variables instead of the $nfieldsC3S ones"
@@ -145,7 +145,7 @@ fi
 #  CHEKC THAT ALL NEEDED MEMBERS ARE THERE
 #----------------------------
 
-if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
+if [[ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]]
 then
     body="C3S: $DIR_C3S/tar_C3S.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
     title="[C3S] ${CPSSYS} $typeofrun ERROR"
@@ -184,7 +184,7 @@ then
    do
       echo $file
       nstep=`cdo -ntime $file`
-      if [ $nstep -ne $fixsimdays ]
+      if [[ $nstep -ne $fixsimdays ]]
       then
           body="C3S: $DIR_C3S/tar_C3S.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
           title="[C3S] ${CPSSYS} forecast ERROR"
@@ -205,7 +205,7 @@ then
   for file in ${lista6hrly}
   do
      nstep=`cdo -ntime $file`
-     if [ $n6hr -ne $nstep ]
+     if [[ $n6hr -ne $nstep ]]
      then
         body="C3S: $DIR_C3S/tar_C3S.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
         title="[C3S] ${CPSSYS} forecast ERROR"
@@ -224,7 +224,7 @@ if [[ $islista12hrly -ne 0 ]] ; then
    for file in ${lista12hrly}
    do
       nstep=`cdo -ntime $file`
-      if [ $n12hr -ne $nstep ]
+      if [[ $n12hr -ne $nstep ]]
       then
          body="C3S: $DIR_C3S/tar_C3S.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
          title="[C3S] ${CPSSYS} forecast ERROR"
@@ -243,7 +243,7 @@ echo "NOW PRODUCE sha256 FILES"
 for file in ${listatocheck}
 do
    file="${file%.*}"
-   if [ -f $file.sha256 ]
+   if [[ -f $file.sha256 ]]
    then
      rm $file.sha256
    fi
@@ -264,7 +264,7 @@ for var in "${var_array2d[@]}"
 do
 #controllare! non e' precisissima...
    NUMB_FOUND=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}*_${var}_*sha256 | wc -l`
-   if [ $((${NUMB_FOUND} * 2)) -eq ${NUMB_CHECK} ] ; then
+   if [[ $((${NUMB_FOUND} * 2)) -eq ${NUMB_CHECK} ]] ; then
      
      # need to extract model,freq and type
      f=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r* | head -1`
@@ -274,7 +274,7 @@ do
      do
         listafile2tar+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r${ens}*`"
      done
-     if [ `echo $listafile2tar|wc -w` -ne $(($nrunC3Sfore * 2)) ]
+     if [[ `echo $listafile2tar|wc -w` -ne $(($nrunC3Sfore * 2)) ]]
      then
          body="C3S: standardisation error in script $DIR_C3S/tar_C3S.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunC3Sfore * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
          title="[C3S] ${CPSSYS} $typeofrun ERROR"
@@ -283,7 +283,7 @@ do
      fi
      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar $listafile2tar
      
-     if [ $? -eq 0 ] ; then
+     if [[ $? -eq 0 ]] ; then
         sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.sha256 
      
      #copy in dtn01 to push
@@ -306,7 +306,7 @@ done
 for var in "${var_array3d[@]}"
 do
    NUMB_FOUND=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}*_${var}_*sha256 | wc -l`
-   if [ $((${NUMB_FOUND} * 2)) -eq ${NUMB_CHECK} ] ; then
+   if [[ $((${NUMB_FOUND} * 2)) -eq ${NUMB_CHECK} ]] ; then
 # IN THE FOLLOWING CASES VARS ARE DOUBLE WE SPLIT
     
 # need to extract model,freq and type
@@ -323,7 +323,7 @@ do
          fi
          list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0*`
          tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar ${list_0}
-         if [ $? -eq 0 ] ; then
+         if [[ $? -eq 0 ]] ; then
              sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.sha256
              rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.* $pushdir_hc
          else
@@ -334,7 +334,7 @@ do
          #first 10
          list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r10*`
          tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar ${list_0}
-         if [ $? -eq 0 ] ; then
+         if [[ $? -eq 0 ]] ; then
             sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.sha256
            rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.* $pushdir_hc
          else
@@ -344,7 +344,7 @@ do
          #second 10
          list_1=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r1[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r20*`
          tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.tar ${list_1}
-         if [ $? -eq 0 ] ; then
+         if [[ $? -eq 0 ]] ; then
             sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.sha256
             rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.* $pushdir_hc
          else
@@ -354,7 +354,7 @@ do
          #third  10
          list_2=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r2[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r30*`
          tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.tar ${list_2}
-         if [ $? -eq 0 ] ; then
+         if [[ $? -eq 0 ]] ; then
             sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.sha256
             rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.* $pushdir_hc
          else
@@ -362,12 +362,12 @@ do
          fi
          #FOR SPS4 HINDCAST WE STOP HERE - 30 members in hindcast mode       
   
-         if [ $nrunC3Sfore -eq 50 ]
+         if [[ $nrunC3Sfore -eq 50 ]]
          then 
              #fourth 10
              list_3=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r3[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r40*`
              tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.tar ${list_3}
-             if [ $? -eq 0 ] ; then
+             if [[ $? -eq 0 ]] ; then
                    sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.sha256
                    rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.* $pushdir_hc
              else
@@ -377,7 +377,7 @@ do
              #fifth 10
              list_4=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r4[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r50*`
              tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.tar ${list_4}
-             if [ $? -eq 0 ] ; then
+             if [[ $? -eq 0 ]] ; then
                sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.sha256
                rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.* $pushdir_hc
              else
@@ -397,7 +397,7 @@ done  #end loop on var_array3d
 #check if everything is ok inside the tarfiles
 $DIR_C3S/check_tarC3S.sh $yyyy $st
 stat=$?
-if [ $stat -eq 0 ]
+if [[ $stat -eq 0 ]]
 then
    body="C3S: $DIR_LOG/tar_C3S.sh completed for ${start_date}."
    title="[C3S] ${CPSSYS} $typeofrun notification"
@@ -442,7 +442,7 @@ fi
 #--------------------------------------------
 # NOW COMPRESS ICs RELATIVE TO CURRENT START-DATE
 #--------------------------------------------
-#if [ `whoami` == $operational_user ]
+#if [[ `whoami` == $operational_user ]]
 #then
 #   $IC_SPS35/compress_ICs_current_startdate.sh $st $yyyy
 #fi

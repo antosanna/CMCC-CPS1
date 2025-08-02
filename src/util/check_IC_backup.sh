@@ -21,7 +21,7 @@ dirCINclm=/marconi_scratch/usera07cmc/a07cmc00/backup/IC_CLM_${CPSSYS}/$st
 outputfile=$DIR_LOG/forecast/$yyyy$st/IC_backup_list_${yyyy}${st}
 echo "output file: $outputfile"
 
-if [ -f $outputfile ]
+if [[ -f $outputfile ]]
 then
    rm $outputfile
 fi

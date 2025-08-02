@@ -10,7 +10,7 @@ set -evxu
 
 ifexistdelete() {
 	local filetodelete=$1
-	if [ -f $filetodelete ] ; then
+	if [[ -f $filetodelete ]] ; then
    		rm -f $filetodelete
 	fi
 }
@@ -22,7 +22,7 @@ ifexistdelete() {
 dbg=0
 #
 #
-if [ $dbg -eq 1 ]
+if [[ $dbg -eq 1 ]]
 then
    ic="atm=5,lnd=1,ocn=02"
    caso="sps4_199307_001"
@@ -72,7 +72,7 @@ rootname=${caso}.${landcase}.zip
 #**********************************************************
 # Start postprocessing operations only if not already done
 #**********************************************************
-if [ ! -f $check_postclm ]
+if [[ ! -f $check_postclm ]]
 then
 
 #remap input *************************************************
@@ -148,7 +148,7 @@ then
    set -euvx
    cd ${DIR_POST}/clm # where python script is
    python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
-   if [ $? -ne 0 ]
+   if [[ $? -ne 0 ]]
    then
 # intermidiate product
 #      rm ${DIROUT_REG1x1}/${rootname}.reg1x1.nc

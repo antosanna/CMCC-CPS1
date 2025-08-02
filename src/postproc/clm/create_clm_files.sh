@@ -48,13 +48,13 @@ then
 
       expected_ts=$(( $fixsimdays * $mult + 1 ))
       nt=`cdo -ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
-      if [ $nt -lt $expected_ts  ]
+      if [[ $nt -lt $expected_ts  ]]
       then
           body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.$yyyy-$st.zip.nc , ne to $expected_ts but is $nt. Exit "
           title="${CPSSYS} forecast notification - ERROR "
           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
           exit 1
-      elif [ $nt -gt $expected_ts  ]
+      elif [[ $nt -gt $expected_ts  ]]
       then
           ncks -O -F -d time,1,$expected_ts pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc  
           mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc  

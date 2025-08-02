@@ -44,7 +44,7 @@ cmd_ftp_cmccbo="open -u c3s,YhjDf733 ftp://ftp4.cmcc.it"
 cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
 
 
-if [ ! -f $first ]
+if [[ ! -f $first ]]
 then
    touch $first
 fi
@@ -105,7 +105,7 @@ EOF
 fi  #if dbg
 lftp -f $script_send
 stat=$?
-if [ $stat -eq 1 ]; then
+if [[ $stat -eq 1 ]]; then
       echo "error on  attempt $script_send ${yyyy}$st"|mail -s "[C3S] ${SPSSystem} forecast ERROR" $mymail
       exit 1
 fi         
@@ -165,7 +165,7 @@ fi
 
 lftp -f $script_ls |tee $log_script
 
-if [ $ntarandsha -eq 1 ]
+if [[ $ntarandsha -eq 1 ]]
 then 
    lftp -f $script_send
    lftp -f $script_ls |tee $log_script

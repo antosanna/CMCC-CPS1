@@ -62,7 +62,7 @@ EOF
 fi         
 lftp -f $script
 stat=$?
-if [ $stat -eq 1 ]; then
+if [[ $stat -eq 1 ]]; then
    echo "error on  attempt $script "|mail $mymail
    exit 1
 fi        

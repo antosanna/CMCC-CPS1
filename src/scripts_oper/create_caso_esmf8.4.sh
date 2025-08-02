@@ -34,7 +34,7 @@ fi
 if [[ $yyyy$st -ge ${yyyySCEN}07 ]]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
-   refcase=$refcaseHIST
+   refcase=${refcaseHIST}_esmf8.4
 fi
 cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 mkdir -p $DIR_CASES
@@ -71,10 +71,14 @@ cd $DIR_CASES/$caso
 if [[ $machine == "leonardo" ]]
 then
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_${account_name} $DIR_CASES/$caso/env_workflow.xml
+   rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+   if [[ $machine == "juno" ]]
+   then
+      rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+   fi
 fi
-rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 # this makes use of SC and if a user has no access to the SC it cannot run
 # TO DO
 # set-up the case after modfication env_workflow

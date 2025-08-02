@@ -48,7 +48,7 @@ wdir=$ACTDIR/CHECK/
 
 DL=${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}
 mkdir -p $DL
-if [ -d $ACTDIR ]
+if [[ -d $ACTDIR ]]
 then
    rm -rf $ACTDIR
 fi
@@ -121,7 +121,7 @@ memory[21]="2000M " #"ocean_mon " #uncomment when adding gli ocean_mon
 cd $wdir
 
 # clean old files if they exist
-if [ -n "$(ls -A $wdir/*nc)" ];then
+if [[ -n "$(ls -A $wdir/*nc)" ]];then
     echo "Must clean old files in $wdir"
     rm $wdir/*nc
 fi
@@ -131,7 +131,7 @@ rsync -auv $outdirC3S/*r${member}*.nc $wdir/
 
 # Count all netcdf files
 ncnumber=`ls -1 *.nc | wc -l `
-if [ $ncnumber -ne $filetobechecked ]; then
+if [[ $ncnumber -ne $filetobechecked ]]; then
     echo "Uncorrect number of netcdf files, ncnumber should be $filetobechecked but is $ncnumber "
     		
     title="SPS4 FORECAST ERROR - QA CHECKER"   
@@ -159,7 +159,7 @@ mkdir -p $wdir/output
 # json file
 json=${DIR_C3S}/qa_checker_table.json
 
-if [ -f $wdir/c3s_qa_checker.py ]; then
+if [[ -f $wdir/c3s_qa_checker.py ]]; then
    rm -f $wdir/c3s_qa_checker.py
 fi
 cp $DIR_C3S/c3s_qa_checker.py $wdir/
@@ -169,7 +169,7 @@ submit_cnt=0
 mem_idx=0
 for ns in ${namespace}; do
     # clean old scripts if exists
-    if [ -f launch_c3s_qa_checker.$ns.sh ] ; then
+    if [[ -f launch_c3s_qa_checker.$ns.sh ]] ; then
         rm -f launch_c3s_qa_checker.$ns.sh
     fi
     memlimit=${memory[$mem_idx]}
@@ -201,7 +201,7 @@ echo "retrieve fields ******************"
 output=$wdir/output
 
 cd $wdir
-if [ -d tempdir_\$namespace ] ; then
+if [[ -d tempdir_\$namespace ]] ; then
     rm -rf tempdir_\$namespace 
 fi 
 
@@ -215,13 +215,13 @@ for ncfile in \$netcdf2check ; do
     logname=\`echo \$ncfile  | cut -d _ -f5-15 | cut -d . -f1\`
     varname=\`echo \$logname  | cut -d _ -f4\`
 
-    if [  -f \$output/\$logname.txt ] ; then 
+    if [[  -f \$output/\$logname.txt ]] ; then 
         rm \$output/\$logname.txt
     fi
 
     # copy to tempdir
     cp \$ncfile tempdir_\$namespace
-    if [  \$varname == "tasmin" ] ; then 
+    if [[  \$varname == "tasmin" ]] ; then 
        netcdfaux_sic=\`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member}*.nc\`
        rsync -auv \$netcdfaux_sic tempdir_\$namespace 
 
@@ -243,7 +243,7 @@ for ncfile in \$netcdf2check ; do
     python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 
     # remove files
-    if [ \$? -eq 0 ] ; then
+    if [[ \$? -eq 0 ]] ; then
         echo Once finished, clean file...
         rm $wdir/\$ncfile   
     else
@@ -260,13 +260,13 @@ cd $ACTDIR
 
 
 # remove and touch done file
-if [ -f NSDONE_\$namespace ] ; then
+if [[ -f NSDONE_\$namespace ]] ; then
     rm -r NSDONE_\$namespace
 fi 
 touch NSDONE_\$namespace
 
 # remove temporary dir
-if [ -f NSDONE_\$namespace ] ; then
+if [[ -f NSDONE_\$namespace ]] ; then
     rm -rf $wdir/tempdir_\$namespace
 fi
 
@@ -284,7 +284,7 @@ ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $meml
 
 
 	# update submitted counter
-    if [ $? -eq 0 ]; then
+    if [[ $? -eq 0 ]]; then
         submit_cnt=$(( $submit_cnt + 1 ))
     fi
     mem_idx=$(( $mem_idx + 1 ))
@@ -299,7 +299,7 @@ sleeptime=60
 while `true` ; do
     sleep $sleeptime
     jobdone=`ls -1 ${ACTDIR}/NSDONE_* | wc -l`
-    if [ $jobdone -eq $submit_cnt ] ; then
+    if [[ $jobdone -eq $submit_cnt ]] ; then
         break
     fi
     elapsed_time=$(( $elapsed_time + $sleeptime  ))
@@ -308,7 +308,7 @@ while `true` ; do
     number_of_chk_proc=0
     number_of_chk_proc=`${DIR_UTIL}/findjobs.sh -m $machine -n chk_err_${startdate}_${ens} -c yes`
 
-    if [ $elapsed_time -gt 7200 -a $number_of_chk_proc -eq 0 ]; then 
+    if [[ $elapsed_time -gt 7200 ]] && [[ $number_of_chk_proc -eq 0 ]]; then 
         echo "Something probably went wrong with checker. Check in logs for missing NSDONE_ files production."
         title="SPS4 FORECAST ERROR - QA CHECKER"	
         body="Something probably went wrong with checker of member ${SPSSystem}_${startdate}_${ens}. Check in logs for NSDONE_ files production."
@@ -326,18 +326,18 @@ endtime=`date +%Y%m%d%H%M`
 
 # if all files have been checked
 filetobechecked=1
-if [ $cnt_files -ge $filetobechecked ]; then
+if [[ $cnt_files -ge $filetobechecked ]]; then
 
     # look for warnings
     mkdir -p ${DIR_REP}/${startdate}
     warningreport="${DIR_REP}/${startdate}/${SPSSystem}_${startdate}_${ens}_checker_warnings.txt"
-    if [ -f $warningreport ] 
+    if [[ -f $warningreport ]] 
     then
         rm -f $warningreport
     fi
 
     cntwarning=`grep -Ril FIELDWARNING *.txt | wc -l`
-    if [ $cntwarning -ne 0 ]; then
+    if [[ $cntwarning -ne 0 ]]; then
         echo "WARNING REPORT `date`" >> $warningreport
         
         warninmsg=`grep -Rh FIELDWARNING *.txt`
@@ -349,7 +349,7 @@ if [ $cnt_files -ge $filetobechecked ]; then
         #since $warninmsg and $warninlist are arrays, the body message is created by parts
         body="For member ${SPSSystem}_${startdate}_${ens} $cntwarning warnings files have been found over the $cnt_files C3S standardized files checked. \n\n Here the warning list"
         for w in ${warninmsg}; do
-            if [ "$w" == "[FIELDWARNING]" ];then
+            if [[ "$w" == "[FIELDWARNING]" ]];then
                 body+=" \n ${w}"
             else
                 body+=" ${w}"
@@ -383,10 +383,10 @@ if [ $cnt_files -ge $filetobechecked ]; then
 
     # look for errors
     # remove ok file if present
-    if [ -f $check_c3s_qa_ok ]; then
+    if [[ -f $check_c3s_qa_ok ]]; then
         rm -f $check_c3s_qa_ok
     fi
-    if [ -f $check_c3s_qa_err ]; then
+    if [[ -f $check_c3s_qa_err ]]; then
         rm -f $check_c3s_qa_err
     fi
 

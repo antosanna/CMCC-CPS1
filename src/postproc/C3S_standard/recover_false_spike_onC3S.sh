@@ -35,22 +35,22 @@ output=$ACTDIR/CHECK/output
 spike_list=$output/list_spikes.txt
 
 
-if [ -f ${check_c3s_meta_ok} ] && [  -f ${spike_list} ]
+if [[ -f ${check_c3s_meta_ok} ]] && [[  -f ${spike_list} ]]
 then
-   if [ -f $check_c3s_qa_err ] ; then
+   if [[ -f $check_c3s_qa_err ]] ; then
        rm $check_c3s_qa_err
    fi
    touch $check_c3s_qa_ok
 fi
 
-if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
+if [[ -f ${check_c3s_meta_ok} ]] && [[ -f ${check_c3s_qa_ok} ]]
 then
 #-------------------------------------------
 # 20240919 ready to uncomment
 #-------------------------------------------
 # the following is defined in $dictionary
 checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
-   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
+   if [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
    then
       ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
    fi
@@ -59,11 +59,11 @@ fi
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
 if [[ $typeofrun == "forecast" ]] 
 then
-  if [ $allcheckersok -ge $nrunC3Sfore ] 
+  if [[ $allcheckersok -ge $nrunC3Sfore ]] 
   then
       ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
       nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
-      if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
+      if [[ $ns -eq 0 ]] && [[ $nt -eq 0 ]] 
       then
        #  body="$startdate forecast completed. \n
        #                Now submitting submit_tar_C3S.sh"

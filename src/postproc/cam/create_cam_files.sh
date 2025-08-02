@@ -42,7 +42,7 @@ then
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
    inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
-   if [ -f $inputfile -a $st == "05" -a $typeofrun == "hindcast" ] || [ ! -f $finalfile ]
+   if [[ ! -f $finalfile ]] || { [[ -f $inputfile ]] && [[ "$st" == "05" ]] && [[ $typeofrun == "hindcast" ]]; }
    then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc ]]
@@ -55,20 +55,20 @@ then
       nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc`
     
       expected_ts=$(( $fixsimdays * $mult + 1 ))
-      if [ $nt -lt $expected_ts  ]
+      if [[ $nt -lt $expected_ts  ]]
       then
          body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.$yyyy-$st.nc , ne to $expected_ts but is $nt. Exit "
          title="${CPSSYS} forecast ERROR "
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
          exit 1
-      elif [ $nt -gt $expected_ts  ]
+      elif [[ $nt -gt $expected_ts  ]]
       then
          ncks -O -F -d time,1,$expected_ts $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
          mv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc   
       fi
    
    # remove nr.1 timestep according to filetyp $ft
-      if [ $ft == "h3" ]
+      if [[ $ft == "h3" ]]
       then
       # take from 2nd timestep
          echo "start ncks for $ft "`date`
