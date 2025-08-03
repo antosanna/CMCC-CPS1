@@ -36,7 +36,8 @@ set -euvx
 # generate Ocean conditions 
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
-for poce in `seq -w 01 $n_ic_nemo`;do
+#for poce in `seq -w 01 $n_ic_nemo`;do
+for poce in 01 02 03 08 09 ;do
    poce1=$((10#$poce - 1))
    nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
    ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
@@ -188,9 +189,9 @@ mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
 last_dd_mmIC=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC month last day
 dd=$(($last_dd_mmIC - 1))
 t_analysis=00
-for pp in {0..9}
+ic=1
+for pp in 2 4 5 6 7 8 9
 do
-
     ppcam=`printf '%.2d' $(($pp + 1))`
 
     inputECEDA=$DATA_ECACCESS/EDA/snapshot/${t_analysis}Z/ECEDA${pp}_$yyIC$mmIC${dd}_${t_analysis}.grib
@@ -215,6 +216,25 @@ do
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j makeICsGuess4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
     input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p makeICsGuess4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
+    sleep 300
+    ic=$(($ic + 1))
+    if [[ $ic -eq 2 ]]
+    then
+       while `true`
+       do
+          n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
+          if [[ $n_job_make_atm_ic -eq 1 ]]
+          then
+             ic=1
+             break
+          elif [[ $n_job_make_atm_ic -eq 0 ]]
+          then
+             ic=0
+             break
+          fi
+          sleep 60
+       done
+    fi 
 done     #loop on pp
 
 # loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
@@ -239,7 +259,7 @@ do
     fi
     sleep 60
 done
-# TEMPORARY COMMENTED
+# TEMPORARY COMMENTED to be uncommented from September
 # remove temporary work spaces
 #for pp in {0..9}
 #do
@@ -258,5 +278,6 @@ done
 #         rm -rf $WORK_CPS/$casoIC
 #      fi
 #  fi
+#done
 # replace missing ICs with backup
 $IC_CPS/set_forecast_ICs.sh $yyyy $st

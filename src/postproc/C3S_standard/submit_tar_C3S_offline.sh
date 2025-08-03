@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=07 # startdate
-onlycheckfileok=1  #if 0 does tar_C3S
+st=11 # startdate
+onlycheckfileok=0 #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -84,8 +84,7 @@ var_array=("${var_array2d[@]} ${var_array3d[@]}")
 echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
-#for yyyy in  `seq $iniy_hind $endy_hind`
-for yyyy in `seq 1993 2022` 
+for yyyy in  `seq $iniy_hind $endy_hind`
 do
   
   startdate=$yyyy$st
@@ -112,7 +111,8 @@ do
 #        $DIR_UTIL/check_production_time.sh $st $yyyy 
 # ANTO 20201113 testato su /users_home/csp/sp1/SPS/CMCC-${SPSSYS}/work/ANTO/develop${SPSSYS}
 # MA MAI TESTATO QUI!!!! +
-        $DIR_UTIL/check_production_time.sh -m $machine -s $st -y $yyyy
+        listaens=`ls all_checkers_ok_0*|cut -d '_' -f4|cut -c 2,3`
+        $DIR_UTIL/check_production_time.sh -m $machine -s $st -y $yyyy -e ${listaens}
 # MA MAI TESTATO QUI!!!! -
         input="$yyyy $st"
         echo "ready to send $startdate"

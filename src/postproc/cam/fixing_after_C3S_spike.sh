@@ -49,11 +49,12 @@ inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
 # now perform poisson treatment to all files
 # the output dir is created only at this stage for in principle the file could not be affected by spikes at all
-for ftype in h1 h2 h3
+for ftype in h1 h2 h3 h4
 do
    file2check=$HEALED_DIR/${caso}.cam.$ftype.${yyyy}-${st}.zip.nc
    inputFV=$HEALED_DIR/${caso}.cam.$ftype.${yyyy}-${st}.zip.last.nc
-   mv $file2check $inputFV
+   #mv $file2check $inputFV
+   rsync -av $file2check $inputFV
    export outputFV=$file2check
    checkfile=$HEALED_DIR/${caso}.cam.$ftype.DONE
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile"

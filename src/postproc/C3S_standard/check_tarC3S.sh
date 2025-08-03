@@ -100,20 +100,20 @@ do
    do
          isec=`ls $t|rev|cut -d '.' -f2|cut -c 1-2|rev`
          mm=$(( $isec - 9 ))
-         listafile=`tar -tf ${t}|grep nc`
-         wclistafile=`tar -tf ${t}|grep nc|wc -l`
+         listafile=`tar -tf ${t}|grep "\.nc"`
+         wclistafile=`tar -tf ${t}|grep "\.nc"|wc -l`
          wclistasha=`tar -tf ${t}|grep sha256|wc -l`
          if [ $wclistafile -ne 10 ]
          then
             #echo "numero di file nel tar $var non corretto $wclistafile instead of 10"
             echo "number of files inside tar $var is wrong: $wclistafile instead of 10"
-            exit
+            exit 1
          fi
          if [ $wclistasha -ne 10 ]
          then
             #echo "numero di shasum nel tar $var non corretto $wclistasha instead of 10"
             echo "number of shasum inside tar $var is wrong: $wclistasha instead of 10"
-            exit
+            exit 1
          fi
          for file in $listafile
          do
@@ -121,7 +121,7 @@ do
              if [ $((10#$number)) -ne $mm ]
              then
                 echo "wrong number in $file"
-                exit
+                exit 1
              fi
              echo $mm
              mm=$(($mm + 1))
@@ -135,19 +135,19 @@ do
    for t in $lista
    do
       echo $t
-      listafile=`tar -tf ${t}|grep nc`
-      wclistafile=`tar -tf ${t}|grep nc|wc -l`
+      listafile=`tar -tf ${t}|grep "\.nc"`
+      wclistafile=`tar -tf ${t}|grep "\.nc"|wc -l`
       wclistasha=`tar -tf ${t}|grep sha256|wc -l`
       if [ $wclistafile -ne $nrunC3Sfore ]
       then
          #echo "numero di file nel tar $var non corretto $wclistafile instead of $nrunC3Sfore"
          echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunC3Sfore"
-         exit
+         exit 1
       fi
       if [ $wclistasha -ne $nrunC3Sfore ]
       then
          echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
-         exit
+         exit 1
       fi
       mm=1
       for file in $listafile
@@ -156,7 +156,7 @@ do
           if [ $((10#$number)) -ne $mm ]
           then
              echo "wrong number in $file"
-             exit
+             exit 1
           fi
           mm=$(($mm + 1))
       done

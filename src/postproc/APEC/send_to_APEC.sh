@@ -4,12 +4,13 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_POST/APEC/descr_SPS4_APEC.sh
 
-set -evx 
+set -euvx 
 
 yyyy=$1
 st="$2"
 type_fore=$3
 dbg_push=$4
+isforecast=$5
 
   case $st 
    in  

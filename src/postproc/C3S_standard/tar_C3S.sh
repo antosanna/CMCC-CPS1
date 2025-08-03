@@ -407,7 +407,7 @@ else
    body="C3S: $DIR_C3S/check_tarC3S.sh failed for ${start_date}. Exiting now. Check and fix"
    title="[C3S] ${CPSSYS} $typeofrun ERROR"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
-   exit
+   exit 1
 fi   
 
 #--------------------------------------------
@@ -427,17 +427,6 @@ then
 
 fi
 fi
-#--------------------------------------------
-# NOW REMOVE TEMPORARY $HEALED_DIR
-#--------------------------------------------
-
-#for member in `seq -w 01 $nrunC3Sfore`
-#do
-#   if [[ -d $HEALED_DIR_ROOT/${SPSSystem}_${yyyy}${st}_0${member} ]]
-#   then
-#       rm -rf $HEALED_DIR_ROOT/${SPSSystem}_${yyyy}${st}_0${member}
-#   fi
-#done
 
 #--------------------------------------------
 # NOW COMPRESS ICs RELATIVE TO CURRENT START-DATE

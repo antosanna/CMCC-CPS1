@@ -70,6 +70,20 @@ set -euvx
 # already pushed: go on with following hindcasts
      	continue
    fi
+   if [[ ! -f $check_tar_done ]] ; then
+       
+       if [[ ${typeofrun} == "hindcast" ]] ; then
+           body="Missing ${check_tar_done} push4ECMWF going on for the following year"
+           title="[C3S] ${SPSSystem} ${typeofrun} warning"
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
+           continue
+       else
+           body="Missing ${check_tar_done}. launch_push4ECMWF exiting now."
+           title="[C3S] ${SPSSystem} ${typeofrun} error"
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun 
+           exit
+       fi
+   fi
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------

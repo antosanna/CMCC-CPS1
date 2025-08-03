@@ -26,6 +26,8 @@ check_c3s_meta_ok=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/${member}
 check_c3s_meta_err=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/${member}_c3s_meta_err
 check_c3s_qa_ok=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/${member}_c3s_qa_ok
 check_c3s_qa_err=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/${member}_c3s_qa_err
+check_allchecksC3S=$outdirC3S/all_checkers_ok_0
+spike_from_cmor=$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/spike_from_cmor_${startdate}_${member}
 
 #--#-- touchfiles defined in $DIR_POST/cam/regridC3S.sh
 check_ncl_regrid_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/regridSE_C3S.ncl_${type}_${member}_ok
@@ -37,8 +39,6 @@ check_no_SOLIN=$outdirC3S/no_SOLIN_in_${caso}
 check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE
 check_run_moredays=${CASEROOT}/logs/run_moredays_${caso}_DONE
 
-#--#-- touchfiles defined in $DIR_C3S/checker_and_archive.sh
-check_allchecksC3S=$outdirC3S/all_checkers_ok_0
 
 #--#-- touchfiles defined in $DIR_TEMPL/check_6months_output_in_archive.sh
 check_6months_done=$DIR_CASES/$caso/logs/${caso}_${nmonfore}months_done

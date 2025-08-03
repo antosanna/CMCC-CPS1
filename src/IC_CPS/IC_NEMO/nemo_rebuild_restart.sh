@@ -48,18 +48,16 @@ then
    esac
 else
 # forecast
-#   OUTDIR=/work/cmcc/aspect/CESM2/OPSLAMB$poce1/run/
-   OUTDIR=/work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/run/
-   tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3|rev`
-# temporarily disabled because there is not a defined directory for forecasts
-#   if [[ ! -d $OUTDIR ]] 
-#   then
-# meaming that you are taking the last available analysis and this will be a bkup IC
-#      OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/
-#      nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
-#      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
-#   fi
+   OUTDIR=$SCRATCHDIR/IC/restart_from_ois2_fore/OPSLAMB$poce1/
+   if [[ ! -d $OUTDIR ]] 
+   then
+      last_analysis=`ls -dtr /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/????????00/run|tail -1`
+      OUTDIR=$last_analysis
+      nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+   fi
 fi
+tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
 mkdir -p $IC_NEMO_CPS_DIR/$st
 TMPNEMOREST=$SCRATCHDIR/nemo_rebuild/restart/$yyyy$st
 mkdir -p $TMPNEMOREST
@@ -68,8 +66,6 @@ nf=`ls $OUTDIR/*${tag}*_restart_0???.nc|wc -l`
 rootname=`basename $OUTDIR/*${tag}*_restart_0000.nc|rev|cut -d '_' -f2-|rev`
 N=1
  
-# do we want to include the possibility for restart of nemo present and cice missing and viceversa???
-# I'd rather don't
 if [[ ! -f $nemoic ]]
 then
    cd $TMPNEMOREST
@@ -88,7 +84,8 @@ fi
 
 if [[ ! -f $ciceic ]]
 then
-   f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
+#   f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
+   f_ice=`ls $OUTDIR/*.cice.r.????-??-??-00000.nc|tail -1`
    rsync -auv $f_ice $ciceic
 fi
 set +euvx

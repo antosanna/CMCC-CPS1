@@ -348,6 +348,9 @@ if [ $cnt_files -ge $filetobechecked ]; then
      
         #since $warninmsg and $warninlist are arrays, the body message is created by parts
         body="For member ${SPSSystem}_${startdate}_${ens} $cntwarning warnings files have been found over the $cnt_files C3S standardized files checked. \n\n Here the warning list"
+        if [[ "${warninmsg}" =~ "Air Temperature" ]] ; then
+            touch $spike_from_cmor
+        fi         
         for w in ${warninmsg}; do
             if [ "$w" == "[FIELDWARNING]" ];then
                 body+=" \n ${w}"

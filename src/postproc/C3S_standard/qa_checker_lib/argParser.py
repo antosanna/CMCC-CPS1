@@ -34,6 +34,8 @@ def argParser():
             help="realpath of txt containing the list of spikes with detailed temp values (from right to left)")
     parser.add_argument("-dT","--dropTlist", default=False, 
             help="realpath of txt containing the list of temperature drops (greater than 30)")
+    parser.add_argument("-ml","--minlist", default=False, 
+            help="realpath of txt containing the list of temperatures less than the min threshold")
     parser.add_argument("-dmo","--dmoFile", default=False, 
             help="realpath of template of DMO file for coordinate reference")
     parser.add_argument("-sld","--spikelistdmo", default=False, 

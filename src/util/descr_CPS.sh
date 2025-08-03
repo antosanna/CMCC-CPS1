@@ -145,7 +145,8 @@ then
       FINALARCHC3S=$SCRATCHDIR/CMCC_SPS4/C3S_daily
    fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
-#   dirdataNOAA=$DATA_ARCHIVE1/noaa_sst/
+   dirdatacheckIC=$DATA_ARCHIVE1/check_ICs/
+   dirdataESA=${dirdatacheckIC}/ESA_sst
    OUTDIR_DIAG=$WORK/diagnostics/
    DIR_WEB=$WORK/CPS/C3Swebpage/validation_dev
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
@@ -161,7 +162,7 @@ then
    if [ $(whoami) == ${operational_user} ]; then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
    fi
-#   WOIS=/work/csp/${operational_user}/SPS/CMCC-OIS/
+   WOIS=/work/cmcc/${operational_user}/CPS/CMCC-OIS2/
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
    IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
@@ -283,7 +284,7 @@ WORK_C3S1=$DIR_ARCHIVE1/C3S
 WORK_C3S=$WORK_C3S1
 DIR_LOG1=$WORK1/CPS/CMCC-${CPSSYS}/logs
 DIR_LOG=$WORK/CPS/CMCC-${CPSSYS}/logs
-HEALED_DIR_ROOT=$SCRATCHDIR/fixed_from_spikes
+HEALED_DIR_ROOT=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
 DIR_SUBM_SCRIPTS1=$WORK1/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_SUBM_SCRIPTS=$WORK/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini

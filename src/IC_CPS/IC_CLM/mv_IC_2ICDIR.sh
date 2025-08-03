@@ -46,7 +46,7 @@ then
    restdate=${yy}-${mm2d}-$lastdayp1
 fi
 
-ifbackup=`echo $caso|grep "backup"|wc -l`  #check wether it is a backup case to modify mail title
+ifbackup=`echo $caso|grep "bkup"|wc -l`  #check wether it is a backup case to modify mail title
 rsync -auv $DIR_ARCHIVE/$caso/rest/${restdate}-00000/${caso}.clm2.r.${restdate}-00000.nc ${icclm}
 rsync -auv $DIR_ARCHIVE/$caso/rest/${restdate}-00000/${caso}.hydros.r.${restdate}-00000.nc ${ichydros}
 

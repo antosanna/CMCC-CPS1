@@ -8,7 +8,7 @@ condafunction() {
    local env=$2	
    if [[ $env != "$envcondacm3" ]] 
    then
-       . $DIR_UTIL/load_miniconda
+       . $HOME/load_miniconda
        if [[ $env == "$envcondanemo" ]] 
        then
           if [[ $machine == "zeus" ]]
@@ -17,6 +17,8 @@ condafunction() {
           fi
           module load $mpilib4py_nemo_rebuild
        fi
+   else
+      . $HOME/load_conda
    fi
    if [  $comm == "activate"  ]; then
       	conda $comm $env

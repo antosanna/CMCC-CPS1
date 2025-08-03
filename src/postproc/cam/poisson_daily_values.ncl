@@ -106,6 +106,10 @@ begin
               incr=4
               nsteps2fix=incr+1
               ind_spike=ind_spike-2
+           else if(frq.eq."3hr")then
+              incr=8
+              nsteps2fix=incr+1
+              ind_spike=ind_spike-4
            else if(frq.eq."12hr")then
               incr=2
               nsteps2fix=incr+1
@@ -113,6 +117,7 @@ begin
            else
               incr=0
               nsteps2fix=incr+1
+           end if
            end if
            end if
            print("timesteps to fix "+nsteps2fix)

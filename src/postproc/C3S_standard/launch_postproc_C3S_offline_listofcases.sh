@@ -11,9 +11,11 @@ set -euvx
 LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
+dbg=0 # dbg=1 -> just one member for test
 #listofcases="sps4_200005_001"
-listofcases="sps4_200805_022"
-nmaxsubmit=1     #up to 30 yet consistent with listofcases
+#listofcases="sps4_201008_005"
+listofcases="sps4_200109_010 sps4_200109_011 sps4_200109_012 sps4_200109_013 sps4_200109_014 sps4_200109_015 sps4_200109_016 sps4_200109_017 sps4_200109_018 sps4_200109_019 sps4_200109_020 sps4_200109_021 sps4_200109_022 sps4_200109_023 sps4_200109_024 sps4_200109_025 sps4_200109_026 sps4_200109_027 sps4_200109_028 sps4_200109_029 sps4_200109_030"
+nmaxsubmit=30     #up to 30 yet consistent with listofcases
 
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
@@ -35,6 +37,9 @@ cd $DIR_ARCHIVE/
 
 for caso in $listofcases
 do
+   $DIR_C3S/clean4C3S_listofcases.sh $caso
+
+   yyyy=`echo $caso | cut -d '_' -f2| cut -c1-4`
    isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
    if [[ ${isremote} -eq 1 ]] 
    then
@@ -69,7 +74,7 @@ do
     fi  
 
     mkdir -p $DIR_LOG/hindcast/C3S_postproc
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "$caso ${dir_cases}"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "$yyyy $caso ${dir_cases}"
 
 
     if [[ $dbg -eq 1 ]]

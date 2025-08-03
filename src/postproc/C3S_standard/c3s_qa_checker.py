@@ -213,6 +213,7 @@ def main():
                     # Initialize error list variables for each variable in file
                     error_in_var=False
                     ice_spike_list=[]; spike_error_list=[]
+                    spikemin_list=[]
                     spikeright_list=[]
                     spikeleft_list=[]
                     dropT_list=[]
@@ -265,6 +266,7 @@ def main():
                     # get min/max limits for var
                     minlim = min_checked_vars[shortname] if (check_min) else None
                     maxlim = max_checked_vars[shortname] if (check_max) else None
+                    min4spike=180 #minlin from json in the next future
                     #get level for climatological check
                     lev4check=clim_checked_vars[shortname][0]  if(check_clim) else None
                     tolerance=clim_checked_vars[shortname][1]  if(check_clim) else None
@@ -298,7 +300,7 @@ def main():
                         if args.verbose:
                             print('[INFO] Performing spike diagnostic with threshold d1='+str(args.delta1)+' and d2='+str(args.delta2))
                         if shortname=='TREFMNAV' or shortname=='tasmin':
-                           ice_spike_list, spikeright_list,spikeleft_list,dropT_list, spike_error_list = check_temp_spike_new(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=220, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
+                           ice_spike_list,spikemin_list, spikeright_list,spikeleft_list,dropT_list, spike_error_list = check_temp_spike_new(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=min4spike, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
                         else:
                             raise InputError('Spike check in this variable has not been implemented')
 
@@ -502,7 +504,9 @@ def main():
                 if args.verbose:
               
                   print('[INFO] Log file written: '+logname)
-   
+            if args.minlist and any(spikemin_list):
+                logname=args.minlist
+                write_log(logname, files[f], spikemin_list, args.verbose, args.very_verbose) 
             if args.leftlist and any(spikeleft_list):
                 logname=args.leftlist
                 write_log(logname, files[f], spikeleft_list, args.verbose, args.very_verbose)

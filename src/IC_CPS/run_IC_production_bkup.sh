@@ -10,13 +10,14 @@ if [ $# -eq 0 ]
 then
 #standard from crontab last day of the month (taking EDA data from 2 days before)
    todaydate=`date +%Y%m%d`
-   ddtoday=`date -d $todaydate +%d`
-   mmtoday=`date -d +%m`
+   ddtoday=`date +%d`
+   mmtoday=`date +%m`
    yytoday=`date +%Y`
    lastday=`. $DIR_UTIL/days_in_month.sh $mmtoday $yytoday`
+   ddbackup=`date -d "$yytoday$mmtoday$lastday -1 day" +%d`
 # exit if the date is not the last of the months prior to the forecast 
 # which we choose as bk
-   if [[ $ddtoday  != $lastday ]]
+   if [[ $ddtoday  != $ddbackup ]]
    then
       exit
    fi 
@@ -43,7 +44,8 @@ inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.bkup.n
 # generate Ocean conditions
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
-for poce in `seq -w 01 $n_ic_nemo`;do
+#for poce in `seq -w 01 $n_ic_nemo`;do
+for poce in 01 02 03 08 09 ; do
    poce1=$((10#$poce - 1))
    nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.bkup.nc
    ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.bkup.nc
@@ -154,25 +156,37 @@ do
 		input="$yyyy $st $pp $t_analysis $inputECEDA $ddEDA"
 		${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j firstGuessIC4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
   input="$yyyy $st $pp $yyIC $mmIC $ddEDA $casoIC $ppland"
-  ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
+  ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${casoIC} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
+# in the back-up production we can rely on only 4 nodes at a time so only one IC can be produced otherwise the system can be stuck
+  while `true`
+  do
+     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n $casoIC -c yes`
+     if [[ $n_job_make_atm_ic -eq 0 ]]
+     then
+        break
+     fi
+     sleep 60
+  done
+     
 done     #loop on perturbations
 
+# wait until all the ICs have been produced and stored (.case.store_ICcam)
+# Note that this method differs from the operational one where we only wait for the completion of the
+# s  while `true`
+  do
+     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n $casoIC -c yes`
+     if [[ $n_job_make_atm_ic -eq 0 ]]
+     then
+        break
+     fi
+     sleep 60
+  donehort forecast since the .case.store_ICcam should be almost instantaneous thanks to the 
+# serial-node SC_SERIAL_sps35. On the other hand in operational mode we can also rest on less
+# than 10 ICs produced since we still rely on backup ICs, which instead MUST be 10
 while `true`
 do
-    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n firstGuess -a PEND -c yes`
-    if [[ $n_job_make_atm_ic -eq 0 ]]
-    then
-       break
-    fi
-    sleep 60
-done
-sleep 1800 # assuming root_casoIC takes almost 40'
-# wait until completion of all CAM ICs
-while `true`
-do
-    root_casoIC=${SPSSystem}_EDACAM_IC
-    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
-    if [[ $n_job_ICCAM -eq 0 ]]
+    n_IC_bkup=`ls $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.??.bkup.nc|wc -l`
+    if [[ $n_IC_bkup -eq 10 ]]
     then
        break
     fi

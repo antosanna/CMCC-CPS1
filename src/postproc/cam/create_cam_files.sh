@@ -28,16 +28,17 @@ set +evxu
 . $dictionary
 set -evxu
 
+case $ft in
+  h1 ) mult=4 ;; # 6h
+  h2 ) mult=2 ;; # 12h
+  h3 ) mult=1 ;; # daily
+  h4 ) mult=8 ;; # 3h
+esac
 if [[ ! -f ${check_merge_cam_files}_${ft} ]]
 then
    #--------------------------------------------
    # cam define mulptiplier for timestep (daily,6h,12h)
    #--------------------------------------------
-   case $ft in
-     h1 ) mult=4 ;; # 6h
-     h2 ) mult=2 ;; # 12h
-     h3 ) mult=1 ;; # daily
-   esac
    #--------------------------------------------
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
@@ -83,6 +84,15 @@ then
          ncks -O -F -d time,1,$nstepm1 $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc  
          rsync -auv $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile
          echo "end of ncks for $ft "`date`
+      fi
+   else
+      if [ $ft == "h4" ]
+      then
+      # take from 2nd timestep
+         echo "start ncks for $ft "`date`
+         expected_h4=$(( $fixsimdays * $mult ))
+         rsync -auv $finalfile $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc 
+         ncks -O -F -d time,1,$expected_h4 $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile
       fi
    fi
 fi

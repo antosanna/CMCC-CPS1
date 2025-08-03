@@ -5,6 +5,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco
+. ${DIR_UTIL}/load_cdo
 
 set -evxu
 
@@ -120,14 +121,20 @@ then
         # Interpolation phase
         # create interpolated file in ./reg1x1 dir
         vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
-        ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
+#        ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
     elif [[ $ftype == "h3" ]] ; then
         inputfname=`basename ${CLM_OUTPUT_FV}` 
         rsync -auv ${CLM_OUTPUT_FV} ${DIROUT_REG1x1} 
         export interp_input=${inputfname}
         vars=FSNO
-        ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
+ #       ncremap -v $vars -m ${weight_file} -i ${interp_input} -o $CLM_OUTPUT_REG1x1 --sgs_frc=${interp_input}/landfrac
      fi
+     export REMAP_EXTRAP="on"
+     #not working properly with vars elaborated with ncap2
+     #cdo -selvar,${vars} ${interp_input} C3S_${interp_input}
+     ncks -O -v ${vars} ${interp_input} C3S_${interp_input}
+     export REMAP_EXTRAP="on"
+     cdo remapbil,$REPOGRID1/griddes_C3S.txt C3S_${interp_input} $CLM_OUTPUT_REG1x1
    fi
    
 # remove intermidiate output files

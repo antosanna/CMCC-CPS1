@@ -24,6 +24,7 @@ member=`echo $ens|cut -c2,3`
 
 HEALED_DIR=$HEALED_DIR_ROOT/$caso
 #HEALED_DIR_ROOT=/work/cmcc/cp1/CPS/CMCC-CPS1/fixed_from_spikes/
+# THIS MUST BE KEPT FOR CERISE
 chmod -R u+w $DIR_ARCHIVE/$caso
 ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
@@ -71,39 +72,32 @@ if [[ ! -f $check_all_postclm ]]
 then
 
    cd ${wkdir_clm}
-   filetyp="h1 h3"
+   filetyp="h1 h2 h3"
+   jobIDall=""
    for ft in $filetyp ; do
 
        case $ft in
-           h1) mult=1 ; req_mem=12000 ;;
-           h3) mult=1 ; req_mem=1000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
+           h1) mult=1 ; req_mem=50000 ;;
+           h2) mult=4 ; req_mem=20000 ;;
+           h3) mult=1 ; req_mem=5000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
-       if [[ ! -f $finalfile_clm ]]
+       input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+       jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
+       if [[ $ft == "h2" ]]
        then
-            input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
-            # ADD the reservation for serial !!!
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M 5000 -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
-
-
-             echo "start of postpc_clm "`date`
-             input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
-             # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
-
-       else
-       # meaning that preproc files have been done by create_clm_files.sh
-       # so submit without dependency
-
-             echo "start of postpc_clm "`date`
-             input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
-             # ADD the reservation for serial !!!
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M ${req_mem} -S qos_resv  -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+# contains additional variables for CERISE, not operational
+          continue
        fi
+       echo "start of postpc_clm "`date`
+       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+       input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
+       # ADD the reservation for serial !!!
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S qos_resv -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    done
 fi
-
 
 
 #***********************************************************************
@@ -115,60 +109,55 @@ wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
 mkdir -p ${wkdir_cam}
 if [[ ! -f $check_all_camC3S_done ]]
 then
-   filetyp="h0 h1 h2 h3"
+   jobIDall_cam=""
+   filetyp="h0 h1 h2 h3 h4"
    for ft in $filetyp
    do
-   #get check_regridC3S_type from dictionary
-      if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
-      then
-#   # meaning that preproc files have been done by create_cam_files.sh
-#   # and regridded by regridFV_C3S.sh
-         continue
-      fi
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
-# add exception for May where the files are messed up.
-      if [ -f $inputfile -a $st == "05" ] || [[ ! -f $finalfile ]]
-      then
-         input="$caso $ft ${wkdir_cam} $finalfile $ic" 
-             # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
-      fi
+      input="$caso $ft ${wkdir_cam} $finalfile $ic" 
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      jobIDall_cam+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_cam_files_${ft}_${caso} -i yes`"
    done
 # before running this script it maybe happen that clean4C3S.sh has been run so those flags might have been deleted
 #   while [[ ! -f ${check_merge_cam_files}_h1 ]] || [[ ! -f ${check_merge_cam_files}_h2 ]] || [[ ! -f ${check_merge_cam_files}_h3 ]]
-   merged_file_h1=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h1.$yyyy-$st.zip.nc
-   merged_file_h2=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h2.$yyyy-$st.zip.nc
-   merged_file_h3=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.$yyyy-$st.zip.nc
-   while [[ ! -f ${merged_file_h1} ]] || [[ ! -f ${merged_file_h2} ]] || [[ ! -f ${merged_file_h3} ]] || [[ `${DIR_UTIL}/findjobs.sh -N ${caso} -n create_cam_files -c yes` -ne 0 ]]
+   while [[ `${DIR_UTIL}/findjobs.sh -N ${caso} -n create_cam_files -c yes` -ne 0 ]]
    do
-      sleep 600
+      sleep 60 #for test
+      #sleep 600
    done   
+   for jobid in $jobIDall_cam
+   do
+       if [[ `${DIR_UTIL}/findjobs.sh -j $jobid -a EXIT |wc -w` -ne 0 ]] 
+       then
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$jobid create_cam_files exited" -t "[C3S] ERROR: ${caso} create cam exited" 
+          exit 1
+       fi
+   done
              #now fix for spikes on $HEALED_DIR
              # we want to archive the DMO with spikes
              # this is an iterative procedure that might requires a few cycles (up to 3 I guess)
-   if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]]
-   then
-      rm $HEALED_DIR/${caso}.cam.h1.DONE
-   fi
-   if [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]]
-   then
-      rm $HEALED_DIR/${caso}.cam.h2.DONE
-   fi
-   if [[ -f  $HEALED_DIR/${caso}.cam.h3.DONE ]]
-   then
-      rm $HEALED_DIR/${caso}.cam.h3.DONE
-   fi
+   for ft in h1 h2 h3 h4
+   do
+      for mod in cam
+      do
+         if [[ -f $HEALED_DIR/${caso}.$mod.$ft.DONE ]]
+         then
+            rm $HEALED_DIR/${caso}.$mod.$ft.DONE
+         fi
+      done
+   done
    if [[ -f $HEALED_DIR/${caso}.NO_SPIKE ]]
    then
       rm $HEALED_DIR/${caso}.NO_SPIKE
    fi
    input="$caso $dir_cases"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st
+# now moved to $DIR_C3S from $DIR_POST/cam since it heals also clm files
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_cam.h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_cam.h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE -a -f $HEALED_DIR/${caso}.cam.h4.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
       then
          break
       fi

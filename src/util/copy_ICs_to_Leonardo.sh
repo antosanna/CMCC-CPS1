@@ -6,10 +6,9 @@
 #BSUB -P 0490
 #BSUB -M 1000
 
-#set -euvx
-set -vx
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
+set -euvx
 isrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n copy_ICs_to_Leonardo -c yes`
 if [[ $isrunning -gt 1 ]]
 then
@@ -23,7 +22,7 @@ jun_dir=/data/cmcc/cp1/archive/IC/
 
 realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 
-for st in 07 #01 02 04 05 06 07 09
+for st in 06 #01 02 04 05 06 07 09
 do
    for rea in $realm ; do
 

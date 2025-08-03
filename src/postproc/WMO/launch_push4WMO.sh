@@ -18,7 +18,7 @@ set -euvx
 
 user=`whoami`
 
-dbg_push=$3
+dbg_push=${3:-0}
 
 scriptname=$0
 procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n $scriptname -c yes `
@@ -31,6 +31,7 @@ fi
 # Parameters to be set by user
 st=$1 #2 figures  # SET BY CRONTAB
 isforecast=$2
+
 if [ $isforecast -eq 1 ]
 then
    iyy=`date +%Y`
@@ -57,14 +58,14 @@ fi
 for yyyy in `seq $iyy $fyy` ; do
 
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-   if [ $debug_push -ge 1 ] 
+   if [ $dbg_push -ge 1 ] 
    then
      mymail="sp1@cmcc.it"
      ccmail=$mymail
      body="launch_push4WMO.sh in dbg mode debug_push = $debug_push. Data push to cmcc ftp"
    else
      ccmail=$mymail
-     body="launch_push4WMO.sh. Data push to cmcc ftp"
+     body="launch_push4WMO.sh. Data push to WMO ftp"
    fi
    title=${title_debug}"[WMO] ${SPSSystem} warning"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st

@@ -34,6 +34,7 @@ case $ftype in
    h1)export frq=6hr;;
    h2)export frq=12hr;;
    h3)export frq=day;;
+   h4)export frq=3hr;;
 esac
 if [[ -f $outputFV ]] 
 then

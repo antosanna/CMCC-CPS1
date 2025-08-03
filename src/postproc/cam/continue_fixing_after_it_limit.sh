@@ -43,7 +43,7 @@ file2check=${caso}.cam.h3.${yyyy}-${st}.zip.nc
 # already copied for safety reasons to working directory
 
 fixedfile=$caso.cam.h3.${yyyy}-${st}.fix5.nc
-mv $fixedfile $file2check
+rsync -av $fixedfile $file2check
 #skip the 3 line-header
 tail -n +4 $HEALED_DIR/list_spikes.txt_5 > $HEALED_DIR/list_spikes_no_header.txt_5
 # file resulting from excluding common lines
@@ -54,7 +54,7 @@ inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
 # now perform poisson treatment to all files
 # the output dir is created only at this stage for in principle the file could not be affected by spikes at all
-for ftype in h1 h2 h3
+for ftype in h1 h2 h3 h4
 do
    file2check=${caso}.cam.$ftype.${yyyy}-${st}.zip.nc
    inputFV=$DIR_ARCHIVE/$caso/atm/hist/$file2check

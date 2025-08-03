@@ -13,12 +13,12 @@
 set -euvx
 
 yyyy_in=2025
-mm_in=05
+mm_in=07
 
 newyy=${yyyy_in}                   # year start-date
 newmm=${mm_in}                     # month start-date
 
-while [[ ${newyy}${newmm} -le 202505 ]]
+while [[ ${newyy}${newmm} -le 202507 ]]
 do
     
    yyyy=$newyy                # month start-date: this is a number 

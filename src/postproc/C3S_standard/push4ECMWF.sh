@@ -125,11 +125,11 @@ original dimension $localdim, transferred dimension $remotedim. check it"
    then
       if [[ "$machine" == "juno" ]]
       then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine ${typeofrun}
          stat=$?
       elif [[ "$machine" == "leonardo" ]]
       then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine ${typeofrun}
          stat=$?
       fi
       check_status $stat ${DIR_C3S}/rm_ftp_ecmwf.sh

@@ -38,17 +38,20 @@ dirlog=$dir_cases/$caso/logs
 mkdir -p $dirlog
 
 # the removal must be done here because if the below precedures remain pending it might happen that the following check on the existence of the (old) checkfiles is verified
-if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] ; then
-   rm $HEALED_DIR/${caso}.cam.h1.DONE
-fi  
-if [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] ; then
-   rm $HEALED_DIR/${caso}.cam.h2.DONE
-fi  
-if [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]] ; then
-   rm $HEALED_DIR/${caso}.cam.h3.DONE
-fi  
-if [[ -f $HEALED_DIR/${caso}.NO_SPIKE ]] ; then
-   rm $HEALED_DIR/${caso}.NO_SPIKE
+
+for ft in h1 h2 h3 h4
+do  
+   for mod in cam 
+   do  
+      if [[ -f $HEALED_DIR/${caso}.$mod.$ft.DONE ]]
+      then
+            rm $HEALED_DIR/${caso}.$mod.$ft.DONE
+       fi  
+   done
+done
+if [[ -f $HEALED_DIR/${caso}.NO_SPIKE ]]
+then
+      rm $HEALED_DIR/${caso}.NO_SPIKE
 fi  
 
 
@@ -66,7 +69,7 @@ fi
 # check on presence of checkfile for healing
 while `true`
 do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ]
+      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE -a -f $HEALED_DIR/${caso}.cam.h4.DONE ]
       then
          break
       fi
@@ -89,6 +92,10 @@ wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
 set +euvx
 . $dictionary
 set -euvx
+if [[ -f $check_all_postclm ]]
+then
+   rm $check_all_postclm
+fi
 if [[ -f $check_all_camC3S_done ]]
 then
    rm $check_all_camC3S_done
@@ -102,15 +109,18 @@ if [[ -f $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE ]]
 then
    rm $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE
 fi
+
+
+
 if [[ $flag -eq 1 ]] ; then
 #if recover for too many iteration, then h0 never treated by regrid
-   listft="h0 h1 h2 h3" 
+   listft_cam="h0 h1 h2 h3" 
 elif [[ $flag -eq 2 ]] ; then
 #if recover for spike in C3S, h0 may be skipped
-   listft="h1 h2 h3"
+   listft_cam="h1 h2 h3"
 fi
 
-for ft in $listft
+for ft in ${listft_cam}
 do
    if [[ -f ${check_regridC3S_type}_${ft}_DONE ]]
    then

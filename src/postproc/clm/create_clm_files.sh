@@ -62,8 +62,27 @@ then
      # remove nr.1 timestep according to filetyp $ft
      # take from 2nd timestep
       echo "start of ncks for clm one file "`date`
-      ncks -O -F -d time,2, pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
-      echo "end of ncks for clm one file "`date`
+      if [[ $ft != "h2" ]]
+      then
+         ncks -O -F -d time,2, pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         echo "end of ncks for clm one file "`date`
+      else
+         ntime=$(($expected_ts - 1))
+         ncks -O -F -d time,1,$ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         
+      fi
       mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc $finalfile #$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+   else
+# this exception holds since CERISE files (h2) had already been zipped for a few start-dates but not postprocessed for spikes
+      if [[ $ft == "h2" ]]
+      then
+         expected_h2=$(( $fixsimdays * $mult ))
+         nt=`cdo -ntime $finalfile`
+         if [ $nt -gt $expected_h2  ]
+         then
+            rsync -auv $finalfile tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
+            ncks -O -F -d time,1,$expected_h2 tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc $finalfile
+         fi
+      fi
    fi
 fi

@@ -64,7 +64,7 @@ done
 #-------------------------------------------
 # check ICs and send plots by mail
 #-------------------------------------------
-#$DIR_UTIL/${CPSSYS}_check_ICs.sh $st $yyyy
+$DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 #-----------------------------------
 # triplette generation
 #-----------------------------------

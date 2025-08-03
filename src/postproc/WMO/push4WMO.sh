@@ -193,7 +193,7 @@ fi
 
 # AT LAST SEND notification both to ${user} and to WMO
 title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer to WMO completed"
-body="Dear Hyun-Ju, \n
+body="Dear Jeongmin Han, \n
 \n
 this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer. \n
 \n

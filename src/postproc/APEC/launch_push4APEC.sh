@@ -17,7 +17,7 @@ fi
 
 st=10 #2 figures  # SET BY CRONTAB
 isforecast=0
-dbg_push=2
+dbg_push=0   # operational=0 
 
 if [ $isforecast -eq 1 ] 
 then
@@ -25,7 +25,7 @@ then
    fyy=$iyy
 else
    iyy=1993
-   if [ $dbg_push -ge 1 ] 
+   if [ $dbg_push -eq 1 ] 
    then
       iyy=1998
       fyy=2022
@@ -34,12 +34,13 @@ else
    fi  
 fi
 
-if [ $dbg_push -ge 1 ]
+if [ $dbg_push -eq 1 ]
 then
    mymail=andrea.borrelli@cmcc.it
    ccmail=$mymail
    title_debug="TEST "
 else
+   ccmail=$mymail
    title_debug=" "
 fi
 
@@ -64,7 +65,7 @@ for yyyy in `seq $iyy $fyy` ; do
           queue=$serialq_s
        fi
 # Submit push over APEC ftp	
-       input="${yyyy} ${st} ${typeofrun} ${dbg_push}"
+       input="${yyyy} ${st} ${typeofrun} ${dbg_push} $isforecast"
        ${DIR_UTIL}/submitcommand.sh -M 1000 -m $machine -d $DIR_POST/APEC -q $queue -n 1 -j push4APEC_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4APEC.sh -i "$input"
 
        while `true` ; do

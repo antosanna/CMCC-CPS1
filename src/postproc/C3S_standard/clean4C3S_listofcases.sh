@@ -110,12 +110,19 @@ set -euvx
              fi
          fi
          old_c3s_files=`ls $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.nc |wc -l`
+         old_c3s_sha=`ls $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.sha256 |wc -l`
          if [[ ${old_c3s_files} -ne 0 ]] ; then
             echo "cleaning $old_c3s_files files in $outdirC3S"
             if [[ $dbg -eq 0 ]] ; then
                rm -f $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.nc
             fi
          fi
+         if [[ ${old_c3s_sha} -ne 0 ]] ; then
+            echo "cleaning $old_c3s_sha sha256 files in $outdirC3S"
+            if [[ $dbg -eq 0 ]] ; then
+               rm -f $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.sha256
+            fi  
+         fi  
          if [[ `ls $outdirC3S/all_checkers_ok_0${member} |wc -l` -ne 0  ]]  
          then
               echo "cleaning $outdirC3S/all_checkers_ok_0${member}"

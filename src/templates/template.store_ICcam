@@ -16,7 +16,7 @@ ddEDA=`$DIR_UTIL/days_in_month.sh $mmEDA $yyyyEDA`
 st=`date -d ' '$yyyyEDA${mmEDA}15' + 1 month' +%m` 
 yyyy=`date -d ' '$yyyyEDA${mmEDA}15' + 1 month' +%Y` 
 
-ifbackup=`echo $caso|grep "backup"|wc -l`
+ifbackup=`echo $caso|grep "bkup"|wc -l`
 if [[ $ifbackup -ne 0 ]]
 then
    mv $WORK_CPS/archive/$caso/atm/hist/*.cam.i* $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$pp.bkup.nc 
