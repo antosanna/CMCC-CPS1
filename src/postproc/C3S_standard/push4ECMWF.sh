@@ -34,6 +34,8 @@ filedone=$4
 # check files
 firstdtn03=$5
 
+. ${DIR_UTIL}/descr_ensemble.sh $yyyy
+
 list2rm=""
 log_script=ls_S${yyyy}${st}.log
 if [ $dbg_push -ge 1 ]
@@ -44,11 +46,15 @@ then
    ccecmwfmail=$mymail
    title_debug="TEST"
 else
-   ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
+   if [[ $typeofrun == "hindcast" ]]
+   then
+       ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
+   else
+       ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
+   fi
    title_debug=""
 fi
 
-. ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
 title="${title_debug} [C3S] ${SPSSystem} forecast notification"
 

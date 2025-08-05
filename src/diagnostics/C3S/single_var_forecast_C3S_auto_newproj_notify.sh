@@ -81,8 +81,8 @@ do
        export lead=$(($l  - 1))
        #MB 20230204 - forced tag to be in english
        export SS=`LANG=en_us_88591 date -d "$yyyyfore${mmfore}01 + ${lead} month" +%B`
-       export probupfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_66.$iniy_hind-$endy_hind.nc"
-       export problowfile="${DIR_CLIM}/pctl/monthly/${varm}_${mmfore}_l${lead}_33.$iniy_hind-$endy_hind.nc"
+       export probupfile="${DIR_CLIM}/pctl/monthly/${mmfore}/${varm}_${mmfore}_l${lead}_66.$iniy_hind-$endy_hind.nc"
+       export problowfile="${DIR_CLIM}/pctl/monthly/${mmfore}/${varm}_${mmfore}_l${lead}_33.$iniy_hind-$endy_hind.nc"
        frequency="month"
   fi
   export inputm="$anomdir/${varm}_${SPSSystem}_${yyyyfore}${mmfore}_ens_ano.1993-${endy_hind}.nc"
@@ -290,12 +290,12 @@ done #end for leadlist
 # -------------------------------
 # ALL DONE
 # -------------------------------
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-listafig=`ls ${dirplots}/*${yyyyfore}_${mmfore}*png`
+#set +euvx
+#. $DIR_UTIL/condaactivation.sh
+#condafunction activate $envcondarclone
+#listafig=`ls ${dirplots}/*${yyyyfore}_${mmfore}*png`
 #rclone mkdir my_drive:SPS4_webpage_plots/$yyyyfore$mmfore
-for fig in $listafig
-do
-   rclone copy $fig my_drive:SPS4_webpage_plots
-done
+##for fig in $listafig
+#do
+#   rclone copy $fig my_drive:SPS4_webpage_plots
+#done

@@ -22,9 +22,9 @@ leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
 lista=""
 
 lista_today_1=" "
-for ens in 046
+for ens in 027 029 030 033 036
 do
-   caso=sps4_202505_${ens}
+   caso=sps4_202508_${ens}
 
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
    if [[ -f $checkfile ]]

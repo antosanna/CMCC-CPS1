@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=11 # startdate
-onlycheckfileok=0 #if 0 does tar_C3S
+st=12 # startdate
+onlycheckfileok=1 #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt

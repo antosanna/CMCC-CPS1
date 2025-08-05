@@ -139,8 +139,7 @@ fi
 #fi
 mkdir -p $dirplots
 
-#for flgmnth in {0..1} ; do
-for flgmnth in 0 ; do
+for flgmnth in {0..1} ; do
    if [[ $flgmnth -eq 0 ]]  ; then
       leadlist="1 2 3 4"
       flgmnth_fname="seasonal"
@@ -207,13 +206,16 @@ for flgmnth in {0..1} ; do
 # sst IOD
   if [[ $varm == "sst" ]]
   then
-     magick convert $list1_IOD $list2_IOD ${dirplots}/IOD_${yyyy}_${st}.pdf
-     title="[diags] ${CPSSYS} $typeofrun notifications IOD plot"
-     body="IOD plots for $typeofrun ${yyyy}${st} produced and avaialble here ${dirplots}/IOD_${yyyy}_${st}.pdf"
-     app="${dirplots}/IOD_${yyyy}_${st}.pdf"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
-     rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
-     rm ${dirplots}/sst_IOD_prob_${yyyy}_${st}_DONE
+    if [[ $machine == "zeus" ]]
+    then
+       magick convert $list1_IOD $list2_IOD ${dirplots}/IOD_${yyyy}_${st}.pdf
+       title="[diags] ${CPSSYS} $typeofrun notifications IOD plot"
+       body="IOD plots for $typeofrun ${yyyy}${st} produced and avaialble here ${dirplots}/IOD_${yyyy}_${st}.pdf"
+       app="${dirplots}/IOD_${yyyy}_${st}.pdf"
+       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun
+       rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
+       rm ${dirplots}/sst_IOD_prob_${yyyy}_${st}_DONE
+    fi
 # sst Nino
      magick convert $list1_nino $list2_nino ${dirplots}/ElNino_${yyyy}_${st}.pdf
      title="[diags] ${CPSSYS} ${typeofrun} notifications ENSO plot"
@@ -228,13 +230,13 @@ set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 listafig=`ls ${dirplots}/*${yyyy}_${st}*pdf`
-rclone mkdir my_drive:SPS4_forecast/$yyyy$st
-rclone mkdir my_drive:SPS4_forecast/$yyyy$st/$varm
+rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags/$varm
 for fig in $listafig
 do
-   rclone copy $fig my_drive:SPS4_forecast/$yyyy$st/$varm
+   rclone copy $fig my_drive:forecast/$yyyy$st/C3S_diags/$varm
    rm $fig
 done
+set -euvx
 title="[diags] ${CPSSYS} ${typeofrun} notifications C3S plots"
-body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory SPS4_forecast/$yyyy$st/$varm"
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
+body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags/$varm"
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun 
