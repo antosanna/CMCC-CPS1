@@ -124,6 +124,13 @@ then
    usage
 fi
 
+#if [[ "$qos" == "qos_resv" ]]
+#then
+#   optSLURM="--qos=qos_resv --reservation=s_met_cmcc"
+#else
+#   optSLURM="--qos=qos_resv"
+#fi
+
 if [[ "$basic" == "None" ]]
 then
       if [[ "$scriptname" == "None" ]]
@@ -193,8 +200,7 @@ then
       # $queue is defined and contains string poe -> parallel
       command+=' -P $pID'
       if [[ "$queue" == *"p_"* ]]; then
-          :
-         #command+=' -sla $slaID -app $apprun'
+         command+=' -sla $slaID -app $apprun'
       # $queue is defined and contains string serial -> serial        
       elif [[ "$queue" == *"s_"* ]]  && [[ "$queue" != *"s_download"* ]] ; then
          if [[ `whoami` == $operational_user ]]
@@ -507,12 +513,13 @@ then
 #      command+=" --qos=qos_lowprio --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
        if [[ "$queue" == "lrd_all_serial" ]]
        then
-           command+=" --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err --mail-type=FAIL --mail-user=$mymail"
+             command+=" --account=$account_SLURM  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err --mail-type=FAIL --mail-user=$mymail"
        else
-           command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+#           command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+            command+=" $optSLURM --partition=$queue --account=$account_SLURM --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
        fi
     else
-      command="sbatch --account=$account_name --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail"
+       command+=" --account=$account_SLURM --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail" 
     fi
 
     # (--nice decrease priority, positive value of nice decrease)

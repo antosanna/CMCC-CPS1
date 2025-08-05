@@ -77,32 +77,33 @@ set +euvx
 #set -euvx
 set -eux
 
-#flag introduced to prevent double submission
-#touched at the beginning of the execution and removed at the end
-check_recover_running=${DIR_LOG}/$typeofrun/recover_interrupted_running
-if [[ -f ${check_recover_running} ]] ; then
-   echo "recover_interrupted is already running"
+if [[ $machine == "leonardo" ]]
+then
+  LOG_FILE=$DIR_LOG/recover/recover_`date +%Y%m%d%H%M`.log
+  exec 3>&1 1>>${LOG_FILE} 2>&1
+  njobs_max=2
+  cnt_this_script_running=$(ps cax -u ${operational_user} -f |grep recover_interru |wc -l)
+# cax exclude grep from counting
+elif [[ $machine == "juno" ]]
+then
+  njobs_max=1
+  cnt_this_script_running=`$DIR_UTIL/findjobs.sh -N recover_interrupted -c yes`
+fi
+if [[ $cnt_this_script_running -gt $njobs_max ]]
+then
+   echo "already running"
    exit
 fi
-
-touch ${check_recover_running}
 
 
 cd $DIR_CASES/
 
-#listofcases="sps4_200607_024 sps4_200607_025 sps4_200607_026 sps4_200607_030 sps4_200707_004 sps4_200707_006 sps4_200707_007" 
+#submitted 20250801 
+#at 18.00 these are not running yet: sps4_201004_024 sps4_201304_021 sps4_201404_008 sps4_201504_010 sps4_201504_013 sps4_201504_016 sps4_201504_022 sps4_201504_026 sps4_201604_005 sps4_201604_027 sps4_201604_026 sps4_201604_025 sps4_201604_024 sps4_201604_023 sps4_201604_022 sps4_201604_021 sps4_201604_020 sps4_201604_019 sps4_201604_018 sps4_201604_017 sps4_201604_016 sps4_201604_015 sps4_201604_014 sps4_201604_013 sps4_201604_012 sps4_201604_010 sps4_201604_009 sps4_201604_007 sps4_201604_008 sps4_201604_005
 
-#listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
+#listofcases="sps4_201404_025 sps4_201404_028 sps4_201404_027 sps4_201404_024 sps4_201404_018 sps4_201404_014 sps4_201404_013 sps4_201404_006 sps4_201404_007 sps4_201404_009 sps4_201404_011 sps4_201504_002 sps4_201504_003 sps4_201504_006 sps4_201504_008 sps4_201504_009 sps4_201504_012 sps4_201504_014 sps4_201504_017 sps4_201504_020 sps4_201504_023 sps4_201304_007 sps4_200204_020 sps4_200204_028 sps4_200304_004 sps4_200404_005 sps4_200404_006 sps4_200604_014 sps4_200704_008 sps4_200704_026 sps4_200904_012 sps4_200204_029 sps4_200204_030 sps4_200304_002 sps4_200304_005 sps4_200304_006 sps4_200304_028 sps4_200404_020 sps4_200404_025 sps4_200504_017 sps4_200604_015 sps4_200604_018"
 
-#listofcases="sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200305_010 sps4_200605_016 sps4_201005_007 sps4_199605_001 sps4_199605_004 sps4_199605_014 sps4_199605_016 sps4_200105_004 sps4_200205_001 sps4_200405_023 sps4_201405_009 sps4_201505_020"
-
-####MARI 20250521 - list to be recovered AFTER POP!!!
-listofcases="sps4_202209_019 sps4_201609_017 sps4_200409_018 sps4_201809_003 sps4_201809_004 sps4_201809_005 sps4_201809_007 sps4_201809_008 sps4_201809_009 sps4_201809_011 sps4_201809_012 sps4_201809_013 sps4_201809_014 sps4_201809_016 sps4_201809_017 sps4_201809_018 sps4_201809_020 sps4_201809_026 sps4_201809_028 sps4_201909_018 sps4_201909_028 sps4_202009_004 sps4_202009_005 sps4_202009_014 sps4_202109_012 sps4_202109_020 sps4_202109_027 sps4_202209_010 sps4_202209_024 sps4_200809_009 sps4_201109_006 sps4_201109_010 sps4_201109_029 sps4_201209_008 sps4_201609_009 sps4_201609_012 sps4_201609_015 sps4_201609_023 sps4_201609_025 sps4_201609_027 sps4_201609_030 sps4_201709_001 sps4_201709_002 sps4_201709_004 sps4_201709_009 sps4_201709_014 sps4_201709_016 sps4_201709_018 sps4_201709_022 sps4_201709_025 sps4_201709_028 sps4_201709_029 sps4_200709_007 sps4_200709_010 sps4_200709_011 sps4_200709_012 sps4_200709_014 sps4_201109_024 sps4_201709_003 sps4_201709_008 sps4_201709_026 sps4_202009_028 sps4_202109_013 sps4_201809_022 sps4_201709_030 sps4_200809_021 sps4_201109_019 sps4_201209_020 sps4_201609_002"
-
-#"sps4_200802_013 sps4_200802_021 sps4_200802_022 sps4_200802_023 sps4_200802_024 sps4_200802_025 sps4_200802_026 sps4_200802_027 sps4_200802_029 sps4_200802_030 sps4_200902_001 sps4_200902_002 sps4_200902_012 sps4_200902_018 sps4_200902_020 sps4_200902_024"  
-#"sps4_199711_018 sps4_199811_003 sps4_199811_012 sps4_200411_007 sps4_200411_015 sps4_200711_028 sps4_200811_013 sps4_201011_023 sps4_201411_025" 
-#"sps4_199811_028  sps4_200211_026 sps4_200211_030 sps4_200311_018 sps4_200411_007 sps4_200411_009 sps4_200411_010 sps4_200411_013 sps4_200411_014 sps4_200411_015 sps4_200411_016 sps4_200411_025 sps4_200411_026 sps4_200411_030 sps4_200511_001 sps4_200511_016 sps4_200511_017 sps4_200511_020 sps4_200511_023 sps4_200511_024 sps4_200511_025 sps4_200511_028 "
-
+listofcases="sps4_201004_008 sps4_201004_024 sps4_201304_021 sps4_201404_008 sps4_201504_010 sps4_201504_013 sps4_201504_016 sps4_201504_022 sps4_201504_026 sps4_201604_005 sps4_201604_027 sps4_201604_026 sps4_201604_025 sps4_201604_024 sps4_201604_023 sps4_201604_022 sps4_201604_021 sps4_201604_020 sps4_201604_019 sps4_201604_018 sps4_201604_017 sps4_201604_016 sps4_201604_015 sps4_201604_014 sps4_201604_013 sps4_201604_012 sps4_201604_010 sps4_201604_009 sps4_201604_007 sps4_201604_008 sps4_201604_005"
 
 if [[ $# -ge 1 ]]
 then
@@ -120,9 +121,6 @@ then
    if [[ `echo -n $st|wc -c` -ne 2 ]]
    then
       echo "second input should be st 2 digits"
-      if [[ -f ${check_recover_running} ]] ; then
-         rm ${check_recover_running}
-      fi
       exit
    fi
    listofcases=`ls -d ${SPSSystem}_????${st}_0??`
@@ -131,20 +129,12 @@ set +euvx
 #set -euvx
 set -eux
 fi
-if [[ $machine == "leonardo" ]]
-then
-    LOG_FILE=$DIR_LOG/hindcast/recover_${dbg}_`date +%Y%m%d%H%M`.log
-    exec 3>&1 1>>${LOG_FILE} 2>&1
-fi
 if [[ $# -ge 3 ]]
 then
    yyyy=${3:-$yy_today}
    if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
    then
       echo "third input should be yyyy 4 digits"
-      if [[ -f ${check_recover_running} ]] ; then
-         rm ${check_recover_running}
-      fi 
       exit
    fi
    listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
@@ -156,9 +146,6 @@ fi
 if [[ `echo -n $dbg|wc -c` -ne 1 ]]
 then
    echo "first input should be dbg=0/1/2"
-   if [[ -f ${check_recover_running} ]] ; then
-         rm ${check_recover_running}
-   fi 
    exit
 fi
 #now the script runs from crontab with submitcommand.sh
@@ -425,12 +412,8 @@ if [[ $dbg -ne 2 ]] ; then
    if [[ $now_running -ge $maxnumbertorecover ]]
    then
       echo "ALREADY RUNNING MAXIMUM NUMBER OF JOBS! exit now"
-      if [[ -f ${check_recover_running} ]] ; then
-         rm ${check_recover_running}
-      fi 
       exit
    fi
-   ncount=0
 set +euv
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondacm3
@@ -455,22 +438,19 @@ set -eux
       then
          ./xmlchange STOP_OPTION=nmonths
       fi
-      now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
-      if [[ $machine == "leonardo" ]]
-      then
-         salloc -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00
-         srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+      #if [[ $machine == "leonardo" ]]
+      #then
+       #  salloc -c6 $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00
+       #  srun $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
 # 20240627 G.F.Marras  does not work
-#         srun --export=ALL -c6 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
-      else
+#         srun --export=ALL -c6 --qos=$qos -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 $DIR_RECOVER/recover_lt_archive.sh $caso
+      #else
          $DIR_RECOVER/recover_lt_archive.sh $caso
-      fi
-      ncount=$(($ncount + 1))
-      if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+      #fi
+      sleep 60
+      now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+      if [[ $now_running -ge $maxnumbertorecover ]]
       then
-         if [[ -f ${check_recover_running} ]] ; then
-             rm ${check_recover_running}
-         fi
          exit
       fi
 
@@ -555,22 +535,19 @@ set -eux
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
           echo $command
-          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
-          if [[ $machine == "leonardo" ]]
-          then
-#does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00
-             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-          else
+       #   if [[ $machine == "leonardo" ]]
+       #   then
+#does not work             srun -c16 --export=ALL --qos=$qos -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 ./$command
+       #      salloc -c16 $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00
+       #      srun $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 ./$command
+       #   else
              ./$command
-          fi
+       #   fi
           echo "$command done"
-          ncount=$(($ncount + 1))
-          if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+          sleep 60
+          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+          if [[ $now_running -ge $maxnumbertorecover ]]
           then
-             if [[ -f ${check_recover_running} ]] ; then
-                 rm ${check_recover_running}
-             fi
              exit
           fi
       fi
@@ -586,7 +563,12 @@ set -eux
    fi
    for caso in $lista_first_month
    do
-
+      isemptydir=`ls ${DIR_CASES}/$caso |grep -v logs |wc -l`
+      if [[ ${isemptydir} -eq 0 ]] 
+      then
+         echo "problem in the submission phase, skipping $caso"
+         continue
+      fi
       domodify=0
       isrunlog=`ls $DIR_CASES/$caso/logs/$caso.run_*.err| wc -l`
       if [[ $isrunlog -ge 1 ]] 
@@ -650,22 +632,19 @@ set -eux
 # workaround in order to keep the syntax highlights correct (case is a shell command)
          command="case.submit"
          echo $command
-         now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
-         if [[ $machine == "leonardo" ]]
-         then
-# does not work             srun -c16 --export=ALL --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-             salloc -c16 --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 
-             srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
-         else
+         #if [[ $machine == "leonardo" ]]
+         #then
+# does not work             srun -c16 --export=ALL --qos=$qos -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 ./$command
+         #    salloc -c16 $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 
+         #    srun $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 ./$command
+         #else
              ./$command
-         fi
+         #fi
          echo "$command done"
-         ncount=$(($ncount + 1))
-         if [[ $(($ncount + $now_running)) -ge $maxnumbertorecover ]]
+         sleep 60
+         now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
+         if [[ $now_running -ge $maxnumbertorecover ]]
          then
-            if [[ -f ${check_recover_running} ]] ; then
-                rm ${check_recover_running}
-            fi 
             exit
          fi
       fi
@@ -716,9 +695,6 @@ set -eux
    
    
 fi   
-if [[ -f ${check_recover_running} ]] ; then
-   rm ${check_recover_running}
-fi 
 
 exit
 
@@ -739,8 +715,5 @@ if [[ $dbg -eq 0 ]] ; then
   attachment=$SCRATCHDIR/$st/$pdffile
   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Monitor forecast after recover attached" -t "${CPSSYS} notification" -a "$attachment"
 fi
-if [[ -f ${check_recover_running} ]] ; then
-    rm ${check_recover_running}
-fi 
 
 exit 0

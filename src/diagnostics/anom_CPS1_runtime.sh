@@ -46,28 +46,17 @@ fi
 ic=0
 cd $datamm
 # this is a different plist wrt the one in plot_forecast_all_vars.sh and in assembler_${SPSSYS}_runtime.sh
-plist=`ls |grep ${SPSSystem}_${yyyy}${st}|grep "\.${nmf}.${outputgrid}"|grep $var`
+plist=`ls |grep ${SPSSystem}_${yyyy}${st}|grep "${outputgrid}"|grep $var`
 for f in $plist
 do
    ens=`echo $f|cut -d '_' -f3|cut -d '.' -f1`
-   mergefile=$datamm/${SPSSystem}_${yyyy}${st}_${ens}.${outputgrid}.$var.nc
-   if [[ -f $mergefile ]]
-   then
-      rm $mergefile
-   fi
-   if [[ `ls $datamm/${SPSSystem}_${yyyy}${st}_${ens}.?.${outputgrid}.$var.nc|wc -l` -gt 1 ]]
-   then
-      cdo -mergetime $datamm/${SPSSystem}_${yyyy}${st}_${ens}.?.${outputgrid}.$var.nc $mergefile
-# if there is only one month
-   else
-      cp $datamm/${SPSSystem}_${yyyy}${st}_${ens}.?.${outputgrid}.$var.nc $mergefile
-   fi
    filein=${SPSSystem}_${yyyy}${st}_${ens}.${outputgrid}.$var.nc
+   mergefile=$datamm/$filein
    if [[ -f $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc ]]
    then
       rm $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
    fi
-   cdo sub -seltimestep,1/$nmf $datamm/${filein} -seltimestep,1/$nmf $climdir/${var}_${SPSSYS}_clim_$refperiod.${st}.nc $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
+   cdo sub -selname,${var} -seltimestep,1/$nmf $datamm/${filein} -seltimestep,1/$nmf $climdir/${var}_${SPSSystem}_clim_$refperiod.${st}.nc $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
    ic=`expr $ic + 1`
    ensalllist="$ensalllist $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc"
    if [ $ic -gt $nrun ]

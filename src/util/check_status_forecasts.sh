@@ -3,9 +3,10 @@
 . $DIR_UTIL/descr_CPS.sh
 
 set -eu
-#LOG_FILE=$DIR_LOG/forecast/check_status_forecasts.`date +%Y%m%d%H%M`.log
-#exec 3>&1 1>>${LOG_FILE} 2>&1
 stdate=`date +%Y%m`
+mkdir -p $DIR_LOG/forecast/$stdate/
+LOG_FILE=$DIR_LOG/forecast/$stdate/check_status_forecasts.`date +%Y%m%d%H%M`.log
+exec 3>&1 1>>${LOG_FILE} 2>&1
 
 cnt_this_script_running=$(ps -u ${operational_user} -f |grep check_status_forecasts | grep -v $$|wc -l)
 if [[ $cnt_this_script_running -gt 2 ]]
@@ -13,18 +14,23 @@ then
       echo "already running"
       exit
 fi   
+check_completed=$DIR_LOG/forecast/$stdate/FORECAST_COMPLETED
+if [[ -f $check_completed ]]
+then
+   exit
+fi
 
 fmt="%-15s %-15s %-15s %-15s\n"
 cd $DIR_ARCHIVE
 restlist=""
+mkdir -p $DIR_REP/$stdate
 report=$DIR_REP/$stdate/advancement_status_${stdate}.txt
 if [[ -f $report ]]
 then
    rm $report
 fi
-printf "${fmt}" "CASE" "STATUS" "last-for-day" "last-rest">$report
-mkdir -p $DIR_REP/$stdate
-for i in {001..055}
+printf "${fmt}" "CASE" "STATUS" "last-for-day" "last-rest" > $report
+for i in {001..054}
 do
    fmt="%-15s %-15s %-15s %-15s\n"
    caso=sps4_${stdate}_${i}
@@ -80,7 +86,7 @@ do
    message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
 #   message+=" number of member with restart month ${uniq_rest[$i]} is $n \n"
 done
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "SPS4 $stdate status"
+${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "SPS4 $stdate status"
 set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone

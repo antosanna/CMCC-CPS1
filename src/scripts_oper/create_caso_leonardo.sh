@@ -64,11 +64,17 @@ if [[ $USER == "$operational_user" ]]
 then
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
    rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+   if [[ $machine == "leonardo" ]] ; then
+       rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
+   fi
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
 fi
 #----------------------------------------------------------
 ./case.setup --reset
+if [[ $machine == "leonardo" ]] ; then
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
+fi
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
 rsync -av $DIR_TEMPL/file_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/

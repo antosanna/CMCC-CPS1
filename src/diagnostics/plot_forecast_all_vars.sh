@@ -7,6 +7,7 @@
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
+. ${DIR_UTIL}/load_convert
 
 set -evxu
 
@@ -31,6 +32,12 @@ set -euvx
 logdir=$DIR_LOG/$typeofrun/$yyyy$st
 WKDIR=$SCRATCHDIR/runtimediag/$yyyy$st
 mkdir -p $WKDIR
+noldfile=`ls ${WKDIR}/*.nc |wc -l`
+
+if [[ $noldfile -ne 0 ]] ; then
+   rm ${WKDIR}/*.nc
+fi
+
 if [[ $dbg -eq 1 ]]
 then
    mymail=sp1@cmcc.it #antonella.sanna@cmcc.it
@@ -121,7 +128,7 @@ do
    set +e
 #   rm -rf $WKDIR/*_${yyyy}${st}_*
    input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $dbg"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 40000 -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
 done
 
 while `true` ; do
@@ -178,20 +185,27 @@ then
    rm ${checkfile}
 fi
 convert ${pldir}/*${yyyy}${st}*.png ${pldir}/${yyyy}${st}_${pdfflag}.pdf
-touch ${checkfile}
-
-if [[ $? -ne 0 ]]
+if [[ ! -f ${pldir}/${yyyy}${st}_${pdfflag}.pdf ]]
 then
    title="${CPSSYS} forecast ERROR"
    body="pdf file not produced by script $0"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    exit 1
 fi
-
-title="${CPSSYS} FORECAST $yyyy$st Diagnostics "${textflag}
-body="Dear Silvio e Stefano, \n you will find attached the diagnostics for $nrun members relative to "${textflag}".\n Thank you \n"
-
-app="${pldir}/${yyyy}${st}_${pdfflag}.pdf"
-
-${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -c $mymail -a $app -r "$typeofrun" -s $yyyy$st
+touch ${checkfile}
+if [[ $machine == "leonardo" ]]
+then
+   exit 0
+else
+  set +euvx
+  . $DIR_UTIL/condaactivation.sh
+  condafunction activate $envcondarclone
+  set -euvx
+  rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+  rclone copy ${pldir}/${yyyy}${st}_${pdfflag}.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+fi
+exit 0
+#title="${CPSSYS} FORECAST $yyyy$st Diagnostics "${textflag}
+#body="Dear Silvio e Stefano, \n you will find attached the diagnostics for $nrun members relative to "${textflag}".\n Thank you \n"
+#${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -c $mymail -r "$typeofrun" -s $yyyy$st
 

@@ -35,7 +35,7 @@ if [[ $nmaxens -gt ${nrunmax} ]] ; then
    nmaxens=${nrunmax}
 fi
 
-np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -q $parallelq_l -c yes`
 if [ $np_all -lt $maxnumbertosubmit ]
 then
    echo "go on with hindcast submission"
@@ -69,15 +69,16 @@ listaskip=()
 
 submittable_cnt=0
 subm_cnt=0
-endyear=2013 #to allow for scenario up to the IC we have retrieved
+#endyear=2013 #to allow for scenario up to the IC we have retrieved
 for st in $stlist
 do
-   for yyyy in $(seq $iniy_hind $endyear)
+   #for yyyy in $(seq $iniy_hind $endyear)
+   for yyyy in $(seq $iniy_hind $endy_hind)
    do
-       if [[ $yyyy -eq 2014 ]]
-       then
-          continue
-       fi
+       #if [[ $yyyy -eq 2014 ]]
+       #then
+       #   continue
+       #fi
        echo "YEAR $yyyy *****************************"
        
        #check how many members done per year
@@ -230,7 +231,7 @@ do
             # REDUNDANT but safe (check how many jobs are on parallel queue)
             # if $maxnumbertosubmit already running exit
             # this control does not count the cases still in the create_caso phase
-            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -q $parallelq_l -c yes`
             if [ $np_all -ge $maxnumbertosubmit ]
             then
                ylast=$yyyy

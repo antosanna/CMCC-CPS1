@@ -146,7 +146,7 @@ then
    fi
 #   OCNARCHIVE=/data/csp/${operational_user}/ocn${CPSSYS}
    dirdatacheckIC=$DATA_ARCHIVE1/check_ICs/
-   dirdataESA=${dirdatacheckIC}/ESA_sst
+   dirdataESA=${dirdatacheckIC}/ESA_sst 
    OUTDIR_DIAG=$WORK/diagnostics/
    #DIR_WEB=$WORK/CPS/C3Swebpage/validation_dev
    DIR_WEB=$WORK/CPS/C3Swebpage
@@ -202,21 +202,45 @@ then
 
 # ######## MARCONI SECTION
 elif [[ "$machine" == "leonardo" ]]
-then
+then 
    env_workflow_tag=leonardo
    envcondacm3=cmcc-cm_py
    envcondac3schecker=c3s-nc-checker
    mpirun4py_nemo_rebuild=srun
    mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
 #moved to .bashrc
-   if [[ $account_name == "CMCC_reforeca" ]]
+   if [[ $account_SLURM == "CMCC_reforeca" ]]
    then
       qos=qos_lowprio
    else
 #   account_name=CMCC_Copernic_4
       :
    fi
-   maxnumbertosubmit=64 #modifyied 20240729
+# only for July we must set it to ""
+   if [[ $qos == "qos_lowprio" ]]
+   then
+     #for running with CMCC_reforeca
+      optSLURM="--qos=$qos"
+      serialq_s=dcgp_usr_prod
+     serialq_m=dcgp_usr_prod
+     serialq_l=dcgp_usr_prod
+     parallelq_s=dcgp_usr_prod
+     parallelq_m=dcgp_usr_prod
+     parallelq_l=dcgp_usr_prod
+   else   
+      #for running with account CMCC_2025
+      #optSLURM="--reservation=s_met_cmcc"
+      optSLURM=""
+      serialq_s=dcgp_cmcc_prod
+      serialq_m=dcgp_cmcc_prod
+      serialq_l=dcgp_cmcc_prod
+      parallelq_s=dcgp_cmcc_prod
+      parallelq_m=dcgp_cmcc_prod
+      parallelq_l=dcgp_cmcc_prod
+
+   fi     
+   #maxnumbertosubmit=62 #modifyied 20240729
+   maxnumbertosubmit=54 #20250801 new partition with 3 nodes free for postproc
    maxnumbertorecover=$maxnumbertosubmit
    operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
@@ -231,12 +255,6 @@ then
    slaID=s_met_cmcc_p
    sla_serialID=s_met_cmcc_s
    nmb_nemo_domains=336
-   serialq_s=dcgp_usr_prod
-   serialq_m=dcgp_usr_prod
-   serialq_l=dcgp_usr_prod
-   parallelq_s=dcgp_usr_prod
-   parallelq_m=dcgp_usr_prod
-   parallelq_l=dcgp_usr_prod
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
    WORK=/leonardo_work/$account_name/  #is environment var in leonardo

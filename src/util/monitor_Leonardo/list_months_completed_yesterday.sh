@@ -10,7 +10,7 @@
 
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-set -u
+set -uexv
 
 yesterday=`date -d "1 day ago" +%Y-%m-%d`
 today=`date +%Y-%m-%d`

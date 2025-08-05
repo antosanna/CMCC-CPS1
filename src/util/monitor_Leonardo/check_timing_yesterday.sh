@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh -l
 #SBATCH -A CMCC_reforeca
 #SBATCH -p lrd_all_serial
 #SBATCH --time 00:30:00     # format: HH:MM:SS

@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/sh -l
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
@@ -25,7 +25,7 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 dbg=$1
 set -euvx
 listacasi=""
-for i in {1..4}
+for i in {1..6}
 do
    data=`date +%Y%m%d`
    n_infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt|wc -l`

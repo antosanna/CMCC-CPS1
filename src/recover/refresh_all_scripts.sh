@@ -28,11 +28,20 @@ cd $DIR_CASES/$caso
 #----------------------------------------------------------
 
 rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
-if [[ `ls env_mach_specific.xml |wc -l` -ne 0 ]]
+
+#if [[ `ls env_mach_specific.xml |wc -l` -ne 0 ]]
+#then
+#   echo "env_mach_specific is here "`ls env_mach_specific.xml`
+#   if [[ `grep "modulefiles" env_mach_specific.xml` -ne 0 ]]
+#   then 
+#      cp $DIR_TEMPL/env_mach_specific.xml $DIR_CASES/$caso
+#   fi
+#else
+#   cp $DIR_TEMPL/env_mach_specific.xml $DIR_CASES/$caso
+#fi
+if [[ $machine == "leonardo" ]]
 then
-   echo "env_mach_specific is here "`ls env_mach_specific.xml`
-else
-   cp $DIR_TEMPL/env_mach_specific.xml $DIR_CASES/$caso
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
 fi
 if [[ $machine == "juno" ]]
 then
@@ -51,13 +60,18 @@ elif [[ $machine == "leonardo" ]] ; then
   ./xmlchange PIO_NUMTASKS=-99
 fi
 ./case.setup --reset
+if [[ $machine == "leonardo" ]]
+then
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
+fi
 ./case.setup
+
 ./xmlchange BUILD_COMPLETE=TRUE
 if [[ $typeofrun == "hindcast" ]]
 then
    ./xmlchange --subgroup case.checklist prereq=0
 else
-   ./xmlchange --subgroup case.checklist prereq=1
+   ./xmlchange --subgroup case.checklist prereq=0
 fi
 
 # cp and change script for nemo standardization

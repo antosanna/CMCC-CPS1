@@ -129,14 +129,15 @@ then
 fi
 echo ""
 echo ""
-nrundiagmin=40
-if [ $n_first_month_done -lt $nrundiagmin ] 
+nrundiagsmin=$nrunC3Sfore
+#nrundiagsmin=20
+if [ $n_first_month_done -lt $nrundiagsmin ] 
 then
    echo "not enough month completed to run diagnostics. Bye"
    exit
 fi
 #
-if [ $n_first_month_done -ge $nrundiagmin ] && [ ! -f $checkfile1 ]
+if [ $n_first_month_done -ge $nrundiagsmin ] && [ ! -f $checkfile1 ]
 then
    mkdir -p $DIR_LOG/forecast/$start_date/
    mkdir -p $DIR_TEMP/$start_date
@@ -149,27 +150,46 @@ then
       flgmnth=1
       monthstr=`date -d "$yyyy${st}01 " +%B`
 set +euvx
-      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
+      input="$yyyy $st $nrundiagsmin $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
+      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
+      title="${CPSSYS} forecast notification month1 runtime diags"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      if [[ $machine == "leonardo" ]]
+      then
+        while `true`
+        do
+           sleep 600
+           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
+           if [[ $nproc -eq 0 ]] ; then
+               if [[ -f $checkfile1 ]] ; then
+                   set +euvx
+                   . $DIR_UTIL/condaactivation.sh
+                   condafunction activate $envcondarclone
+                   set -euvx
+                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   break
+               else
+                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for month1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
+                  title="${CPSSYS} forecast warning month1 runtime diags"
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  exit 1 
+               fi
+           fi
+        done
+      fi
       exit
    else
       echo "plot_forecast_first_month_${yyyy}${st} already running"
    fi
-#
-#  in dbg mode send informative email
-   if [ $dbg -eq 1 ]
-   then
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month"
-      title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-   fi
-else
-   echo "Already run for first_month_${yyyy}${st}"
+#else
+#   echo "Already run for first_month_${yyyy}${st}"
 fi
 # run the diagnostics only if enough outputs $n_first_month_done and not yet done ($checkfile1 created exiting from plot_forecast_all_vars.sh)
 ## run the diagnostics only if not yet launched and running
-if [ $n_third_month_done -ge $nrundiagmin ] && [ ! -f $checkfile2 ]
+if [ $n_third_month_done -ge $nrundiagsmin ] && [ ! -f $checkfile2 ]
 then
    mkdir -p $DIR_TEMP/$start_date
    inputfile=$DIR_TEMP/$start_date/list_of_cases_lead0
@@ -182,30 +202,49 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile2 $inputfile $dbg"
+      input="$yyyy $st $nrundiagsmin $nmf $flgmnth $monthstr $checkfile2 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 # Only one $DIR_UTIL/diag/plot_forecast_all_vars.sh allowed at a time!
 set -euvx
+      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
+      title="${CPSSYS} forecast notification lead 0 runtime diags"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      if [[ $machine == "leonardo" ]]
+      then
+        while `true`
+        do
+           sleep 600
+           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
+           if [[ $nproc -eq 0 ]] ; then
+               if [[ -f $checkfile2 ]] ; then
+                   set +euvx
+                   . $DIR_UTIL/condaactivation.sh
+                   condafunction activate $envcondarclone
+                   set -euvx
+                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   break
+               else
+                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 0. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
+                  title="${CPSSYS} forecast warning lead 0 runtime diags"
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  exit 1
+               fi
+           fi
+        done
+      fi
       exit
    else
       echo "plot_forecast_lead0_${yyyy}${st} already running"
    fi
-#
-#  in dbg mode send informative email
-   if [ $dbg -eq 1 ]
-   then
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0"
-      title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-   fi
-else
-   echo "Already run for lead0_${yyyy}${st}"
+#else
+#   echo "Already run for lead0_${yyyy}${st}"
 fi
 #
 # run the diagnostics only if enough outputs $n_first_month_done and not yet done ($checkfile1 created exiting from plot_forecast_all_vars.sh)
 # diagnostcs for lead 1
 #END PRESENT VERSION
-if [ $n_forth_month_done -ge $nrundiagmin ] && [ ! -f $checkfile3 ]
+if [ $n_forth_month_done -ge $nrundiagsmin ] && [ ! -f $checkfile3 ]
 then
    mkdir -p $DIR_TEMP/$start_date
    inputfile=$DIR_TEMP/$start_date/list_of_cases_lead1
@@ -218,22 +257,42 @@ then
       leadmonth=$((${nmf} - 1))
       monthstr=`date -d "$yyyy${st}01 +${leadmonth} month" +%B`
 set +euvx
-      input="$yyyy $st $nrundiagmin $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg "
+      input="$yyyy $st $nrundiagsmin $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg "
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
+      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 1. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
+      title="${CPSSYS} forecast notification lead 1 runtime diags"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      if [[ $machine == "leonardo" ]]
+      then
+        while `true`
+        do
+           sleep 600
+           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
+           if [[ $nproc -eq 0 ]] ; then
+               if [[ -f $checkfile2 ]] ; then
+                   set +euvx
+                   . $DIR_UTIL/condaactivation.sh
+                   condafunction activate $envcondarclone
+                   set -euvx
+                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   break
+               else
+                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
+                  title="${CPSSYS} forecast warning lead 1 runtime diags"
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  exit 1
+               fi
+           fi
+        done
+      fi     
       exit
    else
       echo "plot_forecast_lead1_${yyyy}${st} already running"
    fi
 #
-#  in dbg mode send informative email
-   if [ $dbg -eq 1 ]
-   then
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead $dbg"
-      title="${CPSSYS} forecast notification"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-   fi
-else
-   echo "Already run for lead1_${yyyy}${st}"
+#else
+#   echo "Already run for lead1_${yyyy}${st}"
 fi
 echo "That's all Folks"

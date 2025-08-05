@@ -2,6 +2,7 @@
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
+. ${DIR_UTIL}/load_ncl
 
 set -exuv
 
@@ -37,8 +38,8 @@ set -euvx
 case $flgmnth
 in
 # for lead season lead=$nmf - 3
-   0) export lead=$(($nmf - 3)) ; export pathterc=$pctldir ;;
-   1) export lead=$(($nmf - 1)) ; export pathterc=$pctldir/monthly/ ;;
+   0) export lead=$(($nmf - 3)) ; export pathterc=$pctldir/${st}/ ;;
+   1) export lead=$(($nmf - 1)) ; export pathterc=$pctldir/monthly/${st} ;;
 esac
 
 export pltype="png"
@@ -78,8 +79,8 @@ esac
 l=$(($lead + 1))
 export plname="${pldir}/${var}_ano_forecast_glo_${yyyy}${st}_month${l}"
 export units=$units
-export prob_low=$pathterc/${var}_${st}_l${lead}_33.nc
-export prob_up=$pathterc/${var}_${st}_l${lead}_66.nc
+export prob_low=$pathterc/${var}_${st}_l${lead}_33.$iniy_hind-$endy_hind.nc
+export prob_up=$pathterc/${var}_${st}_l${lead}_66.$iniy_hind-$endy_hind.nc
 if [ $flgmnth -eq 0 ] ; then
    export SS=${S[$l]}
    export plname="${pldir}/${var}_ano_forecast_glo_${yyyy}${st}_lead${lead}"
@@ -91,8 +92,8 @@ then
    rm $checkfile
 fi
 #
-export inputm="$inputdir/${var}_${SPSsystem}_${yyyy}${st}_ens_ano.${iniy_hind}-${endy_hind}.nc"
-export inputmall="$inputdir/${var}_${SPSsystem}_${yyyy}${st}_all_ano.${iniy_hind}-${endy_hind}.nc"
+export inputm="$inputdir/${var}_${SPSSystem}_${yyyy}${st}_ens_ano.${iniy_hind}-${endy_hind}.nc"
+export inputmall="$inputdir/${var}_${SPSSystem}_${yyyy}${st}_all_ano.${iniy_hind}-${endy_hind}.nc"
 
 export mproj="CylindricalEquidistant"
 #export mproj="Robinson"
@@ -100,7 +101,7 @@ ncl season_lead_glo_2cat.ncl   # but this can perform also monthly diagnostics i
 if [ ! -f $checkfile ]
 then
    body="$DIR_DIAG/ncl/season_lead_glo_2cat.ncl not correctly ended for $var ${yyyy}${st}"
-   title="[diags] ${SPSSYS} forecast error"
+   title="[diags] ${CPSSYS} forecast error"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    exit 1
 fi

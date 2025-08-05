@@ -25,9 +25,9 @@
     <cmd_path lang="sh">module</cmd_path>
     <cmd_path lang="csh">module</cmd_path>
     <modules compiler="intel">
-      <command name="load">/leonardo/prod/opt/modulefiles/base/compilers/intel-oneapi-compilers/2023.2.1</command>
-      <command name="load">/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mkl/2023.2.0</command>
-      <command name="load">/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mpi/2021.10.0</command>
+      <command name="load">intel-oneapi-compilers/2023.2.1</command>
+      <command name="load">intel-oneapi-mkl/2023.2.0</command>
+      <command name="load">intel-oneapi-mpi/2021.10.0</command>
       <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0</command>
       <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0</command>
       <command name="load">/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c</command>

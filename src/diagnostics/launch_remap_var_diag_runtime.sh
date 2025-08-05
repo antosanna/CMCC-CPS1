@@ -59,7 +59,7 @@ do
         for var in $invarlist
         do
             input="$yyyy $st $sps $var $ftype $datadir $WKDIR"
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s remap_var_diag_runtime.sh -j remap_var_diag_runtime_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
+            ${DIR_UTIL}/submitcommand.sh -M 10000 -m $machine -q $serialq_m -s remap_var_diag_runtime.sh -j remap_var_diag_runtime_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
         done
      done
      ncases_proc=$(( $ncases_proc + 1 ))

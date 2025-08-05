@@ -3,14 +3,14 @@
 . $DIR_UTIL/descr_CPS.sh
 
 set -euvx
-LOG_FILE=$DIR_LOG/forecast/check_completed_forecasts.`date +%Y%m%d%H%M`.log
-exec 3>&1 1>>${LOG_FILE} 2>&1
 stdate=`date +%Y%m`
+mkdir -p $DIR_LOG/forecast/$stdate/
+LOG_FILE=$DIR_LOG/forecast/$stdate/check_completed_forecasts.`date +%Y%m%d%H%M`.log
+exec 3>&1 1>>${LOG_FILE} 2>&1
 
 yyyy=`date +%Y`
 st=`date +%m`
-mkdir -p $DIR_LOG/forecast/$yyyy/$st/
-check_completed=$DIR_LOG/forecast/$yyyy/$st/FORECAST_COMPLETED
+check_completed=$DIR_LOG/forecast/$stdate/FORECAST_COMPLETED
 if [[ -f $check_completed ]]
 then
    exit
@@ -25,7 +25,7 @@ fi
 
 cd $DIR_ARCHIVE
 n_completed=0
-for ens in {001..055}
+for ens in {001..054}
 do
    caso=sps4_${stdate}_${ens}
    if [[ -f $DIR_CASES/$caso/logs/run_moredays_sps4_${stdate}_${ens}_DONE ]]

@@ -278,7 +278,7 @@ do
             # REDUNDANT but safe (check how many jobs are on parallel queue)
             # if $maxnumbertosubmit already running exit
             # this control does not count the cases still in the create_caso phase
-            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive.${SPSSystem}_ -c yes`
             if [ $np_all -ge $maxnumbertosubmit ]
             then
                ylast=$yyyy
