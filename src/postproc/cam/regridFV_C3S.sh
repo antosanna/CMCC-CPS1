@@ -61,6 +61,10 @@ esac
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CAM
 if [[ $type == "h3" ]]
 then
+   if [[ -f $check_no_SOLIN ]]
+   then
+      rm $check_no_SOLIN 
+   fi
    isSOLINin=`ncdump -h $inputFV|grep SOLIN|wc -l`
    if [[ $isSOLINin -eq 0 ]]
    then
@@ -85,7 +89,7 @@ then
              echo "NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file."
              body="NO SOLIN file to be used as template for case $caso, which does not have SOLIN ouput in $type cam output file. Exiting now. When at least one member in $outdirC3S will have completed SOLIN postproc, delete $DIR_TEMP/C3S_postproc_offline_${caso} to allow automatic resubmission. "
              title="[C3S] ${CPSSYS} forecast warning "
-             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
              if [[ -f ${DIR_TEMP}/C3S_postproc_offline_${caso} ]] 
              then
                   #kill the launcher to allow for new submission
@@ -101,21 +105,9 @@ fi
 
 export checkfile=${check_regridC3S_type}_${type}_DONE
 
-if [[ -f $checkfile ]]
+if [[ -f $checkfile ]] && [[ $inputFV -nt $checkfile ]]
 then
-   if [[ $inputFV -nt $checkfile ]]
-   then
-      if [[ $dbg -eq 0 ]]
-      then
-# in operational mode rm to recompute
-         rm $checkfile
-      else
-# otherwise just send informative email
-         body="$inputFV newer than $checkfile"
-         title="[C3S] ${CPSSYS} forecast warning "
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-      fi
-   fi    
+    rm $checkfile
 fi    
 # if check file does not exist run the ncl script
 if [ ! -f ${checkfile} ] 
@@ -133,7 +125,7 @@ else
    touch ${check_regridC3S_type}_${type}_ERROR
    body="regridFV_C3S.ncl anomalously exited for start-date ${yyyy}${st}, file type $type and member $real "
    title="[C3S] ${CPSSYS} forecast ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
    exit
 fi
 echo "$0 completed"

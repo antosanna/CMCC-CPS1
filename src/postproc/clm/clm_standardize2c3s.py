@@ -42,7 +42,8 @@ def getdzgrnd(c3s_el, f, dbmode):
 def check_timeseries_NEW2(nc_file, c3s_line, index, dbmode,modelname):
     ''' This function simply extract data from file taking into account eventual levels'''
     # params selections depending on input freq
-    if c3s_line[8] == 'day' or c3s_line[8] == '6hr':
+    if c3s_line[8] == 'day':
+        sample = 1
         # Soil moisture is used to calculate both mrlsl and its integral mrso 
         if 'depth' in c3s_line[12] or 'mrso' in  c3s_line[1]:
             print(vars_list)
@@ -164,7 +165,7 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     lon_bnds[:, 0] = (180. / len(lat)) * np.arange(len(lon))
     lon_bnds[:, 1] = (180. / len(lat)) * np.arange(len(lon)) + 1
 
-    if atm_elem[8] == 'day' or atm_elem[8] == '6hr':
+    if atm_elem[8] == 'day':
         str_time_unit = 'days'
     else:
         str_time_unit = 'hours'
@@ -176,8 +177,6 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     time.standard_name = 'time'
     time.calendar = 'gregorian'
     if atm_elem[8] == 'day' and 'leadtime: point' not in atm_elem[13]:
-        time.bounds = 'time_bnds'
-    if atm_elem[8] == '6hr' and 'leadtime: point' not in atm_elem[13]:
         time.bounds = 'time_bnds'
 
     if 'leadtime: point' not in atm_elem[13]:
@@ -194,8 +193,6 @@ def create_C3S_file(nc_file, atm_elem, ltime_dim, yy, st, ic_ens,templfile,nlsl)
     leadtime.standard_name = 'forecast_period'
     
     if atm_elem[8] == 'day' and 'leadtime: point' not in atm_elem[13]:
-        leadtime.bounds = 'leadtime_bnds'
-    if atm_elem[8] == '6hr' and 'leadtime: point' not in atm_elem[13]:
         leadtime.bounds = 'leadtime_bnds'
 
     # reftime
@@ -283,13 +280,6 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
         print(np.shape(new_var))
         printdb(new_var.shape,dbmode)
 
-#    if c3s_el[0] == "SNOTTOPL":
-#        printdb(new_var.shape,dbmode)
-#        new_var = new_var[:,:,:]
-#        print("if SNOTTOPL")
-#        print(np.shape(new_var))
-#        printdb(new_var.shape,dbmode)
-
     # additionally perform integration for mrso over levels (check_timeseries_NEW2 return a stack over axis 1)
     if c3s_el[1] == "mrso":
         print("computing integral mrso")
@@ -341,22 +331,15 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
 
     ncf.variables['realization'][:] = list('{0: <31}'.format('r' + pp + 'i00p00'))  # to have exactly 31 chars
     ncf.variables['reftime'][:] = 0
+    ncf.variables['time'][:] = np.arange(0, time_dim_tot)
+    ncf.variables['leadtime'][:] = np.arange(0, time_dim_tot)
 
     # in land we expect day
-    print(c3s_el[0])
-    print(c3s_el[8])
     if c3s_el[8] == 'day':
         ncf.variables['time'][:] = np.arange(0, time_dim_tot)
         ncf.variables['leadtime'][:] = np.arange(0, time_dim_tot)
-    elif c3s_el[8] == '6hr':
-        ncf.variables['time'][:] = np.arange(0, float(int(time_dim_tot/4)),0.25,dtype=np.float32)
-        ncf.variables['leadtime'][:] = np.arange(0, float(int(time_dim_tot/4)),0.25,dtype=np.float32)
-#        ncf.variables['time'][:] = np.arange(0., 185.,0.25,dtype=np.float32)
-#        ncf.variables['leadtime'][:] = np.arange(0., 185.,0.25,dtype=np.float32)
-#        ncf.variables['time'][:] = np.arange(0, time_dim_tot)
-#        ncf.variables['leadtime'][:] = np.arange(0,time_dim_tot)
     else:
-        print("In land we expect only day and 6hr, fix it.")
+        print("In land we expect only day, fix it.")
         sys.exit(1)
     
     # for variables differents from leadtime: point we need for bounds

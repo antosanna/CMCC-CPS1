@@ -668,7 +668,7 @@ begin
                 var1x1= ESMF_regrid(var2regrid(0,:,:),Opt)
              end if
              if(varout(k).eq."orog" )then
-                dst_file->$varout(k)$ = var1x1/9.18
+                dst_file->$varout(k)$ = var1x1/9.80616
              else if(varout(k).eq."sftlf" )then
                 delete(var1x1@missing_value)
                 delete(var1x1@remap)

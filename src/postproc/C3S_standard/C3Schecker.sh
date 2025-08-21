@@ -9,6 +9,7 @@
 real=$1
 outdirC3S=$2
 startdate=$3
+dir_cases=$4
 member=$real #for dictionary consistency
 yyyy=`echo ${startdate:0:4}`
 set +uexv
@@ -39,10 +40,7 @@ mkdir -p $dir_log_checker
 #fi
 # others checkers 
 # try and do it everytime (if too slow add the exception)
-if [ ! -f $check_c3s_meta_ok ] 
-then
-   ${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
-fi
+${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
 
 # BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
 # to be rewritten
@@ -56,19 +54,14 @@ if [ -f $check_c3s_meta_ok ]
 then
    title="C3S ${c3s_checker_cmd} ok for member $real"
    body="C3S ${c3s_checker_cmd} ok for member $real"
-# 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 else
    title="[C3S ERROR] ${c3s_checker_cmd} KO for member $real"
    body="C3S ${c3s_checker_cmd} Ko for member $real"
- 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+ 	 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$real
    exit
    
 fi
-if [ ! -f ${check_c3s_qa_ok} ]
-then
-   $DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S
-fi
-
+$DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases
 #if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
 if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
 then
@@ -88,15 +81,17 @@ if [[ $typeofrun == "forecast" ]]
 then
   if [ $allcheckersok -ge $nrunC3Sfore ] 
   then
-      ns=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n submit_tar_and_push${startdate} -c yes`
-      nt=`${DIR_UTIL}/findjobs.sh -m $machine -r ${sla_serialID} -n tar_and_push_${startdate} -c yes`
+      ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
+      nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
       if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
       then
+#         body="$startdate forecast completed. \n
+#                       Now submitting submit_tar_C3S.sh"
          body="$startdate forecast completed. \n
-                       Now submitting submit_tar_and_push.sh"
-         title="${SPSSYS} $startdate FORECAST COMPLETED"
+                       $DIR_C3S/submit_tar_C3S.sh to be submitted manually!"
+         title="${CPSSYS} $startdate FORECAST COMPLETED"
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-    	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -t "6" -r $sla_serialID -S qos_resv -j submit_tar_and_push${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_and_push.sh -i "${yyyy} $st" 
+  #  	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -j submit_tar_C3S${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st" 
       fi
   fi  
 fi  
