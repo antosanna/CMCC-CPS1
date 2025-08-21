@@ -75,7 +75,7 @@ then
    lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
 
 # Define working directories
-   DIROUT_REG1x1=${wkdir}/reg1x1
+   DIROUT_REG1x1=${wkdir}/reg1x1_${ftype}
    mkdir -p ${DIROUT_REG1x1}
 
 # Define all input and output files

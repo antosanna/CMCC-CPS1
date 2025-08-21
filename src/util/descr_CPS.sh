@@ -1,5 +1,6 @@
 #!/bin/sh -l
 set -a
+#mymail=marianna.benassi@cmcc.it
 mymail=antonella.sanna@cmcc.it
 #mymail=andrea.borrelli@cmcc.it
 #ncheck=`grep Juno /etc/mtab|wc -l`
@@ -35,7 +36,7 @@ CPSSYS=CPS1
 yyyySCEN=2014
 refcaseHIST=${CPSSYS}_HIST_reference
 refcaseSCEN=${CPSSYS}_SSP585_reference
-envcondanemo=nemo_rebuild
+envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
 envcondarclone=rclone_gdrive
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -52,7 +53,7 @@ then
    then
       HEAD=cmcc
       operational_user=cp1
-      pID=0490 #Juno
+      pID=0575 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
@@ -61,8 +62,8 @@ then
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
-      maxnumbertosubmit=18
-      maxnumbertorecover=40
+      maxnumbertosubmit=7
+      maxnumbertorecover=25
       maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
@@ -292,20 +293,20 @@ pushdir=$WORK/CPS/CMCC-CPS1/push_CERISE
 # endforecastday="08" # late FORECAST end 
 # n_notif=6
 FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
-nmonfore=6      # number of forecast months
-fixsimdays=185  # total number of simulation days
+nmonfore=4      # number of forecast months
+fixsimdays=125  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
  natm3d=6    # number of required fields for C3S 3d atmospheric
- nfieldsC3S=49    # number of required fields for CERISE (prw and clt counted twice)
+ nfieldsC3S=48    # number of required fields for CERISE (prw and clt counted twice)
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
 # jobIDdummy=1234
 versionSPS=20231101
 GCM_name=CMCC-CM3
-endy_hind=2022
-iniy_hind=1993
+endy_hind=2021
+iniy_hind=2002
 iniy_fore=2024
 freq_forcings=8
 # 

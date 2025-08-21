@@ -1,0 +1,14 @@
+{
+  "ExcludedVar": [
+    "PHIS",
+    "LANDFRAC",
+    "TREFHTMN",
+    "TREFHTMX",
+    "TS",
+    "QREFHT",
+    "TREFHT",
+    "FSNTOAC",
+    "UBOT",
+    "VBOT"
+  ]
+}

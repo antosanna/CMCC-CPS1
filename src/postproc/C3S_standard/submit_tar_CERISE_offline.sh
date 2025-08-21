@@ -1,8 +1,8 @@
 #!/bin/sh -l 
-#BSUB -q s_long
+#BSUB -q s_medium
 #BSUB -J submit_tar_C3S_offline
-#BSUB -e /work/cmcc/as34319//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.err
-#BSUB -o /work/cmcc/as34319//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.out
+#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.err
+#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.out
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=05 # startdate
-onlycheckfileok=1  #if 0 does tar_C3S
+st=02 # startdate
+onlycheckfileok=0  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -29,9 +29,9 @@ while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coo
 do
    if [ $freq == "12hr" ]
    then
-      var_array3d+=(" $C3S")
+      var_array3d+=("$C3S")
    else
-      var_array2d+=(" $C3S")
+      var_array2d+=("$C3S")
    fi  
 done } < $C3Stable_cam
 {
@@ -40,20 +40,20 @@ while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coo
 do
    if [ $freq == "12hr" ]
    then
-      var_array3d+=(" $C3S")
+      var_array3d+=("$C3S")
    else
-      var_array2d+=(" $C3S")
+      var_array2d+=("$C3S")
    fi  
 done } < $CERISEtable_cam
 {
 while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
-   var_array2d+=(" $C3S")
+   var_array2d+=("$C3S")
 done } < $C3Stable_clm
 {
 while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
 do
-   var_array2d+=(" $C3S")
+   var_array2d+=("$C3S")
 done } < $CERISEtable_clm
 #var_array3d=(hus ta ua va zg wp)
 var_array=("${var_array2d[@]} ${var_array3d[@]}")
@@ -82,7 +82,7 @@ do
         if [ $onlycheckfileok -eq 0 ]
         then 
            echo "Submitting tar_C3S for $startdate"     
-           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_C3S_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_C3S.sh -i "$input"
+           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE.sh -i "$input"
         fi    
   else
      body="MISSING FILES FOR STARTDATE $startdate"

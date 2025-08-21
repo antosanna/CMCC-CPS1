@@ -81,24 +81,24 @@ do
          mm=$(( $isec - 9 ))
          listafile=`tar -tf ${t}|grep nc`
          wclistafile=`tar -tf ${t}|grep nc|wc -l`
-#         wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-         if [ $wclistafile -ne 12 ]
+         wclistasha=`tar -tf ${t}|grep sha256|wc -l`
+         if [ $wclistafile -ne 10 ]
          then
-            echo "number of files inside tar $var is wrong: $wclistafile instead of 12"
+            echo "number of files inside tar $var is wrong: $wclistafile instead of 10"
+            exit 1
+         fi
+         if [ $wclistasha -ne 10 ]
+         then
+            echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
             exit
          fi
-#         if [ $wclistasha -ne 12 ]
-#         then
-#            echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
-#            exit
-#         fi
          for file in $listafile
          do
              number=`echo $file|rev|cut -d '.' -f2|cut -d '_' -f1|rev|cut -c 2-3`
              if [ $((10#$number)) -ne $mm ]
              then
                 echo "wrong number in $file"
-                exit
+                exit 1
              fi
              echo $mm
              mm=$(($mm + 1))
@@ -112,19 +112,19 @@ do
    for t in $lista
    do
       echo $t
-      listafile=`tar -tf ${t}|grep nc`
-      wclistafile=`tar -tf ${t}|grep nc|wc -l`
-#      wclistasha=`tar -tf ${t}|grep sha256|wc -l`
+      listafile=`tar -tf ${t}|grep  "\.nc"`
+      wclistafile=`tar -tf ${t}|grep  "\.nc"|wc -l`
+      wclistasha=`tar -tf ${t}|grep sha256|wc -l`
       if [ $wclistafile -ne $nrunC3Sfore ]
       then
          echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunC3Sfore"
+         exit 1
+      fi
+      if [ $wclistasha -ne $nrunC3Sfore ]
+      then
+         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
          exit
       fi
-#      if [ $wclistasha -ne $nrunC3Sfore ]
-#      then
-#         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
-#         exit
-#      fi
       mm=1
       for file in $listafile
       do
@@ -132,7 +132,7 @@ do
           if [ $((10#$number)) -ne $mm ]
           then
              echo "wrong number in $file"
-             exit
+             exit 1
           fi
           mm=$(($mm + 1))
       done

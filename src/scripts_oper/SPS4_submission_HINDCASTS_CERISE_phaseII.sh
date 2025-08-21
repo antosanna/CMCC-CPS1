@@ -2,7 +2,7 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/descr_ensemble.sh 1993
+. ${DIR_UTIL}/descr_ensemble.sh 2002
 
 set -evx
 
@@ -20,11 +20,11 @@ then
       exit
    fi
 else
-   np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
+   np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_HINDCAST -c yes`
    if [ $np -gt 1 ]
    then
 # if so check if it is correctly running
-      ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -a $BATCHUNKNOWN -i yes`
+      ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_HINDCAST -a $BATCHUNKNOWN -i yes`
       if [[ -n $ID_unknown ]]
       then
 # in the remote case that the job already on queue is in unknown status 
@@ -92,16 +92,12 @@ listaskip=()
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2022 
-iniy_hind=1993
+endyear=2021 
+iniy_hind=2002
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
    do
-       if [[ $yyyy -eq 2014 ]]
-       then
-          continue
-       fi
        echo "YEAR $yyyy *****************************"
        
        #check how many members done per year
@@ -147,12 +143,6 @@ do
             lg_continue=1
          fi 
   
-         if [ -f /work/csp/cp1/CPS/CMCC-CPS1/cases/$caso/logs/run_moredays_${caso}_DONE ] ; then
-            echo "$caso completed on old $HOME (csp). skip"  
-            cnt_old_home=$(( $cnt_old_home + 1 ))            
-            lg_continue=1
-         fi 
-  
          if [[ $lg_continue -eq 1 ]]
          then
             continue
@@ -183,15 +173,12 @@ do
             n_lndICfiles=`ls ${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.*.r.${yyyy}-${st}-01-00000.${lndIC}.nc| wc -l`
             clmICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${lndIC}.nc
             rofICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.${lndIC}.nc
-            atmICfile=${IC_CAM_CPS_DIR}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${atmIC}.nc
-            nemoICfile=${IC_NEMO_CPS_DIR}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${oceIC}.nc
-            iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceIC}.nc
+            atmICfile=${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${atmIC}.nc
+            nemoICfile=${IC_NEMO_CPS_DIR1}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${oceIC}.nc
+            iceICfile=${IC_CICE_CPS_DIR1}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceIC}.nc
   
             # if atmospheric IC condition not exist, skip
             if [ ! -f $atmICfile ] ; then
-                if [ -f $atmICfile.gz ] ; then
-                   gunzip -f $atmICfile.gz
-                else
                    echo ""
                    echo "CAM IC $atmICfile does not exist. ************** "
                    echo "skip $caso                                  "
@@ -199,14 +186,10 @@ do
                    cnt_atmICfile=$(( $cnt_atmICfile + 1 ))              
                    listaskipCAM+="$caso "
                    flg_continue=1
-               fi
             fi
   
             # if nemo oce IC condition not exist, skip
             if [ ! -f $nemoICfile ] ; then
-              if [ -f $nemoICfile.gz ] ; then
-                 gunzip -f $nemoICfile.gz
-              else
                  echo ""
                  echo "NEMO IC $nemoICfile does not exist. skip ************** "
                  echo "skip $caso                                  "
@@ -214,14 +197,10 @@ do
                  cnt_nemoIC=$(( $cnt_nemoIC + 1 ))              
                  listaskipNEMO+="$caso "
                  flg_continue=1
-              fi
             fi
   
             # if ice oce IC condition not exist, skip
             if [ ! -f $iceICfile ] ; then
-               if [ -f $iceICfile.gz ] ; then
-                  gunzip -f $iceICfile.gz
-               else
                   echo ""
                   echo "CICE IC $iceICfile does not exist. skip ************** "
                   echo "skip $caso                                  "
@@ -229,7 +208,6 @@ do
                   cnt_iceIC=$(( $cnt_iceIC + 1 ))              
                   listaskipCICE+="$caso "
                   flg_continue=1
-               fi       
             fi       
 
             # if land IC condition not exist, skip
@@ -241,15 +219,6 @@ do
                 cnt_lndIC=$(( $cnt_lndIC + 1 ))              
                 listaskipCLM+="$caso "
                 flg_continue=1
-            else 
-               if [ -f $rofICfile.gz ] 
-               then
-                   gunzip -f $rofICfile.gz
-               fi
-               if [ -f $clmICfile.gz ] 
-               then
-                   gunzip -f $clmICfile.gz
-               fi
             fi
     
             if [ $flg_continue -eq 1 ]

@@ -19,7 +19,7 @@ fi
 # Parameters to be set by user
 #st=$1 #2 figures  # SET BY CRONTAB
 #isforecast=$2
-st=11 #2 figures  # SET BY CRONTAB
+st=$1 #2 figures  # SET BY CRONTAB
 isforecast=0
 if [ $isforecast -eq 1 ]
 then
@@ -27,8 +27,7 @@ then
    fyy=$iyy
 else
    iyy=1993 
-   fyy=1993
-#   fyy=2022
+   fyy=2022
 fi
 # ---------------------------
 ccmail=$mymail

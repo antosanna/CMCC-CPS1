@@ -1,3 +1,5 @@
+check_push_done=$DIR_LOG/${typeofrun}/$yyyy$st/push4CERISE_${yyyy}${st}_DONE
+
 #--#-- checklist files
 listfileIC_NEMO=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv

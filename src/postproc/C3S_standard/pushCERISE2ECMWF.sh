@@ -34,10 +34,16 @@ filedone=$4
 # check files
 firstdtn03=$5
 
+if [[ ${dbg_push} -ge 1 ]]
+then
+    title_debug="TEST"
+else
+    title_debug=""
+fi
+
 list2rm=""
 log_script=ls_S${yyyy}${st}.log
 ccecmwfmail=$mymail
-mymail="sp1@cmcc.it"
 ecmwfmail=$mymail
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -81,7 +87,7 @@ then
 # NOW CHECK DIMS
 # do check dimensions of transferred files
    cd $pushdir/$yyyy$st
-   listafiles=`ls *tar *sha256`
+   listafiles=`ls *tar`
    for file in $listafiles
    do
       localdim=`ls -l $file|awk '{print $5}'`
@@ -102,11 +108,11 @@ original dimension $localdim, transferred dimension $remotedim. check it"
    then
       if [[ "$machine" == "juno" ]]
       then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine $typeofrun
          stat=$?
       elif [[ "$machine" == "leonardo" ]]
       then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine
+         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine $typeofrun
          stat=$?
       fi
       check_status $stat ${DIR_C3S}/rm_ftp_ecmwf.sh
@@ -146,38 +152,128 @@ if [ $nline -lt $ntarandsha ] ; then
 fi
 # END OF PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
 
+
 echo `pwd`
 suffixdate=`date +%Y%m%d`"_"`date +%H%M%S`".txt"
 listaofsha=`ls -1 *S${yyyy}${st}0100*.sha256`
 #
+for file in ${listaofsha}
+do
+   cat $file >> cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate}
+done
 
+# AT LAST SEND manifest TO acquisition.ecmwf.int ;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
+#sh send_to_ecmwf.sh $yyyy $st $mymail $typeofrun AGGIUNTO IN INPUT ntarandsha (qui solo il manifest file conclusivo)
+ntarandsha=1
+if [[ "$machine" == "juno" ]]
+then
+   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+   stat=$?
+   check_status $stat "mirroring manifest"
+elif [[ "$machine" == "leonardo" ]]
+then
+   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+   stat=$?
+   check_status $stat "mirroring manifest"
+fi
 
 # Verify that all files are present in push logs (manifest included)
 cd $DIR_LOG/$typeofrun/$yyyy$st
+cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_??????.txt $log_script|wc -l`
 
-# do check dimensions of transferred files
-cd $pushdir/$yyyy$st
-listafiles=`ls *tar`
-for file in $listafiles
-do
-   localdim=`ls -l $file|awk '{print $5}'`
-   remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
-   if [ $localdim -ne $remotedim ]
+if [ $cntmanifest -gt 1 ]; then
+   # Raise error
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+   if [[ "$machine" == "juno" ]]
    then
-      title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
-      body="ACHTUNG!!! In $DIR_C3S/pushCERISE2ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
-      exit 5
+      body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
    fi
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+   exit 1
+fi
+if [ $cntmanifest -lt 1 ]; then
+# last attempt to send manifest TO acquisition.ecmwf.int; send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
+   if [[ "$machine" == "juno" ]]
+   then
+      ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+      stat=$?
+      check_status $stat "mirroring manifest"
+# Verify that all files are present in push logs (manifest included)
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
+      stat=$?
+      check_status $stat "mirroring manifest"
+   fi
+fi
+cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
+if [ $cntmanifest -ne 1 ]; then
+   # Raise error
+   title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+   if [[ "$machine" == "juno" ]]
+   then
+      body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected"
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected"
+   fi
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+   exit 1
+else
+# do check dimensions of transferred files
+   cd $pushdir/$yyyy$st
+   listafiles=`ls *tar *sha256 *txt`
+   for file in $listafiles
+   do
+      localdim=`ls -l $file|awk '{print $5}'`
+      remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
+      if [ $localdim -ne $remotedim ]
+      then
+         title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
+         body="ACHTUNG!!! In $DIR_C3S/push4ECMWF.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+         exit 5
+      fi
+   done
+   if [[ "$machine" == "juno" ]]
+   then
+      touch $filedone
+   elif [[ "$machine" == "leonardo" ]]
+   then
+      touch $filedone
+   fi
+fi
+
+# make a tar -tvf to send 
+cd $pushdir/$start_date
+tarlist=`ls -1 *S${yyyy}${st}0100*.tar`
+attachtxt=${DIR_LOG}/$typeofrun/${yyyy}${st}/tartvf_${yyyy}${st}.txt
+if [ -f ${attachtxt} ] ; then
+    rm ${attachtxt}
+fi
+for tarf in $tarlist ; do
+    tar -tvf $tarf >> ${attachtxt}
 done
-touch $filedone
 
 
+
+ccecmwfmail="charalampos.karvelis@ecmwf.int,giovanni.conti@cmcc.it,daniele.peano@cmcc.it,antonella.sanna@cmcc.it,marianna.benassi@cmcc.it"
 # AT LAST SEND notification both to sp1 and to ECMWF
-title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-body=""
+title=${title_debug}"[CERISE] CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
+body="Dear Harris, \n
+\n
+this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
+\n
+Many thanks for your cooperation \n
+CMCC-SPS staff\n"
+
 checkpushdone=`ls ${filedone} | wc -l`
 if [ $checkpushdone -eq 1 ]; then
+    ${DIR_UTIL}/sendmail.sh -m $machine -M "$body" -t "$title" -e $ccecmwfmail -r $typeofrun -s $yyyy$st -a ${attachtxt}
+
    touch $filedone
    echo "Done."
    exit 0

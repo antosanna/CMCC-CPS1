@@ -36,7 +36,7 @@ if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-cesmexe=$DIR_EXE1/cesm.exe.CPS1
+cesmexe=$DIR_EXE1/cesm.exe.CPS1_juno
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -92,9 +92,9 @@ refcaseIC=ic_for_$caso
 ln -sf $IC_NEMO_CPS_DIR1/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}_00000001_restart.nc
 ln -sf $IC_CICE_CPS_DIR1/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.nc $refdirIC/${refcaseIC}.cice.r.$yyyy-${st}-01-00000.nc
 echo "$refcaseIC.cice.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.ice
-ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc
+ln -sf $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc
 echo "${refcaseIC}.clm2.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.lnd
-ln -sf $IC_CLM_CPS_DIR1/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc
+ln -sf $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ppland.nc $refdirIC/${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc
 echo "${refcaseIC}.hydros.r.$yyyy-${st}-01-00000.nc" > $refdirIC/rpointer.rof
 
 #-----------
@@ -159,22 +159,10 @@ cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe
 
 cd $DIR_CASES/$caso
 
-if [[ $flag_test -ne 0 ]]
-then
-#   if [[ $flag_test -eq 1 ]]
-#   then
-# modify environment files to set a continue run
-#      ./xmlchange CONTINUE_RUN=TRUE
-#      sed -e "s:NRUN:$nrun:g" $DIR_TEST_SUITE/test_from_lt_archive_C3S.run > $DIR_CASES/$caso/test_from_lt_archive_C3S_${nrun}.run
-#      ${DIR_UTIL}/submitcommand.sh -m $machine -Z basic -d $DIR_CASES/$caso -s test_from_lt_archive_C3S_${nrun}.run
-#   fi
-   echo "not implemented yet"
-else
 set +euvx
-    . $DIR_UTIL/condaactivation.sh
-    condafunction activate $envcondacm3
+    . ~/load_conda
+    conda activate $envcondacm3
 set -euvx
     $DIR_CASES/$caso/case.submit
-fi
 checktime=`date`
 echo 'run submitted ' $checktime

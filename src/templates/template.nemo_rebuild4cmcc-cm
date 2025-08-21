@@ -29,7 +29,8 @@ then
    module purge
    module purge
 fi
-. $DIR_UTIL/condaactivation.sh 
+set +euvx
+. $DIR_UTIL/condaactivation.sh
 condafunction deactivate $envcondacm3
 condafunction activate $envcondanemo
 set -euvx

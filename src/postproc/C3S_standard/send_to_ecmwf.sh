@@ -19,7 +19,7 @@ lpushdir=${10}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-nstreams=18
+nstreams=9
 REMOTE_DIR="/DATA/CMCC_CERISE"
 # WARNING!! DO NOT PUT / AT THE END
 

@@ -15,7 +15,7 @@ type_fore=${7:-"forecast"}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-REMOTE_DIR="/DATA/CMCC_CERISE/"
+REMOTE_DIR="/DATA/CMCC_CERISE"
 # WARNING!! DO NOT PUT / AT THE END
 cmd_ftp_dataecmwf="open -u cmcc_cerise,ZZ6e0O1B ftp://acq.ecmwf.int"
 
