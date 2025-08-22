@@ -199,6 +199,7 @@ then
    exit
 fi
 input="$caso"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j c3s2cerise_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s c3s2cerise.sh -i "$input"
 for realm in CAM CLM
 do
    if [[ `ls $SCRATCHDIR/regrid_CERISE/$caso/$realm/*nc |wc -l` -gt 0 ]]

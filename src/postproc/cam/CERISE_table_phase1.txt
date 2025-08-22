@@ -1,0 +1,6 @@
+Model Name,C3S Name,dimension,long_name,standard_name,units,frequency,level_type,modeling_realm,Arithmetic expr,coordinates,cell_methods,varflg,type
+TS,ts,leadtime lat lon,Surface temperature,surface_temperature,K,3hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h4
+CLDLOW,cll,leadtime lat lon,Low Cloud Cover Percentage,low_type_cloud_area_fraction,%,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
+CLDTOT,clt,leadtime lat lon,Total Cloud Fraction,cloud_area_fraction,1,3hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h4
+FSDS,albs,leadtime lat lon,Surface albedo,surface_albedo,1,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h3
+OMEGA,wap,leadtime plev lat lon,Omega,lagrangian_tendency_of_air_pressure,Pa s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2

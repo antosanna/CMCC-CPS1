@@ -4,3 +4,31 @@ CLDLOW,cll,leadtime lat lon,Low Cloud Cover Percentage,low_type_cloud_area_fract
 CLDTOT,clt,leadtime lat lon,Total Cloud Fraction,cloud_area_fraction,1,3hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h4
 FSDS,albs,leadtime lat lon,Surface albedo,surface_albedo,1,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h3
 OMEGA,wap,leadtime plev lat lon,Omega,lagrangian_tendency_of_air_pressure,Pa s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
+PHIS,orog,lat lon,Surface Altitude,surface_altitude,m,fix,surface,atmos,1,lat lon,dummy,0,h0
+LANDFRAC,sftlf,lat lon,Land Area Fraction,land_area_fraction,1,fix,surface,atmos,1,lat lon,dummy,0,h0
+WSPDSRFMX,wsgmax,leadtime lat lon,Maximum Wind Speed of Gust,wind_speed_of_gust,m s-1,day,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: maximum (interval: 0.5 hour),0,h3
+TAUX,tauu,leadtime lat lon,Surface Downward Eastward Wind Stress,surface_downward_eastward_stress,Pa,day,surface,atmos,-1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+TAUY,tauv,leadtime lat lon,Surface Downward Northward Wind Stress,surface_downward_northward_stress,Pa,day,surface,atmos,-1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+TREFMXAV,tasmax,leadtime lat lon,Daily Maximum Near-Surface Air Temperature,air_temperature,K,day,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: maximum (interval: 0.5 hour),0,h3
+TREFMNAV,tasmin,leadtime lat lon,Daily Minimum Near-Surface Air Temperature,air_temperature,K,day,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: minimum (interval: 0.5 hour),0,h3
+FSNTOA,rst,leadtime lat lon,TOA Net Shortwave Radiation,toa_net_downward_shortwave_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+FSNS,rss,leadtime lat lon,Net Shortwave Surface Radiation,surface_net_downward_shortwave_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+SOLIN,rsdt,leadtime lat lon,TOA Incident Shortwave Radiation,toa_incoming_shortwave_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+FSDS,rsds,leadtime lat lon,Surface Downwelling Shortwave Radiation,surface_downwelling_shortwave_flux_in_air,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+FLDS,rlds,leadtime lat lon,Surface Downwelling Longwave Radiation,surface_downwelling_longwave_flux_in_air,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+FLNTOA,rlt,leadtime lat lon,TOA Net Longwave Radiation,toa_net_downward_longwave_flux,W m-2,day,surface,atmos,-1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+FLNS,rls,leadtime lat lon,Net Longwave Surface Radiation,surface_net_downward_longwave_flux,W m-2,day,surface,atmos,-1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+PRECT,lwepr,leadtime lat lon,Liquid Water Equivalent Thickness of Total Precipitation Amount,lwe_thickness_of_precipitation_amount,m,day,surface,atmos,86400,reftime realization time leadtime lat lon,leadtime: sum,0,h3
+PRECSC,lweprsn,leadtime lat lon,Liquid Water Equivalent Thickness of Snowfall Amount,lwe_thickness_of_snowfall_amount,m,day,surface,atmos,86400,reftime realization time leadtime lat lon,leadtime: sum,0,h3
+UBOT,uas,leadtime lat lon,Eastward Near-Surface Wind,x_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
+VBOT,vas,leadtime lat lon,Northward Near-Surface Wind,y_wind,m s-1,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
+RHREFHT,tdps,leadtime lat lon,2m Dewpoint Temperature,dew_point_temperature,K,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
+PSL,psl,leadtime lat lon,Sea Level Pressure,air_pressure_at_sea_level,Pa,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
+TREFHT,tas,leadtime lat lon,Near-Surface Air Temperature,air_temperature,K,6hr,surface,atmos,1,reftime realization time leadtime height lat lon,leadtime: point,0,h1
+Q,hus,leadtime plev lat lon,Specific Humidity,specific_humidity,1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
+T,ta,leadtime plev lat lon,Air Temperature,air_temperature,K,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,1,h2
+U,ua,leadtime plev lat lon,Eastward Wind,x_wind,m s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
+V,va,leadtime plev lat lon,Northward Wind,y_wind,m s-1,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,0,h2
+Z,zg,leadtime plev lat lon,Geopotential Height,geopotential_height,m,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,-1,h2
+SHFLX,hfss,leadtime lat lon,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+LHFLX,hfls,leadtime lat lon,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3

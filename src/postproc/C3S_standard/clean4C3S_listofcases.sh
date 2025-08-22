@@ -4,24 +4,30 @@
 . $DIR_UTIL/descr_ensemble.sh 1993
 set -euvx
 
-
-st=05
-LOG_FILE=$DIR_LOG/hindcast/clean4C3S_${st}_`date +%Y%m%d%H%M`.log
-exec 3>&1 1>>${LOG_FILE} 2>&1
-
-dbg=0
-
-listacasi=`ls -d $DIR_ARCHIVE/sps4_????${st}_0??`
+if [[ $# -eq 0 ]]
+then
+   listacasi="sps4_200910_028"
+   LOG_FILE=$DIR_LOG/hindcast/clean4C3S_listofcases_`date +%Y%m%d%H%M`.log
+   exec 3>&1 1>>${LOG_FILE} 2>&1
+   dbg=0
+else
+   listacasi=$1
+   dbg=0
+fi
 cnt=0
 for dd in $listacasi ; do
    caso=`basename $dd` 
    echo $caso
+   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+set +euvx
+   . $DIR_UTIL/descr_ensemble.sh $yyyy
+set -euvx
 # remove temporary directory for spike "treatment"
    if [[ -d $HEALED_DIR_ROOT/$caso ]]
    then
       rm -rf $HEALED_DIR_ROOT/$caso
    fi
-#   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
    yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
    member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
    startdate=$yyyy$st
@@ -35,9 +41,9 @@ for dd in $listacasi ; do
        DIR_CASES=$ROOT_CASES_WORK/cases_from_Leonardo
    fi
 # flag for isobaric level extrapolation
-   if [[ -f $DIR_CASES/$caso/logs/extrapT_SPS4_${caso}_DONE ]]
+   if [[ -f $DIR_CASES/$caso/logs/extrapT_${caso}_DONE ]]
    then
-      rm $DIR_CASES/$caso/logs/extrapT_SPS4_${caso}_DONE 
+      rm $DIR_CASES/$caso/logs/extrapT_${caso}_DONE 
    fi
 # flag for spike treatment
    if [[ -f $DIR_CASES/$caso/logs/spike_treatment_${caso}_DONE ]]
@@ -104,12 +110,19 @@ for dd in $listacasi ; do
              fi
          fi
          old_c3s_files=`ls $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.nc |wc -l`
+         old_c3s_sha=`ls $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.sha256 |wc -l`
          if [[ ${old_c3s_files} -ne 0 ]] ; then
             echo "cleaning $old_c3s_files files in $outdirC3S"
             if [[ $dbg -eq 0 ]] ; then
                rm -f $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.nc
             fi
          fi
+         if [[ ${old_c3s_sha} -ne 0 ]] ; then
+            echo "cleaning $old_c3s_sha sha256 files in $outdirC3S"
+            if [[ $dbg -eq 0 ]] ; then
+               rm -f $outdirC3S/cmcc_CMCC-CM3-v${versionSPS}_${typeofrun}_S${startdate}0100*r${member}i00p00.sha256
+            fi  
+         fi  
          if [[ `ls $outdirC3S/all_checkers_ok_0${member} |wc -l` -ne 0  ]]  
          then
               echo "cleaning $outdirC3S/all_checkers_ok_0${member}"
