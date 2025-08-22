@@ -131,11 +131,11 @@ do
   
          lg_continue=0
          # if exist in $DIR_CASES, skip
-         if [ -d $DIR_CASES/$caso ] ; then
-            echo "$DIR_CASES/$caso exist. skip"  
-            cnt_dircases=$(( $cnt_dircases + 1 ))            
-            lg_continue=1
-         fi
+#         if [ -d $DIR_CASES/$caso ] ; then
+#            echo "$DIR_CASES/$caso exist. skip"  
+#            cnt_dircases=$(( $cnt_dircases + 1 ))            
+#            lg_continue=1
+#         fi
          # if exist in archive, skip
          if [ -d $DIR_ARCHIVE/$caso ] ; then
             echo "$DIR_ARCHIVE/$caso exist. skip"  
