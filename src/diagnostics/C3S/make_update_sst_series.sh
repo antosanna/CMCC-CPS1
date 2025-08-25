@@ -1,8 +1,8 @@
 #!/bin/sh -l
 
 . ~/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
-. $DIR_TEMPL/load_cdo
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_cdo
 
 set -euvx
 

@@ -44,27 +44,28 @@ meshmask = addfile(meshmaskfile,"r")
    rank=dimsizes(nn)
 
 if ( rank .eq. 4 ) then
-   if ( filetype .eq. "grid_T_EquT" ) then
-      depth=fi->deptht(0:29)
+   if ( filetype .eq. "grid_EquT_T" ) then
+; first 300m
+      depth=fi->deptht(0:34)
    end if
    if ( filetype .eq. "grid_U" ) then
-      depth=fi->depthu(0:29)
+      depth=fi->depthu(0:34)
    end if
    if ( filetype .eq. "grid_V" ) then
-      depth=fi->depthv(0:29)
+      depth=fi->depthv(0:34)
    end if
 end if  
 
 if ( rank .eq. 4 ) then
    fall = addfiles (diri+"/"+fili, "r")
-   varall=fall[:]->$varm$(:,0:29,:,:)
+   varall=fall[:]->$varm$(:,0:34,:,:)
 else if ( rank .eq. 3 ) then
    fall = addfiles (diri+"/"+fili, "r")
    varall=fall[:]->$varm$
 end if
 end if
 
-if ( filetype .eq. "grid_T_EquT" ) then
+if ( filetype .eq. "grid_EquT_T" ) then
    nav_lat = meshmask->nav_lat(348:655,:)
    nav_lon = meshmask->nav_lon(348:655,:)
 

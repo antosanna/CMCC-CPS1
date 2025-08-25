@@ -67,8 +67,8 @@ for yyyy in `seq $iyy $fyy` ; do
      ccmail=$mymail
      body="launch_push4WMO.sh. Data push to WMO ftp"
    fi
-   title=${title_debug}"[WMO] ${SPSSystem} warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
+   #title=${title_debug}"[WMO] ${SPSSystem} warning"
+   #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_wmo_${yyyy}${st}
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year

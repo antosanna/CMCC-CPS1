@@ -14,8 +14,8 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=12 # startdate
-onlycheckfileok=1 #if 0 does tar_C3S
+st=07 # startdate
+onlycheckfileok=0  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -84,6 +84,7 @@ var_array=("${var_array2d[@]} ${var_array3d[@]}")
 echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
+iniy_hind=2020
 for yyyy in  `seq $iniy_hind $endy_hind`
 do
   
@@ -129,10 +130,7 @@ do
 
      fi
   else
-     body="MISSING FILES FOR STARTDATE $startdate"
-     title="${CPSSYS} tar_C3S for $startdate not submitted by submit_tar_C3S"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-  
+     body=""
   # checker files
      if [ $allC3Schecks -lt $nrunC3Sfore ]
      then
@@ -147,7 +145,7 @@ do
              checkmissing+=" $i"
           fi
        done
-       echo "for start-date $startdate check missing for member $checkmissing"
+       body+="For start-date $startdate final checker flag missing for member ${checkmissing}. \n"
      fi 
   # all C3S files
      if [ $allC3Sfiles -lt $(($nfieldsC3S * $nrunC3Sfore)) ]
@@ -169,10 +167,15 @@ do
            then
              :
            else
-              echo "for member $i missing $missing"
+              body+="For member $i missing C3S files for the following vars: $missing \n"
            fi
+           
        done
      fi
+#     body="MISSING FILES FOR STARTDATE $startdate"
+     title="${CPSSYS} tar_C3S for $startdate not submitted by submit_tar_C3S"
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+
   fi
 done
 

@@ -18,15 +18,15 @@ while getopts ":m:i:" o; do
     esac
 done
 
-if [ $# -eq 0 ]
+if [[ $# -eq 0 ]]
 then
    usage
 fi
-if [ -z $machine ]
+if [[ -z $machine ]]
 then
    usage
 fi
-if [ -z $input ]
+if [[ -z $input ]]
 then
     echo 'Job already terminated'
     exit 0  

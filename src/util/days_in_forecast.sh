@@ -27,21 +27,21 @@ while getopts ":y:m:d:f:l:" o; do
             ;;            
     esac
 done
-if [ -z $year ]
+if [[ -z $year ]]
 then
    year=`date +%Y`
 fi
-if [ -z $mon ]
+if [[ -z $mon ]]
 then
    month=`date +%m`
 else
    month=`printf '%.2d' $((10#$mon))`
 fi
-if [ -z $day ]
+if [[ -z $day ]]
 then
    day='01'
 fi
-if [ -z $outxday ]
+if [[ -z $outxday ]]
 then
    outxday=1
 fi
@@ -53,13 +53,13 @@ do
    yyyy=`date -d "$year${month}$day + $ic month" +%Y`
    days=$(($days + `cal $mm $yyyy | awk 'NF {DAYS = $NF}; END {print DAYS}'`))
    # if noleap option is defined february will be returned as a 28 days month 
-   if [ ! -z $noleap ]
+   if [[ ! -z $noleap ]]
    then
-      if [ $mm -eq 2 ]
+      if [[ $mm -eq 2 ]]
       then
         # if year is a leap year
         isleap=$( isleap $yyyy )
-        if [ $isleap == "TRUE" ]; then
+        if [[ $isleap == "TRUE" ]]; then
           days=$(( $days - 1 ))
         fi
       fi  

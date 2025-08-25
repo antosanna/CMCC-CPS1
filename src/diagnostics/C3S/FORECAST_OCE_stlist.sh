@@ -26,11 +26,11 @@ mkdir -p $dirlog
 
 # IF YOU WANT TO COMPUTE TERCILES FOR REFERNCE PERIOD SET TO 1
 
-for var in votemper #sohtc040 somixhgt vozocrtx vomecrty
+for var in toce #sohtc040 somixhgt vozocrtx vomecrty
 do
 
   case $var in
-	    votemper) filetype="grid_T_EquT" ;;
+	    toce) filetype="grid_EquT_T" ;;
 	    sohtc040) filetype="grid_Tglobal" ;;
 	    somixhgt|vosaline) filetype="grid_T" ;;
 	    vozocrtx) filetype="grid_U" ;;
@@ -41,7 +41,7 @@ do
 
    input="$yyyy $st $var $dirlog $filetype ${make_statistics} ${make_anom} ${make_plot} ${flag_done} $dbg"
   
-${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_m -S $qos -j compcompute_stat_OCE_auto_${var}_${st} -l ${dirlog} -d ${DIR_DIAG_C3S} -s compute_stat_OCE_auto.sh -i "$input" 
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -j compute_stat_OCE_auto_${var}_${st} -l ${dirlog} -d ${DIR_DIAG_C3S} -s compute_stat_OCE_auto.sh -i "$input" 
 
 done
 

@@ -9,7 +9,7 @@
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 # First check that no other this script is running
-if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]
+if [[ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]]
 then
    exit
 fi

@@ -160,7 +160,7 @@ then
 ######## ICs_CLM Juno
    IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
    IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
    fi
    WOIS=/work/cmcc/${operational_user}/CPS/CMCC-OIS2/
@@ -168,27 +168,27 @@ then
 # TEMPORARY FOR TESTS
    IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
    IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
    fi
 ######## ICs_CICE Juno
 # TEMPORARY FOR TESTS
    IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
    IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
 ######## ICs_CAM Juno
    IC_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}/
    IC_CAM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CAM_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
    fi
 #   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=adrien.owono@ecmwf.int
 	     ccmail=silvio.gualdi@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it

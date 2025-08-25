@@ -20,9 +20,9 @@ condafunction() {
    else
       . $HOME/load_conda
    fi
-   if [  $comm == "activate"  ]; then
+   if [[  $comm == "activate"  ]]; then
       	conda $comm $env
-   elif [  $comm == "deactivate"  ]; then
+   elif [[  $comm == "deactivate"  ]]; then
       	conda $comm
    fi
 }
@@ -32,9 +32,9 @@ elif [[ "${machine}" == "leonardo" ]] ; then
 condafunction() {
    local comm=$1
    local env=$2	
-   if [  $comm == "activate"  ]; then
+   if [[  $comm == "activate"  ]]; then
       	conda $comm $env
-   elif [  $comm == "deactivate"  ]; then
+   elif [[  $comm == "deactivate"  ]]; then
       	conda $comm
    fi
 }

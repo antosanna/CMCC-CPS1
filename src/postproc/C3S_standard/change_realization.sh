@@ -62,7 +62,7 @@ arr1=`echo ${ensemble[@]} ${ensembleECMWF[@]} ${ensemble[@]} | tr ' ' '\n' | sor
 echo ${arr1[@]}
 if [ `echo ${arr1[@]}|wc -w` -eq 0 ]
 then
-   body='C3S: No renumbering needed: files ready to be transferred to final destinations' 
+   body="C3S: No renumbering needed: $yyyy$st files ready to be transferred to final destinations" 
    title="[C3S] ${CPSSYS} forecast notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    skip=1
