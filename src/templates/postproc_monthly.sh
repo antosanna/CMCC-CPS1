@@ -128,11 +128,6 @@ done
 if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
    rm -rf $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000
 fi
-# now rebuild EquT from NEMO
-if [[ `ls $DOUT_S_ROOT/ocn/hist/EXPNAME_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
-then
-   $DIR_POST/nemo/rebuild_EquT_1month.sh EXPNAME $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
-fi
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
 set +euvx
 . $dictionary

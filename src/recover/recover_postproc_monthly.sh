@@ -71,11 +71,6 @@ do
       if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
          rm -rf $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000
       fi
-      # now rebuild EquT from NEMO
-      yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
-      st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
-      $DIR_POST/nemo/rebuild_EquT_1month.sh ${caso} $yyyy $curryear $currmon "$ic" $DOUT_S_ROOT/ocn/hist
-      echo "-----------postproc_monthly_${caso}.sh COMPLETED-------- "`date`
       touch  $check_pp_monthly
       if [[ $dbg -eq 1 ]]
       then

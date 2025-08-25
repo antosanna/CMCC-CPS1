@@ -34,7 +34,6 @@ do
   . $dictionary
   set -euvx
   if [[ ! -f  $check_6months_done ]] ; then
-       #is st_archive during monthly run. launch with dependency nemo_rebuild and lt_archive
 
        #in order to relaunch st_archive with the right syntax, we keep the command as appear in preview_run (for portability)
        cmd=`./preview_run |grep case.st_archive|tail -1`
@@ -49,8 +48,7 @@ do
        eval ${cmd_nodep}
 
        #${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "1" -M 200 -j st_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s case.st_archive 
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -p st_archive.$caso  -t "1" -M 1500 -j nemo_rebuild.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.nemo_rebuild
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -p nemo_rebuild.$caso -t "6" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "6" -M 15000 -j lt_archive.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive 
   else
     #is st_archive after moredays.. launch with dependency lt_arch_moredays
        cmd=`./preview_run |grep case.st_archive|tail -1`
