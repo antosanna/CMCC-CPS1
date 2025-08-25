@@ -21,6 +21,12 @@ then
    alias rm="rm -f"
    alias cp="/bin/cp -f"
    alias mv="mv -f"
+elif [[ -n `echo $PS1|grep cassandra` ]]
+then
+   machine="cassandra"
+   alias rm="rm -f"
+   alias cp="/bin/cp -f"
+   alias mv="mv -f"
 elif [[ -n `echo $PS1|grep zeus` ]]
 then
    machine="zeus"
@@ -34,22 +40,21 @@ SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2014
-refcaseHIST=${CPSSYS}_HIST_reference
+refcaseHIST=${CPSSYS}_HIST_reference_CERISE
 refcaseSCEN=${CPSSYS}_SSP585_reference
-envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
 envcondarclone=rclone_gdrive
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
+if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
    qos=qos_lowprio   #this is used only for SLURM but it is
                      #necessary for portability being used in
                      #submitcommand
 #   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
 #   envcondarclone=rclone_gdrive
-   if [[ $machine == "juno" ]]
+   if [[ $machine == "juno" ]] 
    then
       HEAD=cmcc
       operational_user=cp1
@@ -58,11 +63,26 @@ then
       cores_per_node=72
       nnodes_SC=56
       cores_per_run=288
-      mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
-      mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
-      maxnumbertosubmit=7
+      maxnumbertosubmit=20
+      maxnumbertorecover=25
+      maxnumberguarantee=7
+      env_workflow_tag=cmcc
+      DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
+      DATA_ECACCESS=/data/delivery/csp/cp1/in/
+   elif [[ $machine == "cassandra" ]]
+   then
+      HEAD=cmcc
+      operational_user=cp1
+      pID=0575 #Juno
+#      pID=0438 #Juno
+      cores_per_node=112
+      nnodes_SC=56
+      cores_per_run=336
+      envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
+      envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
+      maxnumbertosubmit=20
       maxnumbertorecover=25
       maxnumberguarantee=7
       env_workflow_tag=cmcc
@@ -80,8 +100,6 @@ then
       maxnumbertorecover=40
       maxnumbertosubmit=10
       maxnumberguarantee=6
-      mpilib4py_nemo_rebuild=impi20.1/19.7.217
-      mpirun4py_nemo_rebuild=mpirun
       envcondaclm=/work/$HEAD/sp1/anaconda3/envs/CMOR_5
       envcondacm3=/users_home/$HEAD/dp16116/.conda/envs/py38CS2
       env_workflow_tag=cmcc
@@ -101,8 +119,6 @@ then
    BATCHUNKNOWN="UNKN"
    BATCHRUN="RUN"
    BATCHPEND="PEND"
-   nmb_nemo_domains=279
-   nmb_nemo_dmofiles=48 #8 files for each month
 # queues Juno
    serial_test=s_long
    serialq_s=s_short
@@ -198,9 +214,7 @@ then
 elif [[ "$machine" == "leonardo" ]]
 then
    env_workflow_tag=leonardo
-   envcondacm3=cmcc-cm_py
-   mpirun4py_nemo_rebuild=srun
-   mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
+   envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
 #moved to .bashrc
    if [[ $account_name == "CMCC_reforeca" ]]
    then

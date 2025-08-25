@@ -299,7 +299,7 @@ then
    exit 0
 fi 
 
-if [[  "$machine" == "juno" ]]
+if [[  "$machine" == "juno" ]] || [[  "$machine" == "cassandra" ]]
 then
   # initalize command
   command='bsub '

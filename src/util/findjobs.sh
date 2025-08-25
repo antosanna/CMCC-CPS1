@@ -74,7 +74,7 @@ then
 fi
 # Condizione troppo stringente per lt_archive e postrun.tpl
 
-if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]]
+if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]] || [[  "$machine" == "cassandra" ]]
 then
 
    command="bjobs -w "

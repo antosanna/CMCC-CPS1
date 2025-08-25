@@ -2,7 +2,7 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 set +evxu
-if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then	
+if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]; then	
 condafunction() {
    local comm=$1
    local env=$2	

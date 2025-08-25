@@ -9,77 +9,35 @@
     -->
    
     <file_definition type="multiple_file" name="@expname@_@freq@_@startdate@_@enddate@" sync_freq="5d" min_digits="4">
-    
       <file_group id="5d" output_freq="5d"  output_level="10" enabled=".TRUE."/>  <!-- 5d files -->   
 
-      <file_group id="1d" output_freq="1d" output_level="10" enabled=".TRUE."> <!-- real monthly files -->
-        <file id="file21" name_suffix="_grid_EquT_T" description="Equatorial belt variables" >
-          <field field_ref="toce"    grid_ref="EquT_3D"  />
-        </file>  
-        <file id="file22" name_suffix="_grid_T" description="ocean T grid variables" >
-          <field field_ref="hc40"        name="sohtc040"  />
-          <field field_ref="sst"          name="tos"    />
-          <field field_ref="sss"          name="sos"    />
-        </file>  
-      </file_group>  
       <file_group id="1m" output_freq="1mo" output_level="10" enabled=".TRUE."> <!-- real monthly files -->
         <file id="file11" name_suffix="_grid_T" description="ocean T grid variables" >
-          <field field_ref="sst"          name="tos"    />
-          <field field_ref="sss"          name="sos"    />
-          <field field_ref="14d"          name="t14d"  />
-          <field field_ref="17d"          name="t17d"  />
-          <field field_ref="20d"          name="t20d"  />
-          <field field_ref="26d"          name="t26d"  />
-          <field field_ref="28d"          name="t28d"  />
-          <field field_ref="mldr0_3"      name="mlotst" />
-          <field field_ref="mldr10_1"     name="mlotst0.01" />
-          <field field_ref="toce_vmean2000" name="thetaot2000" long_name="Depth average potential temperature of upper 2000m" unit="degC"  /> 
-          <field field_ref="toce_vmean700"  name="thetaot700"  long_name="Depth average potential temperature of upper 700m"  unit="degC"  /> 
-	         <field field_ref="ice_cover" name="sic"         long_name="sea_ice_area_fraction" />
-          <field field_ref="sshdyn"       name="zos"         long_name="Sea Surface Height Above Geoid"   unit="m"     />
-          <field field_ref="qt"           name="hfds"        long_name="Downward Heat Flux at Sea Water Surface"                 unit="W m-2"      />
           <field field_ref="e3t"      />
-          <field field_ref="toce"        name="thetao"      long_name="Sea Water Potential Temperature"  unit="degC" />
-          <field field_ref="toce"         name="thetao_op" operation="instant" freq_op="1mo" > @toce_e3t / @e3t </field>
-          <field field_ref="soce"         name="so_op"     operation="instant" freq_op="1mo" > @soce_e3t / @e3t </field> 
-          <field field_ref="soce"         name="so"          long_name="Sea Water Salinity"               unit="0.001" />
-          <field field_ref="runoffs"      name="friver"      long_name="Water Flux into Sea Water From Rivers"                unit="kg m-2 s-1"  />
-          <field field_ref="heatc"        name="heatc"       long_name="Heat content vertically integrated"                 standard_name="integral_of_sea_water_potential_temperature_wrt_depth_expressed_as_heat_content"   unit="J/m2"       />
-          <field field_ref="hc300"        name="sohtc300"  />
-      	 </file>
+          <field field_ref="toce"         name="theta_raw" />
+          <field field_ref="soce"         name="so"     operation="instant" freq_op="1mo" > @soce_e3t / @e3t </field>
+          <field field_ref="ssh"          name="zos"    />
+          <field field_ref="saltc"        name="saltc" />
 
-       	<file id="file12" name_suffix="_grid_U" description="ocean U grid variables" >
+	  <field field_ref="ice_cover" />
+	</file>
+
+	<file id="file12" name_suffix="_grid_U" description="ocean U grid variables" >
           <field field_ref="e3u"      />
-          <field field_ref="utau"         name="tauuo"   long_name="Surface Downward X Stress"  unit="N m-2" />
-          <field field_ref="uocetr_eff"   name="umo"     long_name="Ocean Mass X Transport"     unit="kg s-1" > @uocetr_eff * $rau0 </field>
-          <field field_ref="uoce"         name="uo"      long_name="Sea Water X Velocity"       unit="m s-1" />
-	         <field field_ref="uoce"         name="uo_op"       operation="instant" freq_op="1mo" > @uoce_e3u / @e3u </field>
-       	</file>
+	  <field field_ref="uoce"         name="uo"       operation="instant" freq_op="1mo" > @uoce_e3u / @e3u </field>
+	</file>
 	
-       	<file id="file13" name_suffix="_grid_V" description="ocean V grid variables" >
+	<file id="file13" name_suffix="_grid_V" description="ocean V grid variables" >
           <field field_ref="e3v"      />
-          <field field_ref="vtau"         name="tauvo"   long_name="Surface Downward Y Stress"  unit="N m-2" />
-          <field field_ref="vocetr_eff"   name="vmo"     long_name="Ocean Mass Y Transport"     unit="kg s-1" > @vocetr_eff * $rau0 </field>
-          <field field_ref="voce"         name="vo"      long_name="Sea Water Y Velocity"       unit="m s-1" />
-	         <field field_ref="voce"         name="vo_op"       operation="instant" freq_op="1mo" > @voce_e3v / @e3v </field>
-       	</file>
+	  <field field_ref="voce"         name="vo"       operation="instant" freq_op="1mo" > @voce_e3v / @e3v </field>
+	</file>
 	
-       	<file id="file14" name_suffix="_grid_W" description="ocean W grid variables" >
+	<file id="file14" name_suffix="_grid_W" description="ocean W grid variables" >
           <field field_ref="e3w" />
-          <field field_ref="wocetr_eff"   name="wmo"     long_name="Upward Ocean Mass Transport" unit="kg s-1" />
-          <field field_ref="woce"         name="wo"      long_name="Sea Water Vertical Velocity" unit="m s-1"  />
-       	</file>
+	  <field field_ref="woce"         name="wo"       />
+	</file>
 
-        <file id="file15" type="one_file" name_suffix="_grid_ptr" description="diaptr variables" enabled=".true." >
-          <field field_ref="sophtvtr" name="hfbasin" long_name="Northward Ocean Heat Transport" unit="W" grid_ref="grid_ptr_T_2D" > @sophtvtr * 1e15 </field>
-          <field field_ref="zomsf"    name="msftyz" long_name="Meridional Stream-Function : All basins" unit="kg s-1" grid_ref="grid_ptr_W_3D"> @zomsf * 1e6 *$rau0 </field> 
-        </file>
-        <file id="file16" type="one_file" name_suffix="_scalar" description="scalar variables" enabled=".true." >
-          <field field_ref="voltot"   name="volo"      long_name="Sea Water Volume"   unit="m3" /> 
-          <field field_ref="sshsteric"   name="zostoga"   long_name="Global Average Thermosteric Sea Level Change" unit="m" /> 
-        </file> 
-
-
+        <file id="file15" name_suffix="_scalar" description="scalar variables" type="one_file" />
 
       </file_group>
 

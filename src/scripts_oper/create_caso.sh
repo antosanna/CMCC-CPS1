@@ -36,7 +36,7 @@ if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-cesmexe=$DIR_EXE1/cesm.exe.CPS1_juno
+cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -55,7 +55,11 @@ if [[ $machine == "leonardo" ]]
 then
    $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
 else
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$refcase --cime-output-root $WORK_CPS
+fi
+if [[ $machine == "cassandra" ]]
+then
+   rsync -av $DIR_TEMPL/env_run.xml_${machine} $DIR_CASES/$caso/env_run.xml
 fi
 
 set -euvx

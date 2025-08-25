@@ -4,7 +4,7 @@
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 yyyy=$1
 n_ic_cam=10
-n_ic_clm=30
+n_ic_clm=25
 if [[ $yyyy -lt 2023 ]]
 then
    n_ic_nemo=4

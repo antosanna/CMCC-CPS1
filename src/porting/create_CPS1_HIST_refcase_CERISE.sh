@@ -17,7 +17,7 @@ then
       exit
    fi
 fi 
-caso=${CPSSYS}_HIST_reference
+caso=${CPSSYS}_HIST_reference_CERISE
 
 if [[ -d $DIR_CASES/$caso ]]
 then
