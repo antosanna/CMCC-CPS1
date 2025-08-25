@@ -65,7 +65,7 @@ then
       cores_per_run=288
       envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
       envcondacm3=cmcc-cm_py39
-      maxnumbertosubmit=20
+      maxnumbertosubmit=7
       maxnumbertorecover=25
       maxnumberguarantee=7
       env_workflow_tag=cmcc
