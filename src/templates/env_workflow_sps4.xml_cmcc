@@ -220,10 +220,7 @@
     <entry id="template" value="$ENV{DIR_TEMPL}/template.lt_archive">
       <type>char</type>
     </entry>
-    <entry id="dependency" value="case.nemo_rebuild">
-      <type>char</type>
-    </entry>
-    <entry id="prereq" value="$NEMO_REBUILD">
+    <entry id="dependency" value="case.st_archive">
       <type>char</type>
     </entry>
     <entry id="task_count" value="1">
