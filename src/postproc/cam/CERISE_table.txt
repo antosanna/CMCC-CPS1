@@ -1,4 +1,5 @@
 Model Name,C3S Name,dimension,long_name,standard_name,units,frequency,level_type,modeling_realm,Arithmetic expr,coordinates,cell_methods,varflg,type
+ICEFRAC,sic,leadtime lat lon,Sea Ice Area Fraction,sea_ice_area_fraction,1,day,surface,seaIce,1,reftime realization time leadtime lat lon,leadtime: point,0,h3
 TS,ts,leadtime lat lon,Surface temperature,surface_temperature,K,3hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h4
 CLDLOW,cll,leadtime lat lon,Low Cloud Cover Percentage,low_type_cloud_area_fraction,%,6hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h1
 CLDTOT,clt,leadtime lat lon,Total Cloud Fraction,cloud_area_fraction,1,3hr,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: point,0,h4
