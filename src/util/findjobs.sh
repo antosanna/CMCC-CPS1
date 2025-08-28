@@ -78,12 +78,12 @@ then
 fi
 # Condizione troppo stringente per lt_archive e postrun.tpl
 
-if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]]
+if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]] || [[  "$machine" == "cassandra" ]]
 then
 
    command="bjobs -w "
 
-   if [ "$format" != "None" ]
+   if [[ "$format" != "None" ]]
    then
       command="bjobs -W "
    fi
@@ -144,7 +144,7 @@ then
 #   set +evx
 fi
 
-if [  "$machine" = "leonardo" ]
+if [[  "$machine" == "leonardo" ]]
 then
    # option -h remove header
    command="squeue -u `whoami` -h -o \"%P %j  %T %i\" "

@@ -10,7 +10,7 @@ set -euvx
 
 scriptname=`basename $0 | rev | cut -d '.' -f2 | rev`
 procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n $scriptname -c yes `
-if [ $procsRUN -gt 1 ] ; then
+if [[ $procsRUN -gt 1 ]] ; then
    echo "$scriptname already running"
    exit 0
 fi		
@@ -19,7 +19,7 @@ fi
 # Parameters to be set by user
 st=$1 #2 figures  # SET BY CRONTAB
 isforecast=$2
-if [ $isforecast -eq 1 ]
+if [[ $isforecast -eq 1 ]]
 then
    iyy=`date +%Y`
    fyy=$iyy
@@ -34,7 +34,7 @@ set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
    . ${dictionary}
 set -euvx
-   if [ $debug_push -ge 1 ]
+   if [[ $debug_push -ge 1 ]]
    then
      mymail="sp1@cmcc.it"
      ccmail=$mymail
@@ -51,7 +51,7 @@ set -euvx
    if [[ "$machine" == "juno" ]]
    then
       filedone=$check_push_done
-      if [ $debug_push -ge 1 ]
+      if [[ $debug_push -ge 1 ]]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
       fi
@@ -59,14 +59,14 @@ set -euvx
    elif [[ "$machine" == "leonardo" ]]
    then
       filedone=$check_push_done
-      if [ $debug_push -ge 1 ]
+      if [[ $debug_push -ge 1 ]]
       then
          filedone=$DIR_LOG/${typeofrun}/$yyyy$st/test_${yyyy}${st}_DONE
       fi
       cmd_anypushC3SDONE="ls $filedone | wc -l"
    fi
    anypushC3SDONE=`eval $cmd_anypushC3SDONE`
-   if [ $anypushC3SDONE -gt 0 ] ; then
+   if [[ $anypushC3SDONE -gt 0 ]] ; then
 # already pushed: go on with following hindcasts
      	continue
    fi
@@ -91,12 +91,12 @@ set -euvx
 #--------------------------------------------------------------------
    procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -c yes `
    jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -i yes `
-   if [ $procsRUN -gt 0 ] ; then
+   if [[ $procsRUN -gt 0 ]] ; then
 # if another push running check how long it has being running for
       elapsedh=`${DIR_UTIL}/findjobs.sh -m $machine -d $jobID`
-      if [ $elapsedh -gt 4 ]
+      if [[ $elapsedh -gt 4 ]]
       then
-         if [ $debug_push -eq 0 ]
+         if [[ $debug_push -eq 0 ]]
          then
             body="elapsed hours $elapsedh for push4ECMWF_${yyyy}${st}. Too much. Going to kill it"
   	         title="[C3S] ${SPSSystem} ${typeofrun} warning"
@@ -149,17 +149,17 @@ set -euvx
        sleep 900 # 
        ic=$(( $ic + 1 ))
        anypushC3SDONE=`eval $cmd_anypushC3SDONE`
-       if [ $anypushC3SDONE -eq 1 ] ; then          
+       if [[ $anypushC3SDONE -eq 1 ]] ; then          
           break
        fi
 # after 4 hours kill the process and relaunch
-       if [ $ic -eq 16 ]
+       if [[ $ic -eq 16 ]]
        then
           ic=0
-          if [ $anypushC3SDONE -eq 0 ] ; then          
+          if [[ $anypushC3SDONE -eq 0 ]] ; then          
 # meaning transfer not completed
              procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -c yes `
-             if [ $procsRUN -ne 0 ] ; then
+             if [[ $procsRUN -ne 0 ]] ; then
 # meaning push still running --> too much! kill and resubmit
                 jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4ECMWF_${yyyy}${st} -i yes `
                 $DIR_UTIL/killjobs.sh -m $machine -i $jobID

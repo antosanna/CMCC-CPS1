@@ -185,7 +185,7 @@ for dir in $casetoarchive; do
 	cntqbo=$(ls ${DIRQBO}/${caso}.Umonthly.nc | wc -l)
 	cntqbozipped=$(ls ${DIRQBO}/${caso}.Umonthly.nc.gz | wc -l)
 	# If both files are missing, then skip
-	if [ $cntqbo -eq 0 -a $cntqbozipped -eq 0 ]; then
+	if [[ $cntqbo -eq 0 ]] && [[ $cntqbozipped -eq 0 ]]; then
 		continue
 	fi
 

@@ -83,7 +83,7 @@ echo "submit $scriptregrid "`date`
 echo ''
 export fileok=${WORK_IC4CAM}/${inp}_ok
 ncl $scriptregrid
-if [ -f $fileok ]
+if [[ -f $fileok ]]
 then
    echo "ended $scriptregrid and begin compression check level fileds"`date`
    echo ''
@@ -96,7 +96,7 @@ else
 fi
 # the script produces check files for vertical interpolation $output_check
 # put them in $WORK_IC4CAM
-if [ -f $WORK_IC4CAM/$output_checkZIP ]
+if [[ -f $WORK_IC4CAM/$output_checkZIP ]]
 then
     rm -f $WORK_IC4CAM/$output_checkZIP
 fi

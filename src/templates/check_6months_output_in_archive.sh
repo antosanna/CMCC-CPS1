@@ -26,7 +26,7 @@ function Count_files()
    n_atm=`ls $DIR_ARCHIVE/CASO/atm/hist/CASO*.nc | grep cam.h0| grep zip | wc -l`
 # EquT are already zip; Tglobal will be by interp_ORCA2_1X1_gridT2C3S.sh
 #   if [ $n_lnd -ne $nmonfore ] || [ $n_ice  -ne $nmonfore ] || [ $n_rof -ne $nmonfore ] || [ $n_atm -ne $nmonfore ] || [ $n1d_ocn -ne $(($nmonfore * 2)) ] || [ $n1m_ocn -ne $(($nmonfore * 4)) ] || [ $nptr_ocn -ne $nmonfore ] || [ $nsca_ocn -ne $nmonfore ]
-   if [ $n_lnd -ne $nmonfore ] || [ $n_ice  -ne $nmonfore ] || [ $n_rof -ne $nmonfore ] || [ $n_atm -ne $nmonfore ] || [ $n1d_ocn -ne $(($nmonfore * 2)) ] || [ $n1m_ocn -ne $(($nmonfore * 4)) ] || [ $nsca_ocn -ne $nmonfore ]
+   if [[ $n_lnd -ne $nmonfore ]] || [[ $n_ice  -ne $nmonfore ]] || [[ $n_rof -ne $nmonfore ]] || [[ $n_atm -ne $nmonfore ]] || [[ $n1d_ocn -ne $(($nmonfore * 2)) ]] || [[ $n1m_ocn -ne $(($nmonfore * 4)) ]] || [[ $nsca_ocn -ne $nmonfore ]]
    then
        ret=1
        if [[ $ic -eq 2 ]]

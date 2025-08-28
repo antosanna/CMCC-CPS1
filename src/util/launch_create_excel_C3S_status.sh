@@ -31,12 +31,12 @@ for st in 10 11 12 01 02 03 04 05 06 07 08 09; do
 	fnamecineca=${pathcineca}"C3S_status_${st}.csv"
 
 	# clean report file if exist
-	if [ $(ls -1 $path/C3S_status_${st}.csv | wc -l ) -gt 0 ]; then
+	if [[ $(ls -1 $path/C3S_status_${st}.csv | wc -l ) -gt 0 ]]; then
 		rm $path/C3S_status_${st}.csv
 	fi
 
 	# if exist copy from cineca use it, otherwise create status file
-	if [ -f $fnamecineca ]; then
+	if [[ -f $fnamecineca ]]; then
 		set -vx
 
 		rsync -auv $fnamecineca $path
@@ -79,7 +79,7 @@ for st in 10 11 12 01 02 03 04 05 06 07 08 09; do
 				ice=$(( $ice_cnt + $ice ))
 
 			done
-			if [ $fs -eq 40 -a $tc -eq 40 -a $mc -eq 40 -a $qc -eq 40 -a $clm -eq 40 -a $cam -eq 40 -a $oce -eq 40 -a $ice -eq 40 ];then
+			if [[ $fs -eq 40 ]] && [[ $tc -eq 40 ]] && [[ $mc -eq 40 ]] && [[ $qc -eq 40 ]] && [[ $clm -eq 40 ]] && [[ $cam -eq 40 ]] && [[ $oce -eq 40 ]] && [[ $ice -eq 40 ]];then
 				OK=1
 			fi
 			#echo "STARTDATE FS TC MC QC CLM CAM"
@@ -94,7 +94,7 @@ set -euvx
 
 # clean report xls file if exist
 excelfile=SPS4_HC_C3S_status.xlsx
-if [ $(ls -1 $path/$excelfile | wc -l ) -gt 0 ]; then
+if [[ $(ls -1 $path/$excelfile | wc -l ) -gt 0 ]]; then
 	rm $path/$excelfile
 fi
 

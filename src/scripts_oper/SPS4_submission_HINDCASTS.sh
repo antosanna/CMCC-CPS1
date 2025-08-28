@@ -21,7 +21,7 @@ then
    fi
 else
    np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -c yes`
-   if [ $np -gt 1 ]
+   if [[ $np -gt 1 ]]
    then
 # if so check if it is correctly running
       ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_main_hc -a $BATCHUNKNOWN -i yes`
@@ -57,7 +57,7 @@ fi
 
 #np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive.${SPSSystem}_ -c yes`
-if [ $np_all -lt $maxnumbertosubmit ]
+if [[ $np_all -lt $maxnumbertosubmit ]]
 then
    echo "go on with hindcast submission"
    tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
@@ -127,7 +127,7 @@ do
          set -e
   
          # if is running, skip
-         if [ $np -gt 0 ] ; then
+         if [[ $np -gt 0 ]] ; then
             echo "job running. skip"
             cnt_run=$(( $cnt_run + 1 )) 
             continue
@@ -135,19 +135,19 @@ do
   
          lg_continue=0
          # if exist in $DIR_CASES, skip
-         if [ -d $DIR_CASES/$caso ] ; then
+         if [[ -d $DIR_CASES/$caso ]] ; then
             echo "$DIR_CASES/$caso exist. skip"  
             cnt_dircases=$(( $cnt_dircases + 1 ))            
             lg_continue=1
          fi
          # if exist in archive, skip
-         if [ -d $DIR_ARCHIVE/$caso ] ; then
+         if [[ -d $DIR_ARCHIVE/$caso ]] ; then
             echo "$DIR_ARCHIVE/$caso exist. skip"  
             cnt_archive=$(( $cnt_archive + 1 ))            
             lg_continue=1
          fi 
   
-         if [ -f /work/csp/cp1/CPS/CMCC-CPS1/cases/$caso/logs/run_moredays_${caso}_DONE ] ; then
+         if [[ -f /work/csp/cp1/CPS/CMCC-CPS1/cases/$caso/logs/run_moredays_${caso}_DONE ]] ; then
             echo "$caso completed on old $HOME (csp). skip"  
             cnt_old_home=$(( $cnt_old_home + 1 ))            
             lg_continue=1
@@ -164,7 +164,7 @@ do
             script_to_submit=$DIR_SUBM_SCRIPTS/$st/${yyyy}${st}_scripts/${header}_${yyyy}${st}_${ens}.sh 
          fi
          submittable_cnt=$(( $submittable_cnt + 1 ))
-         if [ -f $script_to_submit ] ; then
+         if [[ -f $script_to_submit ]] ; then
             if [[ $machine == "leonardo" ]]
             then
                res1=`grep 'sed' ${script_to_submit} |cut -d '/' -f12`
@@ -188,8 +188,8 @@ do
             iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${oceIC}.nc
   
             # if atmospheric IC condition not exist, skip
-            if [ ! -f $atmICfile ] ; then
-                if [ -f $atmICfile.gz ] ; then
+            if [[ ! -f $atmICfile ]] ; then
+                if [[ -f $atmICfile.gz ]] ; then
                    gunzip -f $atmICfile.gz
                 else
                    echo ""
@@ -203,8 +203,8 @@ do
             fi
   
             # if nemo oce IC condition not exist, skip
-            if [ ! -f $nemoICfile ] ; then
-              if [ -f $nemoICfile.gz ] ; then
+            if [[ ! -f $nemoICfile ]] ; then
+              if [[ -f $nemoICfile.gz ]] ; then
                  gunzip -f $nemoICfile.gz
               else
                  echo ""
@@ -218,8 +218,8 @@ do
             fi
   
             # if ice oce IC condition not exist, skip
-            if [ ! -f $iceICfile ] ; then
-               if [ -f $iceICfile.gz ] ; then
+            if [[ ! -f $iceICfile ]] ; then
+               if [[ -f $iceICfile.gz ]] ; then
                   gunzip -f $iceICfile.gz
                else
                   echo ""
@@ -233,7 +233,7 @@ do
             fi       
 
             # if land IC condition not exist, skip
-            if [ $n_lndICfiles -ne 2 ] ; then
+            if [[ $n_lndICfiles -ne 2 ]] ; then
                 echo ""
                 echo "lndICfiles do not exist. skip ************** "
                 echo "skip $caso                                  "
@@ -242,17 +242,17 @@ do
                 listaskipCLM+="$caso "
                 flg_continue=1
             else 
-               if [ -f $rofICfile.gz ] 
+               if [[ -f $rofICfile.gz ]]
                then
                    gunzip -f $rofICfile.gz
                fi
-               if [ -f $clmICfile.gz ] 
+               if [[ -f $clmICfile.gz ]]
                then
                    gunzip -f $clmICfile.gz
                fi
             fi
     
-            if [ $flg_continue -eq 1 ]
+            if [[ $flg_continue -eq 1 ]]
             then
                continue
             fi
@@ -270,7 +270,7 @@ do
             fi
             listacasi+="$caso "
 
-            if [ $subm_cnt -eq $tobesubmitted ]
+            if [[ $subm_cnt -eq $tobesubmitted ]]
             then
                ylast=$yyyy
                break 4
@@ -278,8 +278,8 @@ do
             # REDUNDANT but safe (check how many jobs are on parallel queue)
             # if $maxnumbertosubmit already running exit
             # this control does not count the cases still in the create_caso phase
-            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive.${SPSSystem}_ -c yes`
-            if [ $np_all -ge $maxnumbertosubmit ]
+            np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+            if [[ $np_all -ge $maxnumbertosubmit ]]
             then
                ylast=$yyyy
                break 4

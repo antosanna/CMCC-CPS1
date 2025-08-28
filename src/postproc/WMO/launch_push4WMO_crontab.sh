@@ -16,7 +16,7 @@
 
 set -euvx
 debug=0
-if [ $debug -ge 1 ]
+if [[ $debug -ge 1 ]]
 then
   mymail=andrea.borrelli@cmcc.it
   ccmail=$mymail
@@ -27,7 +27,7 @@ fi
 
 scriptname=$0
 procsRUN=`${DIR_SPS35}/findjobs.sh -m $machine -n $scriptname -c yes `
-if [ $procsRUN -gt 1 ] ; then
+if [[ $procsRUN -gt 1 ]] ; then
    echo "$scriptname already running"
  		exit 0
 fi		
@@ -36,13 +36,13 @@ fi
 # Parameters to be set by user
 st=$1 #2 figures  # SET BY CRONTAB
 isforecast=$2
-if [ $isforecast -eq 1 ]
+if [[ $isforecast -eq 1 ]]
 then
    iyy=`date +%Y`
    fyy=$iyy
 else
    iyy=1993
-   if [ $debug -eq 1 ]
+   if [[ $debug -eq 1 ]]
    then
       iyy=2016 
    fi
@@ -52,7 +52,7 @@ fi
 for yyyy in `seq $iyy $fyy` ; do
    firstdtn03=first_${yyyy}${st}
 
-  	if [ $yyyy -lt $iniy_fore ] ; then
+  	if [[ $yyyy -lt $iniy_fore ]] ; then
     		. ${DIR_SPS35}/descr_hindcast.sh
   	else
     		. ${DIR_SPS35}/descr_forecast.sh
@@ -61,12 +61,12 @@ for yyyy in `seq $iyy $fyy` ; do
 # Check if it is possible to send another  year
 #--------------------------------------------------------------------
    filedone=push_${yyyy}${st}_DONE
-   if [ $debug -ge 1 ]
+   if [[ $debug -ge 1 ]]
    then
       filedone=test_${yyyy}${st}_DONE
    fi
   	anypushC3SDONE=`rsync -auv sp2@dtn03: | grep $filedone | awk '{print $5}' | wc -l`
-  	if [ $anypushC3SDONE -gt 0 ] ; then
+  	if [[ $anypushC3SDONE -gt 0 ]] ; then
 # already pushed: go on with following hindcasts
     		continue
   	fi
@@ -77,7 +77,7 @@ for yyyy in `seq $iyy $fyy` ; do
 #--------------------------------------------------------------------
   	procsRUN=`${DIR_SPS35}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -c yes `
    jobID=`${DIR_SPS35}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -i yes `
-  	if [ $procsRUN -gt 0 ] ; then
+  	if [[ $procsRUN -gt 0 ]] ; then
 # if another push running check how long it has being running for
       startY_proc=`${DIR_SPS35}/findjobs.sh -m $machine -Y $jobID `
       startd_proc=`${DIR_SPS35}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -W yes -d yes`
@@ -87,9 +87,9 @@ for yyyy in `seq $iyy $fyy` ; do
       today_in_sec=$(date -d "$today" +%s)
       startdate_in_sec=$(date -d "${startY_proc}${startm_proc}${startd_proc}${starth_proc}" +%s)
       elapsedh=$(((today_in_sec - startdate_in_sec)/86400))
-      if [ $elapsedh -gt 4 ]
+      if [[ $elapsedh -gt 4 ]]
       then
-         if [ $debug -eq 0 ]
+         if [[ $debug -eq 0 ]]
          then
             body="elapsed hours $elapsedh for push4WMO_${yyyy}${st}. Too much. Going to kill it"
   	         title="[WMO] ${SPSSYS} ${typeofrun} warning"
@@ -108,7 +108,7 @@ for yyyy in `seq $iyy $fyy` ; do
 
   	body="WMO: Inizia il trasferimento della start-date $yyyy$st su server wmo"
    cntfirst=`ssh sp2@dtn03 "ls $firstdtn03 |wc -l" `
-   if [ $cntfirst -eq 1 ]
+   if [[ $cntfirst -eq 1 ]]
    then
       body="WMO: tentativo successivo di trasferimento della start-date $yyyy$st su server wmo"
    fi
@@ -127,17 +127,17 @@ for yyyy in `seq $iyy $fyy` ; do
        sleep 1800 # 
        ic=$(( $ic + 1 ))
        anypushC3SDONE=`rsync -auv sp2@dtn03: | grep $filedone | awk '{print $5}' | wc -l`
-       if [ $anypushC3SDONE -eq 1 ] ; then          
+       if [[ $anypushC3SDONE -eq 1 ]] ; then          
           break
        fi
 # after 40 minutes kill the process and relaunch
-       if [ $ic -eq 8 ]
+       if [[ $ic -eq 8 ]
        then
           ic=0
-          if [ $anypushC3SDONE -eq 0 ] ; then          
+          if [[ $anypushC3SDONE -eq 0 ]] ; then          
 # meaning transfer not completed
              procsRUN=`${DIR_SPS35}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -c yes `
-             if [ $procsRUN -ne 0 ] ; then
+             if [[ $procsRUN -ne 0 ]] ; then
 # meaning push still running --> too much! kill and resubmit
                 jobID=`${DIR_SPS35}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -i yes `
                 bkill $jobID

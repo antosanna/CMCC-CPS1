@@ -14,7 +14,7 @@ set -euvx
 check_status(){
 stat=$1
 script1=$2
-if [ $stat -ne 0 ]
+if [[ $stat -ne 0 ]]
 then
    title="${title_debug}[WMO] ${SPSSystem} ERROR"
    body="Error in ${script1}. Exiting from $DIR_POST/WMO/push4WMO.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
@@ -32,14 +32,14 @@ list2rm=""
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-if [ $dbg_push -ge 1 ]
+if [[ $dbg_push -ge 1 ]]
 then
    mymail=andrea.borrelli@cmcc.it
    wmomail=$mymail
    ccwmomail=$mymail
    title_debug="TEST "
 else
-   if [ $typeofrun = "forecast" ] ; then
+   if [[ $typeofrun = "forecast" ]] ; then
       wmomail="lc_lrfmme@korea.kr"
       ccwmomail="wslee@apcc21.org,asteria1104@apcc21.org"
    else
@@ -58,7 +58,7 @@ title="${title_debug}[WMO] ${SPSSystem} forecast notification"
 body="push4WMO.sh for startdate $yyyy$st started `date` "
 
 cntfirst=`ls $firstdtn03 |wc -l`
-if [ $cntfirst -eq 1 ]
+if [[ $cntfirst -eq 1 ]]
 then
    body="Successive attempt push4WMO.sh for startdate $yyyy$st started `date` "
 fi
@@ -71,7 +71,7 @@ cd $pushdirapec/${typeofrun}/$start_date/monthly
 set +euvx
 nf=`ls -1 cmcc*manifest*txt | wc -l`
 set -euvx
-if [ $nf -ne 0 ] ; then
+if [[ $nf -ne 0 ]] ; then
    rm cmcc*manifest*txt
 fi
 # 
@@ -85,7 +85,7 @@ ntar=$(($nfieldsWMO * $nchunks * $nrun)) #1 per 2d var e 5 per 3d var=136 in hin
 ntarandsha=$ntar
 
 cntfirst=`ls $firstdtn03 |wc -l`
-if [ $cntfirst -eq 1 ]
+if [[ $cntfirst -eq 1 ]]
 then
 # from the second launch it checks if there are still appended processes 
    $DIR_WMO/ls_ftp_wmo.sh $yyyy $st $mymail $typeofrun $dbg_push 
@@ -99,10 +99,10 @@ then
    do
       localdim=`ls -l $file|awk '{print $5}'`
       isremotepresent=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/ls_WMO_S${yyyy}${st}.log|wc -l`
-      if [ $isremotepresent -ne 0 ] 
+      if [[ $isremotepresent -ne 0 ]] 
       then 
          remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/ls_WMO_S${yyyy}${st}.log|awk '{print $5}'`
-         if [ $localdim -ne $remotedim ]
+         if [[ $localdim -ne $remotedim ]]
          then
             echo "ACHTUNG!!! this file $file was not correctly transferred!!
 original dimension $localdim, transferred dimension $remotedim. check it"
@@ -111,7 +111,7 @@ original dimension $localdim, transferred dimension $remotedim. check it"
       fi
    done
 #  eseguire la rimozione di $list2rm sul sito ftp
-   if [ `echo $list2rm |wc -w` -ne 0 ]
+   if [[ `echo $list2rm |wc -w` -ne 0 ]]
    then
       $DIR_WMO/rm_ftp_wmo.sh $yyyy $st $mymail "$list2rm" $dbg_push $typeofrun
       stat=$?
@@ -127,7 +127,7 @@ check_status $stat "sh send_to_wmo.sh"
 
 # Check if the files pushed are as expected
 nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/ls_WMO_S${yyyy}${st}.log | wc -l`
-if [ $nline -lt $ntarandsha ] ; then
+if [[ $nline -lt $ntarandsha ]] ; then
    title=${title_debug}"[WMO] ${SPSSystem} ERROR"
    body="send_to_wmo.sh (${DIR_WMO}): $nline file sent instead of the $ntarandsha expected"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
@@ -157,7 +157,7 @@ check_status $stat "mirroring manifest"
 cd $DIR_LOG/$typeofrun/$yyyy$st
 cntmanifest=`grep CMCC_SPS_${yyyy}${st}0100_manifest_${suffixdate} ls_WMO_S${yyyy}${st}.log|wc -l`
 
-if [ $cntmanifest -ne 1 ]; then
+if [[ $cntmanifest -ne 1 ]]; then
 # last attempt to send manifest TO server wmo; send_to_wmo.`date +%Y%m%d%H%M%S`.log will be output
 $DIR_WMO/send_to_wmo.sh $yyyy $st $mymail $typeofrun $ntarandsha $firstdtn03 $dbg_push | tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_wmo.`date +%Y%m%d%H%M%S`.log
 stat=$?
@@ -166,7 +166,7 @@ check_status $stat "mirroring manifest"
 
 fi
 cntmanifest=`grep CMCC_SPS_${yyyy}${st}0100_manifest_${suffixdate} ls_WMO_S${yyyy}${st}.log|wc -l`
-if [ $cntmanifest -ne 1 ]; then
+if [[ $cntmanifest -ne 1 ]]; then
    # Raise error
    title=${title_debug}"[WMO] ${SPSSystem} ERROR"
    body="send_to_wmo.sh (${DIR_WMO}): $cntmanifest manifest file sent instead of the 1 expected"
@@ -180,7 +180,7 @@ else
    do
       localdim=`ls -l $file|awk '{print $5}'`
       remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/ls_WMO_S${yyyy}${st}.log|awk '{print $5}'`
-      if [ $localdim -ne $remotedim ]
+      if [[ $localdim -ne $remotedim ]]
       then
          title=${title_debug}"[WMO] ${SPSSystem} ERROR"
          body="ACHTUNG!!! In $DIR_C3S/push4WMO.sh file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
@@ -201,7 +201,7 @@ Many thanks for your cooperation \n
 CMCC-SPS staff\n"
 
 checkpushdone=`ls $DIR_LOG/$typeofrun/$yyyy$st/${filedone} | wc -l`
-if [ $checkpushdone -eq 1 ]; then
+if [[ $checkpushdone -eq 1 ]]; then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $wmomail -M "$body" -t "$title" -c $ccwmomail -b $mymail 
    touch $DIR_LOG/$typeofrun/$yyyy$st/$filedone
    echo "Done."

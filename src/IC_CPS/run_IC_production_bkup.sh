@@ -6,7 +6,7 @@ set -euvx
 mkdir -p $DIR_LOG/IC_CAM
 
 t_analysis="00"
-if [ $# -eq 0 ] 
+if [[ $# -eq 0 ]] 
 then
 #standard from crontab last day of the month (taking EDA data from 2 days before)
    todaydate=`date +%Y%m%d`

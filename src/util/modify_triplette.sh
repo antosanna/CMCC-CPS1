@@ -22,7 +22,7 @@ listacasicleaned=()
 #listcases="${SPSSystem}_200611_004"
 #listcases="${SPSSystem}_200111_016 ${SPSSystem}_200311_017 ${SPSSystem}_200511_030"
 listcases="${SPSSystem}_199410_018 ${SPSSystem}_199910_029 ${SPSSystem}_200110_005"
-if [ "$casefromoutside" != "" ]
+if [[ "$casefromoutside" != "" ]]
 then
   listcases=$casefromoutside
 fi
@@ -44,7 +44,7 @@ do
       while `true`
       do
          np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
-         if [ $np -eq 1 ]
+         if [[ $np -eq 1 ]]
          then
             break
          fi
@@ -52,7 +52,7 @@ do
       done
    fi
 
-   if [ ! -f $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig ]
+   if [[ ! -f $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig ]]
    then
       cp $TRIP_DIR/triplette.random.${yyyy}${st}.txt $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig
    else
@@ -99,7 +99,7 @@ do
    else
       cd $DIR_SUBM_SCRIPTS/${st}/${yyyy}${st}_scripts/ 
    fi
-   if [ ! -f ensemble4_${yyyy}${st}_${ens}.sh.orig ]
+   if [[ ! -f ensemble4_${yyyy}${st}_${ens}.sh.orig ]]
    then
       cp ensemble4_${yyyy}${st}_${ens}.sh ensemble4_${yyyy}${st}_${ens}.sh.orig
    else
@@ -155,7 +155,7 @@ fi
 # ***************************************************
 # Email and exit
 # ***************************************************
-if [ "$casefromoutside" == "" ]
+if [[ "$casefromoutside" == "" ]]
 then
    body="In ${dateymdhms} re-submitted ${subm_cnt} cases that aborted after changing tripletta: \n
    \n

@@ -100,6 +100,7 @@ then
 fi
 
 
+
 #***********************************************************************
 # Cam files archiving
 #***********************************************************************
@@ -113,6 +114,7 @@ then
    filetyp="h0 h1 h2 h3 h4"
    for ft in $filetyp
    do
+  
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
       input="$caso $ft ${wkdir_cam} $finalfile $ic" 

@@ -31,7 +31,7 @@ C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 read 
 while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
 do
-   if [ $freq == "12hr" ]
+   if [[ $freq == "12hr" ]]
    then
       var_array3d+=(" $C3S")
    else
@@ -102,11 +102,11 @@ do
   set -vx
   #allC3S=`ls *i00p00.nc|wc -l`
   # IF ALL VARS HAVE BEEN COMPUTED FOR ALL MEMBERS tar_C3S
-  if [ $allC3Schecks -ge $nrunC3Sfore ]  && [ $allC3Sfiles -ge $(($nfieldsC3S * $nrunC3Sfore)) ]
+  if [[ $allC3Schecks -ge $nrunC3Sfore ]]  && [[ $allC3Sfiles -ge $(($nfieldsC3S * $nrunC3Sfore)) ]]
   then
   # check that no job are running for the startdate
      nacjob=`${DIR_UTIL}/findjobs.sh -m $machine -n ${startdate} -c yes`
-     if [ $nacjob -eq 0 ]
+     if [[ $nacjob -eq 0 ]]
      then
 #        $DIR_UTIL/check_production_time.sh $st $yyyy 
 # ANTO 20201113 testato su /users_home/csp/sp1/SPS/CMCC-${SPSSYS}/work/ANTO/develop${SPSSYS}
@@ -117,7 +117,7 @@ do
         input="$yyyy $st"
         echo "ready to send $startdate"
         submit_list+=" $startdate"
-        if [ $onlycheckfileok -eq 0 ]
+        if [[ $onlycheckfileok -eq 0 ]]
         then 
            echo "Submitting tar_C3S for $startdate"     
            $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_C3S_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_C3S.sh -i "$input"
@@ -134,7 +134,7 @@ do
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
   
   # checker files
-     if [ $allC3Schecks -lt $nrunC3Sfore ]
+     if [[ $allC3Schecks -lt $nrunC3Sfore ]]
      then
        echo "found $allC3Schecks and expected $nrunC3Sfore "
        checkmissing=" "
@@ -142,7 +142,7 @@ do
        do
           nm=0
           nm=`ls ${check_allchecksC3S}${i}|wc -l`
-          if [ $nm -ne 1 ]
+          if [[ $nm -ne 1 ]]
           then
              checkmissing+=" $i"
           fi
@@ -150,7 +150,7 @@ do
        echo "for start-date $startdate check missing for member $checkmissing"
      fi 
   # all C3S files
-     if [ $allC3Sfiles -lt $(($nfieldsC3S * $nrunC3Sfore)) ]
+     if [[ $allC3Sfiles -lt $(($nfieldsC3S * $nrunC3Sfore)) ]]
      then
        echo "files $allC3Sfiles expected $(($nfieldsC3S * $nrunC3Sfore)) "
        for i in `seq -w 01 $nrunC3Sfore`
@@ -160,12 +160,12 @@ do
            do
               nf=0
               nf=`ls $WORK_C3S/$startdate/cmcc*${var}_*r${i}i00p00.nc|wc -l`
-              if [ $nf -ne 1 ]
+              if [[ $nf -ne 1 ]]
               then
                 missing+=" $var"
               fi
            done
-           if [ "$missing" == " " ]
+           if [[ "$missing" == " " ]]
            then
              :
            else
@@ -178,7 +178,7 @@ done
 
 set +vx
 printtext="The following startdates are ready to be submitted:"
-if [ $onlycheckfileok -eq 0 ]; then
+if [[ $onlycheckfileok -eq 0 ]]; then
  printtext="The following startdates were submitted:"
 fi
 echo $printtext

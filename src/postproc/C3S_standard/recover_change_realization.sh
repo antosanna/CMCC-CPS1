@@ -43,7 +43,7 @@ then
    echo ${tobecome[@]}
    dim=`echo ${tochange[@]}|wc -w`
    #
-   if [ $dim -ne 0 ]
+   if [[ $dim -ne 0 ]]
    then
       mkdir -p $DIR_LOG/$typeofrun/${yyyy}${st}/change_realization
       body="Starting renumbering for $dim members in forecast $yyyy$st from ${tochange[@]} to ${tobecome[@]}. Script is $DIR_C3S/tar_C3S.sh"
@@ -171,7 +171,7 @@ then
    # this is needed so that if in any case the tar_C3S.sh is relaunched it will not try to redo the renumbering (see section 1.)
             touch $WORK_C3S/$yyyy$st/all_checkers_ok_0${tobecome[$i]}
    # rm the previously compute checkfile_daily
-            if [ -f $checkfile_daily ]
+            if [[ -f $checkfile_daily ]]
             then
                rm $checkfile_daily
             fi

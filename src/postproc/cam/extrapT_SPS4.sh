@@ -74,7 +74,7 @@ rsync -av $DIR_POST/cam/ncl_libraries_${machine}/* $HEALED_DIR/ncl_libraries/.
 
 cd $HEALED_DIR
 ncl compute_PS_from_PSL_${caso}.ncl
-if [ ! -f $outputPS ] 
+if [[ ! -f $outputPS ]] 
 then
    body="PS computed from PSL for case $caso was not produced by compute_PS_from_PSL_${caso}.ncl."
    title="${CPSSYS} forecast postproc ERROR"
@@ -112,7 +112,7 @@ rsync -av $DIR_POST/cam/extrapT_TREFHT_template.ncl $OUTDIR/extrapT_${caso}.ncl
 cd $OUTDIR
 ncl extrapT_${caso}.ncl
 
-if [ -f $checkfile ] 
+if [[ -f $checkfile ]] 
 then
    mv $outputta $inputta
    echo 'vertical extrapolation successfully ended ' `date`
