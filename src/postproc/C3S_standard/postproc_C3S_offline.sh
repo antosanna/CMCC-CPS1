@@ -159,7 +159,7 @@ then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_cam.h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE -a -f $HEALED_DIR/${caso}.cam.h4.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+      if { [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h4.DONE ]]; }  || [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
       then
          break
       fi

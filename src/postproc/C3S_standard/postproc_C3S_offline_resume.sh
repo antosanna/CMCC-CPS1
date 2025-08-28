@@ -69,7 +69,7 @@ fi
 # check on presence of checkfile for healing
 while `true`
 do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE -a -f $HEALED_DIR/${caso}.cam.h4.DONE ]
+      if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h4.DONE ]]
       then
          break
       fi
