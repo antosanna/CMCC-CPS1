@@ -242,11 +242,11 @@ do
                 listaskipCLM+="$caso "
                 flg_continue=1
             else 
-               if [[ -f $rofICfile.gz ] ]
+               if [[ -f $rofICfile.gz ]]
                then
                    gunzip -f $rofICfile.gz
                fi
-               if [[ -f $clmICfile.gz ] ]
+               if [[ -f $clmICfile.gz ]]
                then
                    gunzip -f $clmICfile.gz
                fi

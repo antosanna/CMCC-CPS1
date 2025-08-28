@@ -173,7 +173,6 @@ else
 set +euvx
     . $DIR_UTIL/condaactivation.sh
     condafunction activate $envcondacm3
-#    . ~/module_load 
 set -euvx
     $DIR_CASES/$caso/case.submit
 fi

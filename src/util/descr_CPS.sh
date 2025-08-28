@@ -60,7 +60,7 @@ then
    then
       HEAD=cmcc
       operational_user=cp1
-      pID=0490 #Juno
+      eID=0490 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
@@ -77,6 +77,8 @@ then
       DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "cassandra" ]]
    then
+      refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
+      refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
       HEAD=cmcc
       operational_user=cp1
       pID=0490 #Juno
