@@ -3,6 +3,7 @@
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
 CASE=$1
+caso=$CASE
 CASEROOT=$DIR_CASES/$CASE
 #
 # go back to CASEROOT
