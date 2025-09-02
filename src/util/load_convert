@@ -7,6 +7,6 @@ elif [[ "${machine}" == "juno" ]] ; then
   module load intel-2021.6.0/imagemagick/7.0.8-7-2475g
 elif [[ "${machine}" == "leonardo" ]] || [[ "${machine}" == "cassandra" ]]; then 
      . $DIR_UTIL/condaactivation.sh
-     condafunction activate image_convert
+     condafunction activate env_tools
 fi 
 

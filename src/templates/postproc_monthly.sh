@@ -129,9 +129,6 @@ if [[ -d $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000 ]] ; then
    rm -rf $DOUT_S_ROOT/rest/${curryear}-$currmon-01-00000
 fi
 echo "-----------postproc_monthly_EXPNAME.sh COMPLETED-------- "`date`
-set +euvx
-. $dictionary
-set -euvx
-touch  $check_pp_monthly
+touch  $DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
 
 exit 0
