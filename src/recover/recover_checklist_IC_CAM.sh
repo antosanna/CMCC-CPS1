@@ -14,7 +14,7 @@ listfiletocheck=${SPSSystem}_${typeofrun}_IC_CAM_list.${machine}.csv
 if [[ $machine == "zeus" ]]
 then
    inist=8
-elif [[ $machine == "juno" ]]
+elif [[ $machine == "juno" ]] 
 then
    inist=7
 fi

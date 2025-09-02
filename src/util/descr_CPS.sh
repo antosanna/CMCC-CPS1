@@ -40,9 +40,13 @@ SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
 yyyySCEN=2014
-refcaseHIST=${CPSSYS}_HIST_reference_CERISE
+refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
 refcaseSCEN=${CPSSYS}_SSP585_reference
 envcondarclone=rclone_gdrive
+if [[ "$machine" == "cassandra" ]]
+then
+   envcondarclone=rclone_CPS1
+fi
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
@@ -82,7 +86,7 @@ then
       cores_per_run=336
       envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
       envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
-      maxnumbertosubmit=20
+      maxnumbertosubmit=25
       maxnumbertorecover=25
       maxnumberguarantee=7
       env_workflow_tag=cmcc

@@ -55,12 +55,12 @@ if [[ $machine == "leonardo" ]]
 then
    $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
 else
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$refcase --cime-output-root $WORK_CPS
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
 fi
-if [[ $machine == "cassandra" ]]
-then
-   rsync -av $DIR_TEMPL/env_run.xml_${machine} $DIR_CASES/$caso/env_run.xml
-fi
+#if [[ $machine == "cassandra" ]]
+#then
+#   rsync -av $DIR_TEMPL/env_run.xml_${machine} $DIR_CASES/$caso/env_run.xml
+#fi
 
 set -euvx
 #----------------------------------------------------------
@@ -122,6 +122,17 @@ then
    ./xmlchange --subgroup case.checklist prereq=0
 else
    ./xmlchange --subgroup case.checklist prereq=1
+fi
+if [[ $machine == "cassandra" ]]
+then
+   ./xmlchange PIO_STRIDE_ATM=16
+   ./xmlchange PIO_STRIDE_LND=16
+   ./xmlchange PIO_STRIDE_ROF=16
+   ./xmlchange PIO_STRIDE_ICE=16
+   ./xmlchange PIO_NUMTASKS_ATM=21
+   ./xmlchange PIO_NUMTASKS_LND=21
+   ./xmlchange PIO_NUMTASKS_ROF=21
+   ./xmlchange PIO_NUMTASKS_ICE=21
 fi
 
 sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh

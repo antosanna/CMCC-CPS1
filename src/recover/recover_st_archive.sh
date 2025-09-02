@@ -38,7 +38,7 @@ do
        #in order to relaunch st_archive with the right syntax, we keep the command as appear in preview_run (for portability)
        cmd=`./preview_run |grep case.st_archive|tail -1`
        #this is needed to remove the dependency from model run
-       if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
+       if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]
        then
           cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
        elif [[ $machine == "leonardo" ]] 
@@ -52,7 +52,7 @@ do
   else
     #is st_archive after moredays.. launch with dependency lt_arch_moredays
        cmd=`./preview_run |grep case.st_archive|tail -1`
-       if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
+       if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]
        then
           cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
        elif [[ $machine == "leonardo" ]]  
