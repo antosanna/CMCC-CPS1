@@ -3,6 +3,7 @@ begin
 yyyy=getenv("yyyy")
 st=getenv("st")
 ppp=getenv("ppp")
+checkfile=getenv("checkfile")
 
 ntime=0
 month=toint(st)
@@ -66,27 +67,8 @@ end if
 end if
 
 if ( filetype .eq. "grid_EquT_T" ) then
-   nav_lat = meshmask->nav_lat(348:655,:)
-   nav_lon = meshmask->nav_lon(348:655,:)
 
-   lon11=where(nav_lon.lt.0,nav_lon+360,nav_lon)
-   varall@x = lon11
-
-   latS=-2.5
-   latN=2.5
-   lonW=0
-   lonE=360
-
-   ji=region_ind(nav_lat,lon11,latS,latN,lonW,lonE)
-   jStrt = ji(0)
-   jLast = ji(1)
-   iStrt = ji(2)
-   iLast = ji(3)
-
-   LAT2D = nav_lat(jStrt:jLast,iStrt:iLast)
-   LON2D = lon11(jStrt:jLast,iStrt:iLast)
-
-   varall_slab=dim_avg_n_Wrap(varall(:,:,jStrt:jLast,:),2)
+   varall_slab=dim_avg_n_Wrap(varall,2)
    delete(varall)
    varall=varall_slab
 
@@ -118,6 +100,7 @@ if ( rank .eq. 4 ) then
 end if
 fout->$varm$ = varall
 ;#######
+system("touch "+checkfile)
 
 
 end

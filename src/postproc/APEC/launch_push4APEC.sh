@@ -15,8 +15,8 @@ if [ $procsRUN -gt 1 ] ; then
    exit 0
 fi
 
-st=08 #2 figures  # SET BY CRONTAB
-isforecast=1
+st=11 #2 figures  # SET BY CRONTAB
+isforecast=0
 dbg_push=0   # operational=0 
 
 if [ $isforecast -eq 1 ] 

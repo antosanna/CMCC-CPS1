@@ -4,6 +4,7 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
+. $DIR_UTIL/load_convert
 
 set -euvx
 
@@ -97,17 +98,19 @@ fi
 if [ $make_plot -eq 1 ] ; then
    export yyyyfore=$yyyy
    export mmfore=$st
-   export diroce="$DIR_FORE_ANOM"
-   export maskoce="$REPOSITORY/mesh_mask_from2000.nc"
+   export diroce="${DIR_FORE_ANOM}/${yyyyfore}${mmfore}/"
+   export foce1=${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
+#   export maskoce="$REPOSITORY/mesh_mask_from2000.nc"
+   export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
    export dirlogo="$DIR_DIAG_C3S/ncl/"
    export plname="$workdir/temperature_pac_trop_ensmean_${yyyyfore}_${mmfore}"
 
    ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    if [ -f ${plname}.gif ] ; then
       touch ${flag_done}_OCE
-      rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
-      rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc
-      rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
    else
      title="[diags-oce] ${CPSSYS} ${typeofrun} ERROR"
      body=" Something goes wrong with ocean diagnostic plots ($DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl). \n" 

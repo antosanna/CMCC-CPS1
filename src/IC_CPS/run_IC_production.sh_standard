@@ -189,7 +189,7 @@ mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
 last_dd_mmIC=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC month last day
 dd=$(($last_dd_mmIC - 1))
 t_analysis=00
-for pp in {0..9}
+for pp in `seq 0 $((${n_ic_cam}-1))` 
 do
 
     ppcam=`printf '%.2d' $(($pp + 1))`

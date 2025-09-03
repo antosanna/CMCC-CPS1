@@ -41,7 +41,7 @@ do
 
    input="$yyyy $st $var $dirlog $filetype ${make_statistics} ${make_anom} ${make_plot} ${flag_done} $dbg"
   
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -j compute_stat_OCE_auto_${var}_${st} -l ${dirlog} -d ${DIR_DIAG_C3S} -s compute_stat_OCE_auto.sh -i "$input" 
+${DIR_UTIL}/submitcommand.sh -M 30000 -m $machine -q $serialq_m -S $qos -j compute_stat_OCE_auto_${var}_${st} -l ${dirlog} -d ${DIR_DIAG_C3S} -s compute_stat_OCE_auto.sh -i "$input" 
 
 done
 

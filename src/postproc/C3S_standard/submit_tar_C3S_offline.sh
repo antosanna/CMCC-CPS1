@@ -14,7 +14,7 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=07 # startdate
+st=04 # startdate
 onlycheckfileok=0  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
@@ -84,7 +84,6 @@ var_array=("${var_array2d[@]} ${var_array3d[@]}")
 echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
-iniy_hind=2020
 for yyyy in  `seq $iniy_hind $endy_hind`
 do
   

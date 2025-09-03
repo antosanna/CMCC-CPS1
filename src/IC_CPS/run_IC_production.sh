@@ -198,8 +198,8 @@ mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
 last_dd_mmIC=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC month last day
 dd=$(($last_dd_mmIC - 1))
 t_analysis=00
-ic=1
-for pp in 2 4 5 6 7 8 9
+ic=0
+for pp in `seq 0 $((${n_ic_cam} -1))` 
 do
     ppcam=`printf '%.2d' $(($pp + 1))`
 
@@ -225,54 +225,64 @@ do
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j makeICsGuess4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
     input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p makeICsGuess4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
-    sleep 300
+    while `true`
+    do
+          n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC${ppcam} -c yes`
+          if [[ $n_job_make_atm_ic -eq 1 ]] ; then
+              break
+          fi
+          sleep 60
+    done
     ic=$(($ic + 1))
     if [[ $ic -eq 2 ]]
     then
        while `true`
        do
-          n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
-          if [[ $n_job_make_atm_ic -eq 1 ]]
+          n_job_run_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
+          if [[ $n_job_run_ic -eq 1 ]]
           then
              ic=1
              break
-          elif [[ $n_job_make_atm_ic -eq 0 ]]
+          elif [[ $n_job_run_ic -eq 0 ]]
           then
              ic=0
              break
           fi
-          sleep 60
+          sleep 300
        done
     fi 
 done     #loop on pp
 
 # loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
-while `true`
-do
-    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_ -a PEND -c yes`
-    if [[ $n_job_make_atm_ic -eq 0 ]]
-    then
-       break
-    fi
-    sleep 60
-done
-sleep 1800 # assuming root_casoIC takes almost 40'
-# wait until completion of all CAM ICs
-while `true`
-do
-    root_casoIC=${SPSSystem}_EDACAM_IC
-    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
-    if [[ $n_job_ICCAM -eq 0 ]]
-    then
-       break
-    fi
-    sleep 60
-done
-# TEMPORARY COMMENTED to be uncommented from September
+
+#while `true`
+#do
+#    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_ -a PEND -c yes`
+#    if [[ $n_job_make_atm_ic -eq 0 ]]
+#    then
+#       break
+#    fi
+#    sleep 60
+#done
+#sleep 1800 # assuming root_casoIC takes almost 40'
+## wait until completion of all CAM ICs
+#while `true`
+#do
+#    root_casoIC=${SPSSystem}_EDACAM_IC
+#    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
+#    if [[ $n_job_ICCAM -eq 0 ]]
+#    then
+#       break
+#    fi
+#    sleep 60
+#done
+
+# TEMPORARY COMMENTED to be uncommented from October 2025(!!!)
 # remove temporary work spaces
 #for pp in {0..9}
 #do
-#   if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
+#    casoIC=${SPSSystem}_EDACAM_IC${pp}.${yyIC}${mmIC}${dd}
+#   if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$pp.nc ]]
 #   then
 #      if [[ -d $DIR_CASES/$casoIC ]]
 #      then
@@ -289,4 +299,15 @@ done
 #  fi
 #done
 # replace missing ICs with backup
+
+#to be sure that - if correctly finished - all the operational ICs have been effectively moved to final destination
+#if for some reason one IC run failed, also the storeIC will disappear from queues, and in this case the bkup IC will be substitue by set_forecast_IC proc
+while `true`
+do
+    n_store_ic=`$DIR_UTIL/findjobs.sh -m $machine -n store_ICcam -c yes`
+    if [[ ${n_store_ic} -eq  0 ]] ; then
+       break
+    fi
+    sleep 60
+done
 $IC_CPS/set_forecast_ICs.sh $yyyy $st

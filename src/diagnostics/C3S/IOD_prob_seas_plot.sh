@@ -23,7 +23,7 @@ export stp1=`date -d "${yyyy}${st}01 +1 month" +%m`  #$((10#$st - 1))
 export figtype="png"
 
 export inputmall="$anomdir/${varm}_${SPSSystem}_${yyyy}${st}_all_ano.$refperiod.nc"
-export inputmclimall=$DIR_CLIM/monthly/$varm/C3S/anom/${varm}_${SPSSystem}_${st}_all_ano.$refperiod.nc"
+export inputmclimall="$DIR_CLIM/monthly/$varm/C3S/anom/${varm}_${SPSSystem}_${st}_all_ano.$refperiod.nc"
 
 echo "PLOTTING IOD"
 cd ${DIR_DIAG_C3S}/ncl

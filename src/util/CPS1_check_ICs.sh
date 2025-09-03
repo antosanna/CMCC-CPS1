@@ -26,9 +26,11 @@ if [[ ${nmb_oce_plot} -eq 2 ]] ; then
   # SPS staff"
   # title="[NEMOIC] ${CPSSYS} forecast notification"
   # $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a "$listafile"
+   . ${DIR_UTIL}/condaactivate.sh
    condafunction activate $envcondarclone
    rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
-   for fplot in $listafile do
+   for fplot in $listafile 
+   do
        rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
    done
    conda deactivate $envcondarclone

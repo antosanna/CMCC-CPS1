@@ -1,7 +1,7 @@
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
-load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/ut_string.ncl"
+;load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/ut_string.ncl"
 ;*****************************************************
 begin
 
@@ -24,12 +24,12 @@ figtype=getenv("figtype")
 
 dir = getenv("dir")
 anomdir=getenv("anomdir")
-v1    = addfile (dir+"/sst_SPS3.5_sps_"+tend+st+"_all_ano."+refperiod+".nc","r")
+v1    = addfile (dir+"/sst_sps4_"+tend+st+"_all_ano."+refperiod+".nc","r")
 tstmp  = v1->tso(:,0:5,:,:)
-vclim  = addfile (anomdir+"/sst_SPS3.5_"+st+"_all_ano."+refperiod+".nc","r")
+vclim  = addfile (anomdir+"/sst_sps4_"+st+"_all_ano."+refperiod+".nc","r")
 tstmp_clim  = vclim->tso(:,:,0:5,:,:)
 ts_seas=new((/nens,4,180,360/),typeof(tstmp),tstmp@_FillValue)
-ts_clim_seas=new((/24,40,4,180,360/),typeof(tstmp_clim),tstmp_clim@_FillValue)
+ts_clim_seas=new((/30,30,4,180,360/),typeof(tstmp_clim),tstmp_clim@_FillValue)
 do lead = 0,3
    ts_seas(:,lead,:,:)  = dim_avg_n_Wrap(tstmp(:,lead:lead+2,:,:),1)
    ts_clim_seas(:,:,lead,:,:)  = dim_avg_n_Wrap(tstmp_clim(:,:,lead:lead+2,:,:),2)
@@ -37,7 +37,7 @@ end do
 timetmp  = v1->time(0:5)
 tstmp@_FillValue=-9999.
 ts=new((/nens,6,180,360/),typeof(tstmp),tstmp@_FillValue)
-ts_clim=new((/24,40,6,180,360/),typeof(tstmp),tstmp@_FillValue)
+ts_clim=new((/30,30,6,180,360/),typeof(tstmp),tstmp@_FillValue)
 ts(:,1:4,:,:)=ts_seas  ;(:,1:4,:,:)
 ts_clim(:,:,1:4,:,:)=ts_clim_seas  ;(:,1:4,:,:)
 time=new((/6/),typeof(timetmp))
@@ -101,9 +101,9 @@ iod_clim=iod_clim_w-iod_clim_e
 iod_clim_occ_blw=where(iod_clim.lt.-0.4,1,0)
 iod_clim_occ_nrm=where(iod_clim.ge.-0.4 .and. iod_clim.le.0.4,1,0)
 iod_clim_occ_abv=where(iod_clim.gt.0.4,1,0)
-nina_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_blw,(/40*24,6/)),0)*100
-nino_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_abv,(/40*24,6/)),0)*100
-neutr_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_nrm,(/40*24,6/)),0)*100
+nina_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_blw,(/30*30,6/)),0)*100
+nino_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_abv,(/30*30,6/)),0)*100
+neutr_clim_prob=dim_avg_n_Wrap(reshape(iod_clim_occ_nrm,(/30*30,6/)),0)*100
 
 print("nina_prob   neutr_prob   nino_prob")
 print(nina_prob+" "+neutr_prob+" "+nino_prob)

@@ -20,9 +20,9 @@ here="${DIR_POST}/APEC"
 #-----------------------------------
 #get start-date from system
 #-----------------------------------
-yyyyi=2025 #`date +%Y`
-yyyyf=2025 #`date +%Y`
-st=08     #`date +%m`    #2 figures
+yyyyi=1993 #`date +%Y`
+yyyyf=2022 #`date +%Y`
+st=11     #`date +%m`    #2 figures
 
 for yyyy in `seq $yyyyi $yyyyf`
 do

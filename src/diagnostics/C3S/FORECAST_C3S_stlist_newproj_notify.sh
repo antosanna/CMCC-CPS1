@@ -30,15 +30,19 @@ typefore="fc"
 ###HERE WE KEEP JUST SEASONAL - IF THIS WILL BE MODIFIED IN THE FUTURE, CHECK NUMBER OF FLAG CONTROL in $DIR_UTIL/launch_diagnostic_website.sh 
 export reglist="global Europe Tropics NH SH"
 ensorgl="Nino1+2 Nino3 Nino3.4 Nino4"
-varlist="mslp z500 t850 t2m precip sst u200 v200"
-#varlist="sic"
+if [[ $dbg -eq 0 ]]
+then
+   varlist="mslp z500 t850 t2m precip sst u200 v200"
+else
+   varlist="sst"
+fi
 for var in $varlist
 do
      cd $DIR_DIAG_C3S
      echo 'postprocessing $var '$st
      input="$yyyy $st $var $all '$reglist' '$ensorgl' ${flag_done} $dbg"
      echo $input
-     ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 7000 -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
+     ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 30000 -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
 
 
 ##NOT USED RIGHT NOW - IT MAY BECOME USEFUL FOR FUTURE DIAGNOSTIC FOR WMO
