@@ -45,12 +45,12 @@ for var in $varlist ; do
     rm $scriptdir/max*_$caso.nc
 
 
-    if [ $min_flag -eq 1 ] || [ $max_flag -eq 1 ] ; then
+    if [[ $min_flag -eq 1 ]] || [[ $max_flag -eq 1 ]] ; then
         echo "$var: min value= $min, cmor_min= $vmin" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt
         echo "$var: max value= $max, cmor_max= $vmax" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt
         echo "$input WRONG VALUES" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt
         echo " "
-    elif [ $minw_flag -eq 1 ] || [ $maxw_flag -eq 1 ] ; then
+    elif [[ $minw_flag -eq 1 ]] || [[ $maxw_flag -eq 1 ]] ; then
         echo "$var: min value= $min, warn_min= $vminw" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt
         echo "$var: max value= $max, warn_max= $vmaxw" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt
         echo "$input WARNING" >> $HOME/CESM/CESM1.2/GIT/cesm/cases/$caso/QC/ocn/check_oce_daily_${yyst}${st}_${pp}_${year}${mm}.txt

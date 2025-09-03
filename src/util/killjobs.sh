@@ -33,7 +33,7 @@ then
     #usage
 fi
 # MACHINE DEPENDENT PART ----------------------------
-if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]]
+if [[  "$machine" == "zeus" ]] || [[  "$machine" == "juno" ]] || [[  "$machine" == "cassandra" ]]
 then
 #  set -evx
   isjobup=0

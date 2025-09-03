@@ -19,7 +19,7 @@ declare -A mean_d
 declare -A upper2s
 declare -A lower2s
 archive_size_stats_file=$DIR_TEMPL/archive_size_stats.csv
-if [ ! -f  $archive_size_stats_file ]; then
+if [[ ! -f  $archive_size_stats_file ]]; then
    echo "File $archive_size_stats_file not exist. Exit"
    exit 1
 fi
@@ -54,7 +54,7 @@ listdir=" "
 for dir in $dir2examine
 do
  # first check if mandatory dir exist
-   if [ ! -d $DIR_ARCHIVE/${caso}/${dir} ]; then
+   if [[ ! -d $DIR_ARCHIVE/${caso}/${dir} ]]; then
       echo "ERROR CHECK $DIR_ARCHIVE/${caso}/${dir} ${dir} not exist!!!! "
       listdir+=" $dir NOT EXISTENT "
       size_error+=$(( $size_error + 1 ))
@@ -131,7 +131,7 @@ wkdir=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/$caso
 mkdir -p $wkdir
 export inputfile=$wkdir/${caso}_1m_grid_T.nc
 #echo 'inizio ncrcat ' `date`
-if [ ! -f $inputfile ]
+if [[ ! -f $inputfile ]]
 then
    ncrcat -O $inputlist $inputfile
 fi
@@ -159,14 +159,14 @@ do
 done
 while `true`
 do
-   if [ ! -f ${check_oceregrid}_t14d ] || [ ! -f ${check_oceregrid}_t20d ] || [ ! -f ${check_oceregrid}_t26d ] || [ ! -f ${check_oceregrid}_t28d ] || [ ! -f ${check_oceregrid}_t17d ] || [ ! -f ${check_oceregrid}_others ]
+   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_others ]]
    then
       np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
       if [[ $np -eq 0 ]]
       then
 
          #in the time of the findjobs the flag may have appeared check again before exiting
-          if [ ! -f ${check_oceregrid}_t14d ] || [ ! -f ${check_oceregrid}_t20d ] || [ ! -f ${check_oceregrid}_t26d ] || [ ! -f ${check_oceregrid}_t28d ] || [ ! -f ${check_oceregrid}_t17d ] || [ ! -f ${check_oceregrid}_others ]
+          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_others ]]
           then
              title="[C3S] ${CPSSYS} forecast ERROR"
              body="ERROR in standardization of ocean files for case ${caso}. 
@@ -250,7 +250,7 @@ done } < $C3Stable_oce6
 for v in ${varout[@]}
 do 
    C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc
-   if [ ! -f $C3Sfile ]
+   if [[ ! -f $C3Sfile ]]
    then
       title="${CPSSYS} forecast ERROR"
       body="C3S ocean file $C3Sfile for variable not produced for case ${caso}. 

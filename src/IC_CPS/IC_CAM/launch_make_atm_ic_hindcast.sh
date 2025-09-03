@@ -16,7 +16,7 @@ totcores_SC=$(($nnodes_SC*$cores_per_node))
 np_clim=0
 ## removed from c3s2
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
-if [ $np_clim -eq 0 ]
+if [[ $np_clim -eq 0 ]]
 then
    echo "go on with hindcast submission"
    tobesubmitted=10

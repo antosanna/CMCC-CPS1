@@ -33,7 +33,7 @@ then
    rm -rf $dir_log_checker
 fi
 mkdir -p $dir_log_checker
-#if [ ! -f $outdirC3S/qa_checker_ok_0${real} ] 
+#if [[ ! -f $outdirC3S/qa_checker_ok_0${real} ] 
 #then
 # if not already launched
 #   ${DIR_C3S}/launch_c3s_qa_checker_1ens.sh $startdate $real $outdirC3S
@@ -44,13 +44,13 @@ ${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
 
 # BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
 # to be rewritten
-#if [ ! -f $outdirC3S/dmoc3s_checker_ok_0${real} ]
+#if [[ ! -f $outdirC3S/dmoc3s_checker_ok_0${real} ]
 #then 
 #			${DIR_C3S}/launch_checkdmoC3S-pdf-chain.sh $startdate $real $outdirC3S
 #fi
 #cd $outdirC3S
 
-if [ -f $check_c3s_meta_ok ] 
+if [[ -f $check_c3s_meta_ok ]]
 then
    title="C3S ${c3s_checker_cmd} ok for member $real"
    body="C3S ${c3s_checker_cmd} ok for member $real"
@@ -62,15 +62,15 @@ else
    
 fi
 $DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases
-#if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
-if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
+#if [[ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
+if [[ -f ${check_c3s_meta_ok} ]] && [[ -f ${check_c3s_qa_ok} ]]
 then
 #-------------------------------------------
 # 20240919 ready to uncomment
 #-------------------------------------------
 # the following is defined in $dictionary
 checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
-   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
+   if [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
    then
       ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
    fi
@@ -79,11 +79,11 @@ fi
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
 if [[ $typeofrun == "forecast" ]] 
 then
-  if [ $allcheckersok -ge $nrunC3Sfore ] 
+  if [[ $allcheckersok -ge $nrunC3Sfore ]] 
   then
       ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
       nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
-      if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
+      if [[ $ns -eq 0 ]] && [[ $nt -eq 0 ]] 
       then
 #         body="$startdate forecast completed. \n
 #                       Now submitting submit_tar_C3S.sh"

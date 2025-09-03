@@ -17,9 +17,8 @@ then
    fi  
 fi 
 
-caso=${CPSSYS}_SSP585_reference
+caso=${CPSSYS}_SSP585_reference_esmf8.4
 
-DIR_CASES=/leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/
 if [[ -d $DIR_CASES/$caso ]]
 then
    rm -rf $DIR_CASES/$caso
@@ -30,20 +29,25 @@ if [[ $machine == "leonardo" ]]
 then
    module use -p $modpath
 fi
+if [[ $machine == "cassandra" ]]
+then
+   . ~/load_conda 
+fi
 conda activate $envcondacm3
+
 $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset SSP585_CAM60%WCSC_CLM51%BGC-CROP_CICE_NEMO_HYDROS_SGLC_SWAV --res f05_n0253 --driver nuopc --mach $machine --run-unsupported
 
 cd $DIR_CASES/$caso
 
-./xmlchange STOP_OPTION=ndays
-if [[ $machine == "zeus" ]]
+./xmlchange STOP_OPTION=nmonths
+if [[ $machine == "cassandra" ]]
 then
-   ./xmlchange NTASKS_ATM=-20
-   ./xmlchange NTASKS_CPL=-20
+   ./xmlchange NTASKS_ATM=-3
+   ./xmlchange NTASKS_CPL=-3
    ./xmlchange NTASKS_OCN=330
-   ./xmlchange NTASKS_ICE=-20
-   ./xmlchange NTASKS_ROF=-20
-   ./xmlchange NTASKS_LND=-20
+   ./xmlchange NTASKS_ICE=-3
+   ./xmlchange NTASKS_ROF=-3
+   ./xmlchange NTASKS_LND=-3
 elif [[ $machine == "juno" ]]
 then
    ./xmlchange NTASKS_ATM=-4

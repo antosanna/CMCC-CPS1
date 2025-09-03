@@ -74,10 +74,10 @@ do
       caso=${SPSSystem}_${yyyy}${st}_${ens}
    # check that this member is not presently under processing
       cntall=`${DIR_UTIL}/findjobs.sh -m $machine -n ${caso} -c yes`
-      if [ $cntall -gt 0 ] ; then
+      if [[ $cntall -gt 0 ]] ; then
         cnt_C3Scheck=`${DIR_UTIL}/findjobs.sh -m $machine -n C3Schecker_${caso} -c yes`
         cnt_C3Srecover=`${DIR_UTIL}/findjobs.sh -m $machine -n recover_false_spike_onC3S_${caso} -c yes`
-        if [ ${cnt_C3Scheck} -eq ${cntall}  ] || [ ${cnt_C3Srecover} -eq ${cntall} ] ; then
+        if [[ ${cnt_C3Scheck} -eq ${cntall}  ]] || [[ ${cnt_C3Srecover} -eq ${cntall} ]] ; then
         # if it is the father job go on with C3S_daily_mean    
             echo "just C3Schecker present on queue for $caso - go on"
         else

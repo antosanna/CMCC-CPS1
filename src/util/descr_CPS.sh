@@ -21,6 +21,12 @@ then
    alias rm="rm -f"
    alias cp="/bin/cp -f"
    alias mv="mv -f"
+elif [[ -n `echo $PS1|grep cassandra` ]]
+then
+   machine="cassandra"
+   alias rm="rm -f"
+   alias cp="/bin/cp -f"
+   alias mv="mv -f"
 elif [[ -n `echo $PS1|grep zeus` ]]
 then
    machine="zeus"
@@ -43,18 +49,18 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
+if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
    qos=qos_lowprio   #this is used only for SLURM but it is
                      #necessary for portability being used in
                      #submitcommand
 #   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
 #   envcondarclone=rclone_gdrive
-   if [[ $machine == "juno" ]]
+   if [[ $machine == "juno" ]] 
    then
       HEAD=cmcc
       operational_user=cp1
-      pID=0490 #Juno
+      eID=0490 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
@@ -62,6 +68,27 @@ then
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_py39
+      maxnumbertosubmit=18
+      maxnumbertorecover=40
+      maxnumberguarantee=7
+      env_workflow_tag=cmcc
+      DIR_REST_OIS_FORE=$WORK/OIS2/archive/  #TO BE DEFINED ONCE SET
+      DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
+      DATA_ECACCESS=/data/delivery/csp/cp1/in/
+   elif [[ $machine == "cassandra" ]]
+   then
+      refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
+      refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
+      HEAD=cmcc
+      operational_user=cp1
+      pID=0490 #Juno
+#      pID=0438 #Juno
+      cores_per_node=112
+      nnodes_SC=56
+      cores_per_run=336
+      mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
+      mpirun4py_nemo_rebuild=mpiexec.hydra
+      envcondacm3=cmcc-cm_sps4
       maxnumbertosubmit=18
       maxnumbertorecover=40
       maxnumberguarantee=7

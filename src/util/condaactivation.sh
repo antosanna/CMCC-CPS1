@@ -2,13 +2,13 @@
 set +evxu
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]; then	
+if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]; then	
 condafunction() {
    local comm=$1
    local env=$2	
    if [[ $env != "$envcondacm3" ]] 
    then
-       . $HOME/load_miniconda
+       . $DIR_UTIL/load_miniconda
        if [[ $env == "$envcondanemo" ]] 
        then
           if [[ $machine == "zeus" ]]
@@ -18,7 +18,7 @@ condafunction() {
           module load $mpilib4py_nemo_rebuild
        fi
    else
-      . $HOME/load_conda
+       . $HOME/load_conda 
    fi
    if [[  $comm == "activate"  ]]; then
       	conda $comm $env

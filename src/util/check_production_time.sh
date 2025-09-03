@@ -142,7 +142,7 @@ do
    outdirC3S=${WORK_C3S}/$yyyy$st
    #checkfile=$DIR_CASES/$caso/logs/qa_redo_${yyyy}${st}_0${member}_ok
    #mkdir -p $DIR_CASES/$caso/logs/
-   #if [ -f $checkfile ]
+   #if [[ -f $checkfile ]
    #then
    #   rm $checkfile
    #fi

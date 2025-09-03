@@ -39,7 +39,7 @@ C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 read 
 while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
 do
-   if [ $freq == "12hr" ]
+   if [[ $freq == "12hr" ]]
    then
       var_array3d+=("$C3S")
    else
@@ -103,13 +103,13 @@ do
          listafile=`tar -tf ${t}|grep "\.nc"`
          wclistafile=`tar -tf ${t}|grep "\.nc"|wc -l`
          wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-         if [ $wclistafile -ne 10 ]
+         if [[ $wclistafile -ne 10 ]]
          then
             #echo "numero di file nel tar $var non corretto $wclistafile instead of 10"
             echo "number of files inside tar $var is wrong: $wclistafile instead of 10"
             exit 1
          fi
-         if [ $wclistasha -ne 10 ]
+         if [[ $wclistasha -ne 10 ]]
          then
             #echo "numero di shasum nel tar $var non corretto $wclistasha instead of 10"
             echo "number of shasum inside tar $var is wrong: $wclistasha instead of 10"
@@ -118,7 +118,7 @@ do
          for file in $listafile
          do
              number=`echo $file|rev|cut -d '.' -f2|cut -d '_' -f1|rev|cut -c 2-3`
-             if [ $((10#$number)) -ne $mm ]
+             if [[ $((10#$number)) -ne $mm ]]
              then
                 echo "wrong number in $file"
                 exit 1
@@ -138,13 +138,13 @@ do
       listafile=`tar -tf ${t}|grep "\.nc"`
       wclistafile=`tar -tf ${t}|grep "\.nc"|wc -l`
       wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-      if [ $wclistafile -ne $nrunC3Sfore ]
+      if [[ $wclistafile -ne $nrunC3Sfore ]]
       then
          #echo "numero di file nel tar $var non corretto $wclistafile instead of $nrunC3Sfore"
          echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunC3Sfore"
          exit 1
       fi
-      if [ $wclistasha -ne $nrunC3Sfore ]
+      if [[ $wclistasha -ne $nrunC3Sfore ]]
       then
          echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
          exit 1
@@ -153,7 +153,7 @@ do
       for file in $listafile
       do
           number=`echo $file|rev|cut -d '.' -f2|cut -d '_' -f1|rev|cut -c 2-3`
-          if [ $((10#$number)) -ne $mm ]
+          if [[ $((10#$number)) -ne $mm ]]
           then
              echo "wrong number in $file"
              exit 1

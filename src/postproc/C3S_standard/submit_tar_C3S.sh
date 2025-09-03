@@ -21,7 +21,7 @@ fi
 touch ${check_tar_started}
 
 yyyymmtoday=`date +%Y%m`
-if [ -f $check_tar_done ] 
+if [[ -f $check_tar_done ]] 
 then
    title="${CPSSYS} forecast warning"
    body="$DIR_C3S/tar_C3S.sh already done for this start-date. $check_tar_done exists. If you want to redo first delete it"

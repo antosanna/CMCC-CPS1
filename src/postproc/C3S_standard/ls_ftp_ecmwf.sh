@@ -46,7 +46,7 @@ quit
 EOF
    lftp -f $lftp_cmd |tee $log_lftp
    stat=$?
-   if [ $stat -eq 1 ]; then
+   if [[ $stat -eq 1 ]]; then
       echo "error on  attempt ls.lftp.cmcc "|mail $mymail
       exit 1
    fi        
@@ -72,7 +72,7 @@ quit
 EOF
    lftp -f $lftp_cmd |tee $log_lftp
    stat=$?
-   if [ $stat -eq 1 ]; then
+   if [[ $stat -eq 1 ]]; then
       echo "error on  attempt send.lftp "|mail $mymail
       exit 1
    fi
