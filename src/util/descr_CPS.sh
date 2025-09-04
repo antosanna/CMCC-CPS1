@@ -49,7 +49,7 @@ elif [[ "$machine" == "juno" ]]
 then
    refcaseHIST=${CPSSYS}_HIST_reference_CERISE
    refcaseSCEN=${CPSSYS}_SSP585_reference
-   envcondarclone=rclone_gdrive
+   envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
 fi
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
