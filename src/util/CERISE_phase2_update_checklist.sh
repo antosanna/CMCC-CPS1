@@ -10,9 +10,13 @@ set -euxv
 mkdir -p $DIR_LOG/hindcast/
 #LOG_FILE=$DIR_LOG/hindcast/SPS4_hindcast_checklist_`date +%Y%m%d%H%M`
 #exec 3>&1 1>>${LOG_FILE} 2>&1
+LOG_FILE=$DIR_LOG/hindcast/CERISE_phase2_update_checklist_hindcast_`date +%Y%m%d%H%M`
+exec 3>&1 1>>${LOG_FILE} 2>&1
 
 typeofrun="hindcast"
-hindcasts_list=CERISE_phase2_list.$machine.csv
+hindcasts_templ=CERISE_phase2_list.$machine.csv
+hindcasts_list=CERISE_phase2_list.$machine.`date +%Y%m%d`.csv
+cp $DIR_CHECK/$hindcasts_templ $DIR_CHECK/$hindcasts_list
 hindcastlist_excel=`echo ${hindcasts_list}|rev |cut -d '.' -f2-|rev`.xlsx
 hindcastlist_htm=`echo ${hindcasts_list}|rev |cut -d '.' -f2-|rev`.htm
 if [[ -f $DIR_CHECK/$hindcastlist_excel ]]
@@ -58,6 +62,7 @@ do
 # calc position of the ith-column inside csv table
      # get  flag files from dictionary
       set +euvx
+      CASEROOT=$DIR_CASES/$caso
       . $dictionary     #fixed
       set -euvx
       LN="$(grep -n "$caso" ${DIR_TEMP}/$listfiletocheck | cut -d: -f1)"

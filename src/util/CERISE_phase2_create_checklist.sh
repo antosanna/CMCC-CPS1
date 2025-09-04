@@ -38,7 +38,14 @@ echo " file1 will be written in $file1"
 echo "CASO,month1,month2,month3,month4,days,n_memb_per_y,C3S,QC" > $file1
 echo "TOTAL DONE,0,0,0,0,0,0,0,0" >> $file1
 # Write body -----------------------------------------
-for st in 02 05 08 11
+if [[ $machine == "juno" ]]
+then
+   listst="02 11"
+elif [[ $machine == "cassandra" ]]
+then
+   listst="05 08"
+fi
+for st in $listst
 do
    for yyyy in `seq $iniy_hind $endy_hind`
    do
