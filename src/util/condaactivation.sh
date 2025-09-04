@@ -5,7 +5,7 @@ set +evxu
 if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]; then	
 condafunction() {
    local comm=$1
-   local env=$2	
+   local env=${2:-0}	
    if [[ $env != "$envcondacm3" ]] 
    then
        . $DIR_UTIL/load_miniconda
