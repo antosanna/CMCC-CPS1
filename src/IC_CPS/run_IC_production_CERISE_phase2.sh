@@ -1,6 +1,6 @@
 #!/bin/sh -l
 # HOW TO SUBMIT 
-#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j run_IC_production_ -l $DIR_LOG/hindcast/ -d $IC_CPS -s run_IC_production_CERISE_phase2_juno.sh 
+#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j run_IC_production_ -l $DIR_LOG/hindcast/ -d $IC_CPS -s run_IC_production_CERISE_phase2.sh 
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -40,7 +40,7 @@ set -euvx
       do
          actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ilnd.nc
          actual_ic_hydros=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ilnd.nc
-         if [[ -f actual_ic_clm ]] && [[ -f actual_ic_hydros ]]
+         if [[ -f $actual_ic_clm ]] && [[ -f $actual_ic_hydros ]]
          then
             continue
          fi
