@@ -37,7 +37,13 @@ table_column_id_ndays=$(($nmonfore + 2))
 cp ${DIR_CHECK}/${hindcasts_list} ${DIR_TEMP}/$listfiletocheck
 
 #find currently running start-dates
-local_st_list="`$DIR_UTIL/findjobs.sh -J run.${SPSSystem}|cut -c 14-15|sort -u`"
+if [[ $machine == "cassandra" ]]
+then
+   local_st_list="05 08"
+elif [[ $machine == "juno" ]]
+then
+   local_st_list="02 11"
+fi
 for st in $local_st_list
 do 
    n_listofcases=`ls -d ${DIR_ARCHIVE}/${SPSSystem}_[12][0-9][0-9][0-9]${st}_0??|wc -l`  
