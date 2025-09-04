@@ -384,9 +384,10 @@ condafunction activate $envcondarclone
 #   set -euvx
 set -eux
 python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-rclone copy ${filexls} my_drive:recover
+rclone mkdir my_drive:CERISE/recover
+rclone copy ${filexls} my_drive:CERISE/recover
 set +euvx
-condafunction deactivate $envcondarclone
+condafunction deactivate 
 #   set -euvx
 set -eux
 echo "end of conversion with python on CMCC machines "`date`
