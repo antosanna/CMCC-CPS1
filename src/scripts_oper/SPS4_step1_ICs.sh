@@ -34,7 +34,8 @@ set -euvx
 message="${CPSSYS} forecast starting `date` "
 dirrep=$yyyy$st
 mkdir -p ${DIR_REP}/$dirrep
-echo "${message}" >> ${DIR_REP}/$dirrep/report_${SPSSystem}_${yyyy}${st}
+echo "${message}" 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s ${yyyy}${st}
 mkdir -p ${DIR_LOG}/forecast/$yyyy$st/ICs
 checkfile=${DIR_LOG}/forecast/$yyyy$st/ICs/${SPSSystem}_step1_ICs_${yyyy}${st}_started
 if [[ -f $checkfile ]]
@@ -43,7 +44,7 @@ then
    If you need to resubmit previously remove $checkfile"
    echo $body
    title="${CPSSYS} forecast ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
    exit 2
 fi
 touch $checkfile
