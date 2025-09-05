@@ -144,11 +144,7 @@ then
 #   set +evx
 fi
 
-<<<<<<< HEAD
-if [[  "$machine" = "leonardo" ]]
-=======
 if [[  "$machine" == "leonardo" ]]
->>>>>>> e3cb38a666f116cd671586d66e6f059ab6970f59
 then
    # option -h remove header
    command="squeue -u `whoami` -h -o \"%P %j  %T %i\" "
