@@ -33,18 +33,18 @@ set -euvx
 
 ##20241002 - TEMPORARY COMMENTED WAITING FOR NOTIFICATE
 
-#if [ "$typeofrun" == "forecast" ]
+#if [[ "$typeofrun" == "forecast" ]
 #then
 #   mkdir -p $DIR_LOG/$typeofrun/$yyyy$st
 ##get   check_endrun check_notificate check_submitnotificate from dictionary
 #   touch $fileendrun
 #   # dal 50 al 54esimo il primo che arriva entra qua
 #   cntforecastend=$(ls ${check_endrun}_* | wc -l)
-#   if [ $cntforecastend -ge $nrunC3Sfore ] 
+#   if [[ $cntforecastend -ge $nrunC3Sfore ]] 
 #   then
       
 #      # qui va il 4^ notificate
-#      if [ ! -f $check_notificate ]; then
+#      if [[ ! -f $check_notificate ]; then
 ## get check_submitnotificate from dictionary
 #         touch $check_submitnotificate
 #         # submit notificate 4 - FINE JOBS PARALLELI
@@ -73,7 +73,7 @@ then
 fi
 # get   check_iceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
-if [ ! -f $check_iceregrid ]
+if [[ ! -f $check_iceregrid ]]
 then
     ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
 fi 
@@ -183,7 +183,8 @@ then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+#      if [[ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE ]] || [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
+      if { [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]]; } || [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
       then
          break
       fi
@@ -292,14 +293,14 @@ fi
 #***********************************************************************
 # NOT SURE WE NEED IT
 #cd $DIR_CASES/$caso/Tools/
-#if [ `whoami` == ${operational_user} ]
+#if [[ `whoami` == ${operational_user} ]
 #then
 #   ./checklist_run.sh $jobIDdummy True
 #fi
 #***********************************************************************
 # Remove $WORK_CPS/$caso
 #***********************************************************************
-if [ -d $WORK_CPS/$caso ]
+if [[ -d $WORK_CPS/$caso ]]
 then
   cd $WORK_CPS/$caso
   rm -rf run

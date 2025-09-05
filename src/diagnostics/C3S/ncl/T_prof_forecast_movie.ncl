@@ -8,15 +8,17 @@ begin
 ;=============================================
 yyyyfore  = getenv("yyyyfore")
 mmfore    = getenv("mmfore")
-diroce    = getenv("diroce")  ;"/work/csp/sp2/SPS3.5/CESM/daily/votemper/anom/"
+diroce    = getenv("diroce")  
 plname=getenv("plname")
-maskoce   = getenv("maskoce")  ; "mesh_mask_from2000.nc"
-foce1     = "votemper_SPS3.5_sps_"+yyyyfore+mmfore+"_ens_ano.1993-2016.nc"
+meshmaskfile   = getenv("meshmaskfile")  
+foce1     = getenv("foce1")
 ;==============================================
+varm      = getenv("varm")
 f1      = addfile (diroce+foce1 , "r")    
-sstoce1 = f1 ->votemper
-fm       = addfile(maskoce,"r")
-tmask    = byte2flt(fm ->tmask(:,0:29,:,:))
+toce = f1 ->$varm$
+sstoce1=dim_avg_n(toce,0)
+fm       = addfile(meshmaskfile,"r")
+tmask    = byte2flt(fm ->tmask(:,0:34,:,:))
 tmask@_FillValue = 1.e+20
 lon1     = fm ->nav_lon
 lat1     = fm ->nav_lat
@@ -28,6 +30,8 @@ nlev=dims(1)
 nlon=dims(2)
 
 lon11=where(lon1.lt.0,lon1+360,lon1)
+lon11=where(lon11.lt.0.0001,0.,lon11)
+;sstoce1&lon = lon11
 sstoce1@lon1 = lon11
 
 sstoce1@_FillValue=1.e+20
@@ -46,27 +50,35 @@ jLast = ji(1)
 iStrt = ji(2)
 iLast = ji(3)
 
-LAT2D = lat1(jStrt:jLast,iStrt:iLast)
-LON2D = lon11(jStrt:jLast,iStrt:iLast)
-
 tmaskprof=dim_avg_n_Wrap(tmask(:,:,jStrt:jLast,:),2)
+printVarSummary(tmaskprof)
 
 tmaskmovie=new((/ntime,nlev,nlon/),"float")
+printVarSummary(tmaskmovie)
+printVarSummary(sstoce1)
 tmaskmovie@_FillValue=1.e+20
 
 do n=0,ntime-1
   tmaskmovie(n,:,:)=tmaskprof
 end do
 tmaskmovie@_FillValue=1.e+20
-sstoce11=where(tmaskmovie.eq.1,sstoce1*tmaskmovie,tmaskmovie@_FillValue)
+sstoce11=where(tmaskmovie.eq.1,sstoce1,tmaskmovie@_FillValue)
 
 printVarSummary(sstoce11)
 copy_VarMeta(sstoce1,sstoce11)
 printVarSummary(sstoce11)
 sstoce11@_FillValue=1.e+20
 
-tprof11=sstoce11(time_counter|:,deptht|0:29,x|iStrt:iLast)
+;tprof11=sstoce11(time_counter|:,depth|0:34,x|iStrt:iLast)
+
+tprof11=sstoce11(:,0:34,iStrt:iLast)
 profile=tprof11(:,::-1,:)
+profile!1="lev"
+profile!2="lon"
+tmp=-lev1(0:34)
+profile&lev=tmp(::-1)
+profile&lon=lon11(jStrt+toint((jLast-jStrt+1)/2),iStrt:iLast)
+
 ;==================================================
 wks  = gsn_open_wks ("png", plname )
 gsn_define_colormap(wks,"BlueDarkRed18")
@@ -89,6 +101,7 @@ plot4 = new ( 1 , graphic)
 
   res@gsnYAxisIrregular2Linear = True
 
+
   res@cnLevelSelectionMode     = "ExplicitLevels" 
   res@cnLevels                 = (/-4,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3,3.5,4/)
   res@lbTitleString    = "[~S~o~N~C]"                ; title string
@@ -100,16 +113,13 @@ plot4 = new ( 1 , graphic)
   
   month_abbr = (/"","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep", \
                     "Oct","Nov","Dec"/)
+ 
+  res@sfXArray=profile&lon
+ ; res@sfYArray=profile&lev
 
  do n=0,ntime-1
     nn=n+1
 
-    profile!1="lev"
-    profile!2="lon"
-
-    tmp=-lev1(0:29)
-    profile&lev=tmp(::-1)
-    profile&lon=lon11(0,iStrt:iLast)
 
     time@units = "days since "+yyyyfore+"-"+mmfore+"-01 12:00:0.0"
     utc_date = tostring(cd_calendar(time(n), -2))
@@ -126,30 +136,33 @@ plot4 = new ( 1 , graphic)
     ;res@gsnRightString  = "time: " +  nn
 
     res@tmXBMode        = "Explicit"  
-    res@tmXBValues      = (/140,160,180,200,220,240,260,280/)
+;    res@tmXBValues      = ispan(0,560,80)
+;    res@tmXBLabels      = (/"140E","160E","180E","200E","220E","240E","260E","280E"/) 
+    res@tmXBValues      = (/140.,160.,180.,200.,220.,240.,260.,280./)
     res@tmXBLabels      = (/"140E","160E","180E","200E","220E","240E","260E","280E"/)
-    res@tmXBTickSpacingF      = 20.
+    res@tmXBTickSpacingF  = 20.
 
     plot = gsn_csm_contour(wks,profile(n,:,:),res)  ; Create filled contours
 
-    geom_value="80x80+930+830" 
 
 end do
 
+
+geom_value="80x80+930+830" 
 delete(wks)   ; Make sure PS file is closed
 
 dirlogo=getenv("dirlogo") 
 do n=0,ntime-1
     nn=n+1
     nnstr=sprinti("%0.6i", nn)
-;    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
+    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
  
 end do
 
-;cmd = "magick convert -delay 25 "+plname+"*png "+plname+".gif"
-;system(cmd)
-;cmd = "rm "+plname+"*png"
-;system(cmd)
+cmd = "magick convert -delay 25 "+plname+"*png "+plname+".gif"
+system(cmd)
+cmd = "rm "+plname+"*png"
+system(cmd)
 
 
 ;frame(wks)

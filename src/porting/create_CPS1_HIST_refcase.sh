@@ -17,7 +17,7 @@ then
       exit
    fi
 fi 
-caso=${CPSSYS}_HIST_reference
+caso=${CPSSYS}_HIST_reference_esmf8.4
 
 if [[ -d $DIR_CASES/$caso ]]
 then
@@ -39,14 +39,14 @@ cd $DIR_CASES/$caso
 
 # set to days for dbg purposes; then modified in the op-chain
 ./xmlchange STOP_OPTION=nmonths
-if [[ $machine == "zeus" ]]
+if [[ $machine == "cassandra" ]]
 then
-   ./xmlchange NTASKS_ATM=-20
-   ./xmlchange NTASKS_CPL=-20
+   ./xmlchange NTASKS_ATM=-3
+   ./xmlchange NTASKS_CPL=-3
    ./xmlchange NTASKS_OCN=330
-   ./xmlchange NTASKS_ICE=-20
-   ./xmlchange NTASKS_ROF=-20
-   ./xmlchange NTASKS_LND=-20
+   ./xmlchange NTASKS_ICE=-3
+   ./xmlchange NTASKS_ROF=-3
+   ./xmlchange NTASKS_LND=-3
 elif [[ $machine == "juno" ]]
 then
    ./xmlchange NTASKS_ATM=-4
@@ -202,6 +202,6 @@ f_strairx = "m",
 f_strairy = "m"
 EOF3
 
-#./case.build
-#cp $WORK/CMCC-CM/$caso/bld/cesm.exe $DIR_EXE/cesm.exe.${CPSSYS}_${machine}
-#ln -sf $DIR_EXE/cesm.exe.${CPSSYS}_${machine} $DIR_EXE/cesm.exe.${CPSSYS}
+./case.build
+cp $WORK/CMCC-CM/$caso/bld/cesm.exe $DIR_EXE/cesm.exe.${CPSSYS}_${machine}
+ln -sf $DIR_EXE/cesm.exe.${CPSSYS}_${machine} $DIR_EXE/cesm.exe.${CPSSYS}

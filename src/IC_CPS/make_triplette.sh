@@ -44,7 +44,7 @@ for i in `seq 1 $n_ic_cam` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > 
 
 cd $DIR_CPS
 # if triplette.random.$yyyy$st.txt  does not exist yet into $TRIP_DIR, create it
-if [ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]
+if [[ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]]
 then
    # generate arrays from files with bash builtin function mapfile
    mapfile -t lndAR < $DIR_LOG/forecast/$yyyy$st/lnd.ics.$yyyy$st

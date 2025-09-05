@@ -12,7 +12,7 @@ export dirobs=${noaa_dir}/anom
 export anomdir=$7
 export nens=$8
 # do not modify
-export refperiod=1993-2016
+export refperiod=$iniy_hind-$endy_hind
 export figtype="png"
 export stm1=`date -d "${yyyy}${st}01-1 month" +%m`
 export yyyym1=`date -d "${yyyy}${st}01-1 month" +%Y`

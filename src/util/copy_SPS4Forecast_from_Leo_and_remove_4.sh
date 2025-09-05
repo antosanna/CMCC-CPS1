@@ -13,8 +13,8 @@
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
 
-yyyy=2025
-st=05
+yyyy=`date +%Y`
+st=`date +%m`
 leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
 leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
@@ -26,16 +26,16 @@ for ens in {031..040} ; do
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
    if [[ -f $checkfile ]]
    then
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@data.leonardo.cineca.it:${leo_dir}/
       continue
    fi
-   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso ${DIR_ARCHIVE}
    stat=$?
    if [[ $stat -eq 0 ]]
    then
       chmod -R ug-w ${DIR_ARCHIVE}/$caso
       touch $checkfile
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@data.leonardo.cineca.it:${leo_dir}/
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
       if [[ $dim -lt 256 ]]
       then
@@ -45,7 +45,6 @@ for ens in {031..040} ; do
    fi
 
 done
-idjob=`$DIR_UTIL/findjobs.sh -n copy_SPS4DMO_from_Leonardo1 -i yes`
-logfile=$DIR_TEMP/list4_cases_transferred_`date +%Y%m%d`.$idjob.txt
-echo $lista_today_1 > $logfile
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $logfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir_temp}/
+logfile=$DIR_TEMP/list4_cases_transferred_forecast_`date +%Y%m`.txt
+echo $lista_today_1 >> $logfile
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $logfile a07cmc00@data.leonardo.cineca.it:${leo_dir_temp}/

@@ -41,17 +41,17 @@ while getopts ":m:s:y:e:f:q:m:t:d:" o; do
     esac
 done
 
-if [ -z $machine ]
+if [[ -z $machine ]]
 then
    echo "missing machine"
    usage
 fi
-if [ -z $listayears ]
+if [[ -z $listayears ]]
 then
    echo "missing start-date year. Getting default defined here"
    listayears="2003 2020"
 fi
-if [ -z $st ]
+if [[ -z $st ]]
 then
    echo "missing start-date month Getting default defined here"
    sst=11
@@ -84,9 +84,9 @@ do
        set -ex
 #$SCRATCHDIR/C3Schecker/$typeofrun/$startdate/$member/${member}_c3s_meta_ok
        listaens=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_r${member}i00p00.nc`
-       if [ -n $qa ]     #meaning qa null
+       if [[ -n $qa ]]     #meaning qa null
        then
-         if [ ! -f $check_c3s_qa_ok ]
+         if [[ ! -f $check_c3s_qa_ok ]]
          then
                 echo "this checkfile $check_c3s_qa_ok has not been produced. Rerun the checker"
                 lista_redoqa+=" ${SPSSystem}_${yyyy}${st}_0${member}"
@@ -102,14 +102,14 @@ do
                fi
             done
          fi
-         if [ "$lista_redoqa" == " " ]
+         if [[ "$lista_redoqa" == " " ]]
          then
              echo "qa checks all right"
          fi
        fi
-       if [ -n $meta ] 
+       if [[ -n $meta ]] 
        then
-         if [ ! -f $check_c3s_meta_ok ]
+         if [[ ! -f $check_c3s_meta_ok ]]
          then
             echo "${check_c3s_meta_ok} does not exist"
             lista_redometa+=" ${SPSSystem}_${yyyy}${st}_0${member}"
@@ -125,7 +125,7 @@ do
                fi
             done
          fi
-         if [ "$lista_redometa" == " " ]
+         if [[ "$lista_redometa" == " " ]]
          then
              echo "meta checks all right"
          fi
@@ -142,7 +142,7 @@ do
    outdirC3S=${WORK_C3S}/$yyyy$st
    #checkfile=$DIR_CASES/$caso/logs/qa_redo_${yyyy}${st}_0${member}_ok
    #mkdir -p $DIR_CASES/$caso/logs/
-   #if [ -f $checkfile ]
+   #if [[ -f $checkfile ]
    #then
    #   rm $checkfile
    #fi
@@ -151,7 +151,7 @@ do
    
   $DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S
 
-  if [ ! -f $check_c3s_qa_ok ]
+  if [[ ! -f $check_c3s_qa_ok ]]
   then
     lista_redoqa_error=+=" $caso"
   fi
@@ -170,7 +170,7 @@ do
    ${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
    
    # check that ok file was produced
-   if [ ! -f  ${check_c3s_meta_ok} ]
+   if [[ ! -f  ${check_c3s_meta_ok} ]]
    then
     lista_redometa_error+=" $caso"
    fi

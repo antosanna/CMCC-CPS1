@@ -13,14 +13,14 @@ dbg=$5           # if dbg=1 than send to bologna ftp for tests
 
 REMOTE_DIR="/data/DATA/SEASON/gpc_bologna/${type_fore}"
 # WARNING!! DO NOT PUT / AT THE END
-if [ $dbg -ge 1 ]
+if [[ $dbg -ge 1 ]]
 then
    mymail=andrea.borrelli@cmcc.it
 # WARNING!! DO NOT PUT / AT THE END
    REMOTE_DIR="/data/DATA/SEASON/gpc_bologna/${type_fore}/sample_hindcast"
 fi
 
-if [ $dbg -gt 1 ]
+if [[ $dbg -gt 1 ]]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp << EOF
 set xfer:log true
@@ -33,7 +33,7 @@ quit
 EOF
      lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp |tee ls_S${yyyy}$st.log
      stat=$?
-     if [ $stat -eq 1 ]; then
+     if [[ $stat -eq 1 ]]; then
         echo "TEST [WMO] error on attempt ls.lftp "|mail $mymail
         exit 1
      fi        
@@ -49,7 +49,7 @@ quit
 EOF
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp |tee ls_S${yyyy}$st.log
       stat=$?
-      if [ $stat -eq 1 ]; then
+      if [[ $stat -eq 1 ]]; then
          echo "[WMO] error on  attempt send.lftp "|mail $mymail
          exit 1
       fi

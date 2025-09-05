@@ -15,7 +15,7 @@ first=$6
 dbg_push=$7           # if dbg_push=1 than send to bologna ftp for tests
 
 user=`whoami`
-#if [ $dbg_push -ne 1 ]
+#if [[ $dbg_push -ne 1 ]]
 #then
 #   exit
 #fi
@@ -23,11 +23,11 @@ nstreams=18
 REMOTE_DIR="/data/DATA/SEASON/gpc_bologna/${type_fore}"
 title_debug=""
 
-if [ $type_fore = "hindcast" ] ; then
+if [[ $type_fore = "hindcast" ]] ; then
    mymail=sp1@cmcc.it
 fi
 # WARNING!! DO NOT PUT / AT THE END
-if [ $dbg_push -ge 1 ]
+if [[ $dbg_push -ge 1 ]]
 then
    mymail=sp1@cmcc.it
 # WARNING!! DO NOT PUT / AT THE END
@@ -41,11 +41,11 @@ LOCAL_DIR="$pushdirapec/${type_fore}/${yyyy}${st}/monthly"
 
 logfile="push_${type_fore}_S${yyyy}${st}.$datestr.log"
 
-if [ ! -f $first ]
+if [[ ! -f $first ]]
 then
    touch $first
 fi
-if [ $dbg_push -eq 1 ]
+if [[ $dbg_push -eq 1 ]]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna << EOF
 set xfer:log true
@@ -58,12 +58,12 @@ EOF
       chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       stat=$?
-      if [ $stat -eq 1 ]; then
-         echo "error on  attempt send.lftp.wmo.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
+      if [[ $stat -eq 1 ]]; then
+         echo "error on  attempt send.lftp.wmo.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymai]l
          exit 1
       fi        
 else
-    if [ ! -f $first ]
+    if [[ ! -f $first ]]
     then
        cat > $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo << EOF
 set xfer:log true
@@ -89,13 +89,13 @@ EOF
       chmod 744 $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo
       stat=$?
-      if [ $stat -eq 1 ]; then
+      if [[ $stat -eq 1 ]]; then
          echo "error on  attempt send.lftp.wmo ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
          exit 1
       fi         
 fi
 
-if [ $dbg_push -eq 1 ]
+if [[ $dbg_push -eq 1 ]]
 then
       cat > $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.bologna << EOF
 set xfer:log true
@@ -120,9 +120,9 @@ EOF
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp |tee $DIR_LOG/${type_fore}/$yyyy$st/ls_WMO_S${yyyy}$st.log
 fi
 
-if [ $ntarandsha -eq 1 ]
+if [[ $ntarandsha -eq 1 ]]
 then 
-   if [ $dbg_push -eq 1 ]
+   if [[ $dbg_push -eq 1 ]]
    then
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.bologna |tee $DIR_LOG/${type_fore}/$yyyy$st/ls_WMO_S${yyyy}$st.log

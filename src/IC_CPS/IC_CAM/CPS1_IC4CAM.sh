@@ -45,12 +45,12 @@ cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 #----------------------------------------------------------
 # clean everything
 #----------------------------------------------------------
-if [ -d $WORK_CPS/$caso ]
+if [[ -d $WORK_CPS/$caso ]]
 then
     cd $WORK_CPS/
     rm -rf $caso
 fi
-if [ -d $DIR_CASES/$caso ] 
+if [[ -d $DIR_CASES/$caso ]] 
 then
    cd $DIR_CASES
    rm -rf $caso

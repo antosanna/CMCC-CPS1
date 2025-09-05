@@ -37,7 +37,7 @@ for elem in ${list_ens} ; do
    then
       ensemble+=(" $m2")
       ic=$(($ic + 1))
-      if [ $ic -eq $nrunC3Sfore ]
+      if [[ $ic -eq $nrunC3Sfore ]]
       then
          break
       fi 
@@ -45,7 +45,7 @@ for elem in ${list_ens} ; do
 done
 dim=`echo ${ensemble[@]}|wc -w`
 
-if [ $dim -ne $nrunC3Sfore ]
+if [[ $dim -ne $nrunC3Sfore ]]
 then
    body="$DIR_C3S/tar_C3S.sh in change_realization.sh you selected the wrong number of members! needed $nrunC3Sfore but selected $dim"
    title="[C3S] ${CPSSYS} forecast ERROR"
@@ -61,7 +61,7 @@ echo ${ensembleECMWF[@]}
 #arr1 contains the ensemble numbers not present in $esemble but in $ensembleECMWF
 arr1=`echo ${ensemble[@]} ${ensembleECMWF[@]} ${ensemble[@]} | tr ' ' '\n' | sort | uniq -u `
 echo ${arr1[@]}
-if [ `echo ${arr1[@]}|wc -w` -eq 0 ]
+if [[ `echo ${arr1[@]}|wc -w` -eq 0 ]]
 then
    body='C3S: No renumbering needed: files ready to be transferred to final destinations' 
    title="[C3S] ${CPSSYS} forecast notification"
@@ -87,7 +87,7 @@ then
    echo ${tobecome[@]}
    dim=`echo ${tochange[@]}|wc -w`
    #
-   if [ $dim -ne 0 ]
+   if [[ $dim -ne 0 ]]
    then
       mkdir -p $DIR_LOG/$typeofrun/${yyyy}${st}/change_realization
       body="Starting renumbering for $dim members in forecast $yyyy$st from ${tochange[@]} to ${tobecome[@]}. Script is $DIR_C3S/tar_C3S.sh"
@@ -216,7 +216,7 @@ then
    # this is needed so that if in any case the tar_C3S.sh is relaunched it will not try to redo the renumbering (see section 1.)
          touch $WORK_C3S/$yyyy$st/all_checkers_ok_0${tobecome[$i]}
    # rm the previously compute checkfile_daily
-         if [ -f $checkfile_daily ]
+         if [[ -f $checkfile_daily ]]
          then
             rm $checkfile_daily
          fi

@@ -53,8 +53,8 @@ do
 #------------------------------------------------
 # Get inst data from repository
 #------------------------------------------------
-      if [ ! -f $DIRDATA/eda_forcings_${ftype}_${yr}${mo}_n${member}.grib ] ; then
-         if [ -f $DIRDATA/eda_forcings_${ftype}_${yr}${mo}_n${member}.grib.gz ] ; then
+      if [[ ! -f $DIRDATA/eda_forcings_${ftype}_${yr}${mo}_n${member}.grib ]] ; then
+         if [[ -f $DIRDATA/eda_forcings_${ftype}_${yr}${mo}_n${member}.grib.gz ]] ; then
             gunzip $DIRDATA/eda_forcings_${ftype}_${yr}${mo}_n${member}.grib.gz 
          else
             body="create_edaFORC.sh: EDA INST FIELDS (file eda_forcings_${ftype}_${yr}${mo}_n${member}.grib ) MISSING "

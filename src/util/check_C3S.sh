@@ -13,7 +13,7 @@ do
    for real in `seq -w 01 $nrunC3Sfore`
    do
       count=`ls ${yyyy}${st}/*r${real}*.nc|wc -l`
-      if [ $count -lt $nfieldsC3S ]
+      if [[ $count -lt $nfieldsC3S ]]
       then
          countoce=`ls ${yyyy}${st}/*oce*r${real}*.nc|wc -l`
          countice=`ls ${yyyy}${st}/*Ice*r${real}*.nc|wc -l`
@@ -33,23 +33,23 @@ do
          echo "oce                          files $countoce"
          flag_wrong=1
       fi
-      if [ ! -f ${yyyy}${st}/qa_checker_ok_0${real} ]
+      if [[ ! -f ${yyyy}${st}/qa_checker_ok_0${real} ]]
       then
          echo "qa checker missing   $yyyy$st  ${real}"
          flag_wrong=1  
       fi
-      if [ ! -f ${yyyy}${st}/tmpl_checker_ok_0${real} ] 
+      if [[ ! -f ${yyyy}${st}/tmpl_checker_ok_0${real} ]]
       then
          echo "tmpl checker missing  $yyyy$st   ${real}"
          flag_wrong=1  
       fi
-      if [ ! -f ${yyyy}${st}/meta_checker_ok_0${real} ] 
+      if [[ ! -f ${yyyy}${st}/meta_checker_ok_0${real} ]]
       then
          echo "meta checker missing  $yyyy$st   ${real}"
          flag_wrong=1  
       fi
    done
-   if [ $flag_wrong -ne 1 ]
+   if [[ $flag_wrong -ne 1 ]]
    then
        echo "everything ok for startdate $yyyy$st ! go on with tar_C3S.sh"
    fi

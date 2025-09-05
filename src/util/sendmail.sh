@@ -54,23 +54,23 @@ message=`echo $message | tr -dc "'[:alnum:](-:. /_)\\\\\\\\"`
 #message+=" `date`"
 
 # check if machine exists
-if [ -z $machine ]
+if [[ -z $machine ]]
 then
    usage
 fi
 
 # check if email exists
-if [ -z $email ]
+if [[ -z $email ]]
 then
    usage
 fi
 
-if [ ! -z $report ]
+if [[ ! -z $report ]]
 then
-   if [ ! -z $startdate ]
+   if [[ ! -z $startdate ]]
    then
       outlog=${DIR_REP}/$startdate/REPORT_${machine}.${SPSSystem}_${startdate}
-      if [ ! -z $ensemble ]
+      if [[ ! -z $ensemble ]]
       then
          outlog=${DIR_REP}/$startdate/report_${machine}.${SPSSystem}_${startdate}_${ensemble}
       fi
@@ -94,15 +94,15 @@ then
    fi
 fi
 
-if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
+if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]
 then
-   if [ ! -z $bcc ]
+   if [[ ! -z $bcc ]]
    then
       b=" -b $bcc"
    else
       b=""
    fi
-   if [ `ls $applist|wc -w` -ne 0 ]
+   if [[ `ls $applist|wc -w` -ne 0 ]]
    then
       for app in $applist
       do
@@ -111,7 +111,7 @@ then
    else
       a=""
    fi
-   if [ ! -z $cc ]
+   if [[ ! -z $cc ]]
    then
       c=" -c $cc"
    else
@@ -124,7 +124,7 @@ then
    exit 0
 fi
 
-if [  "$machine" = "leonardo" ]
+if [[  "$machine" = "leonardo" ]]
 then
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT
 # THIS DOES NOT HOLD ANYMORE BEING LEONARDO THE OPERATIONAL MACHINE
@@ -147,7 +147,7 @@ then
   # echo -e "$message" is the key to keep new line
 
   attaching_section=" " 
-  if [ `ls $applist|wc -w` -ne 0 ]
+  if [[ `ls $applist|wc -w` -ne 0 ]]
   then
       for app in $applist
       do
@@ -157,7 +157,7 @@ then
   else
       attaching_section= "echo"
   fi
-  if [ ! -z $cc ]
+  if [[ ! -z $cc ]]
   then
     ARG_EMAIL_CC="$cc"
     (

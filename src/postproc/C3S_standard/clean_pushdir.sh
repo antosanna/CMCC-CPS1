@@ -17,7 +17,7 @@ startdate=$yyyy$st
 cd $pushdir
 
 # THIS IS TO CLEAN PUSH DIRECTORY
-if [ `ls $pushdir/${startdate}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_* |wc -l` -ne 0 ]; then
+if [[ `ls $pushdir/${startdate}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_* |wc -l` -ne 0 ]]; then
   	rm $pushdir/${startdate}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*
 
    body="C3S: deletion completed from $pushdir/${startdate}"

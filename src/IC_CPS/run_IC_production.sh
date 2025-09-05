@@ -37,26 +37,27 @@ set -euvx
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
 #for poce in `seq -w 01 $n_ic_nemo`;do
-for poce in 01 02 03 08 09 ;do
-   poce1=$((10#$poce - 1))
-   nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
-   ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
-   dirnemoic=${IC_NEMO_CPS_DIR}/$st/
-   mkdir -p $dirnemoic
-   dirciceic=${IC_CICE_CPS_DIR}/$st/
+if [[ $idcomplete -eq 0 ]] ; then
+  for poce in 01 02 03 08 09 ;do
+     poce1=$((10#$poce - 1))
+     nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
+     ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
+     dirnemoic=${IC_NEMO_CPS_DIR}/$st/
+     mkdir -p $dirnemoic
+     dirciceic=${IC_CICE_CPS_DIR}/$st/
 #
 # compute only if operational or not existing  ANTO 20210319
-   if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirciceic/$ciceic ]]
-   then
+     if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirciceic/$ciceic ]]
+     then
 
-      mkdir -p  $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-      input="$yyyy $st $poce"
-      $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
+        mkdir -p  $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
+        input="$yyyy $st $poce"
+        $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
 
-     sleep 30
-  fi
-done
-
+       sleep 30
+     fi
+   done
+fi
 
 mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
 for ilnd in {01..03}
@@ -77,13 +78,21 @@ do
          
    else   #operationally or for incomplete eda recover
      
-      if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]
+      if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]  #operationally
       then
           inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
           body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
           title="[CLMIC] ${CPSSYS} forecast notification"
           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+      elif [[ -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
+      then
+          inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+          body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
+          title="[CLMIC] ${CPSSYS} forecast notification"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+         
       fi
    fi
 done
@@ -189,8 +198,8 @@ mmIC=`date -d $yyyy${st}'15 - 1 month' +%m`   # IC month
 last_dd_mmIC=`$DIR_UTIL/days_in_month.sh $mmIC $yyIC`    # IC month last day
 dd=$(($last_dd_mmIC - 1))
 t_analysis=00
-ic=1
-for pp in 2 4 5 6 7 8 9
+ic=0
+for pp in `seq 0 $((${n_ic_cam} -1))` 
 do
     ppcam=`printf '%.2d' $(($pp + 1))`
 
@@ -216,54 +225,64 @@ do
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -j makeICsGuess4CAM_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s makeICsGuess4CAM_FV0.47x0.63_L83.sh -i "$input"
     input="$yyyy $st $pp $yyIC $mmIC $dd $casoIC $ppland"
     ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p makeICsGuess4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${yyyy}${st}_${pp} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
-    sleep 300
+    while `true`
+    do
+          n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC${ppcam} -c yes`
+          if [[ $n_job_make_atm_ic -eq 1 ]] ; then
+              break
+          fi
+          sleep 60
+    done
     ic=$(($ic + 1))
     if [[ $ic -eq 2 ]]
     then
        while `true`
        do
-          n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
-          if [[ $n_job_make_atm_ic -eq 1 ]]
+          n_job_run_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
+          if [[ $n_job_run_ic -eq 1 ]]
           then
              ic=1
              break
-          elif [[ $n_job_make_atm_ic -eq 0 ]]
+          elif [[ $n_job_run_ic -eq 0 ]]
           then
              ic=0
              break
           fi
-          sleep 60
+          sleep 300
        done
     fi 
 done     #loop on pp
 
 # loop to check that no interpolation jobs (makeICsGuess4CAM_FV0.47x0.63_L83.sh) is pending
-while `true`
-do
-    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_ -a PEND -c yes`
-    if [[ $n_job_make_atm_ic -eq 0 ]]
-    then
-       break
-    fi
-    sleep 60
-done
-sleep 1800 # assuming root_casoIC takes almost 40'
-# wait until completion of all CAM ICs
-while `true`
-do
-    root_casoIC=${SPSSystem}_EDACAM_IC
-    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
-    if [[ $n_job_ICCAM -eq 0 ]]
-    then
-       break
-    fi
-    sleep 60
-done
-# TEMPORARY COMMENTED to be uncommented from September
+
+#while `true`
+#do
+#    n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_ -a PEND -c yes`
+#    if [[ $n_job_make_atm_ic -eq 0 ]]
+#    then
+#       break
+#    fi
+#    sleep 60
+#done
+#sleep 1800 # assuming root_casoIC takes almost 40'
+## wait until completion of all CAM ICs
+#while `true`
+#do
+#    root_casoIC=${SPSSystem}_EDACAM_IC
+#    n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n $root_casoIC -c yes`
+#    if [[ $n_job_ICCAM -eq 0 ]]
+#    then
+#       break
+#    fi
+#    sleep 60
+#done
+
+# TEMPORARY COMMENTED to be uncommented from October 2025(!!!)
 # remove temporary work spaces
 #for pp in {0..9}
 #do
-#   if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ppcam.nc ]]
+#    casoIC=${SPSSystem}_EDACAM_IC${pp}.${yyIC}${mmIC}${dd}
+#   if [[ -f $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$pp.nc ]]
 #   then
 #      if [[ -d $DIR_CASES/$casoIC ]]
 #      then
@@ -280,4 +299,15 @@ done
 #  fi
 #done
 # replace missing ICs with backup
+
+#to be sure that - if correctly finished - all the operational ICs have been effectively moved to final destination
+#if for some reason one IC run failed, also the storeIC will disappear from queues, and in this case the bkup IC will be substitue by set_forecast_IC proc
+while `true`
+do
+    n_store_ic=`$DIR_UTIL/findjobs.sh -m $machine -n store_ICcam -c yes`
+    if [[ ${n_store_ic} -eq  0 ]] ; then
+       break
+    fi
+    sleep 60
+done
 $IC_CPS/set_forecast_ICs.sh $yyyy $st

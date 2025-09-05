@@ -268,13 +268,31 @@ do
   export lead=$(($l - 1))
   for region in $reglist 
   do
+      if [[ $region == "global" ]] 
+      then
+         geom_value="80x80+930+830" 
+      elif [[ $region == "NH" ]] || [[ $region == "SH" ]]
+      then
+         geom_value=" 80x80+930+880" 
+      elif [[ $region == "Europe" ]] 
+      then
+         geom_value=" 80x80+930+900" 
+      else
+         geom_value="80x80+930+660"
+      fi
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_ens_anom_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_spread_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
      
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_tercile_summary_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
 
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_up_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_low_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
+      composite -geometry ${geom_value} cmcc_logo_bw.jpg $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type}
       magick convert ${convert_opt} $dirplots/${varobs}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.${wks_type} $dirplots/${varfile}_${region}_prob_mid_tercile_${yyyyfore}_${mmfore}_${flgmnth_fname}_l${lead}.png
       if [[ $varfile == "hgt500" ]]
       then

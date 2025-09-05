@@ -49,21 +49,21 @@ for ll in $list
 do
   file=$ll
   x1=`ncdump -h $ll |grep DOMAIN_position_first|cut -d '=' -f2|cut -d ',' -f1`
-  if [ $x1 -ne 1 ]
+  if [[ $x1 -ne 1 ]]
   then
      x1=$(($x1 - 1))
   else
      x1=0
   fi
   x2=`ncdump -h $ll |grep DOMAIN_position_last|cut -d '=' -f2|cut -d ',' -f1`
-  if [ $x2 -ne 1 ]
+  if [[ $x2 -ne 1 ]]
   then
      x2=$(($x2 - 1))
   else
      x2=0
   fi
   y1=`ncdump -h $ll |grep DOMAIN_position_first|cut -d '=' -f2|cut -d ',' -f2|cut -d ';' -f1`
-  if [ $y1 -ne 1 ]
+  if [[ $y1 -ne 1 ]]
   then
      y1=$(($y1 - 1))
   else
@@ -75,7 +75,7 @@ do
      ymin=$y1
   fi
   y2=`ncdump -h $ll |grep DOMAIN_position_last|cut -d '=' -f2|cut -d ',' -f2|cut -d ';' -f1`
-  if [ $y2 -ne 1 ]
+  if [[ $y2 -ne 1 ]]
   then
      y2=$(($y2 - 1))
   else
@@ -137,12 +137,12 @@ nt=`cdo -ntime $wkdir/${EquTfile}`
 set +euvx
 . ${DIR_UTIL}/load_nco
 set -euvx
-if [ -f $outfile ]
+if [[ -f $outfile ]]
 then
    rootname=`basename $outfile |rev |cut -d '.' -f1 --complement|rev`
    $DIR_UTIL/compress.sh $EquTfile $outdir/${rootname}.zip.nc
    ncatted -O -a ic,global,a,c,"$ic" $outdir/${rootname}.zip.nc
-   if [ -f $outdir/${rootname}.zip.nc ]
+   if [[ -f $outdir/${rootname}.zip.nc ]]
    then
       rm $EquTfile
       rm $outdir/${caso}_1d_${curryear}${currmon}01_${finaldate}_grid_EquT_T_0*.nc

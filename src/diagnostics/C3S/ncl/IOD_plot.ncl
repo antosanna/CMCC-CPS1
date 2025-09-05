@@ -1,7 +1,7 @@
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_code.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/gsn_csm.ncl"
 load "$NCARG_ROOT/lib/ncarg/nclscripts/csm/contributed.ncl"
-load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/ut_string.ncl"
+load "$NCARG_ROOT/lib/ncarg/nclscripts/contrib/cd_string.ncl"
 ;*****************************************************
 begin
 
@@ -21,17 +21,17 @@ nens=tointeger(getenv("nens"))
 figtype=getenv("figtype")
 dir = getenv("dir")
 anomdir  = getenv("anomdir")
-vhc  = addfile (anomdir+"/sst_SPS3.5_"+st+"_all_ano."+refperiod+".nc","r")
+vhc  = addfile (anomdir+"/sst_sps4_"+st+"_all_ano."+refperiod+".nc","r")
 tshc = vhc->tso(:,:,0:5,:,:)
 timehc = vhc->time(0:5)
-sstmhc=new((/24,40,18,180,360/),typeof(tshc),tshc@_FillValue)
+sstmhc=new((/30,30,18,180,360/),typeof(tshc),tshc@_FillValue)
 sstmhc(:,:,12:17,:,:)=tshc
 time=new((/18/),typeof(timehc))
 time=fspan(0,17,18)
 time@units="months since "+tstart+"-"+st+"-15 12:00:00"
 delete(time@calendar)
 format= "%c ~C~%Y"
-stime=ut_string(time,format)
+stime=cd_string(time,format)
 sstmhc@_FillValue=1.e+20
 
 sstm_iod_w=wgt_areaave_Wrap(sstmhc(:,:,:,{-10:10},{50:70}),1.0,1.0,1)
@@ -39,11 +39,11 @@ sstm_iod_e=wgt_areaave_Wrap(sstmhc(:,:,:,{-10:0},{90:108}),1.0,1.0,1)
 sstm_iod=sstm_iod_w-sstm_iod_e
 delete(sstm_iod_w)
 delete(sstm_iod_e)
-sstmhc_iod=reshape(sstm_iod,(/40*24,18/))
+sstmhc_iod=reshape(sstm_iod,(/30*30,18/))
 delete(sstm_iod)
 printVarSummary(sstmhc_iod)
 
-v1    = addfile (dir+"/sst_SPS3.5_sps_"+tend+st+"_all_ano."+refperiod+".nc","r")
+v1    = addfile (dir+"/sst_sps4_"+tend+st+"_all_ano."+refperiod+".nc","r")
 tstmp    = v1->tso(:,0:5,:,:)
 timetmp  = v1->time(0:5)
 sstm=new((/nens,18,180,360/),typeof(tstmp),tstmp@_FillValue)
@@ -53,7 +53,7 @@ time=fspan(0,17,18)
 time@units="months since "+tstart+"-"+st+"-15 12:00:00"
 delete(time@calendar)
 format= "%c ~C~%Y"
-stime=ut_string(time,format)
+stime=cd_string(time,format)
 sstm@_FillValue=1.e+20
 sstm_iod_w=wgt_areaave_Wrap(sstm(:,:,{-10:10},{50:70}),1.0,1.0,1)
 sstm_iod_e=wgt_areaave_Wrap(sstm(:,:,{-10:0},{90:108}),1.0,1.0,1)
@@ -69,7 +69,7 @@ dirobs=getenv("dirobs")
 fobsname = dirobs+"/anom_sst_"+tstart+st+"-"+tendobs+stm1+".nc"
 print(fobsname)
 fobs=addfile(fobsname,"r")
-ssto=short2flt(fobs->sst(:,0,:,:))
+ssto=fobs->analysed_sst
 ssto_iod_w=wgt_areaave_Wrap(ssto(:,{-10:10},{50:70}),1.0,1.0,1)
 ssto_iod_e=wgt_areaave_Wrap(ssto(:,{-10:0},{90:108}),1.0,1.0,1)
 ssto_iod=ssto_iod_w-ssto_iod_e
@@ -145,11 +145,11 @@ res@tmYLLabels        = y  ;(/-2,-1.6,-1.2,-0.8,-0.4,0,0.4,0.8,1.2,1.6,2/)      
 ;res@tmLabelAutoStride = True                    ; nice stride on labels
 
 
-res@xyMonoLineColor    = False             ; want colored lines
+;res@xyMonoLineColor    = False             ; want colored lines
 ;res@xyLineColors       = (/"Red","Red","black","LightBlue","lightpink"/) ; colors chosen
 ;res@xyLineColors       = (/"Red","black","black","LightBlue","lightpink"/) ; colors chosen
-res@xyLineThicknesses  = (/3,2,2,2,2/)      ; line thicknesses
-res@xyDashPatterns     = (/0,1,0,0,0/)      ; make all lines solid
+;res@xyLineThicknesses  = (/3,2,2,2,2/)      ; line thicknesses
+;res@xyDashPatterns     = (/0,1,0,0,0/)      ; make all lines solid
 
 res@tiYAxisString    = "~F35~J~F~C"      ; add an axis title    
 res@txFontHeightF    = 0.007            ; change title font heights
@@ -178,51 +178,42 @@ res@tmXBLabels = labelsx
 
 res@xyLineColor    = "black"
 res@xyLineThicknessF = 3
-res@xyDashPattern = 0
-
 obs_plot = gsn_csm_y (wks,mnmx(5,:),res)       ; create line plot
 
-res@xyLineColor = "Red"
-res@xyMonoDashPattern  = True 
-res@xyDashPattern = 1
-
+delete(res@xyLineColor)
+delete(res@xyLineThicknessF)
+res@xyLineColor = "Grey"
+res@xyLineThicknessF = 2
 raccordo_plot = gsn_csm_y (wks,mnmx(4,:),res)       ; create line plot
 
-; Create a plot with the area between both curves filled in pink.
+; Create a plot with the ensemble plume in red.
 
-delete(res@xyLineColors)
+delete(res@xyLineColor)
+delete(res@xyLineThicknessF)
+res@xyLineColor    = "red"
+res@xyLineThicknessF = 1      ; line thicknesses
+res@xyDashPattern = 1
+
+mid_plot  = gsn_csm_y (wks,sstm_iod,res)  ; Create another filled XY plot.
+
+delete(res@xyLineThicknessF)
 delete(res@xyDashPattern)
-res@gsnXYFillColors = "LightBlue"
-res@xyLineColor     = -1                           ; We don't want the line, so make it transparent.
-
-bot_plot = gsn_csm_y (wks,mnmx(0:2:2,:),res)  ; Create filled XY plot.
-
-res@gsnXYFillColors = "lightpink"
-res@xyLineColor     = -1                           ; We don't want the line, so make it transparent.
-
-up_plot  = gsn_csm_y (wks,mnmx(1:2,:),res)  ; Create another filled XY plot.
-
-; Create a plot with the ensmble mean line filled in red.
-
-res@gsnXYFillColors = "Red"
-;res@gsnXYFillColors = "black"
-;res@xyLineColor     =  "red"                          ; We don't want the line, so make it transparent.
-res@xyLineColors    = "red"
-
-mid_plot  = gsn_csm_y (wks,mnmx(3,:),res)  ; Create another filled XY plot.
-
+delete(res@xyLineColor)
+res@xyLineColor = "Green"
+res@xyLineThicknessF = 5
+res@xyDashPattern = 0
+ensm_plot = gsn_csm_y (wks,mnmx(3,:),res)
 ;
 ; Overlay the top and mid plots on the bottom plot.
 ;
 ; Don't draw anything yet, because we still need to
 ; attach a legend and some titles.
 ;
-  overlay(bot_plot,mid_plot)
-  overlay(bot_plot,obs_plot)
-  overlay(bot_plot,raccordo_plot)
-  overlay(bot_plot,up_plot)
+  overlay(obs_plot,raccordo_plot)
+  overlay(obs_plot,mid_plot)
+  overlay(obs_plot,ensm_plot)
 
-getvalues bot_plot                      ; Get plot size for use in
+getvalues obs_plot                      ; Get plot size for use in
   "vpHeightF" : vph                 ; determining size of
   "vpWidthF"  : vpw                 ; labelbar.
 end getvalues
@@ -235,20 +226,21 @@ lbres@lbAutoManage       = True          ; Necessary to control sizes
 lbres@vpWidthF           = 0.2 * vpw     ; labelbar width
 lbres@vpHeightF          = 0.2 * vph     ; labelbar height
 lbres@lbBoxMajorExtentF  = 0.75          ; puts space between color boxes
-lbres@lbFillColors       = (/"black","Red","LightBlue","lightpink"/)  ; labelbar colors
+lbres@lbFillColors       = (/"black","Green","Red"/)  ; labelbar colors
 lbres@lbMonoFillPattern  = True          ; Solid fill pattern
-lbres@lbLabelFontHeightF = 0.1          ; font height. default is small
+lbres@lbAutoManage       = False 
+lbres@lbLabelFontHeightF = 0.01          ; font height. default is small
 lbres@lbLabelJust        = "CenterLeft"  ; left justify labels
 
-lbid = gsn_create_labelbar(wks,4,(/"NOAA","Ensmean","Below median","Above median"/),lbres)         ; create legend
+lbid = gsn_create_labelbar(wks,3,(/"ESA CCI","SPS4 ensemble mean","SPS4 members"/),lbres)         ; create legend
 
 amres = True
 amres@amJust           = "TopRight"
-amres@amParallelPosF   = -0.3         ; move legend to the right
+amres@amParallelPosF   = -0.2         ; move legend to the right
 amres@amOrthogonalPosF = -0.5            ; move the legend down
-annoid1 = gsn_add_annotation(bot_plot,lbid,amres)   ; add legend to plot
+annoid1 = gsn_add_annotation(obs_plot,lbid,amres)   ; add legend to plot
 
-draw(bot_plot)   ; Draw base plot.
+draw(obs_plot)   ; Draw base plot.
 frame(wks)    ; advance frame
 ;*******************************************************************
 geom_value=" 80x80+930+700" 

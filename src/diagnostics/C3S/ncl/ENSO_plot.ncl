@@ -144,11 +144,9 @@ res@vpWidthF           = 0.7
 res@trYMaxF            = mmax
 res@trYMinF            = mmin
 
-res@xyMonoLineColor    = False             ; want colored lines
-;res@xyLineColors       = (/"Red","Red","black","LightBlue","lightpink"/) ; colors chosen
-;res@xyLineColors       = (/"Red","black","black","LightBlue","lightpink"/) ; colors chosen
-res@xyLineThicknesses  = (/3,2,2,2,2/)      ; line thicknesses
-res@xyDashPatterns     = (/0,1,0,0,0/)      ; make all lines solid
+;res@xyMonoLineColor    = True             ; want colored lines
+;res@xyLineThicknesses  = (/3,3,3/)      ; line thicknesses
+;res@xyDashPatterns     = (/0,1,0/)      ; make all lines solid
 
 res@tiYAxisString    = "~F35~J~F~C"      ; add an axis title    
 res@txFontHeightF    = 0.007            ; change title font heights
@@ -175,52 +173,44 @@ labelsx(15)=" "
 labelsx(17)=" "
 res@tmXBLabels = labelsx    
 
+res@xyLineColor = "black"
+res@xyLineThicknessF = 3
 obs_plot = gsn_csm_y (wks,mnmx(5,:),res)       ; create line plot
 
-res@xyLineColors = "red"
-res@xyMonoDashPattern  = True 
-res@xyDashPattern = 1
-
+delete(res@xyLineColor)
+delete(res@xyLineThicknessF)
+res@xyLineColor = "Grey"
+res@xyLineThicknessF = 2
 raccordo_plot = gsn_csm_y (wks,mnmx(4,:),res)       ; create line plot
 
-; Create a plot with the area between both curves filled in blue.
+; Create a plot with the ensemble plume in red.
 
-delete(res@xyLineColors)
+delete(res@xyLineColor)
+delete(res@xyLineThicknessF)
+res@xyLineColor    = "red"
+res@xyLineThicknessF = 1      ; line thicknesses
+res@xyDashPattern = 1
+
+mid_plot  = gsn_csm_y (wks,nino3,res)  ; Create another filled XY plot.
+
+delete(res@xyLineThicknessF)
 delete(res@xyDashPattern)
-res@gsnXYFillColors = "LightBlue"
-res@xyLineColor     = -1                           ; We don't want the line, so make it transparent.
-
-bot_plot  = gsn_csm_y (wks,mnmx(0:2:2,:),res)  ; Create filled XY plot.
-
-; Create a plot with the area between both curves filled in pink.
-
-res@gsnXYFillColors = "lightpink"
-res@xyLineColor     = -1                           ; We don't want the line, so make it transparent.
-
-printVarSummary(mnmx(1:2,:))
-up_plot  = gsn_csm_y (wks,mnmx(1:2,:),res)  ; Create another filled XY plot.
-      
-; Create a plot with the ensmble mean line filled in red.
-
-res@gsnXYFillColors = "Red"
-;res@gsnXYFillColors = "black"
-;res@xyLineColor     =  "red"                          ; We don't want the line, so make it transparent.
-res@xyLineColors    = "red"
-
-mid_plot  = gsn_csm_y (wks,mnmx(3,:),res)  ; Create another filled XY plot.
-
+delete(res@xyLineColor)
+res@xyLineColor = "Green"
+res@xyLineThicknessF = 5
+res@xyDashPattern = 0
+ensm_plot = gsn_csm_y (wks,mnmx(3,:),res)
 ;
 ; Overlay the top and mid plots on the bottom plot.
 ;
 ; Don't draw anything yet, because we still need to
 ; attach a legend and some titles.
 ;
-  overlay(bot_plot,mid_plot)
-  overlay(bot_plot,obs_plot)
-  overlay(bot_plot,raccordo_plot)
-  overlay(bot_plot,up_plot)
+  overlay(obs_plot,raccordo_plot)
+  overlay(obs_plot,mid_plot)
+  overlay(obs_plot,ensm_plot)
 
-getvalues bot_plot                      ; Get plot size for use in
+getvalues obs_plot                      ; Get plot size for use in
   "vpHeightF" : vph                 ; determining size of
   "vpWidthF"  : vpw                 ; labelbar.
 end getvalues
@@ -233,20 +223,21 @@ lbres@lbAutoManage       = True          ; Necessary to control sizes
 lbres@vpWidthF           = 0.2 * vpw     ; labelbar width
 lbres@vpHeightF          = 0.2 * vph     ; labelbar height
 lbres@lbBoxMajorExtentF  = 0.75          ; puts space between color boxes
-lbres@lbFillColors       = (/"black","Red","LightBlue","lightpink"/)  ; labelbar colors
+lbres@lbFillColors       = (/"black","Green","Red"/)  ; labelbar colors
 lbres@lbMonoFillPattern  = True          ; Solid fill pattern
-lbres@lbLabelFontHeightF = 0.1          ; font height. default is small
+lbres@lbAutoManage       = False 
+lbres@lbLabelFontHeightF = 0.01          ; font height. default is small
 lbres@lbLabelJust        = "CenterLeft"  ; left justify labels
 
-lbid = gsn_create_labelbar(wks,4,(/"NCEP","Ensmean","Below median","Above median"/),lbres)         ; create legend
+lbid = gsn_create_labelbar(wks,3,(/"NCEP","SPS4 ensemble mean","SPS4 members"/),lbres)         ; create legend
 
 amres = True
 amres@amJust           = "TopRight"
-amres@amParallelPosF   = -0.3         ; move legend to the right
+amres@amParallelPosF   = -0.2         ; move legend to the right
 amres@amOrthogonalPosF = -0.5            ; move the legend down
-annoid1 = gsn_add_annotation(bot_plot,lbid,amres)   ; add legend to plot
+annoid1 = gsn_add_annotation(obs_plot,lbid,amres)   ; add legend to plot
 
-draw(bot_plot)   ; Draw base plot.
+draw(obs_plot)   ; Draw base plot.
 frame(wks)    ; advance frame
 ;*******************************************************************
   if ( write .eq. "TRUE" ) then

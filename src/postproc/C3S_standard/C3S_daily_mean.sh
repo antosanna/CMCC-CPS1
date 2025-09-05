@@ -22,13 +22,13 @@ st=`echo $stdate |cut -c 5-6`
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
-if [ ! -d $wkdir ]
+if [[ ! -d $wkdir ]]
 then
    echo "something wrong $wkdir does not exist"
 fi
 #NEW 202103 !!! +
 varlist="tso tas uas vas tdps psl ta zg ua va hus"
-if [ -f $check_ok ] 
+if [[ -f $check_ok ]]
 then
 #se i file C3S ad alta frequenza sono piu' recenti rifai
    for var in $varlist
@@ -44,7 +44,7 @@ then
 fi
 #NEW 202103 !!! -
 
-if [ ! -f $check_ok ]
+if [[ ! -f $check_ok ]]
 then
    for var in $varlist
    do
@@ -84,7 +84,7 @@ then
    done
    touch $check_ok
 fi
-if [ ! -f $check_ok ]
+if [[ ! -f $check_ok ]]
 then
    title="[C3Sdaily] ${CPSSYS} daily postprocessing ERROR"
    body="$stdate $member $DIR_C3S/C3S_daily_mean.sh did not complete correctly. Check ${DIR_LOG}/$typeofrun/${stdate}/launch_C3S_daily_${stdate}_${member}*.err/out"

@@ -9,7 +9,7 @@
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 # First check that no other this script is running
-if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 6 ]
+if [[ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 6 ]]
 then
    exit
 fi
@@ -29,7 +29,7 @@ for ens in 032
 do
    caso=sps4_202508_${ens}
 
-   checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
+   checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE_no_rest
    if [[ -f $checkfile ]]
    then
       rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $checkfile a07cmc00@dmover2.leonardo.cineca.it:${leo_dir}/

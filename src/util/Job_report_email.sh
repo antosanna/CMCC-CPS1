@@ -3,7 +3,7 @@
 . ${DIR_UTIL}/descr_CPS.sh
 mymail=$1
 
-if [ $LSB_JOBEXIT_STAT -ne 0  ] ; then
+if [[ $LSB_JOBEXIT_STAT -ne 0  ]] ; then
   
     message=" Jobname : $LSB_JOBNAME \n
            Job's exit status : $LSB_JOBEXIT_STAT \n
@@ -17,13 +17,13 @@ if [ $LSB_JOBEXIT_STAT -ne 0  ] ; then
     sps_CAM_IC=`echo $LSB_JOBNAME |grep ${SPSSystem}_CAM_IC`
     log_check=`echo $LSB_JOBNAME |grep log_checker`
     title="${CPSSYS} forecast ERROR" 
-    if [ ! -z $ag ]
+    if [[ ! -z $ag ]]
     then
        title="[CAMIC] ${CPSSYS} atmospheric guess ERROR"
-    elif [ ! -z $sps_CAM_IC ]
+    elif [[ ! -z $sps_CAM_IC ]]
     then
        title="[CAMIC] ${CPSSYS} SPS guess ERROR"
-    elif [ ! -z $log_check ]
+    elif [[ ! -z $log_check ]]
     then
        title="${CPSSYS} log_checker ERROR" 
     fi

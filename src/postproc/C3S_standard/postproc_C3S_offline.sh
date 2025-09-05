@@ -100,6 +100,7 @@ then
 fi
 
 
+
 #***********************************************************************
 # Cam files archiving
 #***********************************************************************
@@ -113,6 +114,7 @@ then
    filetyp="h0 h1 h2 h3 h4"
    for ft in $filetyp
    do
+  
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
       input="$caso $ft ${wkdir_cam} $finalfile $ic" 
@@ -157,7 +159,7 @@ then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : fix_spikes_DMO_single_member_cam.h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
-      if [ -f $HEALED_DIR/${caso}.cam.h1.DONE -a -f $HEALED_DIR/${caso}.cam.h2.DONE -a -f $HEALED_DIR/${caso}.cam.h3.DONE -a -f $HEALED_DIR/${caso}.cam.h4.DONE ] || [ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]
+      if { [[ -f $HEALED_DIR/${caso}.cam.h1.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h2.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h3.DONE ]] && [[ -f $HEALED_DIR/${caso}.cam.h4.DONE ]]; }  || [[ -f $HEALED_DIR/${caso}.too_many_it.EXIT ]]
       then
          break
       fi

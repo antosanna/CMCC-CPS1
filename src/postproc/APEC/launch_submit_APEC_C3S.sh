@@ -22,7 +22,7 @@ here="${DIR_POST}/APEC"
 #-----------------------------------
 yyyyi=1993 #`date +%Y`
 yyyyf=2022 #`date +%Y`
-st=10     #`date +%m`    #2 figures
+st=11     #`date +%m`    #2 figures
 
 for yyyy in `seq $yyyyi $yyyyf`
 do

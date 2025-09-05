@@ -3,6 +3,7 @@ begin
 yyyy=getenv("yyyy")
 st=getenv("st")
 ppp=getenv("ppp")
+checkfile=getenv("checkfile")
 
 ntime=0
 month=toint(st)
@@ -44,48 +45,30 @@ meshmask = addfile(meshmaskfile,"r")
    rank=dimsizes(nn)
 
 if ( rank .eq. 4 ) then
-   if ( filetype .eq. "grid_T_EquT" ) then
-      depth=fi->deptht(0:29)
+   if ( filetype .eq. "grid_EquT_T" ) then
+; first 300m
+      depth=fi->deptht(0:34)
    end if
    if ( filetype .eq. "grid_U" ) then
-      depth=fi->depthu(0:29)
+      depth=fi->depthu(0:34)
    end if
    if ( filetype .eq. "grid_V" ) then
-      depth=fi->depthv(0:29)
+      depth=fi->depthv(0:34)
    end if
 end if  
 
 if ( rank .eq. 4 ) then
    fall = addfiles (diri+"/"+fili, "r")
-   varall=fall[:]->$varm$(:,0:29,:,:)
+   varall=fall[:]->$varm$(:,0:34,:,:)
 else if ( rank .eq. 3 ) then
    fall = addfiles (diri+"/"+fili, "r")
    varall=fall[:]->$varm$
 end if
 end if
 
-if ( filetype .eq. "grid_T_EquT" ) then
-   nav_lat = meshmask->nav_lat(348:655,:)
-   nav_lon = meshmask->nav_lon(348:655,:)
+if ( filetype .eq. "grid_EquT_T" ) then
 
-   lon11=where(nav_lon.lt.0,nav_lon+360,nav_lon)
-   varall@x = lon11
-
-   latS=-2.5
-   latN=2.5
-   lonW=0
-   lonE=360
-
-   ji=region_ind(nav_lat,lon11,latS,latN,lonW,lonE)
-   jStrt = ji(0)
-   jLast = ji(1)
-   iStrt = ji(2)
-   iLast = ji(3)
-
-   LAT2D = nav_lat(jStrt:jLast,iStrt:iLast)
-   LON2D = lon11(jStrt:jLast,iStrt:iLast)
-
-   varall_slab=dim_avg_n_Wrap(varall(:,:,jStrt:jLast,:),2)
+   varall_slab=dim_avg_n_Wrap(varall,2)
    delete(varall)
    varall=varall_slab
 
@@ -117,6 +100,7 @@ if ( rank .eq. 4 ) then
 end if
 fout->$varm$ = varall
 ;#######
+system("touch "+checkfile)
 
 
 end

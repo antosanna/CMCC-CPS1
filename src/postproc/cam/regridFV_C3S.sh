@@ -110,14 +110,14 @@ then
     rm $checkfile
 fi    
 # if check file does not exist run the ncl script
-if [ ! -f ${checkfile} ] 
+if [[ ! -f ${checkfile} ]] 
 then
 #   export checkfile=${check_regridC3S_type}_${type}_DONE
    cp $DIR_POST/cam/regridFV_C3S_template.ncl $wkdir/regridFV_C3S.$type.ncl
    sed -i "s/TYPEIN/$type/g;s/MEMBER/$real/g;s/FRQIN/$frq/g" $wkdir/regridFV_C3S.$type.ncl
    ncl $wkdir/regridFV_C3S.$type.ncl
 fi
-if [ -f ${checkfile} ]
+if [[ -f ${checkfile} ]]
 then
    echo "regridFV_C3S.ncl completed successfully for $type and $real"
 else

@@ -9,7 +9,7 @@
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 # First check that no other this script is running
-if [ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]
+if [[ `${DIR_UTIL}/findjobs.sh -m ${machine} -n copy_SPS4DMO_from_Leonardo -c yes ` -gt 4 ]]
 then
    exit
 fi
@@ -21,13 +21,7 @@ leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
 leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
 
-
-
-
-
-lista_today_1=" "
-
-lista="sps4_199702_002"
+lista="sps4_200904_017"
 for caso in $lista ; do
 
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
@@ -52,7 +46,7 @@ for caso in $lista ; do
    fi
 
 done
-idjob=`$DIR_UTIL/findjobs.sh -n copy_SPS4DMO_from_Leonardo1 -i yes`
+idjob=`$DIR_UTIL/findjobs.sh -n copy_SPS4DMO_from_Leonardo_singlecase -i yes`
 logfile=$DIR_TEMP/list1_cases_transferred_`date +%Y%m%d`.$idjob.txt
-echo $lista_today_1 > $logfile
+echo $lista > $logfile
 rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $logfile a07cmc00@dmover3.leonardo.cineca.it:${leo_dir_temp}/

@@ -26,7 +26,7 @@ set -evxu
 
 export check_iceregrid
 #NEW 202103  +
-if [ -f $check_iceregrid ] 
+if [[ -f $check_iceregrid ]]
 then
 # se il checkfile e' piu' vecchio del DMO rimuovi e rifai
    cd $INPUT
@@ -50,7 +50,7 @@ else
    cd $INPUT
    #TAKES 3'
    export inputfile=$wkdir/CASO.cice.nc 
-   if [ ! -f $inputfile ] 
+   if [[ ! -f $inputfile ]]
    then
       inputlist=" "
       for mon in `seq 0 $(($nmonfore - 1))`
@@ -83,7 +83,7 @@ else
    echo "executed $scriptname "`date`
    echo "---------------------------------------------"
 
-   if [ ! -f $check_iceregrid ]
+   if [[ ! -f $check_iceregrid ]]
    then
      title="[C3S] ${CPSSYS} forecast ERROR"
      body="ERROR in standardization of CICE files for case CASO. 

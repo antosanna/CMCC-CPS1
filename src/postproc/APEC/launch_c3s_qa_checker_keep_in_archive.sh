@@ -236,7 +236,7 @@ sleeptime=60
 while `true` ; do
    sleep $sleeptime
    jobdone=`ls -1 ${ACTDIR}/NSDONE_* | wc -l`
-   if [ $jobdone -eq $submit_cnt ] ; then
+   if [[ $jobdone -eq $submit_cnt ]] ; then
       break
    fi
    elapsed_time=$(( $elapsed_time + $sleeptime  ))
@@ -244,7 +244,7 @@ while `true` ; do
    # avoid infinite waiting
    number_of_chk_proc=0
    number_of_chk_proc=`${DIR_SPS35}/findjobs.sh -m $machine -n chk_err_${startdate}_${mb3} -c yes`
-   if [ $elapsed_time -gt 7200 -a $number_of_chk_proc -eq 0 ]; then 
+   if [[ $elapsed_time -gt 7200 ]] && [[ $number_of_chk_proc -eq 0 ]]; then 
 		echo "Something probably went wrong with checker. Check in logs for NSDONE_ files production."
 	        title="[C3Sdaily-QA] ${SPSSYS} forecast ERROR"		
 		body="Something probably went wrong with checker of member ${SPSsystem}_${startdate}_${mb3}. Check in logs for NSDONE_ files production."

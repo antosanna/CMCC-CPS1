@@ -32,7 +32,7 @@ do
       totpert=$(($n_ic_cam * $n_ic_nemo * $n_ic_clm))
 
 # if triplette.random.$yyyy$st.txt  does not exist yet into $TRIP_DIR, create it
-      if [ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]
+      if [[ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]]
       then
    # generate arrays from files with bash builtin function mapfile
          mapfile -t lndAR < $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
@@ -116,7 +116,7 @@ EOF2
 
 # COPY SCRIPTS, triplette_random AND ICs TO CINECA
       cd ${DIR_SUBM_SCRIPTS}/$st/$yyyy${st}_scripts/CINECA/
-      if [ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]; then
+      if [[ -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]]; then
          cp $TRIP_DIR/triplette.random.$yyyy$st.txt .
       fi
       tar -cvf $yyyy${st}_scripts_CINECA.tar *

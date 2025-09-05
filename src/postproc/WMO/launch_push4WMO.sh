@@ -22,7 +22,7 @@ dbg_push=${3:-0}
 
 scriptname=$0
 procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n $scriptname -c yes `
-if [ $procsRUN -gt 1 ] ; then
+if [[ $procsRUN -gt 1 ]] ; then
    echo "$scriptname already running"
  		exit 0
 fi		
@@ -31,14 +31,13 @@ fi
 # Parameters to be set by user
 st=$1 #2 figures  # SET BY CRONTAB
 isforecast=$2
-
-if [ $isforecast -eq 1 ]
+if [[ $isforecast -eq 1 ]]
 then
    iyy=`date +%Y`
    fyy=$iyy
 else
    iyy=1993
-   if [ $dbg_push -ge 1 ]
+   if [[ $dbg_push -ge 1 ]]
    then
       iyy=1993
       fyy=2022
@@ -47,7 +46,7 @@ else
    fi
 fi
 
-if [ $dbg_push -ge 1 ] 
+if [[ $dbg_push -ge 1 ]] 
 then
    mymail=andrea.borrelli@cmcc.it
    title_debug="TEST "
@@ -58,7 +57,7 @@ fi
 for yyyy in `seq $iyy $fyy` ; do
 
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-   if [ $dbg_push -ge 1 ] 
+   if [[ $dbg_push -ge 1 ]] 
    then
      mymail="sp1@cmcc.it"
      ccmail=$mymail
@@ -67,19 +66,19 @@ for yyyy in `seq $iyy $fyy` ; do
      ccmail=$mymail
      body="launch_push4WMO.sh. Data push to WMO ftp"
    fi
-   title=${title_debug}"[WMO] ${SPSSystem} warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
+   #title=${title_debug}"[WMO] ${SPSSystem} warning"
+   #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_wmo_${yyyy}${st}
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year
 #--------------------------------------------------------------------
    filedone=push_WMO_${yyyy}${st}_DONE
-   if [ $dbg_push -ge 1 ]
+   if [[ $dbg_push -ge 1 ]]
    then
       filedone=test_WMO_${yyyy}${st}_DONE
    fi
   	anypushC3SDONE=`ls -1 $DIR_LOG/${typeofrun}/$yyyy$st/$filedone | wc -l`
-  	if [ $anypushC3SDONE -gt 0 ] ; then
+  	if [[ $anypushC3SDONE -gt 0 ]] ; then
 # already pushed: go on with following hindcasts
     		continue
   	fi
@@ -90,7 +89,7 @@ for yyyy in `seq $iyy $fyy` ; do
 #--------------------------------------------------------------------
   	procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -c yes `
    jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -i yes `
-  	if [ $procsRUN -gt 0 ] ; then
+  	if [[ $procsRUN -gt 0 ]] ; then
 # if another push running check how long it has being running for
       startY_proc=`${DIR_UTIL}/findjobs.sh -m $machine -Y $jobID `
       startd_proc=`${DIR_UTIL}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -W yes -d yes`
@@ -100,9 +99,9 @@ for yyyy in `seq $iyy $fyy` ; do
       today_in_sec=$(date -d "$today" +%s)
       startdate_in_sec=$(date -d "${startY_proc}${startm_proc}${startd_proc}${starth_proc}" +%s)
       elapsedh=$(((today_in_sec - startdate_in_sec)/86400))
-      if [ $elapsedh -gt 4 ]
+      if [[ $elapsedh -gt 4 ]]
       then
-         if [ $dbg_push -eq 0 ]
+         if [[ $dbg_push -eq 0 ]]
          then
             body="elapsed hours $elapsedh for push4WMO_${yyyy}${st}. Too much. Going to kill it"
   	         title=${title_debug}"[WMO] ${SPSSystem} ${typeofrun} warning"
@@ -121,7 +120,7 @@ for yyyy in `seq $iyy $fyy` ; do
 
   	body="WMO: Begin of the start-date $yyyy$st transfer on WMO server"
    cntfirst=`ls $firstdtn03 |wc -l `
-   if [ $cntfirst -eq 1 ]
+   if [[ $cntfirst -eq 1 ]]
    then
       body="WMO: successive attempt of the start-date $yyyy$st transfer on WMO server"
    fi
@@ -139,17 +138,17 @@ for yyyy in `seq $iyy $fyy` ; do
        sleep 300 # 
        ic=$(( $ic + 1 ))
        anypushC3SDONE=`ls -1 $DIR_LOG/${typeofrun}/$yyyy$st/$filedone | wc -l`
-       if [ $anypushC3SDONE -eq 1 ] ; then          
+       if [[ $anypushC3SDONE -eq 1 ]] ; then          
           break
        fi
 # after 40 minutes kill the process and relaunch
-       if [ $ic -eq 8 ]
+       if [[ $ic -eq 8 ]]
        then
           ic=0
-          if [ $anypushC3SDONE -eq 0 ] ; then          
+          if [[ $anypushC3SDONE -eq 0 ]] ; then          
 # meaning transfer not completed
              procsRUN=`${DIR_UTIL}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -c yes `
-             if [ $procsRUN -ne 0 ] ; then
+             if [[ $procsRUN -ne 0 ]] ; then
 # meaning push still running --> too much! kill and resubmit
                 jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n push4WMO_${yyyy}${st} -i yes `
                 bkill $jobID

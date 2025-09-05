@@ -21,6 +21,12 @@ then
    alias rm="rm -f"
    alias cp="/bin/cp -f"
    alias mv="mv -f"
+elif [[ -n `echo $PS1|grep cassandra` ]]
+then
+   machine="cassandra"
+   alias rm="rm -f"
+   alias cp="/bin/cp -f"
+   alias mv="mv -f"
 elif [[ -n `echo $PS1|grep zeus` ]]
 then
    machine="zeus"
@@ -43,18 +49,18 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]]
+if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
    qos=qos_lowprio   #this is used only for SLURM but it is
                      #necessary for portability being used in
                      #submitcommand
 #   nmax_lt_arch_md=15   #in SPS3.5 15 lt_archive_C3S_moredays occupy ~ 1TB
 #   envcondarclone=rclone_gdrive
-   if [[ $machine == "juno" ]]
+   if [[ $machine == "juno" ]] 
    then
       HEAD=cmcc
       operational_user=cp1
-      pID=0490 #Juno
+      eID=0490 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
@@ -62,6 +68,27 @@ then
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_py39
+      maxnumbertosubmit=18
+      maxnumbertorecover=40
+      maxnumberguarantee=7
+      env_workflow_tag=cmcc
+      DIR_REST_OIS_FORE=$WORK/OIS2/archive/  #TO BE DEFINED ONCE SET
+      DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/
+      DATA_ECACCESS=/data/delivery/csp/cp1/in/
+   elif [[ $machine == "cassandra" ]]
+   then
+      refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
+      refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
+      HEAD=cmcc
+      operational_user=cp1
+      pID=0490 #Juno
+#      pID=0438 #Juno
+      cores_per_node=112
+      nnodes_SC=56
+      cores_per_run=336
+      mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
+      mpirun4py_nemo_rebuild=mpiexec.hydra
+      envcondacm3=cmcc-cm_sps4
       maxnumbertosubmit=18
       maxnumbertorecover=40
       maxnumberguarantee=7
@@ -160,7 +187,7 @@ then
 ######## ICs_CLM Juno
    IC_CLM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CLM_${CPSSYS}/
    IC_CLM_CPS_DIR=$SCRATCHDIR/IC/CLM_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
    fi
    WOIS=/work/cmcc/${operational_user}/CPS/CMCC-OIS2/
@@ -168,27 +195,27 @@ then
 # TEMPORARY FOR TESTS
    IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
    IC_NEMO_CPS_DIR1=${DATA_ARCHIVE1}/IC/NEMO_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_NEMO_CPS_DIR=$IC_NEMO_CPS_DIR1
    fi
 ######## ICs_CICE Juno
 # TEMPORARY FOR TESTS
    IC_CICE_CPS_DIR=$SCRATCHDIR/IC/CICE_${CPSSYS}/
    IC_CICE_CPS_DIR1=${DATA_ARCHIVE1}/IC/CICE_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CICE_CPS_DIR=$IC_CICE_CPS_DIR1
    fi
 ######## ICs_CAM Juno
    IC_CAM_CPS_DIR=${SCRATCHDIR}/IC/CAM_${CPSSYS}/
    IC_CAM_CPS_DIR1=${DATA_ARCHIVE1}/IC/CAM_${CPSSYS}/
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
       IC_CAM_CPS_DIR=$IC_CAM_CPS_DIR1
    fi
 #   WORK_C3Shind=/data/csp/$operational_user/archive/CESM/${CPSSYS}/C3S/
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
-   if [ $(whoami) == ${operational_user} ]; then
+   if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=adrien.owono@ecmwf.int
 	     ccmail=silvio.gualdi@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it

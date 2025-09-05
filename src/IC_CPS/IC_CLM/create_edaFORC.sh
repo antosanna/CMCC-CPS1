@@ -269,6 +269,7 @@ then
       jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
       ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
       exit 1
+   fi
 fi
 
 #PERFORM HERE NEW ACCUMULATION!!!
