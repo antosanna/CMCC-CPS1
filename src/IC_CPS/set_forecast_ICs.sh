@@ -40,6 +40,8 @@ do
         then
            rm $bkupf
         fi
+        body="CAM IC $ic correctly produced and back-up removed"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
     fi
 done
 #
@@ -72,6 +74,8 @@ do
         then
            rm $bkupf_rof
         fi
+        body="CLM and HYDROS ICs $ic correctly produced and back-up removed"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
     fi
 done
 # replace missing NEMO ICs with backup
@@ -117,6 +121,8 @@ do
         then
            rm $bkupf_nemo
         fi
+        body="NEMO and CICE ICs $ic correctly produced and back-up removed"
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
     fi
 done
 mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/ICs

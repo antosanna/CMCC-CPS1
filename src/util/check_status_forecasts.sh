@@ -24,7 +24,7 @@ fmt="%-15s %-15s %-15s %-15s\n"
 cd $DIR_ARCHIVE
 restlist=""
 mkdir -p $DIR_REP/$stdate
-report=$DIR_REP/$stdate/advancement_status_${stdate}.txt
+report=$DIR_REP/$stdate/advancement_status_${stdate}.`date +%Y%m%d%H`.txt
 if [[ -f $report ]]
 then
    rm $report
@@ -86,9 +86,10 @@ do
    message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
 #   message+=" number of member with restart month ${uniq_rest[$i]} is $n \n"
 done
-${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "SPS4 $stdate status"
+${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "SPS4 $stdate status" -r yes -s $stdate
 set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 set -eu
-rclone copy ${report} my_drive:SPS4_REPORTS/
+rclone mkdir my_drive:forecast/$stdate/REPORTS
+rclone copy ${report} my_drive:forecast/$stdate/REPORTS

@@ -72,8 +72,8 @@ subm_cnt=0
 #endyear=2013 #to allow for scenario up to the IC we have retrieved
 for st in $stlist
 do
-   #for yyyy in $(seq $iniy_hind $endyear)
-   for yyyy in $(seq $iniy_hind $endy_hind)
+#   for yyyy in $(seq $iniy_hind $endy_hind)
+   for yyyy in $(seq 1994 $endy_hind)
    do
        #if [[ $yyyy -eq 2014 ]]
        #then
@@ -237,7 +237,8 @@ do
                ylast=$yyyy
                break 4
             fi
-
+            #to minimize simultaneous I/O from different members running
+            sleep 300
          fi
       done
    done

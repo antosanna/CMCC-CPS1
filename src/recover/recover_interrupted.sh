@@ -310,10 +310,6 @@ set -eux
      fi #juno
      fi #forecast
   fi #if moredays
-#               checkin_qa=`ls $DIR_CASES/$caso/logs/qa_started_${yyyy}${st}_0${member}_ok | wc -l`
-#               checkout_all=`ls $DIR_ARCHIVE/C3S/$yyyy$st/all_checkers_ok_0${member} | wc -l`
-#               checkfile_daily=`ls $FINALARCHC3S/$yyyy$st/qa_checker_daily_ok_${member} | wc -l`
-#               checkfile_mvcase=`ls $DIR_LOG/${typeofrun}/$yyyy$st/${caso}_DMO_arch_ok | wc -l`
 
 done  
 
@@ -383,6 +379,11 @@ then
    done
 fi
 
+cnt_total=$(($cnt_lt_archive + $cnt_resubmit + $cnt_moredays + $cnt_regrid_ice + $cnt_regrid_oce + $cnt_pp_C3S + $cnt_first_month + $cnt_st_archive))
+if [[ $cnt_total -eq 0 ]]
+then
+   exit 0
+fi
 
 if [[ $dbg -eq 2 ]]
 then
@@ -414,6 +415,22 @@ if [[ $dbg -ne 2 ]] ; then
    then
       echo "ALREADY RUNNING MAXIMUM NUMBER OF JOBS! exit now"
       exit
+   else
+      if [[ $typeofrun == "forecast" ]]
+      then
+         body="RECOVER STARTING: see attached $filexls"
+         echo $body
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
+         set +euvx
+         . $DIR_UTIL/condaactivation.sh
+         condafunction activate $envcondarclone
+         set -eux
+         python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+         rclone copy ${filexls} my_drive:$typeofrun/$yyyy$st/REPORTS
+         set +euvx
+         condafunction deactivate $envcondarclone
+         set -eux
+      fi
    fi
 set +euv
    . $DIR_UTIL/condaactivation.sh
@@ -696,25 +713,5 @@ set -eux
    
    
 fi   
-
-exit
-
-#TEMPORARY DISABLED
-if [[ $dbg -eq 0 ]] ; then
-  # third input optional: if present do not print the list of running/pending jobs
-  doplot=1
-  logfile=$DIR_LOG/$typeofrun/monitor_${typeofrun}.$st.`date +%Y%m%d%M`.txt
-  ${DIR_UTIL}/monitor_forecast.sh $st $doplot > $logfile
-
-  ## lag needed to generate the sstplot
-  if [[ $doplot -eq 1 ]] ; then
-    sleep 360 #lag to needed to generate the sstplot
-  fi
-  ## convert in pdf
-  pdffile=`echo monitor_forecast_after_recover_${yyyy}${st}.$(date +%Y%m%d%H%M).txt|rev|cut -d '.' -f2-|rev`.pdf
-  convert -size 860x1200  -pointsize 10 $SCRATCHDIR/$st/${txtfile} $SCRATCHDIR/$st/$pdffile
-  attachment=$SCRATCHDIR/$st/$pdffile
-  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Monitor forecast after recover attached" -t "${CPSSYS} notification" -a "$attachment"
-fi
 
 exit 0

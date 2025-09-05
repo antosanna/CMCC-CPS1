@@ -60,7 +60,7 @@ if [[ $flag -eq 1 ]]
 then
 # healing for too many iterations
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j continue_fixing_after_it_limit_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s continue_fixing_after_it_limit.sh -i "$input"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "continue_fixing_after_it_limit_${caso} submitted" -r "only" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : continue_fixing_after_it_limit_${caso} submitted" -r "only" -s $yyyy$st
 elif [[ $flag -eq 2 ]]
 then
 # healing for spike discovered in C3S
@@ -151,7 +151,7 @@ fi
 inputextrap="$caso $checkfileextrap"
 req_mem=8000
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
 while `true`
 do
@@ -289,7 +289,7 @@ if [[ -d $DIR_TEMP/$caso ]]
 then
    rm -rf $DIR_TEMP/$caso
 fi
-chmod u-w -R $DIR_ARCHIVE/$caso/
+chmod -R u-w $DIR_ARCHIVE/$caso/
 
 
 echo "Done."

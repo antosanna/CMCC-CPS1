@@ -260,4 +260,6 @@ done
 #      fi
 #  fi
 # replace missing ICs with backup
+	body="******* Run ic production completed"
+	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
 $IC_CPS/set_forecast_ICs.sh $yyyy $st

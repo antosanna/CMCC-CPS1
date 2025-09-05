@@ -97,6 +97,7 @@ cnt_atmICfile=0
 cnt_lndIC=0
 cnt_nemoIC=0
 cnt_iceIC=0
+cnt_sleep=0
 
 cnt_fy=0
 listacasi=()
@@ -251,8 +252,7 @@ set -e
      fi
  
      echo "submit $script_to_submit"
-     subm_cnt=$(( $subm_cnt + 1 ))
-
+     
   # If here, all the conditions are satisfied, and the serial launcher can be submitted
      if [[ $machine == "leonardo" ]]
      then
@@ -262,11 +262,18 @@ set -e
         $script_to_submit
      fi
      listacasi+="$caso "
-
+     subm_cnt=$(( $subm_cnt + 1 )) 
+     cnt_sleep=$(($cnt_sleep +1 ))   
+  
   # REDUNDANT but safe (check how many jobs are on parallel queue)
   # if $maxnumbertosubmit already running exit
   # this control does not count the cases still in the create_caso phase
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
+     
+     if [[ ${cnt_sleep} -eq 10 ]] ; then
+        sleep 1800
+        cnt_sleep=0
+     fi
      if [ $np_all -ge $maxnumbertosubmit ]
      then
         break 4
@@ -314,12 +321,7 @@ archive $cnt_archive \n
 case running $cnt_run \n
 \n
 cases already created $cnt_dircases \n"
-if [[ $machine == "leonardo" ]]
-then
-#mail not implemented yet
-   exit
-fi
-title="NEW FORECAST JOBS SUBMITTED on $machine"
+title="NEW FORECAST SUBMISSION COMPLETED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 
 

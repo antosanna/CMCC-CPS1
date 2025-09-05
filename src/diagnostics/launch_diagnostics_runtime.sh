@@ -153,14 +153,15 @@ set +euvx
       input="$yyyy $st $nrundiagsmin $nmf $flgmnth $monthstr $checkfile1 $inputfile $dbg"
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_first_month_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for first month. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
-      title="${CPSSYS} forecast notification month1 runtime diags"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+     
+      body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for first month."
+      title="${CPSSYS} forecast first month runtime diags submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       if [[ $machine == "leonardo" ]]
       then
         while `true`
         do
-           sleep 600
+           sleep 300
            nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
            if [[ $nproc -eq 0 ]] ; then
                if [[ -f $checkfile1 ]] ; then
@@ -170,11 +171,14 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   body="Diagnostics for first month completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   title="${CPSSYS} first month runtime diags completed"
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for month1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
                   title="${CPSSYS} forecast warning month1 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                   exit 1 
                fi
            fi
@@ -206,14 +210,14 @@ set +euvx
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead0_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 # Only one $DIR_UTIL/diag/plot_forecast_all_vars.sh allowed at a time!
 set -euvx
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 0. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
-      title="${CPSSYS} forecast notification lead 0 runtime diags"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for lead 0."
+      title="${CPSSYS} forecast lead 0 runtime diags submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       if [[ $machine == "leonardo" ]]
       then
         while `true`
         do
-           sleep 600
+           sleep 300
            nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
            if [[ $nproc -eq 0 ]] ; then
                if [[ -f $checkfile2 ]] ; then
@@ -223,11 +227,14 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   body="Diagnostics for lead 0 completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   title="${CPSSYS} lead 0 runtime diags completed"
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 0. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
                   title="${CPSSYS} forecast warning lead 0 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                   exit 1
                fi
            fi
@@ -260,14 +267,14 @@ set +euvx
       input="$yyyy $st $nrundiagsmin $nmf $flgmnth $monthstr $checkfile3 $inputfile $dbg "
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -s plot_forecast_all_vars.sh -j plot_forecast_lead1_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st -i "$input"
 set -euvx
-      body="$DIR_DIAG/plot_forecast_diag.sh launched by $DIR_UTIL/launch_forecast_diag.sh for lead 1. You will find plots on drive:$typeofrun/$yyyy$st/runtime_diags"
-      title="${CPSSYS} forecast notification lead 1 runtime diags"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for lead 1."
+      title="${CPSSYS} forecast lead 1 runtime diags submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
       if [[ $machine == "leonardo" ]]
       then
         while `true`
         do
-           sleep 600
+           sleep 300
            nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
            if [[ $nproc -eq 0 ]] ; then
                if [[ -f $checkfile2 ]] ; then
@@ -277,11 +284,14 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+                   body="Diagnostics for lead 1 completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   title="${CPSSYS} lead 1 runtime diags completed"
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
                   title="${CPSSYS} forecast warning lead 1 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                   exit 1
                fi
            fi

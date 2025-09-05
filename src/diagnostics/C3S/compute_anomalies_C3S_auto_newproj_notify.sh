@@ -230,13 +230,14 @@ set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 listafig=`ls ${dirplots}/*${yyyy}_${st}*pdf`
-rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags/$varm
+rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags #/$varm
 for fig in $listafig
 do
-   rclone copy $fig my_drive:forecast/$yyyy$st/C3S_diags/$varm
+   rclone copy $fig my_drive:forecast/$yyyy$st/C3S_diags #/$varm
    rm $fig
 done
 set -euvx
-title="[diags] ${CPSSYS} ${typeofrun} notifications C3S plots"
-body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags/$varm"
+title="[diags] ${CPSSYS} ${typeofrun} notifications C3S $varm plots"
+#body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags/$varm"
+body="All figures for $varm ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun 

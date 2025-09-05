@@ -43,5 +43,5 @@ if [[ $n_completed -gt 0 ]]
 then
    body="$n_completed forecasts completed on Leonardo" 
    title=$body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $stdate
 fi

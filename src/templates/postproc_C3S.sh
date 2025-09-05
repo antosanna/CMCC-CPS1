@@ -365,7 +365,7 @@ if [[ -d $DIR_TEMP/$caso ]]
 then
    rm -rf $DIR_TEMP/$caso
 fi
-chmod u-w -R $DIR_ARCHIVE/$caso/
+chmod -R u-w $DIR_ARCHIVE/$caso/
 #
 for realm in CAM CLM NEMO CICE
 do

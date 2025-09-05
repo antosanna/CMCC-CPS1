@@ -76,8 +76,17 @@ then
       fi
       mkdir -p ${DIR_REP}/$startdate
 #      message=${message//'\n'/<br>}
-      echo "${message} `date`" >> ${outlog}.`date +%Y%m%d`.txt
-      echo " " >> ${outlog}.`date +%Y%m%d`.txt
+      logfile=${outlog}.txt
+      echo "`date` $message" >> ${logfile}
+      echo " " >> $logfile
+      if [[ "$machine" != "leonardo" ]]
+      then
+          . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
+          . $DIR_UTIL/condaactivation.sh
+          condafunction activate $envcondarclone
+          rclone mkdir my_drive:$typeofrun/$startdate/REPORTS
+          rclone copy $logfile $typeofrun/$startdate/REPORTS
+      fi
       if [ "$report" = "only" ]
       then
          exit
@@ -118,13 +127,14 @@ fi
 if [  "$machine" = "leonardo" ]
 then
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT
-  if [[ $title == *"CPS1"* ]]; then
-    oldString="CPS1"
-    newString="CPS1 - $machine BACKUP"
-    title=$(echo "${title/$oldString/$newString}")
-  else
-    title+=" - $machine BACKUP"
-  fi  
+# THIS DOES NOT HOLD ANYMORE BEING LEONARDO THE OPERATIONAL MACHINE
+#  if [[ $title == *"CPS1"* ]]; then
+#    oldString="CPS1"
+#    newString="CPS1 - $machine BACKUP"
+#    title=$(echo "${title/$oldString/$newString}")
+#  else
+#    title+=" - $machine BACKUP"
+#  fi  
 
   #https://stackoverflow.com/questions/63319313/sendmail-sending-corrupted-unreadable-pdf-over-mail-sending-with-base64-encodin  - working sendmail example for single attachment
   message+="<br> `date`"
