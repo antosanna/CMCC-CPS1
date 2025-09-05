@@ -60,7 +60,7 @@ then
    then
       HEAD=cmcc
       operational_user=cp1
-      eID=0490 #Juno
+      pID=0490 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
