@@ -103,7 +103,7 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
 
    title="${$SPSSystem} forecast notification - Website update"
    #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -c $ccmail
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
    y2notify=`date +%Y`
    m2notify=`date +%m`
    d2notify=`date +%d`
@@ -123,6 +123,6 @@ else
    title="${$SPSSystem} forecast notification - C3S diagnostic complete"
    body="Final diagnostic complete. \n Check the notification mails and plots by compute_anomalies_C3S_auto_newproj_notify.sh before sending data to ECMWF.\n
 WARNING: PLOTS NOT UPLOADED TO WEBSITE!!!"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
 fi 
 exit 0
