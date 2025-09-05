@@ -11,7 +11,8 @@
 set -euvx
 
 #for st in {01..12}
-for st in 02 03 04 05 07 09 10 11 12
+# already run for 01 02 03 04 05 07 09 10
+for st in 11 12
 do
    for yyyy in {1993..2022}
    do
@@ -25,6 +26,16 @@ do
          fi 
          chmod -R u+wX $DIR_ARCHIVE/$caso
          cd $DIR_ARCHIVE/$caso/rest
+         n_dirrest=`ls |grep 00000|wc -l`
+         if [[ $n_dirrest -eq 0 ]]
+         then
+            continue
+         fi 
+         if [[ $n_dirrest -gt 1 ]]
+         then
+            echo "$caso must be treated separately" >>/work/cmcc/cp1//scratch/special_cases_multiple_restdir.txt
+            continue
+         fi 
          dirrest=`ls |grep 00000`
          cd $DIR_ARCHIVE/$caso/rest/$dirrest
          if [[ `ls *.h?.* |wc -l` -ne 0 ]]

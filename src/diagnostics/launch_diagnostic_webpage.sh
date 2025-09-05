@@ -28,8 +28,8 @@ input="$yyyy $st $flag_done $dbg"
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
 
 #echo "launching ocean diagnostics on DMO for website"
-#input="$yyyy $st $flag_done $dbg"
-#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
+input="$yyyy $st $flag_done $dbg"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
 
 echo "waiting for the diagnostic to be concluded before updating the website"
 
@@ -39,7 +39,7 @@ do
   set +e
   nmb_flag=`ls -1 ${flag_done}* |wc -l`
   set -e
-  if [ $nmb_flag -eq 16 ]  #per il momento escludiamo il forecast oce e mrlsl+prw
+  if [ $nmb_flag -eq 17 ]  #per il momento escludiamo il forecast oce e mrlsl+prw
   # 10+10 flags from FORECAST_C3S (1 for each variable:prec,prw,mrlsl,t2m,t850,mslp,z500,sst,u200,v200 - seasonal + monthly) 
   #+1 flag from FORECAST_OCE (ocean_profile gif)
   then
@@ -76,17 +76,17 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    done
 
 #   #OCE data
-#   varoce="votemper"
-#   for var in $varoce
-#   do
+   varoce="votemper"
+   for var in $varoce
+   do
 #    ###this if for now is redundant -  but safer in case new OCN diagnostic will be added in the future
-#    if [[ $var == "votemper" ]] ; then
-#       dirplots=$SCRATCHDIR/diag_oce/$var/${yyyy}${st}/
-#       gifname=$dirplots/temperature_pac_trop_ensmean_${yyyy}_${st}.gif
-#       dirplots_final=$dirplots_final_index
-#       rsync -auv ${gifname} $dirplots_final/
-#    fi
-#   done
+    if [[ $var == "votemper" ]] ; then
+       dirplots=$SCRATCHDIR/diag_oce/$var/${yyyy}${st}/
+       gifname=$dirplots/temperature_pac_trop_ensmean_${yyyy}_${st}.gif
+       dirplots_final=$dirplots_final_index
+       rsync -auv ${gifname} $dirplots_final/
+    fi
+   done
 
    
    #step 3: launch aggiorna_web.sh to publish plots on dev webpage (not to be indented!!!)
