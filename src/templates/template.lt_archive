@@ -59,6 +59,9 @@ then
 # from now on the postproc of NEMO is not required anymore
    ./xmlchange NEMO_REBUILD=FALSE
    ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+   #in C3S chain switching off NEMO_REBUILD automatically switch off also usual lt_archive
+   #in CERISE it is necessary to change the prereq explicitely
+   ./xmlchange --subgroup case.lt_archive prereq=0
    mkdir -p ${DIR_TEMP}/$caso
    rsync -auv $DIR_TEMPL/user_nl_nemo_moredays $DIR_CASES/$caso/user_nl_nemo
 set +euvx
