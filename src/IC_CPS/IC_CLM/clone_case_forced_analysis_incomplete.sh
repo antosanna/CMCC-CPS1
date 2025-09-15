@@ -89,7 +89,7 @@ mkdir -p $DIR_CASES/$caso/logs
 ./xmlchange RESUBMIT=0
 #./xmlchange -file env_run.xml -id DIN_LOC_ROOT_CLMFORC -val $DIR_FORC
 
-rsync -av ${DIR_TEMPL}/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+#rsync -av ${DIR_TEMPL}/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml $DIR_CASES/$caso/env_workflow.xml
 
 #mv_IC_2ICDIR must be a template to avoid inputs: submission managed by env_workflow 

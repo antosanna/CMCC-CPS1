@@ -59,7 +59,13 @@ for caso in $lista ; do
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
       if [[ $dim -lt 256 ]]
       then
-         continue
+         #new cases with restart in tar package 
+         if [[ `ls $DIR_ARCHIVE/$caso/rest/*tar.gz |wc -l` -eq 1 ]] && [[ $dim -eq 131 ]]  
+         then
+            :   
+         else
+            continue
+         fi  
       fi
       lista_today_3+=" $caso"
    fi

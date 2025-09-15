@@ -7,13 +7,15 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 # all these vars defined above but not yet available
 #TEMPORARY
-iniy=2015
-endy=2022
+iniy=2023
+endy=2023
 # END TEMPORARY
 for yyyy in `seq $iniy $endy`
 do
-   . $DIR_UTIL/descr_ensemble.sh $yyyy
-   for st in {01..12}
+   #. $DIR_UTIL/descr_ensemble.sh 1993
+   n_ic_clm=3
+   typeofrun="hindcast"
+   for st in {01..01}
    do  
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
       mkdir -p ${IC_CLM_CPS_DIR}/$st

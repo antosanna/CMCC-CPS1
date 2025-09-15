@@ -108,6 +108,12 @@ if [ $make_plot -eq 1 ] ; then
    ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    if [ -f ${plname}.gif ] ; then
       touch ${flag_done}_OCE
+      set +euvx
+      . $DIR_UTIL/condaactivation.sh
+      condafunction activate $envcondarclone
+      rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags
+      rclone copy ${plname}.gif my_drive:forecast/$yyyy$st/C3S_diags
+
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc

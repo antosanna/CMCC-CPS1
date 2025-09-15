@@ -222,8 +222,9 @@ then
    fi
    VALIDATION=$WORK/CPS/VALIDATION
    CLIM_OBS_DIR_DIAG=$VALIDATION/OBS/
-   CLIM_DIR_DIAG=$VALIDATION/CMCC-SPS4/monthly
-   PCTL_DIR_DIAG=$VALIDATION/CMCC-SPS4/pctl/
+   PCTL_OBS_DIR_DIAG=$CLIM_OBS_DIR_DIAG/pctl
+   CLIM_DIR_DIAG=${WORK_SCORES}/monthly
+   PCTL_DIR_DIAG=${WORK_SCORES}/pctl
    #directory for CLM restart clim/std dev (for check on ICs)
 #   clm_clim_dir=${DIR_CLIM}/CLM_restart
 

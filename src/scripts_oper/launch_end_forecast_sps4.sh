@@ -2,7 +2,7 @@
 #--------------------------------
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/descr_ensemble.sh  2024  #always forecast mode
+. ${DIR_UTIL}/descr_ensemble.sh  2025  #always forecast mode
 set -euvx
 
 yyyy=`date +%Y`

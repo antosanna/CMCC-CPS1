@@ -68,7 +68,7 @@ chmod 755 $DIR_CASES/$caso/clm_run_error_touch.sh
 
 #SED ERROR
 rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml $DIR_CASES/$caso/env_workflow.xml
-rsync -av ${DIR_TEMPL}/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+#rsync -av ${DIR_TEMPL}/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 
 ./case.setup --reset
 ./case.setup

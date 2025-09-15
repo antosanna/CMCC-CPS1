@@ -85,7 +85,7 @@ then
           . $DIR_UTIL/condaactivation.sh
           condafunction activate $envcondarclone
           rclone mkdir my_drive:$typeofrun/$startdate/REPORTS
-          rclone copy $logfile $typeofrun/$startdate/REPORTS
+          rclone copy $logfile my_drive:$typeofrun/$startdate/REPORTS
       fi
       if [ "$report" = "only" ]
       then

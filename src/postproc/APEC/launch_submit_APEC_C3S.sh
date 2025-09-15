@@ -12,21 +12,29 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_POST}/APEC/descr_SPS4_APEC.sh
 
 set -ex
 
 here="${DIR_POST}/APEC"
-#-----------------------------------
-#get start-date from system
-#-----------------------------------
-yyyyi=1993 #`date +%Y`
-yyyyf=2022 #`date +%Y`
-st=11     #`date +%m`    #2 figures
+#-----------------------------------------------------------
+#the default without any input is forecast
+#with input "0 $st" is the whole hindcast for startdate $st
+#-----------------------------------------------------------
+isforecast=${1:-1}
+st=${2:-`date +%m`}
+if [[ $isforecast -eq 1 ]] 
+then
+   yyyyi=`date +%Y`
+   yyyyf=$yyyyi
+else
+  yyyyi=${iniy_hind} #`date +%Y`
+  yyyyf=${endy_hind} #`date +%Y`
+fi
 
 for yyyy in `seq $yyyyi $yyyyf`
 do
 
+   . ${DIR_POST}/APEC/descr_SPS4_APEC.sh $yyyy
    . $DIR_UTIL/descr_ensemble.sh $yyyy
 
 # APEC SUBMISSION --------------------------------------------------------------------------------
