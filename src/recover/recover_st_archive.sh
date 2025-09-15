@@ -74,6 +74,11 @@ do
           eval ${cmd_nodep}  
           st_arch_jobid=`$DIR_UTIL/findjobs.sh -m $machine -n st_archive.${caso} -i yes` 
           cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1`
+          if [[ ${cmd_ltarc} == "" ]] ; then
+              ./xmlchange NEMO_REBUILD=FALSE
+              ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+              cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1` 
+          fi
           cmd_ltarc_dep="$(echo "${cmd_ltarc/"--dependency=afterok:1"/"--dependency=${st_arch_jobid}"}")"   
           eval ${cmd_ltarc_dep} 
        fi  
