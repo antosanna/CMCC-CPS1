@@ -21,10 +21,10 @@ fi
 
 yyyy=`date +%Y`
 st=`date +%m`
-leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
-leo_dir_CASES=/leonardo_work/CMCC_reforeca//CPS/CMCC-CPS1/cases
-leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
-leo_dir_REP=/leonardo_work/CMCC_reforeca/CPS/CMCC-CPS1/logs/REPORTS/$yyyy$st
+leo_dir=/leonardo_work/CMCC_2025/CMCC-CM/archive/
+leo_dir_CASES=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/cases
+leo_dir_temp=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
+leo_dir_REP=/leonardo_work/CMCC_2025/CPS/CMCC-CPS1/logs/REPORTS/$yyyy$st
 # get the list of completed cases (produced daily in cron on Leonardo)
 
 outdir=${SCRATCHDIR}/Leonardo_transfer_${yyyy}${st}

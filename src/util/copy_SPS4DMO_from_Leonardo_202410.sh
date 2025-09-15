@@ -17,7 +17,7 @@ fi
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
 
-leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
+leo_dir=/leonardo_work/CMCC_2025/CMCC-CM/archive/
 
 for ens in {01..55}
 do 

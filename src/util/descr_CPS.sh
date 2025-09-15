@@ -294,7 +294,8 @@ then
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
     #SCRATCHDIR=$WORK/scratch
-    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch
+#    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch 20250915
+    SCRATCHDIR=/leonardo_work/CMCC_2025/scratch
     SCRATCHDIR1=$SCRATCHDIR
     FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
     FINALARCHC3S1=$FINALARCHC3S
