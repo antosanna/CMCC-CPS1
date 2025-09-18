@@ -54,7 +54,7 @@ then
 
        case $ft in
            h1) mult=1 ; req_mem=50000 ;;
-           h2) mult=4 ; req_mem=20000 ;;
+           h2) mult=4 ; req_mem=25000 ;;
            h3) mult=1 ; req_mem=5000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
@@ -62,11 +62,6 @@ then
        input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
        jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
-       if [[ $ft == "h2" ]]
-       then
-# contains additional variables for CERISE, not operational
-          continue
-       fi
        echo "start of postpc_clm "`date`
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
@@ -199,7 +194,7 @@ fi # if on $check_all_camC3S_done
 
 while `true`
 do
-   if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 2 ]]
+   if [[ `ls ${check_postclm_type}_??_DONE |wc -l` -eq 3 ]]
    then
       touch $check_all_postclm
       break
@@ -209,7 +204,7 @@ done
 
 while `true`
 do
-   if [[ -f $check_all_postclm ]] && [[ -f $check_iceregrid ]] && [[ -f $check_oceregrid ]] && [[ -f $check_all_camC3S_done ]]
+   if [[ -f $check_all_postclm ]] && [[ -f $check_all_camC3S_done ]]
    then
       break
    fi

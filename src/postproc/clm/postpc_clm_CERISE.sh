@@ -220,14 +220,16 @@ then
 # cat the three vars together
         interp_input=CERISE_${inputf}
         cdo -O merge TSOI_cropped_levsoi.nc H2OSOI.nc SNOTTOPL.nc $interp_input
+        vars=SNOTTOPL,TSOI,H2OSOI
 
     elif [[ $ftype == "h3" ]] ; then
         inputfname=`basename ${CLM_OUTPUT_FV}` 
         rsync -auv ${CLM_OUTPUT_FV} ${DIROUT_REG1x1} 
         interp_input=cerise.$inputfname
         ncap2 -O -s "Z0M=Z0MV+Z0MG;Z0H=Z0HV+Z0HG+Z0QV+Z0QG" ${CLM_OUTPUT_FV} ${interp_input}
-        cdo -selvar,FSNO,Z0M,Z0H,TLAI ${inputfname} ${interp_input}
-        ncrename -v Z0M,Z0MV -v Z0H,Z0HV ${interp_input}
+        cdo -selvar,FSNO,Z0M,Z0H,TLAI ${interp_input} tmp.${interp_input}
+        ncrename -v Z0M,Z0MV -v Z0H,Z0HV tmp.${interp_input}
+        mv tmp.${interp_input} ${interp_input}
         vars=FSNO,Z0MV,Z0HV,TLAI
      fi
      export REMAP_EXTRAP="on"
@@ -262,7 +264,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2CERISE.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/CERISE_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # intermidiate product

@@ -8,14 +8,8 @@ set +euvx
   condafunction activate $envcondac3schecker
 set -euvx
 
-C3Stable_cam="$DIR_POST/cam/C3S_table.txt"
-C3Stable_clm="$DIR_POST/clm/C3S_table_clm.txt"
-C3Stable_oce1="$DIR_POST/nemo/C3S_table_ocean2d_others.txt"
-C3Stable_oce2="$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt"
-C3Stable_oce3="$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt"
-C3Stable_oce4="$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt"
-C3Stable_oce5="$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt"
-C3Stable_oce6="$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt"
+C3Stable_cam="$DIR_POST/cam/CERISE_table.txt"
+C3Stable_clm="$DIR_POST/clm/CERISE_table_clm.txt"
 # Load input vars
 startdate=$1
 real=$2
@@ -48,42 +42,6 @@ while IFS=, read -r flname C3S vtype dim lname sname units freq type realm coord
 do
    varC3S+=" $C3S"
 done } < $C3Stable_clm
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce1
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce2
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce3
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce4
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce5
-{
-read
-while IFS=, read -r flname C3S lname sname units realm level expr coord cell rlev model
-do
-   varC3S+=" $C3S"
-done } < $C3Stable_oce6
 
 
 
@@ -91,7 +49,7 @@ cd ${filedir}
 for var in ${varC3S[@]};
 do
 
-    filename=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00.nc`
+    filename=`ls -1 cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00.nc`
     
 
     #$c3s_checker_cmd -p $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
