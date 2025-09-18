@@ -5,8 +5,3 @@ Z0HV,zrlhs,lnd,f4,leadtime lat lon,Surface roughness length for heat,surface_rou
 TLAI,lai,lnd,f4,leadtime lat lon,Leaf Area Index,leaf_area_index,1,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
 PCT_NATVEG,cnc,lnd,f4,leadtime lat lon,Vegetation Cover Percentage,vegetation_area_fraction,%,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
 H2OSOI,mrlsl,lnd,f4,leadtime depth lat lon,Water Content per Unit Area of Soil Layers,moisture_content_of_soil_layer,kg m-2,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h2
-QOVER,mrroas,lnd,f4,leadtime lat lon,Surface Run-off Amount,surface_runoff_amount,kg m-2,day,surface,land,*86400,reftime realization time leadtime lat lon,leadtime: sum,h1
-QDRAI,mrroab,lnd,f4,leadtime lat lon,Subsurface Run-off Amount,subsurface_runoff_amount,kg m-2,day,surface,land,*86400,reftime realization time leadtime lat lon,leadtime: sum,h1
-RHOSNO,rhosn,lnd,f4,leadtime lat lon,Snow Density,snow_density,kg m-3,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h1
-FSNO,snc,lnd,f4,leadtime lat lon,Snow area percentage,surface_snow_area_fraction,%,day,surface,land,*100,reftime realization time leadtime lat lon,leadtime: point,h3
-H2OSNO,lwesnw,lnd,f4,leadtime lat lon,Liquid Water Equivalent Thickness of Surface Snow Amount,lwe_thickness_of_surface_snow_amount,m,day,surface,land,*0.001,reftime realization time leadtime lat lon,leadtime: point,h1

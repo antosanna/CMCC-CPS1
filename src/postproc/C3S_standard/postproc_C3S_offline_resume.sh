@@ -28,7 +28,7 @@ HEALED_DIR=$HEALED_DIR_ROOT/$caso
 chmod -R u+w $DIR_ARCHIVE/$caso
 ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
-outdirC3S=${WORK_C3S}/$yyyy$st/
+outdirC3S=${WORK_CERISE}/$yyyy$st/
 
 set +euvx
 . $dictionary
@@ -87,7 +87,7 @@ elif [[ $flag -eq 2 ]]
 then
    touch $dir_cases/$caso/logs/spike_treatment_after_C3S_detection_${caso}_DONE
 fi
-wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
+wkdir_cam=$SCRATCHDIR/regrid_CERISE_phase2/$caso/CAM
 # h2 is the file requiring more time to be postprocessed
 set +euvx
 . $dictionary
@@ -105,9 +105,9 @@ then
    rm $check_pp_C3S
 fi
 #to handle remote cases
-if [[ -f $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE ]]
+if [[ -f $dir_cases/$caso/logs/postproc_CERISE_phase2_${caso}_DONE ]]
 then
-   rm $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE
+   rm $dir_cases/$caso/logs/postproc_CERISE_phase2_${caso}_DONE
 fi
 
 
@@ -139,7 +139,7 @@ do
    fi
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
    input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_CERISE_phase2.sh -i "$input"
             
 done
 #  now apply fix for isobaric level T on ft=h2 
@@ -189,7 +189,7 @@ do
    fi
    sleep 60
 done
-touch $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE
+touch $dir_cases/$caso/logs/postproc_CERISE_phase2_${caso}_DONE
 #touch $check_pp_C3S
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
@@ -213,18 +213,18 @@ else
    fi
 fi
 
-for realm in CAM CLM NEMO CICE
+for realm in CAM CLM 
 do
-   if [[ `ls $SCRATCHDIR/regrid_C3S/$caso/$realm/*nc |wc -l` -gt 0 ]]
+   if [[ `ls $SCRATCHDIR/regrid_CERISE_phase2/$caso/$realm/*nc |wc -l` -gt 0 ]]
    then
-      rm -rf $SCRATCHDIR/regrid_C3S/$caso/$realm/*nc
+      rm -rf $SCRATCHDIR/regrid_CERISE_phase2/$caso/$realm/*nc
    fi
    if [[ $realm == "CLM" ]]
    then
-         if [[ -d $SCRATCHDIR/regrid_C3S/$caso/$realm/reg1x1 ]] ; then
-            if [[ `ls $SCRATCHDIR/regrid_C3S/$caso/$realm/reg1x1/*nc |wc -l` -gt 0 ]]
+         if [[ -d $SCRATCHDIR/regrid_CERISE_phase2/$caso/$realm/reg1x1 ]] ; then
+            if [[ `ls $SCRATCHDIR/regrid_CERISE_phase2/$caso/$realm/reg1x1/*nc |wc -l` -gt 0 ]]
             then
-               rm -rf $SCRATCHDIR/regrid_C3S/$caso/$realm/reg1x1/*nc
+               rm -rf $SCRATCHDIR/regrid_CERISE_phase2/$caso/$realm/reg1x1/*nc
             fi
          fi
    fi

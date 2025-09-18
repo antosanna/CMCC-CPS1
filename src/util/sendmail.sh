@@ -2,9 +2,9 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>] [-E <member number OPTIONAL]" 1>&2; exit 1; }
 
-while getopts ":m:e:M:t:c:a:b:r:s:" o; do
+while getopts ":m:e:M:t:c:a:b:r:s:E:" o; do
     case "${o}" in
         m)
             machine=${OPTARG}
@@ -20,6 +20,9 @@ while getopts ":m:e:M:t:c:a:b:r:s:" o; do
             ;;
         s)
             startdate=${OPTARG}
+            ;;
+        E)
+            ensemble=${OPTARG}
             ;;
         c)
             cc=${OPTARG}
@@ -51,38 +54,46 @@ message=`echo $message | tr -dc "'[:alnum:](-:. /_)\\\\\\\\"`
 #message+=" `date`"
 
 # check if machine exists
-if [ -z $machine ]
+if [[ -z $machine ]]
 then
    usage
 fi
 
 # check if email exists
-if [ -z $email ]
+if [[ -z $email ]]
 then
    usage
 fi
 
-if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]]
+if [[ ! -z $report ]]
 then
-   if [ ! -z $report ]
+   if [[ ! -z $startdate ]]
    then
-      runtype=$report
-      mkdir -p ${DIR_LOG}/report/$runtype
-      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      if [ "$report" = "only" ]
+      outlog=${DIR_REP}/$startdate/REPORT_${machine}.${SPSSystem}_${startdate}
+      if [[ ! -z $ensemble ]]
+      then
+         outlog=${DIR_REP}/$startdate/report_${machine}.${SPSSystem}_${startdate}_${ensemble}
+      fi
+      mkdir -p ${DIR_REP}/$startdate
+#      message=${message//'\n'/<br>}
+      echo "${message} `date`" >> ${outlog}.`date +%Y%m%d`.txt
+      echo " " >> ${outlog}.`date +%Y%m%d`.txt
+      if [[ "$report" = "only" ]]
       then
          exit
       fi
    fi
+fi
 
-   if [ ! -z $bcc ]
+if [[ "$machine" == "zeus" ]] || [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]
+then
+   if [[ ! -z $bcc ]]
    then
       b=" -b $bcc"
    else
       b=""
    fi
-   if [ `ls $applist|wc -w` -ne 0 ]
+   if [[ `ls $applist|wc -w` -ne 0 ]]
    then
       for app in $applist
       do
@@ -91,7 +102,7 @@ then
    else
       a=""
    fi
-   if [ ! -z $cc ]
+   if [[ ! -z $cc ]]
    then
       c=" -c $cc"
    else
@@ -104,22 +115,8 @@ then
    exit 0
 fi
 
-# marconi
-if [  "$machine" = "leonardo" ]
+if [[  "$machine" = "leonardo" ]]
 then
-   message=${message//'\n'/<br>}
-   if [ ! -z $report ]
-   then
-      runtype=$report
-      mkdir -p ${DIR_LOG}/report/$runtype
-      echo "${message}" >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      echo " " >> ${DIR_LOG}/report/$runtype/report_${SPSSystem}.${machine}.`date +%Y%m%d`.txt
-      if [ "$report" = "only" ]
-      then
-         exit
-      fi
-   fi
-
   # MODIFY TITLE TO INCLUDE BACKUP INTO IT
   if [[ $title == *"CPS1"* ]]; then
     oldString="CPS1"
@@ -140,7 +137,7 @@ then
   # echo -e "$message" is the key to keep new line
 
   attaching_section=" " 
-  if [ `ls $applist|wc -w` -ne 0 ]
+  if [[ `ls $applist|wc -w` -ne 0 ]]
   then
       for app in $applist
       do
@@ -150,7 +147,7 @@ then
   else
       attaching_section= "echo"
   fi
-  if [ ! -z $cc ]
+  if [[ ! -z $cc ]]
   then
     ARG_EMAIL_CC="$cc"
     (

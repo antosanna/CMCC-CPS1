@@ -88,7 +88,7 @@ then
       cores_per_node=112
       nnodes_SC=56
       cores_per_run=336
-      envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
+      envcondaclm=postpc_CLM_C3S
       envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
       maxnumbertosubmit=25
       maxnumbertorecover=25
@@ -382,5 +382,6 @@ WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
 HEALED_DIR_ROOT1=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
+HEALED_DIR_ROOT=$WORK/CPS/CMCC-${CPSSYS}/fixed_from_spikes
 
 set +a

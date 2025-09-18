@@ -31,7 +31,7 @@ set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 
-export inputC3S=${WORK_C3S}/${yyyy}${st}/cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100_atmos_day_surface_tasmin_r${ens}i00p00.nc
+export inputC3S=${WORK_CERISE}/${yyyy}${st}/cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100_atmos_day_surface_tasmin_r${ens}i00p00.nc
 export pltname_root=$wkdir/$caso.tasmin_C3S
 rsync -auv $DIR_C3S/plot_timeseries_spike_c3s.ncl $wkdir
 

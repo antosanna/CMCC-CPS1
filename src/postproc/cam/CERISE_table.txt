@@ -33,3 +33,4 @@ V,va,leadtime plev lat lon,Northward Wind,y_wind,m s-1,12hr,pressure,atmos,1,ref
 Z,zg,leadtime plev lat lon,Geopotential Height,geopotential_height,m,12hr,pressure,atmos,1,reftime realization time leadtime plev lat lon,leadtime: point,-1,h2
 SHFLX,hfss,leadtime lat lon,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
 LHFLX,hfls,leadtime lat lon,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,W m-2,day,surface,atmos,1,reftime realization time leadtime lat lon,leadtime: mean (interval: 0.5 hour),0,h3
+QFLX,lwee,leadtime lat lon,Liquid Water Equivalent Thickness of Evaporation Amount,lwe_thickness_of_water_evaporation_amount,m,day,surface,land,86.4,reftime realization time leadtime lat lon,leadtime: sum,0,h3

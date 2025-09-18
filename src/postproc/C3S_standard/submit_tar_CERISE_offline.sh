@@ -1,8 +1,8 @@
 #!/bin/sh -l 
 #BSUB -q s_medium
-#BSUB -J submit_tar_C3S_offline
-#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.err
-#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.out
+#BSUB -J submit_tar_CERISE_offline
+#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISE%J.err
+#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISE%J.out
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -15,7 +15,7 @@ set -eu
 # Start here
 # ----------------------------------------------------------
 st=02 # startdate
-onlycheckfileok=0  #if 0 does tar_C3S
+onlycheckfileok=0  #if 0 does tar_CERISE
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
@@ -81,12 +81,12 @@ do
         submit_list+=" $startdate"
         if [ $onlycheckfileok -eq 0 ]
         then 
-           echo "Submitting tar_C3S for $startdate"     
+           echo "Submitting tar_CERISE for $startdate"     
            $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE.sh -i "$input"
         fi    
   else
      body="MISSING FILES FOR STARTDATE $startdate"
-     title="${CPSSYS} tar_C3S for $startdate not submitted by submit_tar_C3S"
+     title="${CPSSYS} tar_CERISE for $startdate not submitted by submit_tar_CERISE"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
   
   # checker files
@@ -100,7 +100,7 @@ do
            for var in ${var_array[@]}
            do
               nf=0
-              nf=`ls $WORK_C3S/$startdate/cmcc*${var}_*r${i}i00p00.nc|wc -l`
+              nf=`ls $WORK_CERISE/$startdate/cmcc*${var}_*r${i}i00p00.nc|wc -l`
               if [ $nf -ne 1 ]
               then
                 missing+=" $var"

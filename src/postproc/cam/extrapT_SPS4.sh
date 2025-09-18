@@ -100,11 +100,11 @@ fi
 
 
 #define inputs
-export inputta=$WORK_C3S/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_12hr_pressure_ta_r"$member"i00p00.nc
+export inputta=$WORK_CERISE/${yyyy}${st}/cmcc_CERISE-${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_12hr_pressure_ta_r"$member"i00p00.nc
 export inputPS=$outputPS
 
 #define outputs
-export outputta=$OUTDIR/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00.nc
+export outputta=$OUTDIR/cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00.nc
 
 echo 'post processing starts ' `date`
 

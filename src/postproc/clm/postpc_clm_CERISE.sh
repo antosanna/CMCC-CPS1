@@ -5,6 +5,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco
+. ${DIR_UTIL}/load_cdo
 
 set -evxu
 
@@ -143,7 +144,7 @@ then
 # Standardize in C3S format
 #************************************************************************
 # C3S vars    prefix
-   prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
+   prefix="cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx

@@ -92,7 +92,7 @@ cd $DIR_CASES/
 
 #listofcases="sps4_199402_020 sps4_199602_002 sps4_199602_009 sps4_199602_019 sps4_199602_024 sps4_199602_025 sps4_199602_027 sps4_199602_028 sps4_199602_029 sps4_199702_011 sps4_199702_016 sps4_199702_018 sps4_199702_019 sps4_199702_022 sps4_199702_027 sps4_199702_028 sps4_199702_029 sps4_199702_030 sps4_199802_006 sps4_199802_008" 
 
-listofcases="sps4_200408_002 sps4_201108_001"
+listofcases="sps4_200408_002"
 
 
 if [[ $# -ge 1 ]]
@@ -498,6 +498,7 @@ set -eux
              srun --qos=$qos -A $account_name -p dcgp_usr_prod -t 1:00:00 ./$command
          else
              ./$command
+             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso recovered with automatic procedure" -t "RECOVER $caso"
          fi
          echo "$command done"
          ncount=$(($ncount + 1))
