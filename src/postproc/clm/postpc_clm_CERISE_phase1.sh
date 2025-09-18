@@ -29,17 +29,17 @@ then
    caso="sps4_199307_001"
    OUTDIR=/work/csp/sps-dev/CESM2/archive/${caso}/lnd/hist
    mkdir -p $OUTDIR
-   outdirC3S=$SCRATCHDIR/test_clm
-   mkdir -p $outdirC3S
+   outdirCERISE=$SCRATCHDIR/test_clm
+   mkdir -p $outdirCERISE
    DIR_LOG=/users_home/csp/mb16318/SPS/SPS4/postproc/CLM/logs
    ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
 else
 
-#"$ens $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
+#"$ppp $startdate $outdirCERISE $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
    CLM_OUTPUT_FV=$1
-   ens=$2
+   ppp=$2
    startdate=$3
-   outdirC3S=$4  # where python write finalstandardized  output 
+   outdirCERISE=$4  # where python write finalstandardized  output 
    caso=$5
    check_postclm=$6
    wkdir=$7
@@ -47,10 +47,10 @@ else
    ftype=${9} #h1 or h3 currently
 fi
 
-mkdir -p $SCRATCHDIR/regrid_CERISE_phase2/$caso/CLM
+mkdir -p $SCRATCHDIR/regrid_CERISE/$caso/CLM
 yyyy=`echo "${startdate}" | cut -c1-4`
 st=`echo "${startdate}" | cut -c5-6`
-pp=`echo $ens | cut -c2-3` # two digits member ie 001 -> 01
+pp=`echo $ppp | cut -c2-3` # two digits member ie 001 -> 01
 
 #**********************************************************
 # Load vars depending on hindcast/forecast
@@ -59,12 +59,6 @@ set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 
-if [[ $machine == "leonardo" ]] ;then
-set +euvx
-  . $DIR_UTIL/condaactivation.sh
-  condafunction activate env_tools_test
-set -euvx
-fi
 #file name:$caso.clm2.$ft.$yyyy-$st.zip.nc
 
 landcase="clm2.${ftype}"
@@ -80,9 +74,6 @@ then
    export weight_file="$REPOGRID/CAMFV05_2_reg1x1_conserve_C3S.nc"
    lsmfile="$REPOGRID/SPS4_C3S_LSM.nc"
 
-# C script to compute snow density
-   rhosnow_ncap2_script=$DIR_POST/clm/calc_rhosnow4clm.c 
-
 # Define working directories
    DIROUT_REG1x1=${wkdir}/reg1x1
    mkdir -p ${DIROUT_REG1x1}
@@ -95,33 +86,7 @@ then
    then
       echo "file already regridded"
    else
-      if [[ $ftype == "h1" ]] ; then
-        # NCO phase - Create new variables - 4 steps
-        # (I) H2OSOI
-        # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
-        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
-        mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
-   
-        # (II) SNOW
-        ncap2 -O -S ${rhosnow_ncap2_script} ${rootname}.tmp_H2OSOI.nc ${rootname}.nc_tmp_RHOSNO
-        mv ${rootname}.nc_tmp_RHOSNO ${rootname}.tmp_RHOSNO.nc
-   
-        # (III) Remove extra vars
-        ncks -O -x -v RHOSNO_fresh,RHOSNO_BULK,H2OSNO_fresh,H2OSNO_diff ${rootname}.tmp_RHOSNO.nc ${rootname}.nc_tmp_rm
-        rm ${rootname}.tmp_RHOSNO.nc
-   	
-        # (IV) Change variable attributes
-        ncatted -O -a long_name,H2OSOI,o,c,"Soil water (vegetated landunits only)" ${rootname}.nc_tmp_rm	
-        ncatted -O -a units,H2OSOI,o,c,"kg m-2" ${rootname}.nc_tmp_rm	
-   
-        ncatted -O -a long_name,RHOSNO,o,c,"Snow Density" ${rootname}.nc_tmp_rm	
-        ncatted -O -a units,RHOSNO,o,c,"kg m-3" ${rootname}.nc_tmp_rm	
-        export interp_input=${rootname}.nc_tmp_rm
-
-        # Interpolation phase
-        # create interpolated file in ./reg1x1 dir
-        vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
-    elif [[ $ftype == "h2" ]] ; then
+      if [[ $ftype == "h2" ]] ; then
         # create interpolated file in ./reg1x1 dir
         inputf=`basename ${CLM_OUTPUT_FV}`
         rsync -av ${CLM_OUTPUT_FV} ${DIROUT_REG1x1}
@@ -220,29 +185,20 @@ then
 # cat the three vars together
         interp_input=CERISE_${inputf}
         cdo -O merge TSOI_cropped_levsoi.nc H2OSOI.nc SNOTTOPL.nc $interp_input
-
-    elif [[ $ftype == "h3" ]] ; then
+      elif [[ $ftype == "h3" ]] ; then
         inputfname=`basename ${CLM_OUTPUT_FV}` 
-        rsync -auv ${CLM_OUTPUT_FV} ${DIROUT_REG1x1} 
         interp_input=cerise.$inputfname
-        ncap2 -O -s "Z0M=Z0MV+Z0MG;Z0H=Z0HV+Z0HG+Z0QV+Z0QG" ${CLM_OUTPUT_FV} ${interp_input}
-        cdo -selvar,FSNO,Z0M,Z0H,TLAI ${inputfname} ${interp_input}
+        ncap2 -O -s "Z0M=Z0MV+Z0MG;Z0H=Z0HV+Z0HG+Z0QV+Z0QG" ${CLM_OUTPUT_FV} ${inputfname}
+        cdo -selvar,Z0M,Z0H,TLAI ${inputfname} ${interp_input}
         ncrename -v Z0M,Z0MV -v Z0H,Z0HV ${interp_input}
-        vars=FSNO,Z0MV,Z0HV,TLAI
-     fi
-     export REMAP_EXTRAP="on"
-     #not working properly with vars elaborated with ncap2
-     #cdo -selvar,${vars} ${interp_input} C3S_${interp_input}
-     ncks -O -v ${vars} ${interp_input} C3S_${interp_input}
-     export REMAP_EXTRAP="on"
-     cdo remapbil,$REPOGRID1/griddes_C3S.txt C3S_${interp_input} $CLM_OUTPUT_REG1x1
-     if [[ $ftype == "h3" ]] ; then
+      fi
+      export REMAP_EXTRAP="on"
+      cdo remapbil,$REPOGRID1/griddes_C3S.txt ${interp_input} $CLM_OUTPUT_REG1x1 
+      if [[ $ftype == "h3" ]] ; then
         outfile=`basename $CLM_OUTPUT_REG1x1`
         mv $outfile tmp.$outfile
-        cdo -O merge $SCRATCHDIR/CERISE/PCT_NATVEG_reg1x1_125days.nc tmp.$outfile $CLM_OUTPUT_REG1x1
-     fi
-
- 
+        cdo -O merge $SCRATCHDIR/CERISE/PCT_NATVEG_reg1x1_185days.nc tmp.$outfile $CLM_OUTPUT_REG1x1
+      fi
    fi
    
 # remove intermidiate output files
@@ -262,7 +218,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2c3s.py $startdate $ppp $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirCERISE $DIR_LOG $REPOGRID $ic $DIR_TEMPL/CERISE_globalatt.txt ${DIR_POST}/clm/CERISE_table_clm.txt $caso $lsmfile $prefix
    if [ $? -ne 0 ]
    then
 # intermidiate product
@@ -271,11 +227,11 @@ then
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi  
    
-   cd $outdirC3S
+   cd $outdirCERISE
    
    set +euvx
    condafunction deactivate $envcondaclm 
@@ -283,11 +239,12 @@ then
 
    echo "postpc_clm.sh DONE"
    touch ${check_postclm}
+   rm -rf $DIROUT_REG1x1
 else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
    
 fi
 
