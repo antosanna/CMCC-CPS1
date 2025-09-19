@@ -32,7 +32,7 @@ memberstocheck=1 # only 1 member DO NOT CHANGE
 #touch $checkfile     # check file qa started in $DIR_CASES/$caso  unlikely needed anymore
 
 tmembers=$nrunC3Sfore # from descriptor, change between hindcast and forecast
-expected_files=$nfieldsC3S # from descriptor, number of variables (distinct files)
+expected_files=37 # from descriptor, number of variables (distinct files)
 
 member=$(printf "%.2d" $((10#$memberlist))) #member with 2 digits
 set +euvx
@@ -82,12 +82,6 @@ namespace+="atmos_fix "
 # land
 namespace+="land_6hr "
 namespace+="land_day "
-# seaIce
-namespace+="seaIce_6hr "
-namespace+="seaIce_day "
-# ocean (only tso)
-namespace+="ocean_6hr "
-namespace+="ocean_mon " #uncomment when adding gli ocean_mon
 
 # Define memory needs for each namespace (attention:keep order)
 # atmos
@@ -110,12 +104,6 @@ memory[15]="2000M " #"atmos_fix "
 # land
 memory[16]="5000M" #"2500M " #"land_6hr "
 memory[17]="5000M" #"2750M " #"land_day "
-# seaIce
-memory[18]="5000M" #"3500M " #"seaIce_6hr "
-memory[19]="5000M" #"2000M " #"seaIce_day "
-# ocean (only tso)
-memory[20]="12000M" #"2500M " #"ocean_6hr "
-memory[21]="2000M " #"ocean_mon " #uncomment when adding gli ocean_mon
     
 # Link or copy temporarily all files to working dir
 cd $wdir
@@ -127,11 +115,15 @@ if [ -n "$(ls -A $wdir/*nc)" ];then
 fi
 
 # Copy netcdf files 
-rsync -auv $outdirC3S/*r${member}*.nc $wdir/
+C3S_CERISE_VARS="mrlsl sic tso tdps psl tas uas vas lwepr lweprsn hfss hfls rsds rlds rss rst rlt rls tauu tauv lwee tasmax tasmin wsgmax hus ta ua va zg orog sftlf rsdt mrroas mrroab lwesnw rhosn snc"
+for var in $C3S_CERISE_VARS
+do
+   rsync -auv $outdirC3S/*${var}*r${member}*.nc $wdir/
+done
 
 # Count all netcdf files
 ncnumber=`ls -1 *.nc | wc -l `
-if [ $ncnumber -ne $filetobechecked ]; then
+if [ $ncnumber -ne $expected_files ]; then
     echo "Uncorrect number of netcdf files, ncnumber should be $filetobechecked but is $ncnumber "
     		
     title="SPS4 FORECAST ERROR - QA CHECKER"   
@@ -237,9 +229,6 @@ for ncfile in \$netcdf2check ; do
     mkdir -p \$scratch4outl
     # launch python (checking files in tempdir_\$namespace)
     # adding -pclim input activates the climatological check on monthly min/max, while -pqval activates the interquantile one 
-    #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pqval 0.01 -mf 1. -pclim \$OUTDIR_DIAG/C3S_statistics -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-# WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
-    #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
     python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
 
     # remove files
@@ -325,8 +314,8 @@ cnt_files=`ls -1 *.txt | wc -l`
 endtime=`date +%Y%m%d%H%M`
 
 # if all files have been checked
-filetobechecked=1
-if [ $cnt_files -ge $filetobechecked ]; then
+txttobechecked=1
+if [ $cnt_files -ge $txttobechecked ]; then
 
     # look for warnings
     mkdir -p ${DIR_REP}/${startdate}

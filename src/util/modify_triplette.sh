@@ -119,9 +119,9 @@ do
    #now everything is ready to submit the modified triplette caso, before submission check for presence of ICs
    clmICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
    rofICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
-   atmICfile=${IC_CAM_CPS_DIR}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${ppatmnew2d}.nc
-   nemoICfile=${IC_NEMO_CPS_DIR}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
-   iceICfile=${IC_CICE_CPS_DIR}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
+   atmICfile=${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${ppatmnew2d}.nc
+   nemoICfile=${IC_NEMO_CPS_DIR1}/${st}/${CPSSYS}.nemo.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
+   iceICfile=${IC_CICE_CPS_DIR1}/${st}/${CPSSYS}.cice.r.${yyyy}-${st}-01-00000.${ppocenew2d}.nc
    if [[ -f $clmICfile ]] && [[ -f $rofICfile ]] && [[ -f $atmICfile ]] && [[ -f $nemoICfile ]] && [[ -f $iceICfile ]] ; then  
      
    #if all the ICs are present resubmit the case
