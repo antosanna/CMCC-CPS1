@@ -28,9 +28,9 @@ do
       n_done_juno=`ls $DIR_CASES/${SPSSystem}_${yyyy}${st}_0??/logs/run_moredays_*DONE 2>/dev/null|wc -l`
       if [[ $(($n_done_juno)) -gt 0 ]]
       then
-         echo "$yyyy$st done number $n_done_juno"
          if [[ $(($n_done_juno)) -lt 25 ]]
          then
+             echo "$yyyy$st done number $n_done_juno"
              list2do=""
              for i in {01..25}
              do
@@ -45,6 +45,8 @@ do
                 fi
              done
              echo "members still to be run: $list2do"
+         else
+            echo "$yyyy$st COMPLETE"
          fi
   
       elif [[ $n_done_juno -eq 0 ]]
