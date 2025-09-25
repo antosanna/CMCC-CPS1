@@ -39,7 +39,7 @@ envcondac3schecker=c3schecker
 SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
-yyyySCEN=2014
+yyyySCEN=2015
 if [[ "$machine" == "cassandra" ]]
 then
    envcondarclone=rclone_CPS1
@@ -48,7 +48,7 @@ then
 elif [[ "$machine" == "juno" ]]
 then
    refcaseHIST=${CPSSYS}_HIST_reference_CERISE
-   refcaseSCEN=${CPSSYS}_SSP585_reference
+   refcaseSCEN=${CPSSYS}_SSP585_reference_CERISE
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
 fi
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
