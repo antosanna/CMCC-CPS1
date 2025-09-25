@@ -39,7 +39,7 @@ envcondac3schecker=c3schecker
 SPSSystem=sps4
 DPSSystem=dps3
 CPSSYS=CPS1
-yyyySCEN=2015
+yyyySCEN=2014
 if [[ "$machine" == "cassandra" ]]
 then
    envcondarclone=rclone_CPS1

@@ -31,7 +31,7 @@ then
    module use -p $modpath
 fi
 
-if [ $yyyy$st -ge ${yyyySCEN}03 ]; then
+if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
@@ -166,7 +166,7 @@ then
 fi
 
 #for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
-if [[ $yyyy$st -eq 201501 ]] 
+if [[ $yyyy$st -eq 201502 ]] || [[ $yyyy$st -eq 201408 ]]
 then   
    echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
 fi
