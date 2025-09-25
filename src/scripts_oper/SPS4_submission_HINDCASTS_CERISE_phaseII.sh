@@ -98,7 +98,7 @@ for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
    do
-       if [[ $yyyy -eq 2007 ]] || [[ $yyyy eq 2008 ]] || [[ $yyyy -eq 2013 ]]
+       if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2013 ]]
        then
           continue
        fi

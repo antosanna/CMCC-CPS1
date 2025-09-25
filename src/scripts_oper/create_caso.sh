@@ -31,7 +31,7 @@ then
    module use -p $modpath
 fi
 
-if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
+if [ $yyyy$st -ge ${yyyySCEN}03 ]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
