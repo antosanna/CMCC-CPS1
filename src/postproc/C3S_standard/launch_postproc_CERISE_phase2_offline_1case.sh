@@ -31,7 +31,7 @@ then
     exit
 fi
 touch ${flag_running}
-cd $DIR_ARCHIVE1/
+cd $DIR_ARCHIVE/
 
 listofcases=sps4_200205_023
 

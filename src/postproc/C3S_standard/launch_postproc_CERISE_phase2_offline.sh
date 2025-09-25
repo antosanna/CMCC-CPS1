@@ -14,6 +14,14 @@ LOG_FILE=$DIR_LOG/hindcast/launch_postproc_CERISE_phase2_offline.`date +%Y%m%d%H
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 st=$1  #stdate as input
+cd $DIR_ARCHIVE/
+if [[ $# -gt 1 ]]
+then
+   yyyy=$2
+   listofcases=`ls -d sps4_${yyyy}${st}_0??|grep -v 2025`
+else
+   listofcases=`ls -d sps4_????${st}_0??|grep -v 2025`
+fi
 
 dbg=0 # dbg=1 -> just one member for test
 mkdir -p $DIR_TEMP
@@ -31,9 +39,7 @@ then
     exit
 fi
 touch ${flag_running}
-cd $DIR_ARCHIVE1/
 
-listofcases=`ls -d sps4_????${st}_0??|grep -v 2025`
 
 for caso in $listofcases
 do
@@ -55,7 +61,8 @@ do
     fi  
 
     mkdir -p $DIR_LOG/hindcast/CERISE_phase2_postproc
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_CERISE_phase2_offline_${caso} -s postproc_CERISE_phase2_offline.sh -l $DIR_LOG/hindcast/CERISE_phase2_postproc -i "$caso ${dir_cases} $dbg"
+    yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_CERISE_phase2_offline_${caso} -s postproc_CERISE_phase2_offline.sh -l $DIR_LOG/hindcast/CERISE_phase2_postproc -i "$yyyy $caso ${dir_cases} $dbg"
 
 
     if [[ $dbg -eq 1 ]]
