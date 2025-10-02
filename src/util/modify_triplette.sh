@@ -52,19 +52,19 @@ do
       done
    fi
 
-   if [ ! -f $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig ]
+   if [ ! -f $TRIP_DIR/triplette.CERISE.random.${yyyy}${st}.txt.orig ]
    then
-      cp $TRIP_DIR/triplette.random.${yyyy}${st}.txt $TRIP_DIR/triplette.random.${yyyy}${st}.txt.orig
+      cp $TRIP_DIR/triplette.CERISE.random.${yyyy}${st}.txt $TRIP_DIR/triplette.CERISE.random.${yyyy}${st}.txt.orig
    else
-      cp $TRIP_DIR/triplette.random.${yyyy}${st}.txt $TRIP_DIR/triplette.random.${yyyy}${st}.txt.$dateymdhms
+      cp $TRIP_DIR/triplette.CERISE.random.${yyyy}${st}.txt $TRIP_DIR/triplette.CERISE.random.${yyyy}${st}.txt.$dateymdhms
    fi
 
    cd $TRIP_DIR
 
   
-   line1=`cat triplette.random.${yyyy}${st}.txt | head -n${n1} | tail -1`
+   line1=`cat triplette.CERISE.random.${yyyy}${st}.txt | head -n${n1} | tail -1`
    line1script=`echo $line1 | awk '{print $3" "$1" "$2}'`
-   line2=`cat triplette.random.${yyyy}${st}.txt | head -n${n2} | tail -1`
+   line2=`cat triplette.CERISE.random.${yyyy}${st}.txt | head -n${n2} | tail -1`
    line2script=`echo $line2 | awk '{print $3" "$1" "$2}'`
   
   
@@ -85,12 +85,12 @@ do
    echo $n1" line1: "$line1" line1script: "$line1script 
    echo $n2" line2: "$line2" line2script: "$line2script 
 
-   # Make substitutions in triplette.random
-   # substitute triplette with the ones in 41st line
-   sed -i "${n1}s/${line1}/${line2}/" triplette.random.${yyyy}${st}.txt
-   #sed -i "s/${line1}/${line2}/g" triplette.random.${yyyy}${st}.txt
+   # Make substitutions in triplette.CERISE.random
+   # substitute triplette.CERISE with the ones in 41st line
+   sed -i "${n1}s/${line1}/${line2}/" triplette.CERISE.random.${yyyy}${st}.txt
+   #sed -i "s/${line1}/${line2}/g" triplette.CERISE.random.${yyyy}${st}.txt
    # remove 41st line to avoid repetition in next substitutions
-   sed -i "${n2},${n2}d" triplette.random.${yyyy}${st}.txt
+   sed -i "${n2},${n2}d" triplette.CERISE.random.${yyyy}${st}.txt
 
    # Make substitutions in ensemble scripts
    if [[ $machine == "leonardo" ]]
@@ -116,7 +116,7 @@ do
    fi
    chmod 744 ensemble4_${yyyy}${st}_${ens}.sh
   
-   #now everything is ready to submit the modified triplette caso, before submission check for presence of ICs
+   #now everything is ready to submit the modified triplette.CERISE caso, before submission check for presence of ICs
    clmICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.clm2.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
    rofICfile=${IC_CLM_CPS_DIR}/${st}/${CPSSYS}.hydros.r.${yyyy}-${st}-01-00000.${pplndnew2d}.nc
    atmICfile=${IC_CAM_CPS_DIR1}/${st}/${CPSSYS}.cam.i.${yyyy}-${st}-01-00000.${ppatmnew2d}.nc
