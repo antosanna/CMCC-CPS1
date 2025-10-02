@@ -35,8 +35,9 @@ cd $DIR_LOG/$typeofrun/$yyyy$st
 # to each $i a random number is associated and then sorted in ascendong order
 
 #MARI+ANTO 20250730 - waiting for fixing OIS2 members with ERS/COBE sst
-#for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
-for i in 01 02 03 08 09 ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
+#for i in 01 02 03 08 09 ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
+
+for i in `seq -w 01 $n_ic_nemo` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/oce.ics.$yyyy$st
    
 for i in `seq -w 01 $n_ic_clm` ; do echo $RANDOM $i ; done|sort -k1|cut -d" " -f2 > $DIR_LOG/$typeofrun/$yyyy$st/lnd.ics.$yyyy$st
 

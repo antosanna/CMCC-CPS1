@@ -79,7 +79,8 @@ do
     fi
 done
 # replace missing NEMO ICs with backup
-for ic in 01 02 03 08 09
+#for ic in 01 02 03 08 09
+for ic in `seq -w 01 $n_ic_nemo`
 do
     bkupf_nemo=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc
     bkupf_cice=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.bkup.nc

@@ -14,19 +14,38 @@ set -euvx
 
 if [[ $machine != "juno" ]]
 then
-   echo "this script is meant to be run on Juno!!!"
+   message="this script is meant to be run on Juno!!!"
+   body=$message
+   title="[$CPSSYS] ERROR: SPS4_step1_ICs.sh exited"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st}
    echo "exit now"
    exit 1
 fi
 
-
+st=`date +%m`
+m=$(( 10#$st )) #this must NOT be 2 figures
+yyyy=`date +%Y`
+if [[ ! -f /work/cmcc/cp1/CPS/CMCC-OIS2/logs/WEEKLY_SUBMISSION/weekly_ois2_submit_${yyyy}${st}01.submitted ]]
+then
+   body="OIS2 forecast not submitted: $SPSSystem IC production cannot start"
+   title="[$CPSSYS] ERROR: SPS4_step1_ICs.sh exited"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st}
+   exit 1
+fi
+   
+while `true`
+do
+   np=`${DIR_UTIL}/findjobs.sh -m $machine -n OPSLAMB -c yes` 
+   if [[ $np -eq 0 ]]
+   then
+      break
+   fi
+   sleep 100
+done
 #-----------------------------------
 #get start-date from system
 #-----------------------------------
 
-st=`date +%m`
-m=$(( 10#$st )) #this must NOT be 2 figures
-yyyy=`date +%Y`
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
@@ -34,7 +53,7 @@ set -euvx
 message="${CPSSYS} forecast starting `date` "
 dirrep=$yyyy$st
 mkdir -p ${DIR_REP}/$dirrep
-echo "${message}" 
+body=`echo "${message}"` 
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s ${yyyy}${st}
 mkdir -p ${DIR_LOG}/forecast/$yyyy$st/ICs
 checkfile=${DIR_LOG}/forecast/$yyyy$st/ICs/${SPSSystem}_step1_ICs_${yyyy}${st}_started
