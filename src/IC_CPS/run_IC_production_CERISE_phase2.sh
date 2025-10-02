@@ -60,6 +60,20 @@ set -euvx
          rsync -auv $origdir/*hydros_00${ilnd}.r.$yyyy-$st* $IC_CLM_CPS_DIR/$st/
          gunzip $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
          gunzip $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
+         dim_clm=ncdump -h $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc|grep "landunit = 2" 
+         if [[ $dim_clm =~ "228727" ]] && [[ $yyyy -gt 2014 ]]
+         then
+            body="Dimensions are $dim_clm while the expected for $yyyy are 228914"
+            title="CERISE: restart dims ERROR"
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "no" 
+         fi
+         if [[ $dim_clm =~ "228914" ]] && [[ $yyyy -le 2014 ]]
+         then
+            body="Dimensions are $dim_clm while the expected for $yyyy are 228727"
+            title="CERISE: restart dims ERROR"
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "no" 
+         fi
+         mv $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_clm
          mv $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_clm
          mv $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_hydros
       
