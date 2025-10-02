@@ -7,6 +7,11 @@
 
 set -euvx
 
+np=`${DIR_UTIL}/findjobs.sh -m $machine -n run_IC_production -c yes`
+if [[ $np -gt 1 ]]
+then
+   exit
+fi
 if [[ $machine == "juno" ]]
 then
    listmm="2 11"
