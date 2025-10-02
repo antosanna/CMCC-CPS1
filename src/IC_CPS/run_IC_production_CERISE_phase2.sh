@@ -28,12 +28,20 @@ set -euvx
       mkdir -p $IC_CLM_CPS_DIR/$st
       mkdir -p $IC_NEMO_CPS_DIR/$st
 
-      if [[ $machine == "juno" ]]
+      if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] 
       then
-         origdir=/work/cmcc/spreads-lnd/land/archive/SPREADS_MU30/cerise_phase2_restarts/restart_${yyyy}-${st}-01
-      elif [[ $machine == "cassandra" ]]
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2006/$yyyy/restart_${yyyy}-${st}-01
+      elif [[ $yyyy -eq 2019 ]]
       then
-         origdir=/data/cmcc/cp1/temporary/cerise_IC_clm/${st}
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2018/$yyyy/restart_${yyyy}-${st}-01
+      else
+         if [[ $machine == "juno" ]]
+         then
+            origdir=/work/cmcc/spreads-lnd/land/archive/SPREADS_MU30/cerise_phase2_restarts/restart_${yyyy}-${st}-01
+         elif [[ $machine == "cassandra" ]]
+         then
+            origdir=/data/cmcc/cp1/temporary/cerise_IC_clm/${st}
+         fi
       fi
 
       for ilnd in {01..25}
