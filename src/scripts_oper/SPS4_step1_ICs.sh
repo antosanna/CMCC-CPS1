@@ -91,3 +91,11 @@ $DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 #checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
 ${IC_CPS}/make_triplette.sh $yyyy $st
 ${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st
+body="Cari tutti, \n
+vi confermiamo il completamento della procedura di creazione ICs per il seasonal Forecast. Potete ripristinare la configurazione standard dei nodi paralleli. \n
+\n
+Grazie
+\n
+SPS-staff\n"
+title="FINE RICHIESTA SPECIALE PER SC_sps35"
+${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail
