@@ -182,7 +182,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 
-lista_caso_ignored="sps4_201208_005"
+lista_caso_ignored="" #sps4_201208_005"
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
 #sps4_199910_025 (zeus) - h2osoi_ice sign negative
@@ -198,6 +198,10 @@ for caso in $listofcases ; do
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+  if [[ $yyyy -eq 2020 ]] 
+  then
+     continue
+  fi
   member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
