@@ -31,9 +31,11 @@ set -euvx
       if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] 
       then
          origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2006/$yyyy/restart_${yyyy}-${st}-01
+         redo=1
       elif [[ $yyyy -eq 2019 ]]
       then
          origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2018/$yyyy/restart_${yyyy}-${st}-01
+         redo=1
       else
          if [[ $machine == "juno" ]]
          then
@@ -48,7 +50,8 @@ set -euvx
       do
          actual_ic_clm=$IC_CLM_CPS_DIR/$st/CPS1.clm2.r.$yyyy-$st-01-00000.$ilnd.nc
          actual_ic_hydros=$IC_CLM_CPS_DIR/$st/CPS1.hydros.r.$yyyy-$st-01-00000.$ilnd.nc
-         if [[ -f $actual_ic_clm ]] && [[ -f $actual_ic_hydros ]]
+         flag_done=$SCRATCHDIR/newic.$yyyy-$st.$ilnd.done
+         if [[ -f $actual_ic_clm ]] && [[ -f $actual_ic_hydros ]] && [[ -f $flag_done ]]
          then
             continue
          fi
@@ -58,8 +61,8 @@ set -euvx
          fi
          rsync -auv $origdir/*clm2_00${ilnd}.r.$yyyy-$st* $IC_CLM_CPS_DIR/$st/
          rsync -auv $origdir/*hydros_00${ilnd}.r.$yyyy-$st* $IC_CLM_CPS_DIR/$st/
-         gunzip $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
-         gunzip $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
+         gunzip -f $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
+         gunzip -f $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc.gz
          dim_clm=ncdump -h $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc|grep "landunit = 2" 
          if [[ $dim_clm =~ "228727" ]] && [[ $yyyy -gt 2014 ]]
          then
@@ -74,8 +77,14 @@ set -euvx
             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "no" 
          fi
          mv $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_clm
-         mv $IC_CLM_CPS_DIR/$st/*.clm2_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_clm
          mv $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_hydros
+         if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] || [[ $yyyy -eq 2019 ]]
+         then
+            body=""
+            title="CERISE: new ICs preduced for $yyyy$st"
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "no" 
+            touch $flag_done
+         fi
       
       done
    done   
