@@ -79,6 +79,7 @@ do
     fi
 done
 # replace missing NEMO ICs with backup
+
 for ic in `seq -w 01 $n_ic_nemo`
 do
     bkupf_nemo=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.bkup.nc

@@ -14,18 +14,18 @@ fi
 listfiletocheck=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 mkdir -p $DIR_TEMP
 
-for yyyy in `seq 2023 2023`
+for yyyy in `seq 2024 2024`
 #for yyyy in `seq $iniy_hind $endy_hind`
 do
 #TEMPORARY
-   for st in {01..12}
+   for st in 10 10 
    do
       mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
       mkdir -p ${IC_NEMO_CPS_DIR}/$st
       mkdir -p ${IC_CICE_CPS_DIR}/$st
       #since we don't know how to proceed with the memebrs with cobe/ersst  
       #for poce in `seq -w 01 $n_ic_nemo`
-      for poce in `seq -w 01 02`
+      for poce in `seq -w 01 04`
       do
          if [[ -f $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$poce.nc ]] && [[ -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$poce.nc ]]
          then

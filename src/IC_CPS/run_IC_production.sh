@@ -38,7 +38,8 @@ procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
 #for poce in `seq -w 01 $n_ic_nemo`;do
 if [[ $idcomplete -eq 0 ]] ; then
-  for poce in 01 02 03 08 09 ;do
+  #for poce in 01 02 03 08 09 ;do
+  for poce in `seq -w 01 $n_ic_nemo`;do
      poce1=$((10#$poce - 1))
      nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
      ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc

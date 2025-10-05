@@ -5,7 +5,7 @@
 ####TO_BE_PORTED!
 #
 . $HOME/.bashrc
-. ${DIR_SPS35}/descr_SPS3.5.sh
+. ${DIR_UTIL}/descr_CPS.sh
 
 set +euvx
 conda activate CDSAPI

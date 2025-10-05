@@ -48,6 +48,7 @@ ndim=dimsizes(hiic)
 nlat=ndim(1)
 nlon=ndim(2)
 sic_ic = new((/npoce,nlat/2,nlon/),typeof(hiic))
+;sic_ic = new((/nfilsic,nlat/2,nlon/),typeof(hiic))
 delete(hiic)
 do i=0,nfilsic-1
    fi = addfile(diric+"/"+filic(i),"r")
@@ -74,6 +75,7 @@ end if
 
 ; now read forecast res
 SPSsys=getenv("SPSSystem")
+;sps4_202508_053.cice.nc
 fili = systemfunc("cd "+dirwkroot+" ; ls "+SPSsys+"_"+yyyyfore+st+"*.cice.nc")
 nfils=dimsizes(fili)
 ;nfils=5 ;for dbg purposes
@@ -98,6 +100,7 @@ copy_VarMeta(areain,area)
 ;
 sic_fc = new((/nfils,ntime+1,nlat/2,nlon/),typeof(tmp))
 pocefc = new((/nfils/),typeof(tmp))
+
 sic_fc@_FillValue=1.e+20
 delete(tmp)
 delete(nn)
@@ -118,6 +121,8 @@ do nf=0,nfils-1
    delete(nn)
 end do
 
+print(pocefc)
+
 sic_ic=where(sic_ic.gt..15,1.,0.)
 sic_ic@_FillValue=1.e+20
 ; sie NH IC
@@ -129,6 +134,8 @@ areasic=new((/npoce,nfils,ntime+1/),typeof(sic_fc))
 areasic_ic=new((/npoce,ntime+1/),typeof(sic_ic),1.e+20)
 areasic_ic@_FillValue=1.e+20
 areasic@_FillValue=1.e+20
+printVarSummary(areasic)
+printVarSummary(areasic_ic)
 
 
 do t=1,ntime

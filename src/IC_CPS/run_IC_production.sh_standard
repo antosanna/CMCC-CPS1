@@ -36,27 +36,27 @@ set -euvx
 # generate Ocean conditions 
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
-#for poce in `seq -w 01 $n_ic_nemo`;do
-for poce in 01 02 03 08 09 ;do
-   poce1=$((10#$poce - 1))
-   nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
-   ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
-   dirnemoic=${IC_NEMO_CPS_DIR}/$st/
-   mkdir -p $dirnemoic
-   dirciceic=${IC_CICE_CPS_DIR}/$st/
+if [[ $idcomplete -eq 0 ]] ; then
+   for poce in `seq -w 01 $n_ic_nemo`;do
+  #for poce in 01 02 03 08 09 ;do
+      poce1=$((10#$poce - 1))
+      nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.nc
+      ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.nc
+      dirnemoic=${IC_NEMO_CPS_DIR}/$st/
+      mkdir -p $dirnemoic
+      dirciceic=${IC_CICE_CPS_DIR}/$st/
 #
 # compute only if operational or not existing  ANTO 20210319
-   if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirciceic/$ciceic ]]
-   then
+      if [[ ! -f $dirnemoic/$nemoic ]] || [[ ! -f $dirciceic/$ciceic ]]
+      then
 
-      mkdir -p  $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-      input="$yyyy $st $poce"
-      $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
-
-     sleep 30
-  fi
-done
-
+        mkdir -p  $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
+        input="$yyyy $st $poce"
+        $DIR_UTIL/submitcommand.sh -q s_medium -M 2500 -s nemo_rebuild_restart.sh -i "$input" -d $DIR_OCE_IC -j nemo_rebuild_restart_${yyyy}${st}_${poce} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_NEMO
+        sleep 30
+      fi
+   done
+fi
 
 mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/IC_CLM
 for ilnd in {01..03}
@@ -69,7 +69,7 @@ do
 	   rm ${clm_err_file}
    fi
    eda_incomplete_check=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/EDA${ilnd}_incomplete_${yyyy}$st
-   if [[ ! -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
+   if [[ ! -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]  
    then
          body="CLM: EDA${ilnd} time-series was complete. You do not have to rerun"
          title="[CLMIC] ${CPSSYS} forecast notification"
@@ -77,11 +77,18 @@ do
          
    else   #operationally or for incomplete eda recover
      
-      if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]
+      if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]  #operationally
       then
           inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
           body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
+          title="[CLMIC] ${CPSSYS} forecast notification"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+      elif [[ -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
+      then
+          inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+          body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
           title="[CLMIC] ${CPSSYS} forecast notification"
           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
       fi

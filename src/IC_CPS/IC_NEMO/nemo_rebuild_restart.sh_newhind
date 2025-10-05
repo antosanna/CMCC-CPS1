@@ -31,21 +31,41 @@ then
          #IC for startdate 202212 saved in the operational runs (OPSLAMB0,OPSLAMB1,OPSLAMB4 and OPSLAMB5)
          #even if also the other OPSLAMBs are present (e.g. OPSLAB1,OPSLAMB2 etc) 
          #the numeration has been conserved consistent with the SLAMBs run (0,1,4,5)
-         if [[ ${yyyy}${st} -ge 202212 ]] && [[ ${yyyy}${st} -le 202407 ]]
+         if [[ ${yyyy}${st} -ge 202212 ]] && [[ ${yyyy}${st} -le 202409 ]]
          then
               OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+              tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
          else
-             echo "exiting for now"
-             exit 0
+              OUTDIR=`ls -drt /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/${yy_assim}${mm_assim}??00/run|tail -1` 
+              case $st 
+               in
+                    10) if [[ $poce1 -eq 0 ]] ; then tag=00883224 ; else tag=01891224 ; fi ;;
+                    11) if [[ $poce1 -eq 0 ]] ; then tag=00885456 ; else tag=01893456 ; fi ;;
+                    12) if [[ $poce1 -eq 0 ]] ; then tag=00887616 ; else tag=01895616 ; fi ;;
+              esac
          fi 
          ;;
-      2 | 3) OUTDIR=$DIR_REST_OIS/SLAMB$((poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      2 | 3) OUTDIR=$DIR_REST_OIS/SLAMB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
          if [[ "$st" == "01" ]] && [[ $yyyy -eq 1993 ]]
          then
-           OUTDIR=$DIR_REST_OIS/MB$((poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
-         elif [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
+            OUTDIR=$DIR_REST_OIS/MB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+            tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
+         elif [[ ${yyyy}$st -ge 202212 ]] && [[ ${yyyy}${st} -le 202401 ]]
          then
-           OUTDIR=$DIR_REST_OIS/OPSLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+            OUTDIR=$DIR_REST_OIS/OPSLAMB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+            tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
+         elif [[ ${yyyy}${st} -ge 202402 ]] && [[ ${yyyy}${st} -le 202409 ]]
+         then
+            OUTDIR=$DIR_REST_OIS/OPSLAMB$(($poce1 + 5))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+            tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
+         else
+            OUTDIR=`ls -drt /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$(($poce1 + 5))/${yy_assim}${mm_assim}??00/run|tail -1`
+            case $st 
+               in  
+                    10) if [[ $poce1 -eq 2 ]] ; then tag=01891224 ; else tag=00883224 ; fi ;;
+                    11) if [[ $poce1 -eq 2 ]] ; then tag=01893456 ; else tag=00885456 ; fi ;;
+                    12) if [[ $poce1 -eq 2 ]] ; then tag=01895616 ; else tag=00887616 ; fi ;;
+            esac
          fi
          ;;
    esac
@@ -57,10 +77,11 @@ else
       last_analysis=`ls -dtr /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/????????00/run|tail -1`
       OUTDIR=$last_analysis
       nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
-      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
+      ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc
+ 
+      tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
    fi
 fi
-tag=`ls $OUTDIR/*rest*nc|tail -1|rev|cut -d '_' -f3 |rev`
 mkdir -p $IC_NEMO_CPS_DIR/$st
 TMPNEMOREST=$SCRATCHDIR/nemo_rebuild/restart/$yyyy$st
 mkdir -p $TMPNEMOREST
@@ -87,8 +108,12 @@ fi
 
 if [[ ! -f $ciceic ]]
 then
-#   f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
-   f_ice=`ls $OUTDIR/*.cice.r.????-??-??-00000.nc|tail -1`
+  if [[ $typeofrun == "hindcast" ]]
+  then
+     f_ice=`ls $OUTDIR/*.cice.r.$yyyy-$st-01-00000.nc`
+  else
+     f_ice=`ls $OUTDIR/*.cice.r.????-??-??-00000.nc|tail -1`
+  fi
    rsync -auv $f_ice $ciceic
 fi
 set +euvx

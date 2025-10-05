@@ -90,7 +90,11 @@ mkdir -p $DIR_CASES/$caso/logs
 #./xmlchange -file env_run.xml -id DIN_LOC_ROOT_CLMFORC -val $DIR_FORC
 
 #rsync -av ${DIR_TEMPL}/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
-rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml $DIR_CASES/$caso/env_workflow.xml
+if [[ $backup -eq 1 ]] ; then
+   rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml $DIR_CASES/$caso/env_workflow.xml
+else
+   rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml_SC $DIR_CASES/$caso/env_workflow.xml
+fi
 
 #mv_IC_2ICDIR must be a template to avoid inputs: submission managed by env_workflow 
 sed -e "s@CASO@$caso@g;s@YY@${ycurr}@g;s@MM@${mcurr}@g;s@ICCLM@${icclm}@g;s@ICHYD@${ichydros}@g;s@MEMBER@${member}@g;s@CHECKMV@${check_mv}@g;s@LASTDAY@${lastday}@g" $DIR_LND_IC/mv_IC_2ICDIR.sh > $DIR_CASES/$caso/mv_IC_2ICDIR_${caso}.sh

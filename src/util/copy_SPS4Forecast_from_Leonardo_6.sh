@@ -57,7 +57,12 @@ for ens in {046..054} ; do
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
       if [[ $dim -lt 256 ]]
       then
-         continue
+         if [[ `ls $DIR_ARCHIVE/$caso/rest/*tar.gz |wc -l` -eq 1 ]] && [[ $dim -ge 130 ]]
+         then
+            echo "restart compressed and .h* files removed $dim"
+         else
+            continue
+         fi
       fi
    else
       continue
