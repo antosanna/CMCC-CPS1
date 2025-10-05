@@ -18,7 +18,9 @@ then
 fi
 
 
+set +evx
 conda activate $envcondacm3
+set -evx
 
 
 # Input **********************
@@ -73,7 +75,8 @@ subm_cnt=0
 for st in $stlist
 do
 #   for yyyy in $(seq $iniy_hind $endy_hind)
-   for yyyy in $(seq 1994 $endy_hind)
+   #for yyyy in $(seq 1994 $endy_hind)
+   for yyyy in $(seq 1994 2021) #for june stdate 1993 and 2022 on Cassandra
    do
        #if [[ $yyyy -eq 2014 ]]
        #then
@@ -238,7 +241,7 @@ do
                break 4
             fi
             #to minimize simultaneous I/O from different members running
-            sleep 300
+            sleep 240
          fi
       done
    done

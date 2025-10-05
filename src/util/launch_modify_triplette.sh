@@ -10,7 +10,7 @@ then
 fi
 #sps4_200404_002 sps4_200304_003 sps4_200304_021 sps4_200104_029 sps4_200104_012 sps4_199504_026 sps4_199504_005
 
-listacasi="sps4_200106_023"
+listacasi="sps4_200906_029"
 for caso in $listacasi 
 do
    echo $caso

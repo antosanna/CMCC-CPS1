@@ -11,9 +11,13 @@ then
    continue
 fi 
 cd $DIR_ARCHIVE/$caso/rest
-n_dirrest=`ls |grep 00000|wc -l`
+n_dirrest=`ls |grep 00000|grep -v *.tar.gz |wc -l`
 if [[ $n_dirrest -ne 1 ]]
 then
+   if [[ $n_dirrest -eq 0 ]] && [[ `ls  $DIR_ARCHIVE/$caso/rest/*.tar.gz |wc -l` -eq 1 ]] ; then
+      echo "tar for caso $caso already done, exiting now"
+      exit 0
+   fi
    stdate=`echo $caso|cut -d "_" -f2`
    title="[$CPSSYS] ERROR: more than one rest dir found"
    body="Case $caso presents more than one restart directory. lt_archive_moredays exited"
