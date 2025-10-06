@@ -94,6 +94,11 @@ subm_cnt=0
 
 endyear=2021 
 iniy_hind=2002
+if [[ $st == "02" ]]
+then
+   iniy_hind=2019
+   endy_hind=2019
+fi
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)

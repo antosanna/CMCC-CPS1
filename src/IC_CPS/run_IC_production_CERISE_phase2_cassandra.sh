@@ -21,8 +21,9 @@ then
 fi
 for yyyy in {2002..2021}
 do
-   if [[ $yyyy -eq 2013 ]] 
+   if [[ $yyyy -eq 2013 ]] || [[ $yyyy -eq 2019 ]]
    then
+# 2013 still missing and 2019 already done
       continue
    fi
 set +euvx
@@ -40,9 +41,6 @@ set -euvx
       if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] 
       then
          origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2006/$yyyy/restart_${yyyy}-${st}-01
-      elif [[ $yyyy -eq 2019 ]]
-      then
-         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/stream2018/$yyyy/restart_${yyyy}-${st}-01
       else
          if [[ $machine == "juno" ]]
          then
@@ -60,7 +58,7 @@ set -euvx
          flag_done=$SCRATCHDIR/newic.$yyyy-$st.$ilnd.done
          if [[ -f $actual_ic_clm ]] && [[ -f $actual_ic_hydros ]] 
          then
-             if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] || [[ $yyyy -eq 2019 ]]
+             if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] 
              then
                 if [[ -f $flag_done ]]
                 then
@@ -99,7 +97,7 @@ set -euvx
          touch $actual_ic_clm
          mv $IC_CLM_CPS_DIR/$st/*.hydros_00${ilnd}.r.$yyyy-$st-01-00000.nc $actual_ic_hydros
          touch $actual_ic_hydros
-         if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] || [[ $yyyy -eq 2019 ]]
+         if [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2008 ]] || [[ $yyyy -eq 2009 ]] 
          then
             body="$actual_ic_clm $actual_ic_hydros"
             title="CERISE: new ICs preduced for $yyyy$st"
