@@ -413,7 +413,7 @@ fi
 #--------------------------------------------
 # NOW SUBMIT PUSH4ECMWF (only forecast)
 #--------------------------------------------
-skip=1
+skip=0
 if [[ $skip -eq 0 ]]
 then
 if [[ $typeofrun == "forecast" ]]

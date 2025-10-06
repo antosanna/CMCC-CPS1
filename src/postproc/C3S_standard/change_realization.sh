@@ -173,6 +173,9 @@ then
                 touch $dirflag
             done
             dir=rest
+            cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/
+            gunzip 20??-??-01-00000.tar.gz
+            tar -xvf 20??-??-01-00000.tar
             cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/????-??-01-00000
             dirflag=$DIR_LOG/$typeofrun/${yyyy}${st}/change_realization/${caso2change}_${caso_tobecome}_${dir}_done1
             if [[ ! -f $dirflag ]]
