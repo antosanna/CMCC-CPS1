@@ -93,7 +93,7 @@ submittable_cnt=0
 subm_cnt=0
 
 endyear=2021 
-iniy_hind=2002
+iniy_hind=2015
 for st in $stlist
 do
    for yyyy in $(seq $iniy_hind $endyear)
