@@ -103,7 +103,7 @@ mkdir -p $caso/logs
 mkdir -p $SCRATCHDIR/cases_${st}
 sed -e "s/YYYY/${yyyy}/g;s/STDATE/$st/g;s/PATM/$pp/g;s/PLAND/$ppland/g;s/POCE/$poce/g;s/NRUN/$nrun/g;" $DIR_CPS/create_caso_leonardo.sh > $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
 chmod u+x $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
-srun -c16 -A ${account_name} --qos=qos_lowprio -p dcgp_usr_prod -t 0:30:00 $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
+srun -c16 -A ${account_name} --qos=$qos -p dcgp_usr_prod -t 0:30:00 $SCRATCHDIR/cases_$st/create_caso_leonardo_$caso.sh
 
 
 EOF2

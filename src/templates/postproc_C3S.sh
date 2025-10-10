@@ -49,7 +49,7 @@ set -euvx
 #         touch $check_submitnotificate
 #         # submit notificate 4 - FINE JOBS PARALLELI
 #         input="`whoami` 0 $yyyy $st 1 4"
-#         ${DIR_UTIL}/submitcommand.sh -r $sla_serialID -S qos_resv -q $serialq_s -j notificate${startdate}_4th -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s notificate.sh -i "$input"
+#         ${DIR_UTIL}/submitcommand.sh -r $sla_serialID -S $qos -q $serialq_s -j notificate${startdate}_4th -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s notificate.sh -i "$input"
 #         touch $check_notificate
 #
 #      fi
@@ -68,14 +68,14 @@ mkdir -p $SCRATCHDIR/regrid_C3S/$caso/NEMO
 if [[ ! -f $check_oceregrid ]]
 then
     #logdir as input to manage remote vs local cases (online vs offline postproc)
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$DIR_CASES/$caso/logs"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$DIR_CASES/$caso/logs"
 
 fi
 # get   check_iceregrid from dictionary
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CICE
 if [[ ! -f $check_iceregrid ]]
 then
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -M 4000 -j interp_cice2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_cice2C3S_${caso}.sh 
 fi 
 
 #***********************************************************************
@@ -102,17 +102,17 @@ then
       then
             input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
             # ADD the reservation for serial !!!
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 5000 -j create_clm_files_${ft}_${caso} -l ${DIR_CASES}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
 
            echo "start of postpc_clm "`date`
            input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"  
            # ADD the reservation for serial !!!
-           ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -S qos_resv -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -S $qos -p create_clm_files_${ft}_${caso} -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
       else
            echo "start of postpc_clm "`date`
            input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
            # ADD the reservation for serial !!!
-           ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -S qos_resv -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+           ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -S $qos -j postpc_clm_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
       fi
     done 
  
@@ -145,7 +145,7 @@ then
       then
          input="$caso $ft ${wkdir_cam} $finalfile $ic"
              # ADD the reservation for serial !!!
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 4000 -j create_cam_files_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       fi
    done
 # not using the checkfiles for consistency with the offline procedure
@@ -179,7 +179,7 @@ then
    fi  
 
    input="$caso $DIR_CASES"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 40000 -j fix_spikes_DMO_single_member_h3_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s fix_spikes_DMO_single_member.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "fix_spikes_DMO_single_member_h3_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
@@ -218,7 +218,7 @@ then
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
 
    done
 #  now apply fix for isobaric level T on ft=h2 
@@ -226,7 +226,7 @@ then
    checkfileextrap=${HEALED_DIR}/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l ${HEALED_DIR}/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l ${HEALED_DIR}/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "submitted" -t "extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st 
    while `true`
    do
@@ -273,7 +273,7 @@ allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]] 
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate ${DIR_CASES}"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate ${DIR_CASES}"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then

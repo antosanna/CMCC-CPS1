@@ -25,11 +25,11 @@ flag_done=$dirlog/plots_all_DONE
 
 echo "launching diagnostic on C3S files for website"
 input="$yyyy $st $flag_done $dbg" 
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
 
 echo "launching ocean diagnostics on DMO for website"
 input="$yyyy $st $flag_done $dbg"
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
 
 echo "waiting for the diagnostic to be concluded before updating the website"
 
@@ -101,9 +101,9 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    Thank you, \n
    SPS staff\n"
 
-   title="${SPSSystem} forecast notification - Website update"
+   title="${SPSSystem} forecast notification - Website updated"
    #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -c $ccmail
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st -c $ccmail
    y2notify=`date +%Y`
    m2notify=`date +%m`
    d2notify=`date +%d`
@@ -117,7 +117,7 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    M2notify=$( $DIR_UTIL/getincrdate.sh 5 $hourincrement );
    data2notify=$y2notify":"$m2notify":"$d2notify":"$H2notify":"$M2notify
    input="8"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -B $data2notify -j sendreminder4endForecast${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s sendreminder.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -B $data2notify -j sendreminder4endForecast${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s sendreminder.sh -i "$input"
    
 else
    title="${SPSSystem} forecast notification - C3S diagnostic complete"

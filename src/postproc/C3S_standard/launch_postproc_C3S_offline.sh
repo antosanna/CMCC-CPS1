@@ -55,7 +55,8 @@ fi
 cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
-for yyyy in `seq $iniy_hind $endy_hind`
+#for yyyy in `seq $iniy_hind $endy_hind`
+for yyyy in `seq $iniy_hind 2011`
 do
    listofcases=`ls -d sps4_${yyyy}${st}_0?? |head -n $nrunC3Sfore`
 

@@ -37,8 +37,9 @@ fi
 # 3) remove $caso in CESM/archive/
 if [[ -d $DIR_ARCHIVE/$caso ]] ; then
          cd $DIR_ARCHIVE
+#    modify permissions adding writing one for $caso in CESM/archive/
+         chmod -R u+wX $caso
          rm -rf $caso
-
 fi
 if [[ -d $WORK/CPS/CMCC-CPS1/cases_from_Leonardo/$caso ]] ; then
    

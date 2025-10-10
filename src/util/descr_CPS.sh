@@ -217,7 +217,7 @@ then
    ccmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=adrien.owono@ecmwf.int
-	     ccmail=silvio.gualdi@cmcc.it,stefanotib@gmail.com
+      ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it
    fi
    VALIDATION=$WORK/CPS/VALIDATION
@@ -258,7 +258,7 @@ then
    else   
       #for running with account CMCC_2025
       #optSLURM="--reservation=s_met_cmcc"
-      optSLURM=""
+      optSLURM="--qos=$qos"
       serialq_s=dcgp_cmcc_prod
       serialq_m=dcgp_cmcc_prod
       serialq_l=dcgp_cmcc_prod

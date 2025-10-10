@@ -219,7 +219,7 @@ EOF3
 
 	chmod u+x launch_c3s_qa_checker.${ns}.sh
         input="$ns ${startdate} ${mb3} ${json}"
-        ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_l -t "2" -r $sla_serialID -S qos_resv -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${mb3}_${ns} -d $ACTDIR -l $DL -i "$input"
+        ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_l -t "2" -r $sla_serialID -S \$qos -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${mb3}_${ns} -d $ACTDIR -l $DL -i "$input"
 	# update submitted counter
 	if [ $? -eq 0 ]; then
 		submit_cnt=$(( $submit_cnt + 1 ))

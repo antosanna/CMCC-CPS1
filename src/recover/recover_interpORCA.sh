@@ -37,7 +37,7 @@ do
   if [[ $dorelaunch -eq 1 ]] ; then
       running=0
       input="$running"
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input" 
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -S $qos -M 8000 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$input" 
   fi
 done
 

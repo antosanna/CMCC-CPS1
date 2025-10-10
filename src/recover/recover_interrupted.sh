@@ -779,7 +779,7 @@ set -eux
       $DIR_RECOVER/refresh_all_scripts.sh $caso
       cd $DIR_CASES/$caso
 #      bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
       body="RECOVER submitted"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi

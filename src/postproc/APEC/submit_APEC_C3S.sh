@@ -49,7 +49,7 @@ for pp in $plist ; do
   echo $input
   if [ ! -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/${yyyy}${st}_${ppp}_APEC_DONE ] ;then
 
-     ${DIR_UTIL}/submitcommand.sh -M 7000 -m $machine -q $serialq_m -j APEC_${yyyy}${st}_${ppp} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st} -d ${here} -s data_to_APEC_from_C3S.sh -i "$input"
+     ${DIR_UTIL}/submitcommand.sh -M 1000 -m $machine -q $serialq_m -j APEC_${yyyy}${st}_${ppp} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st} -d ${here} -s data_to_APEC_from_C3S.sh -i "$input"
   fi
   sleep 2
 

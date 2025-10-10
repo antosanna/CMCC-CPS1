@@ -46,7 +46,7 @@ then
     sed -e "s:CASO:$caso:g;s:IC:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/nemo/interp_ORCA2_1X1_gridT2C3S_template.sh > $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
     chmod u+x $dir_cases/$caso/interp_ORCA2_1X1_gridT2C3S_${caso}.sh
 
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$dirlog"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 7500 -j interp_ORCA2_1X1_gridT2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_ORCA2_1X1_gridT2C3S_${caso}.sh -i "$dirlog"
 
 fi
 # 
@@ -58,7 +58,7 @@ if [[ ! -f $check_iceregrid ]]
 then
    sed -e "s:CASO:$caso:g;s:ICs:$ic:g;s:OUTDIRC3S:$outdirC3S:g" $DIR_POST/cice/interp_cice2C3S_template.sh > $dir_cases/$caso/interp_cice2C3S_${caso}.sh
    chmod u+x $dir_cases/$caso/interp_cice2C3S_${caso}.sh
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S qos_resv -M 4000 -j interp_cice2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_cice2C3S_${caso}.sh
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -M 4000 -j interp_cice2C3S_${caso} -l $dir_cases/$caso/logs/ -d ${dir_cases}/$caso -s interp_cice2C3S_${caso}.sh
 fi
 
 #***********************************************************************
@@ -84,7 +84,7 @@ then
        flag_for_type=${check_postclm_type}_${ft}_DONE
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
        jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
        if [[ $ft == "h2" ]]
        then
@@ -95,7 +95,7 @@ then
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
        # ADD the reservation for serial !!!
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S qos_resv -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S $qos -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    done
 fi
 
@@ -118,7 +118,7 @@ then
       finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
       input="$caso $ft ${wkdir_cam} $finalfile $ic" 
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       jobIDall_cam+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_cam_files_${ft}_${caso} -i yes`"
    done
 # before running this script it maybe happen that clean4C3S.sh has been run so those flags might have been deleted
@@ -155,7 +155,7 @@ then
    fi
    input="$caso $dir_cases"
 # now moved to $DIR_C3S from $DIR_POST/cam since it heals also clm files
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fix_spikes_DMO_single_member_cam.h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 30000 -j fix_spikes_DMO_single_member_cam.h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s fix_spikes_DMO_single_member.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : fix_spikes_DMO_single_member_cam.h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do
@@ -193,14 +193,14 @@ then
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
              # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
             
    done
 #  now apply fix for isobaric level T on ft=h2 
    checkfileextrap=$HEALED_DIR/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso :extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
    while `true`
@@ -250,7 +250,7 @@ allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]]
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then

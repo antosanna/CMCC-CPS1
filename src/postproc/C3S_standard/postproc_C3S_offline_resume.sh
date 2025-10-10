@@ -59,12 +59,12 @@ input="$caso"
 if [[ $flag -eq 1 ]]
 then
 # healing for too many iterations
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j continue_fixing_after_it_limit_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s continue_fixing_after_it_limit.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 40000 -j continue_fixing_after_it_limit_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s continue_fixing_after_it_limit.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : continue_fixing_after_it_limit_${caso} submitted" -r "only" -s $yyyy$st
 elif [[ $flag -eq 2 ]]
 then
 # healing for spike discovered in C3S
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv -M 40000 -j fixing_after_C3S_spike_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s fixing_after_C3S_spike.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 40000 -j fixing_after_C3S_spike_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s fixing_after_C3S_spike.sh -i "$input"
 fi
 # check on presence of checkfile for healing
 while `true`
@@ -139,7 +139,7 @@ do
    fi
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
    input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
             
 done
 #  now apply fix for isobaric level T on ft=h2 
@@ -150,7 +150,7 @@ then
 fi
 inputextrap="$caso $checkfileextrap"
 req_mem=8000
-${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S qos_resv  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
 while `true`
@@ -197,7 +197,7 @@ allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]]
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S qos_resv -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate ${dir_cases}"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate ${dir_cases}"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then

@@ -419,7 +419,7 @@ then
 if [[ $typeofrun == "forecast" ]]
 then
    input="$yyyy $st"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
   
    body="Diagnostics from C3S just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_SPS35/launch_end_forecast_${CPSSYS}.sh manually"
    title="[C3S] ${CPSSYS} $typeofrun notification"

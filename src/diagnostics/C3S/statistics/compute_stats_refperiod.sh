@@ -56,7 +56,7 @@ then
    if [ $np -eq 0 ]
    then
       input="$var $st $outdir $fileroot $nens $checkfilestd $fileok $inpdir"
-      ${DIR_SPS35}/submitcommand.sh -m $machine -M 10000  -S qos_resv -t "4" -q $serialq_m -j $namescript.$st.${var} -l $DIR_LOG/DIAGS/stats/ -d ${DIR_DIAG}/C3S_statistics -s stdev_on_line.sh -i "$input"
+      ${DIR_SPS35}/submitcommand.sh -m $machine -M 10000  -S $qos -t "4" -q $serialq_m -j $namescript.$st.${var} -l $DIR_LOG/DIAGS/stats/ -d ${DIR_DIAG}/C3S_statistics -s stdev_on_line.sh -i "$input"
    else
       echo "$var for start-date $st already under process. Skip"
       exit
