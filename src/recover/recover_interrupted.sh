@@ -193,6 +193,7 @@ lista_caso_ignored="sps4_202510_014"
 
 cd $DIR_CASES/
 for caso in $listofcases ; do
+  report="$caso "
   if [[ $lista_caso_ignored == *"$caso"* ]] ; then
      continue  
   fi
@@ -213,6 +214,7 @@ set -eux
   if [[ $iscompleted == "-" ]]
   then
      echo "skip this $caso because completed"
+     report+=" completed"
      continue
   fi
 ### check that case is not running, if running skip
@@ -225,6 +227,7 @@ set -eux
   fi
   echo ""
   echo "************$caso is not running"
+  report+=" is not running"
   echo ""
 
 ### FROM HERE WE WANT TO DETECT WHERE THE CASE HAS BEEN INTERRUPTED
@@ -258,12 +261,15 @@ set -eux
         if [[ ${last_cesm} -nt ${last_star} ]] && [[ $errstring -ne 0 ]] ; then
           cnt_st_archive=$(($cnt_st_archive + 1)) 
           lista_st_archive+=" $caso"
+          report+=" must be resubmitted from st_archive"
         elif [[ ${is_starch} -eq 1 ]] ; then
            cnt_st_archive=$(($cnt_st_archive + 1))
            lista_st_archive+=" $caso"
+          report+=" must be resubmitted from st_archive"
         else
            cnt_lt_archive=$(($cnt_lt_archive + 1))
            lista_lt_archive+=" $caso"
+          report+=" must be resubmitted from st_archive"
 #get last restart directory month
            cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 #compute num of months run nmonthsrun
@@ -278,14 +284,17 @@ set -eux
            then
               cnt_resubmit=$(($cnt_resubmit + 1))
               lista_resubmit+=" $caso"
+              report+=" must be resubmitted"
            else
               if [[ `ls ${DIR_CASES}/$caso/logs/lt_archive_moredays_*err |wc -l` -eq 0 ]]
               then
                  lista_moredays+=" $caso"
                  cnt_moredays=$(($cnt_moredays + 1))
+                 report+=" lacks moredays"
               else
-                   lista_arch_moredays+=" $caso"
-                   cnt_arch_moredays=$(($cnt_arch_moredays + 1))
+                 lista_arch_moredays+=" $caso"
+                 report+=" has done moredays"
+                 cnt_arch_moredays=$(($cnt_arch_moredays + 1))
               fi 
            fi
         fi
@@ -319,17 +328,18 @@ set -eux
      fi #juno
      fi #forecast
   fi #if moredays
+  echo $report >>$DIR_REP/REPORT_recover.$yyyy$st
 
 done  
 
 if [[ "$lista_lt_archive"  != " " ]]
 then
-   echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted"
-   echo "$lista_lt_archive"
-   echo ""
-   echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing "
-   echo ""
-   echo "$lista_moredays"
+   echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted" >>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "$lista_lt_archive" >>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing ">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "$lista_moredays">>$DIR_REP/REPORT_recover.$yyyy$st
    for caso in $lista_moredays
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -337,8 +347,8 @@ then
    done
 
    echo "---- From the above RECOVER_LIST, $cnt_arch_moredays cases with lt_archive_moredays missing"
-   echo ""
-   echo "$lista_arch_moredays"
+   echo ">>$DIR_REP/REPORT_recover.$yyyy$st"
+   echo "$lista_arch_moredays>>$DIR_REP/REPORT_recover.$yyyy$st"
    for caso in $lista_arch_moredays
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -349,9 +359,9 @@ then
 fi
 if [[ "$lista_resubmit" != " " ]]
 then
-   echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted "
-   echo "$lista_resubmit"
-   echo ""
+   echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted >>$DIR_REP/REPORT_recover.$yyyy$st"
+   echo "$lista_resubmit>>$DIR_REP/REPORT_recover.$yyyy$st"
+   echo ">>$DIR_REP/REPORT_recover.$yyyy$st"
    for caso in $lista_resubmit
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -360,9 +370,9 @@ then
 fi
 if [[ "$lista_first_month" != " " ]]
 then
-   echo "Cases interrupted during first month"
-   echo "$lista_first_month" 
-   echo ""
+   echo "Cases interrupted during first month">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "$lista_first_month">>$DIR_REP/REPORT_recover.$yyyy$st 
+   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
    for caso in $lista_first_month
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -371,9 +381,9 @@ then
 fi
 if [[ "$lista_st_archive" != " " ]]
 then
-   echo "Cases interrupted during st_archive"
-   echo "$lista_st_archive" 
-   echo ""
+   echo "Cases interrupted during st_archive">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "$lista_st_archive" >>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
    for caso in $lista_st_archive
    do  
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -384,9 +394,9 @@ fi
 if [[ "$lista_pp_C3S" != " " ]]
 then
    lista_pp_C3S=$(echo $lista_pp_C3S | tr ' ' '\n' | sort -u)
-   echo "Cases with interrupted postproc_C3S.sh"
-   echo "$lista_pp_C3S" 
-   echo ""
+   echo "Cases with interrupted postproc_C3S.sh">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "$lista_pp_C3S" >>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
    for caso in $lista_pp_C3S
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -489,6 +499,8 @@ set -eux
       then
          exit
       fi
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 # lt_archive
@@ -524,6 +536,8 @@ set -eux
          exit
       fi
 
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -621,6 +635,8 @@ set -eux
              exit
           fi
       fi
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -718,6 +734,8 @@ set -eux
             exit
          fi
       fi
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
   
@@ -734,6 +752,8 @@ set -eux
       cd $DIR_CASES/$caso
       $DIR_RECOVER/recover_st_archive.sh $caso
 
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
  
@@ -760,6 +780,8 @@ set -eux
       cd $DIR_CASES/$caso
 #      bsub -W 06:00 -q s_medium -P 0490 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
    

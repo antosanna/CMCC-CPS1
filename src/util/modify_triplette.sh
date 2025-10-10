@@ -21,7 +21,7 @@ listacasicleaned=()
 #listcases="${SPSSystem}_200011_016" 
 #listcases="${SPSSystem}_200611_004"
 #listcases="${SPSSystem}_200111_016 ${SPSSystem}_200311_017 ${SPSSystem}_200511_030"
-listcases="${SPSSystem}_199410_018 ${SPSSystem}_199910_029 ${SPSSystem}_200110_005"
+listcases="${SPSSystem}_201106_003"
 if [[ "$casefromoutside" != "" ]]
 then
   listcases=$casefromoutside

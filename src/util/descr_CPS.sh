@@ -242,7 +242,7 @@ then
       qos=qos_lowprio
    else
 #   account_name=CMCC_Copernic_4
-      :
+      qos=qos_cmcc
    fi
 # only for July we must set it to ""
    if [[ $qos == "qos_lowprio" ]]

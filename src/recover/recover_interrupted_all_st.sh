@@ -25,27 +25,25 @@
 
 function write_help_leonardo
 {
-  echo "USE ONLY FROM crontab if not dbg: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
-  echo "     (if hindcast only st else also yyyy)"
+  echo "USE ONLY FROM crontab if not dbg: recover_interrupted.sh [<dbg>]"
   echo ""
   echo "CAVEAT"
   echo "---First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
   echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
   echo ""
   echo "SUBMISSION COMMAND WITH dbg=2:"
-  echo "./recover_interrupted.sh 2 \$st"
+  echo "./recover_interrupted.sh 2"
   echo ""
   echo "SUBMISSION COMMAND EXAMPLE (every 30'):"
-  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0 \$st"
+  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0"
 }
 #set -euxv
 function write_help
 {
-  echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
-  echo "     (if hindcast only st else also yyyy)"
+  echo "Use: recover_interrupted.sh [<dbg>]"
   echo ""
   echo "SUBMISSION COMMAND:"
-  echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_${stmain}_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"\$dbg \$stmain\""
+  echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"\$dbg \""
   echo ""
   echo "CAVEAT"
   echo "---First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
@@ -79,7 +77,7 @@ set -eux
 
 if [[ $machine == "leonardo" ]]
 then
-  LOG_FILE=$DIR_LOG/recover/recover_`date +%Y%m%d%H%M`.log
+  LOG_FILE=$DIR_LOG/recover/recover_new_hindcasts_`date +%Y%m%d%H%M`.log
   exec 3>&1 1>>${LOG_FILE} 2>&1
   njobs_max=2
   cnt_this_script_running=$(ps cax -u ${operational_user} -f |grep recover_interru |wc -l)
@@ -117,34 +115,10 @@ set -eux
 else
    dbg=0    #you want to resubmit just the cases listed in your hardcoded $listofcases
 fi
-if [[ $# -ge 2 ]]
-then
-   st=${2:-$mo_today}
-   if [[ `echo -n $st|wc -c` -ne 2 ]]
-   then
-      echo "second input should be st 2 digits"
-      exit
-   fi
-   listofcases=`ls -d ${SPSSystem}_????${st}_0??`
-set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh 1993
-#set -euvx
+listofcases=`ls -d ${SPSSystem}_2023??_0??`
+listofcases+=" "`ls -d ${SPSSystem}_2024??_0??`
+typeofrun=hindcast
 set -eux
-fi
-if [[ $# -ge 3 ]]
-then
-   yyyy=${3:-$yy_today}
-   if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
-   then
-      echo "third input should be yyyy 4 digits"
-      exit
-   fi
-   listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
-set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
-#set -euvx
-set -eux
-fi
 if [[ `echo -n $dbg|wc -c` -ne 1 ]]
 then
    echo "first input should be dbg=0/1/2"
@@ -168,7 +142,7 @@ cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 cnt_st_archive=0     #CASES INTERRUPTED DURING ST_ARCHIVE
 cnt_arch_moredays=0 #CASES INTERRUPTED DURING LT_ARCHIVE_MOREDAYS
-filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${dbg}_list.${machine}.`date +%Y%m%d%H`.csv
+filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${dbg}_new_hidncast_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
 
 
