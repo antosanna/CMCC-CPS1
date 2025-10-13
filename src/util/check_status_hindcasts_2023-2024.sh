@@ -45,7 +45,6 @@ set -e
             status="NOT-QUEUED"
          fi
          lastday1="$caso        "
-         last_updated_file=`ls -rt $WORK_CPS/$caso/run/*`
          log2check=`ls -rt $WORK_CPS/$caso/run/rof.log*[0-9]|tail -1`
          if [[ ! -z $log2check ]]
          then

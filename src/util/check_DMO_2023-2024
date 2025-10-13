@@ -1,0 +1,62 @@
+#!/bin/sh -l
+. $HOME/.bashrc
+. ${DIR_UTIL}/descr_CPS.sh
+
+set -eu
+
+echo "enter the month to check (leave empty if you want all months)"
+read st
+echo ""
+if [[ -z $st ]]
+then
+    echo "checking all st"
+    str_st="all st"
+    stlist=`seq -w 1 12`
+else    
+    echo "checking start-date $st"
+    str_st=$st
+    stlist=$st
+fi
+
+ylist=`seq 2023 2024`
+for st in $stlist
+do
+   n_st_done=0
+   echo "$st hindcast done"
+   for yyyy in $ylist
+   do
+      n_done=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0??.transfer_from_*_DONE 2>/dev/null |head -30|wc -l`
+      n_done_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0??/logs/run_moredays_*DONE 2>/dev/null|head -30|wc -l`
+      if [[ $(($n_done + $n_done_juno)) -gt 0 ]]
+      then
+         echo "$yyyy$st done number $(($n_done + $n_done_juno))"
+         if [[ $(($n_done + $n_done_juno)) -lt 30 ]]
+         then
+             list2do=""
+             for i in {01..30}
+             do
+                hinddone=`ls $DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${i}.transfer_from_*_DONE 2>/dev/null |wc -l`
+                hinddone_juno=`ls $DIR_CASES1/${SPSSystem}_${yyyy}${st}_0${i}/logs/run_moredays_*DONE 2>/dev/null |wc -l`
+                if [[ $hinddone -eq 0 ]] && [[ $hinddone_juno -eq 0 ]]
+                then
+                    list2do+=" ${SPSSystem}_${yyyy}${st}_0${i}"
+                    if [[ `echo $list2do|wc -w` -eq $((30 - $n_done - $n_done_juno)) ]]
+                    then
+                       break
+                    fi
+                fi
+             done
+             echo "members still to be run: $list2do"
+         fi
+  
+      elif [[ $(($n_done + $n_done_juno)) -eq 0 ]]
+      then
+         echo "$yyyy$st NONE MEMBER COMPLETED"
+      fi
+      n_st_done=$(($n_st_done + $n_done + $n_done_juno))
+   done
+   echo "TOTAL NUMBER DONE FOR START-DATE $st: $n_st_done"
+   echo "Percentage                          : $(($n_st_done * 100 / $((30 * 30))))%"
+   echo ""
+   read -p "Press enter to continue"
+done
