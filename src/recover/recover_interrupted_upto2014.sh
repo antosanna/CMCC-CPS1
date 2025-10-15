@@ -202,6 +202,10 @@ for caso in $listofcases ; do
   then
      continue
   fi
+  if [[ $yyyy -eq 2008 ]] 
+  then
+     continue
+  fi
   member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
