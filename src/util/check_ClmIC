@@ -4,8 +4,8 @@
 
 set -eu
 
-stlist=`seq -w 1 12`
-ylist=`seq 1993 2022`
+stlist="02 05 08 11"
+ylist=`seq 2002 2021`
 if [[ $# -eq 1 ]]
 then
    stlist=$1
@@ -20,7 +20,7 @@ do
    for yyyy in $ylist
    do
       n_IC_local=`ls $IC_CLM_CPS_DIR/$st/*$yyyy-${st}*.nc 2>/dev/null|wc -l`
-      if [[ $n_IC_local -eq 6 ]]
+      if [[ $n_IC_local -eq 50 ]]
       then
           echo "$yyyy$st ready"
       else

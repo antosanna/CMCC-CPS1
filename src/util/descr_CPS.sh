@@ -90,8 +90,8 @@ then
       cores_per_run=336
       envcondaclm=postpc_CLM_C3S
       envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
-      maxnumbertosubmit=35
-      maxnumbertorecover=35
+      maxnumbertosubmit=33
+      maxnumbertorecover=33
       maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS=/work/$HEAD/aspect/CESM2/rea_archive/

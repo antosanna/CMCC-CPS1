@@ -119,7 +119,7 @@ then
 fi
 
 lista_caso_ignored="sps4_201208_005" #sps4_201208_005"
-for st in 05 11
+for st in 05 
 do
    listofcases=`ls -d ${SPSSystem}_20??${st}_0??`
 set +euvx
