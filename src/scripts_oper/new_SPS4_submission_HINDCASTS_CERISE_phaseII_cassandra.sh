@@ -99,7 +99,7 @@ do
    iniy_hind=2004
    if [[ $st == "02" ]]
    then
-      iniy_hind=2009
+      iniy_hind=2007
    fi
    for yyyy in $(seq $iniy_hind $endyear)
    do

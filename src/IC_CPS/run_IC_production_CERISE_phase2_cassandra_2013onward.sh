@@ -13,12 +13,8 @@ then
    exit
 fi
 listmm="2 5 8 11"
-for yyyy in {2013..2016}
+for yyyy in {2017..2021}
 do
-   if [[ $yyyy -eq 2014 ]]
-   then
-      continue
-   fi
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
@@ -31,9 +27,21 @@ set -euvx
       mkdir -p $IC_CLM_CPS_DIR/$st
       mkdir -p $IC_NEMO_CPS_DIR/$st
 
-      origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/RECOVER/stream2015/$yyyy/restart_${yyyy}-$st-01
+      if [[ $yyyy -eq 2015 ]] || [[ $yyyy -eq 2016 ]]
+      then
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/RECOVER/stream2015/$yyyy/restart_${yyyy}-$st-01
+      elif [[ $yyyy -eq 2017 ]] || [[ $yyyy -eq 2018 ]]
+      then
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/RECOVER/stream2017/$yyyy/restart_${yyyy}-$st-01
+      elif [[ $yyyy -eq 2019 ]] || [[ $yyyy -eq 2020 ]]
+      then
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/RECOVER/stream2019/$yyyy/restart_${yyyy}-$st-01
+      elif [[ $yyyy -eq 2021 ]]
+      then
+         origdir=/data/products/CERISE-LND-REANALYSIS/transfer/gc02720/RECOVER/stream2021/$yyyy/restart_${yyyy}-$st-01
 
-      if [[ $yyyy -eq 2013 ]]
+
+      elif [[ $yyyy -eq 2013 ]]
       then
          origdir=/data/products/CERISE-LND-REANALYSIS/av27223/transfer/restartfiles/2013/restart_${yyyy}-$st-01
       fi
