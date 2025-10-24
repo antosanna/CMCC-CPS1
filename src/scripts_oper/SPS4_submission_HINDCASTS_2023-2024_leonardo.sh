@@ -24,7 +24,7 @@ set -evx
 
 
 # Input **********************
-stlist="01 02 03 04 05 06 07 08 09 10 11 12"
+stlist="11 12 01 02 03 04 05 06 07"
 
 #max number of ens member to be submitted per startdate
 #to advance with the diagnostic it has been decided to run first
