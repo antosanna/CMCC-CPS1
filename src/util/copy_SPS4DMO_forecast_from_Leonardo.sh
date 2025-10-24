@@ -17,8 +17,8 @@
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
 
-leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
-leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
+leo_dir=/leonardo_work/CMCC_2025/CMCC-CM/archive/
+leo_dir_temp=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
 
 cnt=0

@@ -26,9 +26,11 @@ if [[ ${nmb_oce_plot} -eq 2 ]] ; then
   # SPS staff"
   # title="[NEMOIC] ${CPSSYS} forecast notification"
   # $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a "$listafile"
+   . ${DIR_UTIL}/condaactivation.sh
    condafunction activate $envcondarclone
    rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
-   for fplot in $listafile do
+   for fplot in $listafile 
+   do
        rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
    done
    conda deactivate $envcondarclone
@@ -41,6 +43,30 @@ else
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
    exit 1
 fi
+#CHECK SIC IC compared to obs
+$DIR_OCE_IC/check_cice_restarts.sh $yyyy $st 
+mkdir -p $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/
+nmb_ice_plot=`ls $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/*png |wc -l`
+if [[ ${nmb_ice_plot} -ge 1 ]] ; then
+   listafile=`ls $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/*png`
+   . ${DIR_UTIL}/condaactivation.sh
+   condafunction activate $envcondarclone
+   rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+   for fplot in $listafile 
+   do  
+       rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+   done
+   conda deactivate $envcondarclone
+   title="[CICEIC] ${CPSSYS} forecast notification"
+   body="On google drive in the folder ${typeofrun}/${yyyy}${st}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+else
+   body="Plots to check CICE ICs not completed. Check log of SPS4_step1_ICs.sh in ${DIR_LOG}/forecast/${yyyy}${st}. \n\n"
+   title="[NEMOIC] ${CPSSYS} forecast warning"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   exit 1
+fi
+
 
 # Andrea - 30/9/2020
 #*******graphical check of CLM forcings********

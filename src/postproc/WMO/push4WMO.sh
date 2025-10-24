@@ -76,7 +76,7 @@ if [[ $nf -ne 0 ]] ; then
 fi
 # 
 
-nfieldsWMO=20
+nfieldsWMO=20   #it should be 21 - not used???
 nchunks=6
 nrun=$nrunC3Sfore
 

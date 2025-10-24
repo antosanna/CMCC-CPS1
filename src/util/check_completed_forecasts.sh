@@ -34,14 +34,14 @@ do
    fi
    if [[ $n_completed -ge 50 ]]
    then
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Time to copy results from Juno" -t "FORECAST COMPLETED ON LEONARDO" 
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "Time to copy results from Juno" -t "[$CPSSYS] FORECAST COMPLETED ON LEONARDO" 
          touch $check_completed
          exit
    fi
 done
 if [[ $n_completed -gt 0 ]] 
 then
-   body="$n_completed forecasts completed on Leonardo" 
+   body="[$CPSSYS] $n_completed forecasts completed on Leonardo" 
    title=$body
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $stdate
 fi

@@ -107,7 +107,7 @@ do
              echo "qa checks all right"
          fi
        fi
-       if [[ -n $meta ]]
+       if [[ -n $meta ]] 
        then
          if [[ ! -f $check_c3s_meta_ok ]]
          then

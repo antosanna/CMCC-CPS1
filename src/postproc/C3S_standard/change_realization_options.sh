@@ -222,7 +222,7 @@ then
          fi
          ens=${tobecome[$i]}
          ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $ens
-         #$DIR_UTIL/submitcommand.sh -m $machine -M 1600 -q $serialq_l -t "2" -r $sla_serialID -S qos_resv -j C3S_daily_after_change_realization_${yyyy}$st${ens} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -d ${DIR_POST}/C3S_standard -s launch_C3S_daily_mean.sh -i "$st $yyyy $ens $checkfile_daily"
+         #$DIR_UTIL/submitcommand.sh -m $machine -M 1600 -q $serialq_l -t "2" -r $sla_serialID -S $qos -j C3S_daily_after_change_realization_${yyyy}$st${ens} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -d ${DIR_POST}/C3S_standard -s launch_C3S_daily_mean.sh -i "$st $yyyy $ens $checkfile_daily"
       done
    
    fi

@@ -38,7 +38,7 @@ do
          echo "qa checker missing   $yyyy$st  ${real}"
          flag_wrong=1  
       fi
-      if [[ ! -f ${yyyy}${st}/tmpl_checker_ok_0${real} ]] 
+      if [[ ! -f ${yyyy}${st}/tmpl_checker_ok_0${real} ]]
       then
          echo "tmpl checker missing  $yyyy$st   ${real}"
          flag_wrong=1  

@@ -102,7 +102,7 @@ do
 
    echo "postprocessing $var "$st
    input="$yyyy $st $refperiod $var $nrun $nmf $mproj $flgmnth $scriptdir $monthdir $workdir $monthstr $checkdiagfile $pldir $dbg"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -S qos_resv -t "1" -q $serialq_s -s compute_anomalies_auto_${var}.sh -j diag_ANOM_${var}${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -S $qos -t "1" -q $serialq_s -s compute_anomalies_auto_${var}.sh -j diag_ANOM_${var}${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/$typeofrun/$yyyy$st -i "$input"
 
 done
 

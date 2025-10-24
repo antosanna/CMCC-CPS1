@@ -11,7 +11,7 @@
 . $DIR_UTIL/descr_CPS.sh
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 
-leo_dir=/leonardo_work/CMCC_reforeca/scratch/IC/
+leo_dir=/leonardo_work/CMCC_2025/scratch/IC/
 leo_trip_dir=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/triplette_done
 jun_dir=/data/cmcc/cp1/archive/IC/
 

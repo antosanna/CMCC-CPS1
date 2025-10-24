@@ -44,8 +44,8 @@ inputNEMO4CAM=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.01.bkup.n
 # generate Ocean conditions
 procdate=`date +%Y%m%d-%H%M`
 mkdir -p $WORKDIR_OCE
-#for poce in `seq -w 01 $n_ic_nemo`;do
-for poce in 01 02 03 08 09 ; do
+#for poce in 01 02 03 08 09 ; do
+for poce in `seq -w 01 $n_ic_nemo`;do
    poce1=$((10#$poce - 1))
    nemoic=${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.${poce}.bkup.nc
    ciceic=${CPSSYS}.cice.r.$yyyy-${st}-01-00000.${poce}.bkup.nc
@@ -71,15 +71,20 @@ do
    icclm=$IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.${ilnd}.bkup.nc
    ichydros=$IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.${ilnd}.bkup.nc
 
-   clm_err_file=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/clm_run_error_touch_EDA${ilnd}.$yyyy$st.bkup
-   if [[ -f $clm_err_file ]] ; then
-    rm ${clm_err_file}
+   if [[ ! -f $icclm ]] || [[ ! -f $ichydros ]]
+   then
+     clm_err_file=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/clm_run_error_touch_EDA${ilnd}.$yyyy$st.bkup
+     if [[ -f $clm_err_file ]] ; then
+        rm ${clm_err_file}
+     fi
+     inputlnd="$yyIC $mmIC $ilnd $icclm $ichydros"
+     ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA_bkup.sh -j launchFREDA${ilnd}_${yyyy}${st}_bkup -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+     body="CLM: submitted script launch_forced_run_EDA_bkup.sh to produce backup CLM ICs from EDA perturbation $ilnd"
+     title="[CLMIC-backup] ${CPSSYS} forecast notification"
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+   else
+      echo "${icclm} ${ichydros} already computed"
    fi
-   inputlnd="$yyIC $mmIC $ilnd $icclm $ichydros"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA_bkup.sh -j launchFREDA${ilnd}_${yyyy}${st}_bkup -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
-   body="CLM: submitted script launch_forced_run_EDA_bkup.sh to produce backup CLM ICs from EDA perturbation $ilnd"
-   title="[CLMIC-backup] ${CPSSYS} forecast notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
 done
 
 while `true`
@@ -113,7 +118,9 @@ do
    fi
    sleep 600
 done
-for pp in {0..9}
+
+ic=0
+for pp in `seq 0 $((${n_ic_cam} -1))` 
 do
 
 # check if IC was already created 
@@ -158,29 +165,39 @@ do
   input="$yyyy $st $pp $yyIC $mmIC $ddEDA $casoIC $ppland"
   ${DIR_UTIL}/submitcommand.sh -m $machine -M 2000 -q $serialq_l -p firstGuessIC4CAM_${yyyy}${st}_${pp} -j make_atm_ic_${casoIC} -l $DIR_LOG/$typeofrun/$yyyy$st/IC_CAM -d $DIR_ATM_IC -s make_atm_ic.sh -i "$input"
 # in the back-up production we can rely on only 4 nodes at a time so only one IC can be produced otherwise the system can be stuck
+ 
+
   while `true`
   do
-     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n $casoIC -c yes`
-     if [[ $n_job_make_atm_ic -eq 0 ]]
-     then
-        break
-     fi
-     sleep 60
+     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC${ppcam} -c yes`
+     if [[ $n_job_make_atm_ic -eq 1 ]] ; then
+              break
+      fi
+      sleep 60
   done
-     
+  ic=$(($ic + 1))
+  if [[ $ic -eq 2 ]]
+  then
+     while `true`
+     do
+        n_job_run_ic=`$DIR_UTIL/findjobs.sh -m $machine -n run.${SPSSystem}_EDACAM_IC -c yes`
+        if [[ $n_job_run_ic -eq 1 ]]
+        then
+             ic=1
+             break
+         elif [[ $n_job_run_ic -eq 0 ]]
+         then
+             ic=0
+             break
+         fi
+         sleep 60
+      done
+    fi
 done     #loop on perturbations
 
 # wait until all the ICs have been produced and stored (.case.store_ICcam)
 # Note that this method differs from the operational one where we only wait for the completion of the
-# s  while `true`
-  do
-     n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n $casoIC -c yes`
-     if [[ $n_job_make_atm_ic -eq 0 ]]
-     then
-        break
-     fi
-     sleep 60
-  donehort forecast since the .case.store_ICcam should be almost instantaneous thanks to the 
+# short forecast since the .case.store_ICcam should be almost instantaneous thanks to the 
 # serial-node SC_SERIAL_sps35. On the other hand in operational mode we can also rest on less
 # than 10 ICs produced since we still rely on backup ICs, which instead MUST be 10
 while `true`

@@ -195,6 +195,7 @@ fi
 touch ${checkfile}
 if [[ $machine == "leonardo" ]]
 then
+   #rclone not working from nodes! copy on rclone moved to the launcher (running on prompt)
    exit 0
 else
   set +euvx

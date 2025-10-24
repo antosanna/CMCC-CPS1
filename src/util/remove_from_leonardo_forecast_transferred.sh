@@ -19,20 +19,16 @@ then
    write_help 
    exit 
 fi
-LOG_FILE=$DIR_LOG/hindcast/REMOVE_FROM_LEONARDO_FORECAST_TRANSFERRED_`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
-
 dbg=$1
-set -euvx
+set -eu
 listacasi=""
-infile=$DIR_TEMP/list_cases_forecast_transferred_20250224.txt
+infile=$DIR_TEMP/list_cases_transferred_202508.txt
 if [[ ! -f $infile ]]
 then
-      continue
+     exit
 fi
 while read line
 do
-      echo $line
       listacasi+=" $line"
 done <$infile
 echo $listacasi
@@ -40,11 +36,17 @@ if [[ $dbg -eq 1 ]]
 then
    exit
 fi
+LOG_FILE=$DIR_LOG/hindcast/REMOVE_FROM_LEONARDO_FORECAST_TRANSFERRED_`date +%Y%m%d%H%M`
+exec 3>&1 1>>${LOG_FILE} 2>&1
+
+set -euvx
+echo "GOING TO REMOVE THE FOLLOWING"
+echo $listacasi
 
 for caso in $listacasi ; do
 
  if [[ -f ${DIR_ARCHIVE}/$caso.transfer_from_Leonardo_DONE ]] ; then
-    if [[ ! -d ${DIR_ARCHIVE}/$caso ]]; then
+    if [[ -d ${DIR_ARCHIVE}/$caso ]]; then
         echo $caso   
         chmod -R u+wrx ${DIR_ARCHIVE}/$caso
         rm -r ${DIR_ARCHIVE}/$caso/*

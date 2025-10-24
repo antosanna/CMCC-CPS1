@@ -62,7 +62,7 @@ arr1=`echo ${ensemble[@]} ${ensembleECMWF[@]} ${ensemble[@]} | tr ' ' '\n' | sor
 echo ${arr1[@]}
 if [[ `echo ${arr1[@]}|wc -w` -eq 0 ]]
 then
-   body='C3S: No renumbering needed: files ready to be transferred to final destinations' 
+   body="C3S: No renumbering needed: $yyyy$st files ready to be transferred to final destinations" 
    title="[C3S] ${CPSSYS} forecast notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    skip=1
@@ -173,6 +173,9 @@ then
                 touch $dirflag
             done
             dir=rest
+            cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/
+            gunzip 20??-??-01-00000.tar.gz
+            tar -xvf 20??-??-01-00000.tar
             cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/????-??-01-00000
             dirflag=$DIR_LOG/$typeofrun/${yyyy}${st}/change_realization/${caso2change}_${caso_tobecome}_${dir}_done1
             if [[ ! -f $dirflag ]]
@@ -218,7 +221,7 @@ then
          fi
          ens=${tobecome[$i]}
          ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $ens
-         #$DIR_UTIL/submitcommand.sh -m $machine -M 1600 -q $serialq_l -t "2" -r $sla_serialID -S qos_resv -j C3S_daily_after_change_realization_${yyyy}$st${ens} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -d ${DIR_POST}/C3S_standard -s launch_C3S_daily_mean.sh -i "$st $yyyy $ens $checkfile_daily"
+         #$DIR_UTIL/submitcommand.sh -m $machine -M 1600 -q $serialq_l -t "2" -r $sla_serialID -S $qos -j C3S_daily_after_change_realization_${yyyy}$st${ens} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -d ${DIR_POST}/C3S_standard -s launch_C3S_daily_mean.sh -i "$st $yyyy $ens $checkfile_daily"
       done
    
    fi

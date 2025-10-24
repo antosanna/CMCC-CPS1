@@ -79,7 +79,7 @@ for st in 10 11 12 01 02 03 04 05 06 07 08 09; do
 				ice=$(( $ice_cnt + $ice ))
 
 			done
-			if [[ $fs -eq 40 ]] && [[ $tc -eq 40 ]] && [[ $mc -eq 40 ]] && [[ $qc -eq 40 ]] && [[ $clm -eq 40 ]] && [[ $cam -eq 40 ]] && [[ $oce -eq 40 ]] && [[ $ice -eq 40 ]];then
+			if [[ $fs -eq 40 ]] & [[ $tc -eq 40 ]] && [[ $mc -eq 40 ]] && [[ $qc -eq 40 ]] && [[ $clm -eq 40 ]] && [[ $cam -eq 40 ]] && [[ $oce -eq 40 ]] && [[ $ice -eq 40 ]];then
 				OK=1
 			fi
 			#echo "STARTDATE FS TC MC QC CLM CAM"

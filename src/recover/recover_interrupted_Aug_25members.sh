@@ -555,7 +555,7 @@ set -eux
       do
          $DIR_RECOVER/refresh_all_scripts.sh $caso
          cd $DIR_CASES/$caso
-         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S qos_resv -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
+         ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
           nsubmitted=$(($nsubmitted + 1))
           if [[ $nsubmitted -ge $n2run ]]
           then

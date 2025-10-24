@@ -1,12 +1,13 @@
- #!/bin/sh -l
+#!/bin/sh -l
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
 
 function write_help
 {
-echo "input 1 to just check the list of cases to be removed;
-      0 if you want to proceed and remove them"
+echo "first input 1 to just check the list of cases to be removed;
+                  0 if you want to proceed and remove them
+      second input (optional): number of days to check back starting from today (default=1, i.e. yesterday and today)"
 }
 
 if [[ -z "$1" ]]
@@ -25,26 +26,32 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 dbg=$1
 set -euvx
 listacasi=""
-for i in {1..6}
+
+n_daysback=${2:-1}
+today=`date +%Y%m%d`
+for dd in `seq 0 ${n_daysback}` 
 do
-   data=`date +%Y%m%d`
-   n_infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt|wc -l`
-   if [[ $n_infiles -eq 0 ]]
-   then
-      continue
-   fi
-   infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt`
-   for ff in $infiles
+   data=$(date -d "${today} - ${dd} days" +'%Y%m%d')
+   for i in {1..6} #in principle up to 6 transfer in parallel
    do
-      if [[ ! -f $ff ]]
+      n_infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt|wc -l`
+      if [[ ${n_infiles} -eq 0 ]]
       then
          continue
       fi
-      while read line
+      infiles=`ls $DIR_TEMP/list${i}_cases_transferred_${data}.*txt`
+      for ff in $infiles
       do
-         echo $line
-         listacasi+=" $line"
-      done <$ff
+         if [[ ! -f $ff ]]
+         then
+            continue
+         fi
+         while read line
+         do
+            echo $line
+            listacasi+=" $line"
+         done <$ff
+      done
    done
 done
 echo $listacasi

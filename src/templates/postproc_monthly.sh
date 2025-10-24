@@ -70,7 +70,7 @@ set -euxv
 #  title="[${SPSSYS} spike] ${SPSSYS} warning EXPNAME: RESUBMITTED"
 #  body="Found a spike in case EXPNAME during EXPNAME.l_archive. killjobs_spike_and_resub.sh script created and submitted" 
 #  ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-#  ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_s -S qos_resv -r $sla_serialID -j killjob_spike_resub_${yyyy}${st}_${ens} -l $DIR_LOG/spikes/ -d ${DIR_CASES}/EXPNAME -s killjobs_spike_and_resub.sh
+#  ${DIR_SPS35}/submitcommand.sh -m $machine -q $serialq_s -S $qos -r $sla_serialID -j killjob_spike_resub_${yyyy}${st}_${ens} -l $DIR_LOG/spikes/ -d ${DIR_CASES}/EXPNAME -s killjobs_spike_and_resub.sh
 #  exit 5
 #else
 #  touch $DIR_CASES/EXPNAME/logs/findspikes_ok_${ens}

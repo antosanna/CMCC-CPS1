@@ -36,13 +36,14 @@ then
               OUTDIR=$DIR_REST_OIS/OPSLAMB$poce1/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
          fi 
          ;;
-      2 | 3) OUTDIR=$DIR_REST_OIS/SLAMB$((poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+      2 | 3) OUTDIR=$DIR_REST_OIS/SLAMB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
          if [[ "$st" == "01" ]] && [[ $yyyy -eq 1993 ]]
          then
-           OUTDIR=$DIR_REST_OIS/MB$((poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+           OUTDIR=$DIR_REST_OIS/MB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
          elif [[ "$st" == "12" ]] && [[ $yyyy -eq 2022 ]]
          then
-           OUTDIR=$DIR_REST_OIS/OPSLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+           #OUTDIR=$DIR_REST_OIS/OPSLAMB4/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
+           OUTDIR=$DIR_REST_OIS/OPSLAMB$(($poce1 + 2))/MONTHLY_RESTARTS/${yy_assim}${mm_assim}/
          fi
          ;;
    esac

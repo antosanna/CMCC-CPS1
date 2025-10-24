@@ -49,7 +49,7 @@ for pp in $plist ; do
   echo $input
   if [ ! -f ${DIR_LOG}/${typeofrun}/${yyyy}${st}/${yyyy}${st}_${ppp}_APEC_DONE ] ;then
 
-     ${DIR_UTIL}/submitcommand.sh -M 7000 -m $machine -q $serialq_m -j APEC_${yyyy}${st}_${ppp} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st} -d ${here} -s data_to_APEC_from_C3S.sh -i "$input"
+     ${DIR_UTIL}/submitcommand.sh -M 1000 -m $machine -q $serialq_m -j APEC_${yyyy}${st}_${ppp} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st} -d ${here} -s data_to_APEC_from_C3S.sh -i "$input"
   fi
   sleep 2
 
@@ -86,7 +86,7 @@ done
 
 # GET pushdirapec
 # normalize pushdir, extra check for pushdir format (remove final slash .. if they exist)
-normalized_pushdir="`cd "${pushdir}";pwd`"
+normalized_pushdir="`cd "${pushdirapec}";pwd`"
 pushdirapec="${normalized_pushdir}/$typeofrun/$yyyy$st"
 pushdirapec_monthly="${pushdirapec}/monthly"
 pushdirapec_daily="${pushdirapec}/daily"
@@ -104,7 +104,8 @@ else
 fi
 
 # expected apec files count
-expected_nmonthly=$(($nmaxmem_APEC*17*6))
+nmb_tot_var=21
+expected_nmonthly=$((${nmaxmem_APEC}*${nmb_tot_var}*6))
 if [ $typeofrun = "forecast" ] ; then
 	expected_napec=$(($expected_nmonthly*2))
 else
@@ -114,7 +115,7 @@ fi
 if [[ $actual_napec -eq $expected_napec ]]; then
   # all is fine!
   body="APEC C3S post-processing completed"
-  title="[APEC] ${SPSSYS} ${typeofrun} ${yyyy}${st} postproc notification"
+  title="[APEC] ${CPSSYS} ${typeofrun} ${yyyy}${st} postproc notification"
   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
   # Now and only we can delete work dirs
   rm -rf $workdir $WORK_SPS35/APEC/${yyyy}${st}_*
@@ -129,7 +130,7 @@ else
     bodyerror2="We have an issue with monthly files (and daily probably). Actual_monthly=$actual_nmonthly VS expected_monthly=$expected_nmonthly."
   fi
   body="ERROR - APEC C3S post-processing not completed completed. $bodyerror1 $bodyerror2 See $workdir directory. "
-  title="[APEC] ${SPSSYS} ${typeofrun} ${yyyy}${st} postproc notification"
+  title="[APEC] ${CPSSYS} ${typeofrun} ${yyyy}${st} postproc notification"
   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
 
   exit

@@ -17,10 +17,10 @@ fi
 module load intel-2021.6.0/sshpass/.1.06-zarp3
 set -uvx
 
-leo_dir=/leonardo_work/CMCC_reforeca/CMCC-CM/archive/
-leo_dir_temp=/leonardo_work/CMCC_reforeca/scratch/CMCC-CPS1/temporary
+leo_dir=/leonardo_work/CMCC_2025/CMCC-CM/archive/
+leo_dir_temp=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
 # get the list of completed cases (produced daily in cron on Leonardo)
-rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:/leonardo_work/CMCC_reforeca/scratch/list_`date +%Y%m%d` $DIR_TEMP
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@dmover3.leonardo.cineca.it:/leonardo_work/CMCC_2025/scratch/list_`date +%Y%m%d` $DIR_TEMP
 
 lista=""
 cnt=0
@@ -59,7 +59,13 @@ for caso in $lista ; do
       dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
       if [[ $dim -lt 256 ]]
       then
-         continue
+         #new cases with restart in tar package 
+         if [[ `ls $DIR_ARCHIVE/$caso/rest/*tar.gz |wc -l` -eq 1 ]] && [[ $dim -eq 131 ]]  
+         then
+            :   
+         else
+            continue
+         fi  
       fi
       lista_today_4+=" $caso"
    fi

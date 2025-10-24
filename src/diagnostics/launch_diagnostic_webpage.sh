@@ -25,11 +25,11 @@ flag_done=$dirlog/plots_all_DONE
 
 echo "launching diagnostic on C3S files for website"
 input="$yyyy $st $flag_done $dbg" 
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
 
-#echo "launching ocean diagnostics on DMO for website"
-#input="$yyyy $st $flag_done $dbg"
-#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S qos_resv -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
+echo "launching ocean diagnostics on DMO for website"
+input="$yyyy $st $flag_done $dbg"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"
 
 echo "waiting for the diagnostic to be concluded before updating the website"
 
@@ -39,7 +39,7 @@ do
   set +e
   nmb_flag=`ls -1 ${flag_done}* |wc -l`
   set -e
-  if [ $nmb_flag -eq 16 ]  #per il momento escludiamo il forecast oce e mrlsl+prw
+  if [ $nmb_flag -eq 17 ]  #per il momento escludiamo mrlsl+prw
   # 10+10 flags from FORECAST_C3S (1 for each variable:prec,prw,mrlsl,t2m,t850,mslp,z500,sst,u200,v200 - seasonal + monthly) 
   #+1 flag from FORECAST_OCE (ocean_profile gif)
   then
@@ -76,17 +76,17 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    done
 
 #   #OCE data
-#   varoce="votemper"
-#   for var in $varoce
-#   do
+   varoce="toce"
+   for var in $varoce
+   do
 #    ###this if for now is redundant -  but safer in case new OCN diagnostic will be added in the future
-#    if [[ $var == "votemper" ]] ; then
-#       dirplots=$SCRATCHDIR/diag_oce/$var/${yyyy}${st}/
-#       gifname=$dirplots/temperature_pac_trop_ensmean_${yyyy}_${st}.gif
-#       dirplots_final=$dirplots_final_index
-#       rsync -auv ${gifname} $dirplots_final/
-#    fi
-#   done
+    if [[ $var == "toce" ]] ; then
+       dirplots=$SCRATCHDIR/diag_oce/$var/${yyyy}${st}/
+       gifname=$dirplots/temperature_pac_trop_ensmean_${yyyy}_${st}.gif
+       dirplots_final=$dirplots_final_index
+       rsync -auv ${gifname} $dirplots_final/
+    fi
+   done
 
    
    #step 3: launch aggiorna_web.sh to publish plots on dev webpage (not to be indented!!!)
@@ -101,9 +101,9 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    Thank you, \n
    SPS staff\n"
 
-   title="${$SPSSystem} forecast notification - Website update"
+   title="${SPSSystem} forecast notification - Website updated"
    #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -c $ccmail
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st -c $ccmail
    y2notify=`date +%Y`
    m2notify=`date +%m`
    d2notify=`date +%d`
@@ -117,12 +117,12 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    M2notify=$( $DIR_UTIL/getincrdate.sh 5 $hourincrement );
    data2notify=$y2notify":"$m2notify":"$d2notify":"$H2notify":"$M2notify
    input="8"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S qos_resv -B $data2notify -j sendreminder4endForecast${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s sendreminder.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -B $data2notify -j sendreminder4endForecast${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s sendreminder.sh -i "$input"
    
 else
-   title="${$SPSSystem} forecast notification - C3S diagnostic complete"
+   title="${SPSSystem} forecast notification - C3S diagnostic complete"
    body="Final diagnostic complete. \n Check the notification mails and plots by compute_anomalies_C3S_auto_newproj_notify.sh before sending data to ECMWF.\n
 WARNING: PLOTS NOT UPLOADED TO WEBSITE!!!"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
 fi 
 exit 0

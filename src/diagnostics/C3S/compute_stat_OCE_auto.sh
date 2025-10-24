@@ -1,9 +1,10 @@
 #!/bin/sh -l
 
 . ~/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
-. $DIR_TEMPL/load_cdo
-. $DIR_TEMPL/load_nco
+. $DIR_UTIL/descr_CPS.sh
+. $DIR_UTIL/load_cdo
+. $DIR_UTIL/load_nco
+. $DIR_UTIL/load_convert
 
 set -euvx
 
@@ -21,12 +22,7 @@ dbg=${10}
 climdir=$DIR_CLIM/daily/$varm 
 refperiod=$iniy_hind-$endy_hind
 
-if [ $yyyy -lt ${iniy_fore} ]
-then
-   . ${DIR_SPS35}/descr_hindcast.sh
-else
-   . ${DIR_SPS35}/descr_forecast.sh
-fi
+   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
 
 workdir=$SCRATCHDIR/diag_oce/$varm/${yyyy}${st}/
@@ -54,10 +50,10 @@ if [ $ncapsuleyyyystDONE -eq 0 ] ; then
        if [[ ! -f $dirlog/capsule_${yyyy}${st}_${ppp}_oce_${varm}_DONE ]]
        then
 		        input="$yyyy $st $ppp $workdir_ens $workdir $varm $dirlog $filetype"
-          $DIR_SPS35/submitcommand.sh -S $qos -M 20000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
+          $DIR_UTIL/submitcommand.sh -S $qos -M 20000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
        fi
 		     while `true` ; do
-           ncapsjob=`$DIR_SPS35/findjobs.sh -m $machine -n capsule_oce -c yes`
+           ncapsjob=`$DIR_UTIL/findjobs.sh -m $machine -n capsule_oce -c yes`
            if [ $ncapsjob -lt $nrunC3Sfore ] ; then
 				          break
 			        fi
@@ -68,7 +64,7 @@ if [ $ncapsuleyyyystDONE -eq 0 ] ; then
    # Check if no other capsule jobs are still running
    while `true` ; do
 
-      ncapsjob=`$DIR_SPS35/findjobs.sh -m $machine -n capsule_oce -c yes`
+      ncapsjob=`$DIR_UTIL/findjobs.sh -m $machine -n capsule_oce -c yes`
 	     if [ $ncapsjob -eq 0 ] ; then
 		       break
       fi
@@ -88,35 +84,43 @@ if [ ! -f ${dirlog}/capsule_${yyyy}${st}_oce_${varm}_DONE ] ; then
     else
       	ncapsyyyystDONEfound=`ls -1 $dirlog/capsule_${yyyy}${st}_???_oce_${varm}_DONE | wc -l`
  	     ###SENDMAIL
-       title="[diags OCE] ${SPSSYS} ${typeofrun} capsule ERROR"
-       body="$ncapsyyyystDONEfound file $varm found of the $nrunC3Sfore expected for $yyyy$st $typeofrun"
-       ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
+       title="[diags OCE] ${CPSSYS} ${typeofrun} capsule ERROR"
+       body="In $DIR_DIAG_C3S/compute_stat_OCE_auto.sh $ncapsyyyystDONEfound file $varm found of the $nrunC3Sfore expected for $yyyy$st $typeofrun \n\n Check logs in $DIR_LOG/$typeofrun/$yyyy$st/diagnostics"
+       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun
        exit 1
     fi
 fi 
 
 if [ $make_anom -eq 1 ] ; then
-	  $DIR_DIAG_C3S/anom_${SPSSYS}_oce.sh $yyyy $st $refperiod $nrunC3Sfore $climdir $varm $workdir $dbg
+	  $DIR_DIAG_C3S/anom_${CPSSYS}_oce.sh $yyyy $st $refperiod $nrunC3Sfore $climdir $varm $workdir $dbg
 fi
 
 if [ $make_plot -eq 1 ] ; then
    export yyyyfore=$yyyy
    export mmfore=$st
-   export diroce="$DIR_FORE_ANOM"
-   export maskoce="$REPOSITORY/mesh_mask_from2000.nc"
+   export diroce="${DIR_FORE_ANOM}/${yyyyfore}${mmfore}/"
+   export foce1=${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
+#   export maskoce="$REPOSITORY/mesh_mask_from2000.nc"
+   export meshmaskfile="$CESMDATAROOT/inputdata/ocn/nemo/tn0.25v3/grid/ORCA025L75_mesh_mask.nc"
    export dirlogo="$DIR_DIAG_C3S/ncl/"
    export plname="$workdir/temperature_pac_trop_ensmean_${yyyyfore}_${mmfore}"
 
    ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    if [ -f ${plname}.gif ] ; then
       touch ${flag_done}_OCE
-      rm $diroce/${varm}_${SPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
-      rm $diroce/${varm}_${SPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc
-      rm $diroce/${varm}_${SPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
+      set +euvx
+      . $DIR_UTIL/condaactivation.sh
+      condafunction activate $envcondarclone
+      rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags
+      rclone copy ${plname}.gif my_drive:forecast/$yyyy$st/C3S_diags
+
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc
+   #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_all_ano.$refperiod.nc
    else
-     title="[diags-oce] ${SPSSYS} ${typeofrun} ERROR"
+     title="[diags-oce] ${CPSSYS} ${typeofrun} ERROR"
      body=" Something goes wrong with ocean diagnostic plots ($DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl). \n" 
-     ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r $typeofrun
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"-r $typeofrun
      exit 1   
    fi
 fi

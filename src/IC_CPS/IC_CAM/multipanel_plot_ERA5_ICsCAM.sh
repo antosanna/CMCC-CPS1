@@ -114,6 +114,7 @@ then
    exit
 fi
 listafile="$dirplots/Uprofile_${yyyy}${st}.png $dirplots/500hPa_IC_vs_${obs}_$yyyy$st.pdf"
+. $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
 for fplot in $listafile 

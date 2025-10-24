@@ -60,7 +60,7 @@ then
    then
       HEAD=cmcc
       operational_user=cp1
-      eID=0490 #Juno
+      pID=0490 #Juno
 #      pID=0438 #Juno
       cores_per_node=72
       nnodes_SC=56
@@ -218,13 +218,15 @@ then
    ccmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=adrien.owono@ecmwf.int
-	     ccmail=silvio.gualdi@cmcc.it,stefanotib@gmail.com
+      ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it
    fi
    VALIDATION=$WORK/CPS/VALIDATION
+   EVALUATION=$WORK/CPS/EVALUATION
    CLIM_OBS_DIR_DIAG=$VALIDATION/OBS/
-   CLIM_DIR_DIAG=$VALIDATION/CMCC-SPS4/monthly
-   PCTL_DIR_DIAG=$VALIDATION/CMCC-SPS4/pctl/
+   PCTL_OBS_DIR_DIAG=$CLIM_OBS_DIR_DIAG/pctl
+   CLIM_DIR_DIAG=${WORK_SCORES}/monthly
+   PCTL_DIR_DIAG=${WORK_SCORES}/pctl
    #directory for CLM restart clim/std dev (for check on ICs)
 #   clm_clim_dir=${DIR_CLIM}/CLM_restart
 
@@ -242,7 +244,7 @@ then
       qos=qos_lowprio
    else
 #   account_name=CMCC_Copernic_4
-      :
+      qos=qos_cmcc
    fi
 # only for July we must set it to ""
    if [[ $qos == "qos_lowprio" ]]
@@ -258,7 +260,7 @@ then
    else   
       #for running with account CMCC_2025
       #optSLURM="--reservation=s_met_cmcc"
-      optSLURM=""
+      optSLURM="--qos=$qos"
       serialq_s=dcgp_cmcc_prod
       serialq_m=dcgp_cmcc_prod
       serialq_l=dcgp_cmcc_prod
@@ -294,7 +296,8 @@ then
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
     #SCRATCHDIR=$WORK/scratch
-    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch
+#    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch 20250915
+    SCRATCHDIR=/leonardo_work/CMCC_2025/scratch
     SCRATCHDIR1=$SCRATCHDIR
     FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
     FINALARCHC3S1=$FINALARCHC3S

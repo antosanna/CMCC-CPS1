@@ -87,11 +87,11 @@ then
       then
 #         body="$startdate forecast completed. \n
 #                       Now submitting submit_tar_C3S.sh"
-         body="$startdate forecast completed. \n
+         body="$startdate forecast standardisation completed. \n
                        $DIR_C3S/submit_tar_C3S.sh to be submitted manually!"
-         title="${CPSSYS} $startdate FORECAST COMPLETED"
+         title="${CPSSYS} $startdate FORECAST: C3S STANDARDISATION COMPLETED"
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-  #  	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -j submit_tar_C3S${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st" 
+  #  	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S $qos -j submit_tar_C3S${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st" 
       fi
   fi  
 fi  

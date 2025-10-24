@@ -1,6 +1,7 @@
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+yyyy=$1
 nmaxjob=32      # 32 max number of job submitted on poe
 nminjob=17      # 17 max number of job submitted on poe
 extramail=1     # 1 if you want more controls, 0 if you do not 
@@ -8,7 +9,12 @@ nrunmax=55      # 55 number of realizations you want to produce
 nmonfore=7
 nrunC3Sfore=50  # 50 number of realizations required to C3S forecast
 maxjobs_APEC=10 # 20 max number of APEC job submitted
-nmaxmem_APEC=50 # 20 max number of realization required to APEC
+if [[ $yyyy -lt 2023 ]]
+then
+   nmaxmem_APEC=30 
+else
+   nmaxmem_APEC=${nrunC3Sfore}
+fi
 version=20231101
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # define here operational directories to be used by SPS3

@@ -12,7 +12,6 @@ then
    nmax4modify_trip=40 #line from which modify_triplette acts
    #in hindcast different from $nrunmax to avoid possibility of running twice the same members
    #for startdate initially launched for 40 members
-#   nrunmax=30      # 30 number of realizations you want to produce
    nrunmax=30      # 30 number of realizations you want to produce
    nrunC3Sfore=$nrunhind  # 30 number of realizations required to C3S forecast
    typeofrun="hindcast"
@@ -24,7 +23,7 @@ then
    #DATA_ECACCESS_CLM=$DATA_ECACCESS/ERA5/6hourly
    # PAY ATTENTION!!! THESE ARE DEFINED FOR ZEUS BUT STAY HERE TO GUARANTEE PORTABILITY -
 else
-   n_ic_nemo=5 #until we fix ERS/COBE OIS2 runs
+   n_ic_nemo=9 #until we fix ERS/COBE OIS2 runs
    nrunmax=54      # 40 number of realizations you want to produce
    nrunC3Sfore=50  # 40 number of realizations required to C3S forecast
    nmax4modify_trip=$nrunmax #line from which modify_triplette acts

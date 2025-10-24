@@ -11,6 +11,25 @@ yyyy=`date +%Y`
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -evx
 
+# wait for the presence of the triplette as a signal that the IC production has been completed and the submission can go-on
+if [[ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]]
+then
+#   title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
+#   body="FORECAST not submitted since ICs are not yet ready"
+#   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   exit 0
+fi
+
+# check if there is another job submitted by crontab with the same name
+if [[ -f $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted ]]
+then
+   title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
+   body="FORECAST already submitted. If you really want to resubmit first remove $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   exit 0
+fi
+
+touch $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted
 # check if there is another job submitted by crontab with the same name
 if [[ $machine == "leonardo" ]]
 then
@@ -18,51 +37,31 @@ then
    LOG_FILE=$DIR_LOG/forecast/SPS4_submission_FORECAST.`date +%Y%m%d%H%M`.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
 
-   cnt_this_script_running=$(ps -u ${operational_user} -f |grep SPS4_submission_FORECAST | grep -v $$|wc -l)
-   if [[ $cnt_this_script_running -gt 2 ]]
-   then
-      echo "already running"
-      title="[${CPSSYS} WARNING] script SPS4_submission_FORECAST.sh exited!"
-      body="SPS4_submission_FORECAST.sh already running exited"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      exit
-   else
-      lastlog=`ls -rt $SCRATCHDIR/cases_${st}/${header}_${yyyy}${st}*log|tail -1`
-      check_aborted=`grep aborted $lastlog|wc -l`
+   lastlog=`ls -rt $SCRATCHDIR/cases_${st}/${header}_${yyyy}${st}*log|tail -1`
+   check_aborted=`grep aborted $lastlog|wc -l`
 # takes into account the possibility that for misterious reasons srun commnad failed
-      if [[ $check_aborted -ne 0 ]]
-      then
-         ens_aborted=`echo $lastlog|rev|cut -d '.' -f2|cut -d '_' -f1|rev`
-         $DIR_UTIL/clean_caso.sh ${SPSSystem}_${yyyy}${st}_${ens_aborted}
-         title="[${CPSSYS} WARNING] case ${SPSSystem}_${yyyy}${st}_${ens_aborted} not submitted due to srun issues"
+   if [[ $check_aborted -ne 0 ]]
+   then
+      ens_aborted=`echo $lastlog|rev|cut -d '.' -f2|cut -d '_' -f1|rev`
+      $DIR_UTIL/clean_caso.sh ${SPSSystem}_${yyyy}${st}_${ens_aborted}
+      title="[${CPSSYS} WARNING] case ${SPSSystem}_${yyyy}${st}_${ens_aborted} not submitted due to srun issues"
 
-         body="${SPSSystem}_${yyyy}${st}_${ens_aborted} cleaned and going to be resubmitted"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      fi
+      body="${SPSSystem}_${yyyy}${st}_${ens_aborted} cleaned and going to be resubmitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
    fi
 else
-   np=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_FORECAST -c yes`
-   if [[ $np -gt 1 ]]
-   then
 # if so check if it is correctly running
-      ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_FORECAST -a $BATCHUNKNOWN -i yes`
-      if [[ -n $ID_unknown ]]
-      then
+   ID_unknown=`${DIR_UTIL}/findjobs.sh -m $machine -n SPS4_submission_FORECAST -a $BATCHUNKNOWN -i yes`
+   if [[ -n $ID_unknown ]]
+   then
 # in the remote case that the job already on queue is in unknown status 
 # kill it
-         $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
+      $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
 # it often occurs that if a job is in unknown status others too are in the same.
-         title="WARNING!!! FORECAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
-         body="Check if other jobs are in unknown status too!!"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      else
-# otherwise exit
-         echo "there is one SPS4_submission_FORECAST already running! Exiting now!"
-         title="[${CPSSYS} WARNING] script SPS4_submission_FORECAST.sh exited!"
-         body="SPS4_submission_FORECAST.sh already running exited"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-         exit
-      fi
+      title="WARNING!!! FORECAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
+      body="Check if other jobs are in unknown status too!!"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      exit
    fi
 fi
 # this can be redundant on Juno
@@ -97,6 +96,7 @@ cnt_atmICfile=0
 cnt_lndIC=0
 cnt_nemoIC=0
 cnt_iceIC=0
+cnt_sleep=0
 
 cnt_fy=0
 listacasi=()
@@ -251,8 +251,7 @@ set -e
      fi
  
      echo "submit $script_to_submit"
-     subm_cnt=$(( $subm_cnt + 1 ))
-
+     
   # If here, all the conditions are satisfied, and the serial launcher can be submitted
      if [[ $machine == "leonardo" ]]
      then
@@ -262,12 +261,19 @@ set -e
         $script_to_submit
      fi
      listacasi+="$caso "
-
+     subm_cnt=$(( $subm_cnt + 1 )) 
+     cnt_sleep=$(($cnt_sleep +1 ))   
+  
   # REDUNDANT but safe (check how many jobs are on parallel queue)
   # if $maxnumbertosubmit already running exit
   # this control does not count the cases still in the create_caso phase
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
-     if [[ $np_all -ge $maxnumbertosubmit ]]
+     
+     if [[ ${cnt_sleep} -eq 10 ]] ; then
+        sleep 1800
+        cnt_sleep=0
+     fi
+     if [ $np_all -ge $maxnumbertosubmit ]
      then
         break 4
      fi
@@ -314,12 +320,7 @@ archive $cnt_archive \n
 case running $cnt_run \n
 \n
 cases already created $cnt_dircases \n"
-if [[ $machine == "leonardo" ]]
-then
-#mail not implemented yet
-   exit
-fi
-title="NEW FORECAST JOBS SUBMITTED on $machine"
+title="NEW FORECAST SUBMISSION COMPLETED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 
 

@@ -3,21 +3,11 @@
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
-if [[ $machine == "leonardo" ]]
+caso=${CPSSYS}_SSP585_reference
+if [[ $machine == "cassandra" ]]
 then
-   echo "This script must be executed on compute node"
-   echo "Are you on compute node? [y/n]"
-   read answer
-   if [[ $answer == "y" ]]
-   then
-      echo "go on"
-   else
-      echo "login to compute node first"
-      exit
-   fi  
-fi 
-
-caso=${CPSSYS}_SSP585_reference_esmf8.4
+   caso=${CPSSYS}_SSP585_reference_esmf8.4
+fi
 
 if [[ -d $DIR_CASES/$caso ]]
 then
@@ -204,4 +194,3 @@ f_strairx = "m",
 f_strairy = "m"
 EOF3
 
-./case.build

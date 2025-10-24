@@ -1,11 +1,11 @@
 #!/bin/sh -l
-#SBATCH -A CMCC_reforeca
+#SBATCH -A CMCC_2025
 #SBATCH -p lrd_all_serial
 #SBATCH --time 00:30:00     # format: HH:MM:SS
 #SBATCH --ntasks=1 # 4 tasks out of 112
 #SBATCH --job-name=list_completed_10dd
-#SBATCH --err=/leonardo_work/CMCC_reforeca//CPS/CMCC-CPS1/logs/hindcast/monitor/list_months_completed_10dd_%J.err
-#SBATCH --out=/leonardo_work/CMCC_reforeca//CPS/CMCC-CPS1/logs/hindcast/monitor/list_months_completed_10dd_%J.txt
+#SBATCH --err=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs/hindcast/monitor/list_months_completed_10dd_%J.err
+#SBATCH --out=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs/hindcast/monitor/list_months_completed_10dd_%J.txt
 #SBATCH --qos=qos_lowprio
 
 . $HOME/.bashrc

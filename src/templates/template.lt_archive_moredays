@@ -21,7 +21,9 @@ then
    set +euvx
    . $dictionary
    set -euvx
+   $DIR_UTIL/remove_outputs_and_gzip_restdir.sh $caso
    touch $check_run_moredays
+# temporary: C3S postproc always offline and performed on Juno
    exit
    if [[ $typeofrun == "hindcast" ]] 
    then

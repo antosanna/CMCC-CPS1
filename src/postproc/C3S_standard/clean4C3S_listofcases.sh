@@ -6,7 +6,7 @@ set -euvx
 
 if [[ $# -eq 0 ]]
 then
-   listacasi="sps4_200910_028"
+   listacasi="sps4_201106_003 sps4_201106_014"
    LOG_FILE=$DIR_LOG/hindcast/clean4C3S_listofcases_`date +%Y%m%d%H%M`.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
    dbg=0
