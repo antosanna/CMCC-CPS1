@@ -56,10 +56,10 @@ do
   #in order to relaunch lt_archive with the right syntax, we keep the command as appear in preview_run (for portability)
   cmd=`./preview_run |grep case.lt_archive|tail -1`
   #this is needed to remove the dependency from model run
-  if [[ $machine == "zeus" ]] || [[ $machine == "juno" ]]
+  if [[ $machine == "cassandra" ]] || [[ $machine == "juno" ]]
   then
-     #cmd_nodep="$(echo "${cmd/"-ti -w 'done(2)'"/}")"
-     cmd_nodep="$(echo "${cmd/"-w 'done(2)'"/}")"
+     cmd_nodep="$(echo "${cmd/"-ti -w 'done(2)'"/}")"
+     #cmd_nodep="$(echo "${cmd/"-w 'done(2)'"/}")"
   elif [[ $machine == "leonardo" ]]  
   then
      cmd_nodep="$(echo "${cmd/"--dependency=afterok:2"/}")"  #--dependency=afterok:2

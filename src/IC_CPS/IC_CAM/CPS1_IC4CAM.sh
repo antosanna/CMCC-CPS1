@@ -5,7 +5,7 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/load_nco
+#. ${DIR_UTIL}/load_nco
 
 set -euvx
 #----------------------------------------------------------
@@ -58,7 +58,14 @@ fi
 #----------------------------------------------------------
 # create the case as a lone from the referenc
 #----------------------------------------------------------
+
+set +euvx
+. $DIR_UTIL/condaactivation.sh
+condafunction activate $envcondacm3 
+set -euvx
+
 $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$refcase --cime-output-root $WORK_CPS
+
 #----------------------------------------------------------
 mkdir -p $DIR_CASES/$caso/logs
 cd $DIR_CASES/$caso

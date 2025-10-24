@@ -133,7 +133,13 @@ set +euvx
 set -euvx
 ncl $wkdir/mergedomain$curryear$currmon.ncl
 echo "ended mergedomain$curryear$currmon.ncl "`date`
-nt=`cdo -ntime $wkdir/${EquTfile}`
+if [[ $machine == "cassandra" ]] ; then
+   ncatted -a coordinates,,d,, $wkdir/${EquTfile} $wkdir/${EquTfile}_tmp
+   nt=`cdo -ntime $wkdir/${EquTfile}_tmp`
+   rm $wkdir/${EquTfile}_tmp
+else
+   nt=`cdo -ntime $wkdir/${EquTfile}`
+fi
 set +euvx
 . ${DIR_UTIL}/load_nco
 set -euvx

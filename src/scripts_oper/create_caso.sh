@@ -73,7 +73,12 @@ then
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_${account_name} $DIR_CASES/$caso/env_workflow.xml
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+#   if [[ $machine == "juno" ]]
+#   then
+#      rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+#   fi  
 fi
+
 rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
 # this makes use of SC and if a user has no access to the SC it cannot run
 # TO DO
@@ -113,6 +118,19 @@ stop_op=nmonths
 ./xmlchange INFO_DBUG=0
 ./xmlchange NEMO_REBUILD=TRUE  
 ./xmlchange GET_REFCASE=TRUE
+if [[ $machine == "cassandra" ]]
+then
+   ./xmlchange PIO_STRIDE_ATM=16
+   ./xmlchange PIO_STRIDE_LND=16
+   ./xmlchange PIO_STRIDE_ROF=16
+   ./xmlchange PIO_STRIDE_ICE=16
+   
+   ./xmlchange PIO_NUMTASKS_ATM=21
+   ./xmlchange PIO_NUMTASKS_LND=21
+   ./xmlchange PIO_NUMTASKS_ROF=21
+   ./xmlchange PIO_NUMTASKS_ICE=21
+fi
+
 if [[ $typeofrun == "hindcast" ]]
 then
    ./xmlchange --subgroup case.checklist prereq=0

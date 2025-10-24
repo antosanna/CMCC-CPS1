@@ -6,7 +6,7 @@ yyyy=$1
 n_ic_cam=10
 n_ic_clm=3
 nrunhind=30  # 30 number of realizations required in hindcast
-if [[ $yyyy -lt 2023 ]]
+if [[ $yyyy -lt 2025 ]]
 then
    n_ic_nemo=4
    nmax4modify_trip=40 #line from which modify_triplette acts

@@ -89,7 +89,8 @@ then
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_sps4
-      maxnumbertosubmit=18
+      envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
+      maxnumbertosubmit=5
       maxnumbertorecover=40
       maxnumberguarantee=7
       env_workflow_tag=cmcc

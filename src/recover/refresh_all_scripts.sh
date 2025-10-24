@@ -57,7 +57,18 @@ elif [[ $machine == "leonardo" ]] ; then
    module use -p $modpath
    ./xmlchange MAX_TASKS_PER_NODE=112
    ./xmlchange MAX_MPITASKS_PER_NODE=96
-  ./xmlchange PIO_NUMTASKS=-99
+   ./xmlchange PIO_NUMTASKS=-99
+elif [[ $machine == "cassandra" ]]
+then
+   ./xmlchange PIO_STRIDE_ATM=16
+   ./xmlchange PIO_STRIDE_LND=16
+   ./xmlchange PIO_STRIDE_ROF=16
+   ./xmlchange PIO_STRIDE_ICE=16
+   
+   ./xmlchange PIO_NUMTASKS_ATM=21
+   ./xmlchange PIO_NUMTASKS_LND=21
+   ./xmlchange PIO_NUMTASKS_ROF=21
+   ./xmlchange PIO_NUMTASKS_ICE=21
 fi
 ./case.setup --reset
 if [[ $machine == "leonardo" ]]
