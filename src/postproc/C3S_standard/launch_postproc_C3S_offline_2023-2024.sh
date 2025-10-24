@@ -22,7 +22,7 @@ if [[ -f ${flag_running} ]]
 then
       exit
 fi
-
+endy_hind=2024
 nmaxsubmit=30
 nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_C3S -c yes`
 if [[ $nsubmit -ge $nmaxsubmit ]]
@@ -33,9 +33,9 @@ fi
 touch ${flag_running}
 
 if [[ ${recover} -eq 0 ]] ; then
-   cnt_subm=`ls $DIR_TEMP/C3S_postproc_offline_sps4_????${st}_0?? |wc -l`
+   cnt_subm=`ls $DIR_TEMP/C3S_postproc_offline_sps4_????${st}_0??|grep -v 2025 |wc -l`  #to exclude forecast postproc
    nmbhindyr=$((${endy_hind} - ${iniy_hind} +1))
-   ntot=$((${nrunhind}*${nmbhindyr})) #30members x 30 years
+   ntot=$((${nrunhind}*${nmbhindyr})) #30members x 30 years--> now 30members x 32 years
    if [[ ${cnt_subm} -eq ${ntot} ]] ; then
        cnt_all_ok=`ls ${WORK_C3S}/????${st}/all_checkers_ok_0?? |wc -l`
        if [[ ${cnt_all_ok} -eq ${cnt_subm} ]] ;then
@@ -55,7 +55,8 @@ fi
 cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
-for yyyy in `seq $iniy_hind $endy_hind`
+#for yyyy in `seq $iniy_hind $endy_hind`
+for yyyy in `seq 2023 2024`
 do
    listofcases=`ls -d sps4_${yyyy}${st}_0?? |head -n $nrunC3Sfore`
 

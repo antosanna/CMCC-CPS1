@@ -16,6 +16,8 @@ set -euvx
 #DIR_LOG="/users_home/cmcc/sp2/SPS/CMCC-${SPSSYS}/work/MARIA/briefing/logs"
 #SCRATCHDIR="/work/cmcc/sp2/scratch"
 
+SPSSYS=$(echo "$SPSSystem" | tr '[:lower:]' '[:upper:]')
+
 # Dates neccesary: current forecast, forecast evaluated, last year
 fore_yyyy=`date +%Y`
 fore_st=`date +%m`
@@ -47,7 +49,7 @@ case ${eval_month_st} in
 esac
 
 # Directories
-website_dir="/data/cmcc/sp1/C3S/webpage"
+website_dir="${DIR_WEB}"
 verification_dir="${website_dir}/verification_dev" 
 verification_new_dir=/work/cmcc/sp2/EVALUATION/${fore_yyyy}${fore_st}
 prob_index_dir=${website_dir}/forecast-indexes_dev
@@ -212,7 +214,7 @@ mkdir -p $tmpdir
 cd $tmpdir
 
 #create forecast summary
-$DIR_ROOT/work/ANDREA/diag_C3S_final/launch_forecast_summary.sh
+$DIR_ROOT/development_tmp/ANDREA/diag_C3S_final/launch_forecast_summary.sh
 
 #Loop on produced files
 echo 'Upload produced files'
@@ -234,7 +236,9 @@ for f in "${!dfiles_name[@]}"; do
     wget --no-check-certificate "${dfiles_website[$f]}/${dfiles_name[$f]}"
     if [ -f ${tmpdir}/enso_evolution-status-fcsts-web.pdf ] ;then
        cd ${tmpdir}
-       convert -density 300 enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
+       . $DIR_UTIL/load_convert 
+       #convert -density 300 enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
+       convert enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
        listremove=`ls -1 enso_??.png | grep -v "enso_04.png"`
        rm $listremove 
     fi

@@ -14,7 +14,7 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=04 # startdate
+st=06 # startdate
 onlycheckfileok=0  #if 0 does tar_C3S
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------

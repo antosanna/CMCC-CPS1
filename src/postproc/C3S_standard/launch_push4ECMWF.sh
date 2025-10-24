@@ -152,8 +152,8 @@ set -euvx
        if [[ $anypushC3SDONE -eq 1 ]] ; then          
           break
        fi
-# after 4 hours kill the process and relaunch
-       if [[ $ic -eq 16 ]]
+# after 1.5 hours kill the process and relaunch
+       if [[ $ic -eq 6 ]]
        then
           ic=0
           if [[ $anypushC3SDONE -eq 0 ]] ; then          
