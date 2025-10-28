@@ -250,9 +250,10 @@ set -eux
         if [[ ${is_starch} -eq 1 ]] ; then
             cnt_st_archive=$(($cnt_st_archive + 1))
             lista_st_archive+=" $caso"
-        else
-           cnt_first_month=$(($cnt_first_month + 1))
-           lista_first_month+=" $caso"
+#        else
+#           cnt_first_month=$(($cnt_first_month + 1))
+#           lista_first_month+=" $caso"
+         
         fi
      else
         is_starch=`ls -ltr $DIR_CASES/$caso/logs |tail -n 1|grep 'st_archive'|wc -l`
@@ -343,6 +344,7 @@ then
       echo "-,$caso,-,-,- " >> $filecsv
    done
 fi
+lista_first_month=""
 if [[ "$lista_first_month" != " " ]]
 then
    echo "Cases interrupted during first month"
