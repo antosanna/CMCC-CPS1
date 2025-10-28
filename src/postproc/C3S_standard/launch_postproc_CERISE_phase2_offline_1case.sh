@@ -33,7 +33,7 @@ fi
 touch ${flag_running}
 cd $DIR_ARCHIVE/
 
-listofcases=sps4_200205_023
+listofcases=sps4_200302_001
 
 for caso in $listofcases
 do

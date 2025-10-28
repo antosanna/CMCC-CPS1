@@ -15,6 +15,7 @@ $DIR_CESM/cime/scripts/create_newcase --case $DIR_CASES/$caso --compset SSP370_C
 
 cd $DIR_CASES/$caso
 
+exit
 ./xmlchange STOP_OPTION=ndays
 if [[ $machine == "zeus" ]]
 then

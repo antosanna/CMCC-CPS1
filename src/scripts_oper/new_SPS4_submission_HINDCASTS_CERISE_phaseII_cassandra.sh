@@ -92,7 +92,7 @@ listaskip=""
 submittable_cnt=0
 subm_cnt=0
 
-endyear=2014 
+endyear=2021 
 ylast=$endyear
 for st in $stlist
 do

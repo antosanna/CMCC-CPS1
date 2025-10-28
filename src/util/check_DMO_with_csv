@@ -18,7 +18,7 @@ else
     stlist=$st
 fi
 
-ylist=`seq 2002 2014`
+ylist=`seq 2002 2021`
 for st in $stlist
 do
    n_st_done=0

@@ -58,7 +58,7 @@ set -euvx
         
             body="restarts not present in $origdir"
             title="CERISE: restart ERROR"
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "no" 
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
             continue
          fi
          rsync -auv $origdir/*clm2_00${ilnd}.r.$yyyy-$st* $IC_CLM_CPS_DIR/$st/

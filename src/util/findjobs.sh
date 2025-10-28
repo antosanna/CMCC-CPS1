@@ -3,7 +3,7 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 set -eu
-usage() { echo "Usage: $0 [-m <machine string >] [-W <format string(yes)>] [-Y <year-date integer(jobID)>] [-q <queue string>] [-n <name_to_grep string >] [-N <name_to_grep2 string >] [-a <status_run string>] [-i <id_job string>] [-c <wc string>] [-r <reservation string>] [-J <name_complete string output>] [-p <id_job string>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-W <format string(yes)>] [-Y <year-date integer(jobID)>] [-q <queue string>] [-n <name_to_grep string >] [-N <name_to_grep2 string >] [-a <status_run string>] [-i <id_job string>] [-j <id_job number as input>] [-c <wc string>] [-r <reservation string>] [-J <name_complete string output>] [-p <id_job string>]" 1>&2; exit 1; }
 
 queue="None"
 scriptname="None"
@@ -11,13 +11,14 @@ scriptname2="None"
 printjobname="None"
 stat="None"
 jobID="None"
+jobIDinput="None"
 id="None"
 dependency="None"
 sla="None"
 count="None"
 format="None"
 duration="None"
-while getopts ":m:q:n:N:a:c:r:i:d:H:M:W:Y:J:p:" o; do
+while getopts ":m:q:n:N:a:c:r:i:d:H:M:W:Y:J:j:p:" o; do
     case "${o}" in
         m)
             machine=${OPTARG}
@@ -33,6 +34,9 @@ while getopts ":m:q:n:N:a:c:r:i:d:H:M:W:Y:J:p:" o; do
             ;;
         J)
             printjobname=${OPTARG}
+            ;;
+        j)
+            jobIDinput=${OPTARG}
             ;;
         a)
             stat=${OPTARG}
@@ -79,9 +83,13 @@ then
 
    command="bjobs -w "
 
-   if [ "$format" != "None" ]
+   if [[ "$format" != "None" ]]
    then
       command="bjobs -W "
+   fi
+   if [[ "$jobIDinput" != "None" ]]
+   then
+      command+=" $jobIDinput "
    fi
    if [[ "$queue" != "None" ]]
    then
@@ -136,7 +144,7 @@ then
 #   set +evx
 fi
 
-if [  "$machine" = "leonardo" ]
+if [[  "$machine" == "leonardo" ]]
 then
    # option -h remove header
    command="squeue -u `whoami` -h -o \"%P %j  %T %i\" "
