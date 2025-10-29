@@ -43,12 +43,13 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # refcase changes with scenario but the executable must not
 set +euvx
-if [[ $machine == "leonardo" ]]
-then
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
-else
+# from 20251029 /leonardo_work/CMCC_Copernic_4 merged to /leonardo_work/CMCC_2025 and  removed (refcases re-created on $DIR_CASES) 
+#if [[ $machine == "leonardo" ]]
+#then
+#   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
+#else
    $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
-fi
+#fi
 
 set -euvx
 #----------------------------------------------------------
