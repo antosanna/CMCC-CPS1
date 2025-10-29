@@ -86,7 +86,7 @@ cd $DIR_CASES/$caso
 # this modify the env_build.xml to tell the model that it has already been compiled an to skip the building-up (taking more than 30')
 #----------------------------------------------------------
 rsync -av $DIR_TEMPL/env_workflow_IC_cam.xml_${env_workflow_tag} env_workflow.xml
-#rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} env_batch.xml
+rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} env_batch.xml
 ./case.setup --reset
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
