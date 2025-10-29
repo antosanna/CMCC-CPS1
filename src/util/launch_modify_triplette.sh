@@ -13,7 +13,7 @@ fi
 #listacasi="sps4_200906_029"
 #listacasi="sps4_202402_025"
 #listacasi="sps4_202311_009"
-listacasi="sps4_202303_006"
+listacasi="sps4_202406_021"
 for caso in $listacasi 
 do
    echo $caso

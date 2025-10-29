@@ -78,6 +78,9 @@ fi
 ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=08:00
 
 ./case.setup --reset
+if [[ $machine == "leonardo" ]] ; then
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
+fi
 ./case.setup
 
 
