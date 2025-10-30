@@ -49,6 +49,10 @@ cp $DIR_POST/cam/plot_timeseries_spike.ncl $HEALED_DIR
 if [[ $machine == "leonardo" ]] ; then
    $DIR_UTIL/load_ncl
 fi
+set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate env_tools
+set -euvx
 
 ncl $HEALED_DIR/plot_timeseries_spike.ncl
 

@@ -1,8 +1,8 @@
 #!/bin/sh -l
 #BSUB -J copy_ICs_to_Leonardo
 #BSUB -q s_download
-#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo.%J.out  
-#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo.%J.err  
+#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo.%J.out  
+#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo.%J.err  
 #BSUB -P 0490
 #BSUB -M 1000
 
@@ -15,14 +15,14 @@ then
     echo "already running! exit!"
     exit
 fi
-module load intel-2021.6.0/sshpass/.1.06-zarp3
+module load oneapi-2025.0.4/sshpass/1.06-qkqpz 
 
-leo_dir=/leonardo_work/CMCC_reforeca/scratch/IC/
-jun_dir=/data/cmcc/cp1/archive/IC/
+leo_dir=/leonardo_work/CMCC_2025/asanna00/IC_CERISE_phase2
+cassandra_dir=/work/cmcc/cp2/scratch/IC
 
-realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
+realm=CLM_CPS1
 
-for st in 01 02 04 05 06 07 09
+for st in 02 #05 08 11
 do
    for rea in $realm ; do
 
@@ -31,7 +31,7 @@ do
       then 
          continue
       fi
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/.
+      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*.r.20[12]*.nc a07cmc00@data.leonardo.cineca.it:${leo_dir}/$rea/$st/.
       touch $checkf
 
    done

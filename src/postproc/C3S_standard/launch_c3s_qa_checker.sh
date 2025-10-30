@@ -64,14 +64,10 @@ filetobechecked=$(( ( $expected_files ) * $memberstocheck   )) #2120 for hindcat
 namespace=()
 # atmos
 namespace+="atmos_6hr_surface_psl "
-namespace+="atmos_6hr_surface_prw "
-namespace+="atmos_6hr_surface_clt "
 namespace+="atmos_6hr_surface_tas "
 namespace+="atmos_6hr_surface_tdps "
 namespace+="atmos_6hr_surface_uas "
 namespace+="atmos_6hr_surface_vas "
-namespace+="atmos_6hr_surface_ua100m "
-namespace+="atmos_6hr_surface_va100m "
 namespace+="atmos_12hr_pressure_zg "
 namespace+="atmos_12hr_pressure_ta "
 namespace+="atmos_12hr_pressure_hus "
@@ -80,30 +76,24 @@ namespace+="atmos_12hr_pressure_va "
 namespace+="atmos_day "
 namespace+="atmos_fix "
 # land
-namespace+="land_6hr "
 namespace+="land_day "
 
 # Define memory needs for each namespace (attention:keep order)
 # atmos
 memory[0]="5000M" #"2500M " #"atmos_6hr_surface_psl "
-memory[1]="5000M" #"2500M " #"atmos_6hr_surface_prw "
-memory[2]="5000M" #"2500M " #"atmos_6hr_surface_clt "
-memory[3]="5000M" #"2500M " #"atmos_6hr_surface_tas "
-memory[4]="5000M" #"2500M " #"atmos_6hr_surface_tdps "
-memory[5]="7500M" #"2500M " #"atmos_6hr_surface_uas "
-memory[6]="7500M" #"2500M " #"atmos_6hr_surface_vas "
-memory[7]="7500M" #"2500M " #"atmos_6hr_surface_ua100m "
-memory[8]="7500M" #"2500M " #"atmos_6hr_surface_va100m "
-memory[9]="20000M" #"3500M " #"atmos_12hr_pressure_zg "
-memory[10]="20000M" #"4000M " #"atmos_12hr_pressure_ta "
-memory[11]="20000M" #"5000M " #"atmos_12hr_pressure_hus "
-memory[12]="20000M" #"3500M " #"atmos_12hr_pressure_ua "
-memory[13]="20000M" #"3500M " #"atmos_12hr_pressure_va "
-memory[14]="10000M" #"7500M" #"5000M "  #"atmos_day "
-memory[15]="2000M " #"atmos_fix "
+memory[1]="5000M" #"2500M " #"atmos_6hr_surface_tas "
+memory[2]="5000M" #"2500M " #"atmos_6hr_surface_tdps "
+memory[3]="7500M" #"2500M " #"atmos_6hr_surface_uas "
+memory[4]="7500M" #"2500M " #"atmos_6hr_surface_vas "
+memory[5]="20000M" #"3500M " #"atmos_12hr_pressure_zg "
+memory[6]="20000M" #"4000M " #"atmos_12hr_pressure_ta "
+memory[7]="20000M" #"5000M " #"atmos_12hr_pressure_hus "
+memory[8]="20000M" #"3500M " #"atmos_12hr_pressure_ua "
+memory[9]="20000M" #"3500M " #"atmos_12hr_pressure_va "
+memory[10]="10000M" #"7500M" #"5000M "  #"atmos_day "
+memory[11]="2000M " #"atmos_fix "
 # land
-memory[16]="5000M" #"2500M " #"land_6hr "
-memory[17]="5000M" #"2750M " #"land_day "
+memory[12]="5000M" #"2750M " #"land_day "
     
 # Link or copy temporarily all files to working dir
 cd $wdir
@@ -298,9 +288,9 @@ while `true` ; do
     number_of_chk_proc=`${DIR_UTIL}/findjobs.sh -m $machine -n chk_err_${startdate}_${ens} -c yes`
 
     if [ $elapsed_time -gt 7200 -a $number_of_chk_proc -eq 0 ]; then 
-        echo "Something probably went wrong with checker. Check in logs for missing NSDONE_ files production."
+        body="Something probably wrong with checker. Check in ${DIR_LOG}/$typeofrun/${startdate}/C3S_checker_${SPSSystem}_${startdate}_${ens}*err for missing NSDONE_ files production. Check tempdir_* in $ACTDIR/"
+        echo $body
         title="SPS4 FORECAST ERROR - QA CHECKER"	
-        body="Something probably went wrong with checker of member ${SPSSystem}_${startdate}_${ens}. Check in logs for NSDONE_ files production."
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $startdate -E $ens
         exit 1
     fi

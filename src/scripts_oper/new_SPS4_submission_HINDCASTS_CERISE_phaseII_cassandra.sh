@@ -94,13 +94,9 @@ subm_cnt=0
 
 endyear=2021 
 ylast=$endyear
+iniy_hind=2007
 for st in $stlist
 do
-   iniy_hind=2004
-   if [[ $st == "02" ]]
-   then
-      iniy_hind=2007
-   fi
    for yyyy in $(seq $iniy_hind $endyear)
    do
        echo "YEAR $yyyy *****************************"

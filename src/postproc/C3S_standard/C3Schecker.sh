@@ -65,35 +65,8 @@ $DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases
 #if [ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
 if [ -f ${check_c3s_meta_ok} ] && [ -f ${check_c3s_qa_ok} ]
 then
-#-------------------------------------------
-# 20240919 ready to uncomment
-#-------------------------------------------
-# the following is defined in $dictionary
-checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
-   if [ ! -f ${checkfile_daily} ] || [[ $dbg -eq 0 ]]
-   then
-      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
-   fi
    touch $check_allchecksC3S$real
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
-if [[ $typeofrun == "forecast" ]] 
-then
-  if [ $allcheckersok -ge $nrunC3Sfore ] 
-  then
-      ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
-      nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
-      if [ $ns -eq 0 ] && [ $nt -eq 0 ] 
-      then
-#         body="$startdate forecast completed. \n
-#                       Now submitting submit_tar_C3S.sh"
-         body="$startdate forecast completed. \n
-                       $DIR_C3S/submit_tar_C3S.sh to be submitted manually!"
-         title="${CPSSYS} $startdate FORECAST COMPLETED"
-    	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-  #  	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S qos_resv -j submit_tar_C3S${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st" 
-      fi
-  fi  
-fi  
 echo "$0 completed"
 exit 0
