@@ -10,14 +10,14 @@ set -euvx
 
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
 mkdir -p $DIR_LOG/hindcast/
-LOG_FILE=$DIR_LOG/hindcast/launch_postproc_CERISE_offline.`date +%Y%m%d%H%M`
+LOG_FILE=$DIR_LOG/hindcast/launch_postproc_CERISE_phase2_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-dbg=0
+dbg=1
 st=$1  #stdate as input
 
 mkdir -p $DIR_TEMP
-flag_running=$DIR_TEMP/launch_postproc_CERISE_offline_on #to avoid multiple submission from crontab
+flag_running=$DIR_TEMP/launch_postproc_CERISE_phase2_offline_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
 then
    exit

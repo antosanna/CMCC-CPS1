@@ -13,7 +13,7 @@ mkdir -p $DIR_LOG/hindcast/
 LOG_FILE=$DIR_LOG/hindcast/launch_postproc_CERISE_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-dbg=0
+dbg=1
 st=$1  #stdate as input
 yyyy=$2
 
