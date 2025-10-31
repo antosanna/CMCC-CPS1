@@ -61,9 +61,9 @@ do
           list_not_completed+=" $caso"
           continue
        fi
-       flagpostproc_done=$logdir/postproc_CERISE_${caso}_DONE    #not for dictionary to have a unique definition btw remote and local cases  
+       flagpostproc_done=$logdir/postproc_CERISE_phase2_${caso}_DONE    #not for dictionary to have a unique definition btw remote and local cases  
    
-       flag_postproc_offline_on=$DIR_TEMP/CERISE_postproc_offline_${caso}
+       flag_postproc_offline_on=$DIR_TEMP/CERISE_phase2_postproc_offline_${caso}
        if [[ -f ${flag_postproc_offline_on} ]]  
        then
             #postproc already submitted - continue
@@ -72,8 +72,8 @@ do
             touch ${flag_postproc_offline_on}
        fi  
    
-       mkdir -p $DIR_LOG/hindcast/CERISE_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_CERISE_offline_${caso} -s postproc_CERISE_phase2_offline.sh -l $DIR_LOG/hindcast/CERISE_postproc -i "$yyyy $caso ${dir_cases} $dbg"
+       mkdir -p $DIR_LOG/hindcast/CERISE_phase2_postproc
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 20000 -d ${DIR_C3S} -j postproc_CERISE_phase2_offline_${caso} -s postproc_CERISE_phase2_offline.sh -l $DIR_LOG/hindcast/CERISE_phase2_postproc -i "$yyyy $caso ${dir_cases} $dbg"
    
    
        if [[ $dbg -eq 1 ]]
@@ -81,7 +81,7 @@ do
              rm ${flag_running}
              exit
        fi
-       nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_CERISE -c yes`
+       nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_CERISE_phase2 -c yes`
        if [[ $nsubmit -eq $nmaxsubmit ]]
        then
              rm ${flag_running}
