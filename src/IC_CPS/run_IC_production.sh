@@ -37,6 +37,7 @@ set -euvx
 procdate=`date +%Y%m%d-%H%M`
 
 flagdir=$MYCESMDATAROOT/temporary/${typeofrun}/${yyyy}${st}/operational
+mkdir -p $flagdir
 flag4CAM=$flagdir/CAM_ICs_on_CASSANDRA_DONE
 
 
