@@ -267,7 +267,7 @@ if [[ $machine == "cassandra" ]] ; then
        n_job_make_atm_ic=`$DIR_UTIL/findjobs.sh -m $machine -n makeICsGuess4CAM_  -c yes`
        n_job_ICCAM=`$DIR_UTIL/findjobs.sh -m $machine -n ${root_casoIC} -c yes`
        n_store_ic=`$DIR_UTIL/findjobs.sh -m $machine -n store_ICcam -c yes`
-       ncount=$((${n_job_make_atm_ic} + ${n_job_ICCAM} + ${n_store_ic}))
+       n_count=$((${n_job_make_atm_ic} + ${n_job_ICCAM} + ${n_store_ic}))
        #if all of them are equal to zero all procedure for CAM IC production have been completed (succesfully or not but in any case everything is finished)
        #the idea is to touch the flag so that, on juno, the set_forecast_IC procedure eventually replace backup ICs if needed
        if [[ ${n_count} -eq  0 ]] ; then
