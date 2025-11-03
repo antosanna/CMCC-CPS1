@@ -1,4 +1,4 @@
-H2OSOI,mrlsl,lnd,f4,leadtime depth lat lon,Water Content per Unit Area of Soil Layers,moisture_content_of_soil_layer,kg m-2,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h1
+H2OSOI,mrlsl,lnd,f4,leadtime depth lat lon,Water Content per Unit Area of Soil Layers,moisture_content_of_soil_layer,kg m-2,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h2
 TSOI,tslsl,lnd,f4,leadtime depth lat lon,Temperature of Soil,soil_temperature,K,6hr,soil,land,,reftime realization time leadtime depth lat lon,leadtime: point,h2
 SNOTTOPL,tsn,lnd,f4,leadtime lat lon,Snow internal temperature,temperature_in_surface_snow,K,6hr,surface,atmos,,reftime realization time leadtime lat lon,leadtime: point,h2
 Z0MV,zrlms,lnd,f4,leadtime lat lon,Surface roughness length for momentum,surface_roughness_length_for_momentum_in_air,m,day,surface,land,,reftime realization time leadtime lat lon,leadtime: point,h3
