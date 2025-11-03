@@ -120,7 +120,7 @@ then
 
         # Interpolation phase
         # create interpolated file in ./reg1x1 dir
-        vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO
+        vars=H2OSNO,H2OSOI2,QDRAI,QOVER,RHOSNO,H2OSOI
     elif [[ $ftype == "h2" ]] ; then
         # create interpolated file in ./reg1x1 dir
         inputf=`basename ${CLM_OUTPUT_FV}`
