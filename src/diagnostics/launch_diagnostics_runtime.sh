@@ -89,7 +89,12 @@ do
    then
    #skip it
       continue
-   fi  
+   fi
+   starch_run=`$DIR_UTIL/findjobs.sh -m ${machine} -n st_archive.${caso} -a RUN -c yes` 
+   if [[ ${starch_run} -ne 0 ]] ; then
+      #skip case with st_archive running to avoid using incomplete file during diags processing
+      continue
+   fi 
    # Get last restart file
    last_rest=""
    nf=$(ls -1 $WORK_CPS/archive/${caso}/rest 2>/dev/null|wc -l)

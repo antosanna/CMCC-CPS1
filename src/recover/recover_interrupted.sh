@@ -267,7 +267,7 @@ set -eux
         else
            cnt_lt_archive=$(($cnt_lt_archive + 1))
            lista_lt_archive+=" $caso"
-          report+=" must be resubmitted from st_archive"
+          report+=" must be resubmitted from lt_archive"
 #get last restart directory month
            cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 #compute num of months run nmonthsrun

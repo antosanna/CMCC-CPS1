@@ -24,7 +24,7 @@ set -evx
 
 
 # Input **********************
-stlist="09"
+stlist="10"
 #stlist="11 12 01 02 03 04 05 06 07"
 
 #max number of ens member to be submitted per startdate
@@ -94,8 +94,12 @@ do
        if [[ $((${n_moredays_done} + $np_yyyyst )) -ge $nmaxens ]] ; then
           continue
        fi
-       
-       for n in `seq 1 $nrunmax`
+       if [[ $st -eq 10 ]] && [[ $yyyy -eq 2023 ]] ; then
+          inimember=6 #up to member 5 run on Cassandra
+       else
+          inimember=1
+       fi
+       for n in `seq $inimember $nrunmax`
        do
          flg_continue=0
          echo "n $n *****************************"

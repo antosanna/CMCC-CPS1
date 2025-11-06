@@ -24,7 +24,7 @@
       <type>char</type>
       <desc>project for project-sensitive build and run paths, and job scripts</desc>
     </entry>
-    <entry id="BATCH_COMMAND_FLAGS" value="-q p_medium -P $ENV{pID} -W 04:00 -x ">
+    <entry id="BATCH_COMMAND_FLAGS" value="-q p_medium -P $ENV{pID} -W 04:00 -x">
       <type>char</type>
       <valid_values/>
       <desc>Override the batch submit command this job. Do not include executable or dependencies</desc>
