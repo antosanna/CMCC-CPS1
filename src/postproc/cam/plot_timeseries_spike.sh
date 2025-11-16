@@ -16,7 +16,7 @@ export C3S=$2
 export inputascii=$3
 
 ftype=h3
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 
 wkdir=$HEALED_DIR
 logdir=$wkdir/logs

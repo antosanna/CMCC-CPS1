@@ -2,6 +2,7 @@
 #--------------------------------
 
 # this script identifies the spikes in a daily timeseries, derives from it the corresponding index in the appropriate actual timeseries (daily, 6hourly or 12hourly) and fixes through poisson extrapolation, setting to mask an arbitrary selected region around the spike and filling it through poisson.
+set +euvx
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_ncl
@@ -16,11 +17,12 @@ export inputFV=$5
 export outputFV=$6
 export checkfile=$7
 
-export HEALED_DIR=$HEALED_DIR_ROOT/$caso
+export HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 
 yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
 st=`echo $caso|cut -d '_' -f2|cut -c 5-6`
 mem=`echo $caso|cut -d '_' -f3|cut -c 2-3`
+export lastday=$(( $fixsimdays - 1 ))
 export npoints=3
 export templateFileName=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
 if [[  -f $checkfile ]]

@@ -6,6 +6,7 @@
 
 begin
 
+  lastday=toint(getenv("lastday"))
   npoints=toint(getenv("npoints"))
   npoints_lon=npoints
   npoints_lat=npoints
@@ -118,7 +119,7 @@ begin
            end if
            ; to treat spike for high freq data on the last day of the series 
            ; (e.g. 6 hourly: usually 00-06-12-18-00..for last day 00-06-12-18)
-           if (it_spike(is,0).eq.184 .and. frq.ne."day") then
+           if (it_spike(is,0).eq.lastday .and. frq.ne."day") then
              incr=incr-1
            end if
            nsteps2fix=incr+1

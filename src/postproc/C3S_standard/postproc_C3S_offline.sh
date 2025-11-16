@@ -22,7 +22,7 @@ startdate=$yyyy$st
 ens=`echo $caso|cut -d '_' -f 3 `
 member=`echo $ens|cut -c2,3` 
 
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 #HEALED_DIR_ROOT=/work/cmcc/cp1/CPS/CMCC-CPS1/fixed_from_spikes/
 # THIS MUST BE KEPT FOR CERISE
 chmod -R u+w $DIR_ARCHIVE/$caso

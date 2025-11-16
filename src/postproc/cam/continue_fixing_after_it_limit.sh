@@ -12,7 +12,7 @@
 . $DIR_UTIL/descr_CPS.sh
 set -euvx
 export caso=$1
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 mkdir -p $HEALED_DIR
 
 #----------------------------------

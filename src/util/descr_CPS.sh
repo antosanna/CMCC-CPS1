@@ -382,6 +382,6 @@ WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
 HEALED_DIR_ROOT1=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
-HEALED_DIR_ROOT=$WORK/CPS/CMCC-${CPSSYS}/fixed_from_spikes
+HEALED_DIR_ROOT=$SCRATCHDIR/regrid_CERISE_phase2
 
 set +a

@@ -26,7 +26,7 @@ else
    HEALED_DIR=$SCRATCHDIR/extrapT/${caso}
 fi
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 set +exvu
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -exvu

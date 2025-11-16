@@ -13,7 +13,7 @@
 set -euvx
 export caso=$1
 dir_cases=$2
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 #export caso=sps4_199305_001
 mkdir -p $HEALED_DIR
 

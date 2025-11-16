@@ -16,7 +16,7 @@ ens=`echo $caso|cut -d '_' -f3`
 
 file2check=${caso}.cam.h3.${yyyy}-${st}.zip.nc
 var="TREFMNAV"
-HEALED_DIR=$HEALED_DIR_ROOT/$caso
+HEALED_DIR=$HEALED_DIR_ROOT/$caso/CAM/healing
 python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
 
 cnterror=`grep -Ril ERROR\] ${logfile} | wc -l`

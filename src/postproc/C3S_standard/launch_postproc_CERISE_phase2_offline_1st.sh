@@ -17,7 +17,7 @@ dbg=0
 st=$1  #stdate as input
 
 mkdir -p $DIR_TEMP
-flag_running=$DIR_TEMP/launch_postproc_CERISE_phase2_offline_on #to avoid multiple submission from crontab
+flag_running=$DIR_LOG/hindcast/launch_postproc_CERISE_phase2_offline_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
 then
    exit
@@ -33,7 +33,7 @@ fi
 touch ${flag_running}
 cd $DIR_ARCHIVE/
 
-for yyyy in {2002..2015}
+for yyyy in {2002..2021}
 do
    listofcases=`ls |grep sps4_${yyyy}${st}_0`
    
@@ -61,9 +61,8 @@ do
           list_not_completed+=" $caso"
           continue
        fi
-       flagpostproc_done=$logdir/postproc_CERISE_phase2_${caso}_DONE    #not for dictionary to have a unique definition btw remote and local cases  
    
-       flag_postproc_offline_on=$DIR_TEMP/CERISE_phase2_postproc_offline_${caso}
+       flag_postproc_offline_on=$DIR_CASES/$caso/logs/CERISE_phase2_postproc_offline_${caso}
        if [[ -f ${flag_postproc_offline_on} ]]  
        then
             #postproc already submitted - continue
