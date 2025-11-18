@@ -1,6 +1,7 @@
 #!/bin/sh -l
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
+set -euvx
 if [[ $machine == "juno" ]]
 then
    module load intel-2021.6.0/ncl/6.6.2-p2sqo

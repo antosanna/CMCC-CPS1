@@ -118,9 +118,9 @@ pfiles_name[22]="sst_IOD_mem_${fore_yyyy}_${fore_st}.png"
 pfiles_path[22]=${forecast_index_dir}
 pfiles_name[30]="sst_IOD_prob_${fore_yyyy}_${fore_st}.png"
 pfiles_path[30]=${forecast_index_dir}
-# noaa sst anomalies
-pfiles_name[23]="noaa_anom_${fore_yyyy}${fore_st}.png"
-pfiles_path[23]=$SCRATCHDIR/${fore_st}
+# esacci sst anomalies
+pfiles_name[23]="esacci_anom_fore_${fore_yyyy}${fore_st}.png"
+pfiles_path[23]=$SCRATCHDIR/forecast/${fore_yyyy}${fore_st}/IC_OCE
 # new verification plots
 pfiles_name[24]="z500_ano_verification_${eval_lead_yyyy}${eval_lead_st}.pdf"
 pfiles_path[24]=$verification_new_dir
@@ -236,11 +236,14 @@ for f in "${!dfiles_name[@]}"; do
     wget --no-check-certificate "${dfiles_website[$f]}/${dfiles_name[$f]}"
     if [ -f ${tmpdir}/enso_evolution-status-fcsts-web.pdf ] ;then
        cd ${tmpdir}
-       . $DIR_UTIL/load_convert 
-       #convert -density 300 enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
-       convert enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
+       module load intel-2021.6.0/imagemagick/7.0.8-7-2475g
+       convert -density 300 enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
+       #convert enso_evolution-status-fcsts-web.pdf -trim +repage enso_%02d.png
+       module unload intel-2021.6.0/imagemagick/7.0.8-7-2475g
        listremove=`ls -1 enso_??.png | grep -v "enso_04.png"`
        rm $listremove 
+       #upload "enso_04.png" to Dropbox
+       python $DIR_UTIL/upload_2dropbox.py "enso_04.png" -p "${tmpdir}" -d "${dropbox_dir}" -l ${logdir}
     fi
     set -e
     if [ -f ${tmpdir}/${dfiles_name[$f]} ]; then
