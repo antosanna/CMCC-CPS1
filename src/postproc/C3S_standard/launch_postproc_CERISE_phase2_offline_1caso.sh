@@ -30,8 +30,8 @@ fi
 touch ${flag_running}
 cd $DIR_ARCHIVE/
 
-# fatti sps4_200205_010 sps4_201605_025 sps4_202005_009
-listofcases="sps4_200205_010 sps4_201605_025 sps4_202005_009 sps4_202105_011"
+#listofcases="sps4_200205_010 sps4_202005_009 "
+listofcases="sps4_200405_019 sps4_200605_023 "
 for caso in $listofcases
 do
    yyyy=`echo $caso |cut -d '_' -f2|cut -c 1-4`

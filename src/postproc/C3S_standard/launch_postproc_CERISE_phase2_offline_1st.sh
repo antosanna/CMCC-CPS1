@@ -35,6 +35,11 @@ cd $DIR_ARCHIVE/
 
 for yyyy in {2002..2021}
 do
+   n_listofcases=`ls |grep sps4_${yyyy}${st}_0|wc -l`
+   if [[ $n_listofcases -eq 0 ]]
+   then
+      continue
+   fi
    listofcases=`ls |grep sps4_${yyyy}${st}_0`
    
    list_not_completed=""

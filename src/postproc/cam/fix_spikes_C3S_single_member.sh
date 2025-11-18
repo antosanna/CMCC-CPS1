@@ -102,7 +102,7 @@ do
    export outputFV=$HEALED_DIR/$fixedfile
 
    checkfile=$HEALED_DIR/${caso}.cam.h3.DONE
-   $DIR_POST/cam/poisson_daily_values.sh h3 $caso $inputascii $inputFV $outputFV $checkfile
+   $DIR_C3S/poisson_daily_values.sh h3 $caso $inputascii $inputFV $outputFV $checkfile
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$body" -r "only" -s $yyyy$st -E $ens
    mv $inputascii ${inputascii}_0
 #  successive attempt of treatments: the cycle relies on the assumption that the $inputascii is not created of no spikes are detected so it is removed after any test
@@ -154,7 +154,7 @@ do
    fixedfinal=$file2check
    checkfile=$HEALED_DIR/${caso}.cam.$ftype.DONE
    export outputFV=$HEALED_DIR/$fixedfinal
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_C3S} -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile"
    message="$caso poisson treatment submitted for $ftype file"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 done
