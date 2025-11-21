@@ -1,9 +1,9 @@
 #!/bin/sh -l 
 #BSUB -q s_medium
-#BSUB -J submit_tar_CERISE_offline
-#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISE%J.err
-#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISE%J.out
-#BSUB -P 0490
+#BSUB -J submit_tar_CERISE_phase2offline
+#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_%J.err
+#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_%J.out
+#BSUB -P 0575
 #BSUB -M 1000
 
 . $HOME/.bashrc
@@ -14,7 +14,7 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=02 # startdate
+st=05 # startdate
 onlycheckfileok=0  #if 0 does tar_CERISE
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
@@ -25,6 +25,7 @@ CERISEtable=/data/cmcc/cp1/temporary/CERISE_table/CERISE_vars.txt
 #CERISEtable_clm=$DIR_POST/clm/CERISE_table_clm.txt
 #
 {
+read
 while IFS=, read -r line
 do
    var_array+=("$line")
@@ -33,7 +34,8 @@ done } < $CERISEtable
 echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
-for yyyy in  `seq $iniy_hind $endy_hind`
+#for yyyy in  `seq $iniy_hind $endy_hind`
+for yyyy in  2019
 do
   
   startdate=$yyyy$st
@@ -54,12 +56,12 @@ do
         submit_list+=" $startdate"
         if [ $onlycheckfileok -eq 0 ]
         then 
-           echo "Submitting tar_CERISE for $startdate"     
-           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE.sh -i "$input"
+           echo "Submitting tar_CERISE_phase2 for $startdate"     
+           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_phase2_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE_phase2.sh -i "$input"
         fi    
   else
      body="MISSING FILES FOR STARTDATE $startdate"
-     title="${CPSSYS} tar_CERISE for $startdate not submitted by submit_tar_CERISE"
+     title="${CPSSYS} tar_CERISE_phase2 for $startdate not submitted by submit_tar_CERISE_phase2"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
   
   # checker files

@@ -1,7 +1,7 @@
 #!/bin/sh -l
 
 #THIS WORKS ONLY FROM LSF
-#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j modify_triplette_sps4 -l ${DIR_LOG}/hindcast/ -d ${DIR_UTIL} -s modify_triplette.sh
+#${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j modify_triplette_sps4 -l ${DIR_LOG}/hindcast/ -d ${DIR_UTIL} -s modify_triplette.sh -i
 
 # load variables from descriptor
 . $HOME/.bashrc

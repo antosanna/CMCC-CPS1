@@ -409,7 +409,7 @@ if [ $cnt_files -ge $txttobechecked ]; then
                 fi
                 sleep 300
              done
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_resume_${caso} -s postproc_C3S_offline_resume.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$caso ${dir_cases} 2" 
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_CERISE_phase2_offline_resume_${caso} -s postproc_CERISE_phase2 $DIR_LOG/$typeofrun/CERISE_phase2_postproc -i "$caso ${dir_cases} 2" 
 # in this case we do not want the checkfile with error $check_c3s_qa_err
              exit
           fi

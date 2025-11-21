@@ -26,52 +26,19 @@ set -euxv
 #memberstocheck=20
 #
 start_date=${yyyy}${st}
-C3Stable_cam=$DIR_POST/cam/C3S_table.txt
-C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
-CERISEtable_cam=$DIR_POST/cam/CERISE_table.txt
-CERISEtable_clm=$DIR_POST/clm/CERISE_table_clm.txt
+CERISEtable=$3
 
 #
 {
-read 
-while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
+while IFS=, read -r C3S 
 do
-   if [ $freq == "12hr" ]
-   then
-      var_array3d+=("$C3S")
-   else
-      var_array2d+=("$C3S")
-   fi
-done } < $C3Stable_cam
-{
-read 
-while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
-do
-   if [ $freq == "12hr" ]
-   then
-      var_array3d+=("$C3S")
-   else
-      var_array2d+=("$C3S")
-   fi
-done } < $CERISEtable_cam
-{
-read 
-while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
-do
-   var_array2d+=("$C3S")
-done } < $C3Stable_clm
-{
-read 
-while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
-do
-   var_array2d+=("$C3S")
-done } < $CERISEtable_clm
-# AA -
+   var_array+=("$C3S")
+done } < $CERISEtable
 
 cd $pushdir/$yyyy$st
 
 
-for var in ${var_array3d[@]}
+for var in hus ta ua va wap zg
 do
    mm=1
    lista=`ls *_${var}_*.tar`
@@ -82,12 +49,12 @@ do
          listafile=`tar -tf ${t}|grep nc`
          wclistafile=`tar -tf ${t}|grep nc|wc -l`
          wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-         if [ $wclistafile -ne 10 ]
+         if [ $wclistafile -ne 10 ] && [ $wclistafile -ne 15 ]
          then
             echo "number of files inside tar $var is wrong: $wclistafile instead of 10"
             exit 1
          fi
-         if [ $wclistasha -ne 10 ]
+         if [ $wclistasha -ne 10 ] && [ $wclistasha -ne 15 ]
          then
             echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
             exit

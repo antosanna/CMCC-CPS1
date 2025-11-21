@@ -32,6 +32,9 @@ cd $DIR_ARCHIVE/
 
 #listofcases="sps4_200205_010 sps4_202005_009 "
 #listofcases="sps4_200405_019"
+#listofcases="sps4_201002_012 sps4_201002_013"
+#listofcases="sps4_201702_010 sps4_201702_011"
+#listofcases="sps4_200211_023"
 listofcases="sps4_200605_023"
 for caso in $listofcases
 do
