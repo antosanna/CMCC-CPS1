@@ -16,7 +16,7 @@ script1=$2
 if [ $stat -ne 0 ]
 then
    title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       body="Error in ${script1}. Exiting from $DIR_C3S/pushCERISE2ECMWF.sh. Log in ${DIR_LOG}/${typeofrun}/${yyyy}${st}/"
    elif [[ "$machine" == "leonardo" ]]
@@ -73,7 +73,7 @@ if [ $cntfirst -eq 1 ]
 then
 # from the second launch it checks if there are still appended processes 
    
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       $DIR_C3S/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
       stat=$?
@@ -106,7 +106,7 @@ original dimension $localdim, transferred dimension $remotedim. check it"
 #  eseguire la rimozione di $list2rm sul sito ftp
    if [ `echo $list2rm |wc -w` -ne 0 ]
    then
-      if [[ "$machine" == "juno" ]]
+      if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
       then
          ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine $typeofrun
          stat=$?
@@ -123,7 +123,7 @@ fi
 # e ricomincia da capo
 input4send="$yyyy $st $mymail $typeofrun $ntarandsha $firstdtn03 $dbg_push $log_script $machine $pushdir"
 
-if [[ "$machine" == "juno" ]]
+if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
 then
    ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
    stat=$?
@@ -140,7 +140,7 @@ fi
 nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/${log_script} | wc -l`
 if [ $nline -lt $ntarandsha ] ; then
    title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
    elif [[ "$machine" == "leonardo" ]]
@@ -165,7 +165,7 @@ done
 # AT LAST SEND manifest TO acquisition.ecmwf.int ;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
 #sh send_to_ecmwf.sh $yyyy $st $mymail $typeofrun AGGIUNTO IN INPUT ntarandsha (qui solo il manifest file conclusivo)
 ntarandsha=1
-if [[ "$machine" == "juno" ]]
+if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
 then
    ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
    stat=$?
@@ -184,7 +184,7 @@ cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${
 if [ $cntmanifest -gt 1 ]; then
    # Raise error
    title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
    elif [[ "$machine" == "leonardo" ]]
@@ -196,7 +196,7 @@ if [ $cntmanifest -gt 1 ]; then
 fi
 if [ $cntmanifest -lt 1 ]; then
 # last attempt to send manifest TO acquisition.ecmwf.int; send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
       stat=$?
@@ -213,7 +213,7 @@ cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${
 if [ $cntmanifest -ne 1 ]; then
    # Raise error
    title=${title_debug}"[CERISE] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected"
    elif [[ "$machine" == "leonardo" ]]
@@ -238,7 +238,7 @@ else
          exit 5
       fi
    done
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       touch $filedone
    elif [[ "$machine" == "leonardo" ]]

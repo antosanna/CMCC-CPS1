@@ -131,6 +131,7 @@ do
        h1)req_mem=9000;;
        h2)req_mem=4000;;
        h3)req_mem=1500;;
+       h4)req_mem=9000;;
    esac
    finalfile=$HEALED_DIR/$caso.cam.$ft.$yyyy-$st.zip.nc
    if [[ $ft == "h0" ]]

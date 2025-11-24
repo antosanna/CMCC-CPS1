@@ -37,7 +37,7 @@ then
 fi
 if [[ $dbg_push -eq 1 ]]
 then
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
       cat > $script_send << EOF
@@ -64,7 +64,7 @@ EOF
 
 elif [[ $dbg_push -eq 2 ]] || [[ $dbg_push -eq 0 ]] 
 then
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
       cat > $script_send << EOF
@@ -88,7 +88,7 @@ fi
 
 if [[ $dbg_push -eq 1 ]]
 then
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.cmcc
       log_script=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
@@ -114,7 +114,7 @@ EOF
 
 elif [[ $dbg_push -eq 2 ]] || [[ $dbg_push -eq 0 ]]
 then
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || "$machine" == "cassandra" ]]
    then
       script_ls=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp
       log_script=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
