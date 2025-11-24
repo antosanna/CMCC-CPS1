@@ -45,16 +45,22 @@ do
    for t in $lista
    do
          isec=`ls $t|rev|cut -d '.' -f2|cut -c 1-2|rev`
-         mm=`ls $t|rev|cut -d '.' -f2|cut -c 5-6|rev`
+         if [[ $isec -eq 25 ]]
+         then
+            mm=11
+         elif [[ $isec -eq 10 ]]
+         then
+            mm=1
+         fi
          listafile=`tar -tf ${t}|grep nc`
          wclistafile=`tar -tf ${t}|grep nc|wc -l`
          wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-         if [ $wclistafile -ne 10 ] && [ $wclistafile -ne 15 ]
+         if [ $wclistafile -ne $(($isec - $mm + 1)) ] 
          then
             echo "number of files inside tar $var is wrong: $wclistafile instead of 10"
             exit 1
          fi
-         if [ $wclistasha -ne 10 -a $mm -eq 1 ] && [ $wclistasha -ne 15 -a $mm -eq 11 ]
+         if [ $wclistasha -ne $(($isec - $mm + 1)) ] 
          then
             echo "number of shasum inside tar $var is wrong: $wclistasha instead of 12"
             exit

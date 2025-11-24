@@ -211,7 +211,7 @@ then
         cdo -O --reduce_dim -sellevidx,20 ${DIROUT_REG1x1}/h2osoi.nc ${DIROUT_REG1x1}/h2osoi_lev.nc
         lev=1140
         cdo mulc,$lev ${DIROUT_REG1x1}/h2osoi_lev.nc ${DIROUT_REG1x1}/mrlsl20.nc
-        ncecat mrlsl?.nc mrlsl??.nc H2OSOI.nc
+        ncecat -O mrlsl?.nc mrlsl??.nc H2OSOI.nc
         ncrename -O -d record,levsoi H2OSOI.nc
         ncks --fix_rec_dmn levsoi H2OSOI.nc prova.nc
         ncks --mk_rec_dmn time  prova.nc prova2.nc

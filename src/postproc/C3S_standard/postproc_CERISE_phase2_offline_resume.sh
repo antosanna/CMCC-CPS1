@@ -164,7 +164,7 @@ do
 done
 while `true`
 do
-   if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
+   if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 5 ]]
    then
       touch $check_all_camC3S_done
       break
