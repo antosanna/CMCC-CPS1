@@ -114,10 +114,10 @@ fi
 
 if [[ $flag -eq 1 ]] ; then
 #if recover for too many iteration, then h0 never treated by regrid
-   listft_cam="h0 h1 h2 h3" 
+   listft_cam="h0 h1 h2 h3 h4" 
 elif [[ $flag -eq 2 ]] ; then
 #if recover for spike in C3S, h0 may be skipped
-   listft_cam="h1 h2 h3"
+   listft_cam="h1 h2 h3 h4"
 fi
 
 for ft in ${listft_cam}

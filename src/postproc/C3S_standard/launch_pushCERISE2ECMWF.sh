@@ -20,14 +20,15 @@ fi
 #st=$1 #2 figures  # SET BY CRONTAB
 #isforecast=$2
 st=$1 #2 figures  # SET BY CRONTAB
-isforecast=0
-if [ $isforecast -eq 1 ]
+dbg=$2    # send only one st-date
+debug_push=0    #do not re-send if stuck
+if [ $dbg -eq 1 ]
 then
-   iyy=`date +%Y`
+   iyy=2019
    fyy=$iyy
 else
-   iyy=1993 
-   fyy=2022
+   iyy=2002
+   fyy=2021
 fi
 # ---------------------------
 ccmail=$mymail
@@ -44,7 +45,7 @@ set -euvx
      title="[CERISE] ${SPSSystem} warning"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
    fi
-   firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_${yyyy}${st}
+   firstdtn03=$DIR_LOG/${typeofrun}/$yyyy$st/first_CERISE_phase2_${yyyy}${st}
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year
 #--------------------------------------------------------------------
