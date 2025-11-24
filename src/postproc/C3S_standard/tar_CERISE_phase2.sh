@@ -282,7 +282,7 @@ do
 done  #end loop on var_array3d
 
 #check if everything is ok inside the tarfiles
-$DIR_C3S/check_tarCERISE.sh $yyyy $st $CERISEtable
+$DIR_C3S/check_tarCERISE_phase2.sh $yyyy $st $CERISEtable
 stat=$?
 if [ $stat -eq 0 ]
 then
@@ -291,7 +291,7 @@ then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    touch ${check_tar_done}
 else
-   body="CERISE: $DIR_C3S/check_tarCERISE.sh failed for ${start_date}. Exiting now. Check and fix"
+   body="CERISE: $DIR_C3S/check_tarCERISE_phase2.sh failed for ${start_date}. Exiting now. Check and fix"
    title="[CERISE] ${CPSSYS} $typeofrun ERROR"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    exit 1
