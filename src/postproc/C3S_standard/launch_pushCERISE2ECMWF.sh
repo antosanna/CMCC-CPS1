@@ -129,12 +129,7 @@ set -euvx
   	          body="CERISE: Successive attempt of the start-date $yyyy$st transfer on acquisition.ecmwf.int"
   	          title="[CERISE] ${SPSSystem} ${typeofrun} notification"
             	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
-             if [[ "$machine" == "juno" ]]
-             then
                 ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
-             else
-                ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
-             fi
           fi
        fi
    done

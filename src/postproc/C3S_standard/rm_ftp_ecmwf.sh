@@ -2,6 +2,8 @@
 
 . ~/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
+. ~/load_miniconda
+conda activate $envcondacm3
 
 set -euvx
 

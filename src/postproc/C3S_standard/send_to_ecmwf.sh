@@ -2,6 +2,8 @@
 
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
+. ~/load_miniconda
+conda activate $envcondacm3
 ##DO NOT UPLOAD the DESCRIPTOR HERE!! THIS SCRIPT IS USED ON dtn03 !!!
 
 set -euvx
@@ -19,7 +21,8 @@ lpushdir=${10}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-nstreams=9
+#nstreams=9
+nstreams=20
 REMOTE_DIR="/DATA/CMCC_CERISE"
 # WARNING!! DO NOT PUT / AT THE END
 

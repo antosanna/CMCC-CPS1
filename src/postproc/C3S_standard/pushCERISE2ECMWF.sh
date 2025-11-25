@@ -179,7 +179,7 @@ fi
 
 # Verify that all files are present in push logs (manifest included)
 cd $DIR_LOG/$typeofrun/$yyyy$st
-cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_??????.txt $log_script|wc -l`
+cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
 
 if [ $cntmanifest -gt 1 ]; then
    # Raise error

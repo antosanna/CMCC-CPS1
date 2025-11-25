@@ -37,7 +37,9 @@ cd $DIR_ARCHIVE/
 #listofcases="sps4_200211_023"
 #listofcases="sps4_201702_017"
 #listofcases="sps4_200605_023"
-listofcases="sps4_200611_009"
+#listofcases="sps4_200611_009"
+#listofcases="sps4_200605_023 sps4_201408_024"
+listofcases="sps4_201802_014 sps4_201802_015 sps4_201802_016 sps4_201802_017 sps4_201802_018 sps4_201802_019 sps4_201802_020 sps4_201802_021 sps4_201802_022 sps4_201802_023"
 for caso in $listofcases
 do
    yyyy=`echo $caso |cut -d '_' -f2|cut -c 1-4`
