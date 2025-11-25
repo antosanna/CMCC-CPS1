@@ -61,6 +61,7 @@ fi
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
 start_date=$yyyy$st
+pushdir=/data/cmcc/cp1/temporary/CERISE_phase2/pushdir/
 cd $pushdir/$start_date
 #
 

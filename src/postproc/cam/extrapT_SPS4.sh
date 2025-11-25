@@ -8,7 +8,7 @@
 #module load gcc-12.2.0/12.2.0
 if [[ $machine == "juno" ]] ; then
   . $HOME/load_miniconda
-  conda activate miniconda_ncl
+  conda activate $envcondancl
 fi
 #---------------------------------
 # first part computes PS from PSL

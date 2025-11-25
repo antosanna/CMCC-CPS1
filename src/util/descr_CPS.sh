@@ -53,6 +53,7 @@ then
    refcaseSCEN=${CPSSYS}_SSP585_reference_CERISE
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
    envcondaqachecker=/work/cmcc/cp1/miniconda/envs/qachecker
+   envcondancl=/work/cmcc/cp1/miniconda/envs/miniconda_ncl
 fi
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
