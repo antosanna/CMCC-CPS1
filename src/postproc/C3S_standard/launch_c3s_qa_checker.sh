@@ -175,7 +175,7 @@ echo "activate env *********************"
 
 set +euvx
   . $DIR_UTIL/condaactivation.sh 
-  condafunction activate qachecker 
+  condafunction activate $envcondaqachecker
 set -euvx
 
 
@@ -234,7 +234,7 @@ done
 cd $ACTDIR
 
 #set +evxu
-#  condafunction deactivate qachecker  
+#  condafunction deactivate  $envcondaqachecker
 #set -euvx
 
 

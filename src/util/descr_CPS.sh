@@ -45,11 +45,14 @@ then
    envcondarclone=rclone_CPS1
    refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
    refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
+   envcondarclone=rclone_gdrive
+   envcondaqachecker=qachecker
 elif [[ "$machine" == "juno" ]]
 then
    refcaseHIST=${CPSSYS}_HIST_reference_CERISE
    refcaseSCEN=${CPSSYS}_SSP585_reference_CERISE
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
+   envcondaqachecker=/work/cmcc/cp1/miniconda/envs/qachecker
 fi
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
