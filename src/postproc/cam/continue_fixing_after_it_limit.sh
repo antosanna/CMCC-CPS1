@@ -33,7 +33,7 @@ ens=`echo $caso|cut -d '_' -f3`
 #----------------------------------
 set +euvx
 . $DIR_UTIL/condaactivation.sh
-condafunction activate qachecker
+condafunction activate $envcondaqachecker
 set -euvx
 
 
