@@ -311,6 +311,10 @@ DIR_NEMO_REBUILD=$DIR_CESM/components/nemo/source/utils/py_nemo_rebuild/src/py_n
 DIR_CPS=$DIR_ROOT/src/scripts_oper
 DIR_RECOVER=$DIR_ROOT/src/recover
 pushdir=$WORK/CPS/CMCC-CPS1/push_CERISE
+if [[ $machine == "juno" ]]
+then
+   pushdir=/data/cmcc/cp1/temporary/CERISE_phase2/pushdir/
+fi
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # PARAMS to be set
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -61,10 +61,10 @@ fi
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
 start_date=$yyyy$st
-pushdir=/data/cmcc/cp1/temporary/CERISE_phase2/pushdir/
 cd $pushdir/$start_date
 #
-
+# FOR CERISE REDEFINED OVERWRITING descr_ensemble
+nchunks=2
 # PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
 ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d)) #1 per 2d var e 5 per 3d var=136 in hindcast and 146 in forecast
 ntarandsha=$((ntar * 2))
@@ -261,7 +261,7 @@ done
 
 
 
-ccecmwfmail="charalampos.karvelis@ecmwf.int,giovanni.conti@cmcc.it,daniele.peano@cmcc.it,antonella.sanna@cmcc.it,marianna.benassi@cmcc.it"
+ccecmwfmail="charalampos.karvelis@ecmwf.int,giovanni.conti@cmcc.it,daniele.peano@cmcc.it,antonella.sanna@cmcc.it"
 # AT LAST SEND notification both to sp1 and to ECMWF
 title=${title_debug}"[CERISE] CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
 body="Dear Harris, \n

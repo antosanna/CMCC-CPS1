@@ -38,6 +38,10 @@ set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
    . ${dictionary}
 set -euvx
+   if [[ $machine == "juno" ]]
+   then
+       check_tar_done=$pushdir/tar_CERISE_phase2_${yyyy}${st}_DONE
+   fi
    if [ $debug_push -ge 1 ]
    then
      mymail="sp1@cmcc.it"
