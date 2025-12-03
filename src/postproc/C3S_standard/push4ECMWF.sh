@@ -202,7 +202,7 @@ fi
 
 # Verify that all files are present in push logs (manifest included)
 cd $DIR_LOG/$typeofrun/$yyyy$st
-cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_??????.txt $log_script|wc -l`
+cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
 
 if [[ $cntmanifest -gt 1 ]]; then
    # Raise error
@@ -264,13 +264,7 @@ else
          exit 5
       fi
    done
-   if [[ "$machine" == "juno" ]]
-   then
-      touch $filedone
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      touch $filedone
-   fi
+   touch $filedone
 fi
 
 # make a tar -tvf to send 
@@ -304,13 +298,7 @@ then
 fi
 if [[ $checkpushdone -eq 1 ]]; then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
-   if [[ "$machine" == "juno" ]]
-   then
-      touch $filedone
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      touch $filedone
-   fi
+   touch $filedone
    echo "Done."
    exit 0
 fi

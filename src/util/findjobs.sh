@@ -3,7 +3,7 @@
 . ${DIR_UTIL}/descr_CPS.sh
 
 set -eu
-usage() { echo "Usage: $0 [-m <machine string >] [-W <format string(yes)>] [-Y <year-date integer(jobID)>] [-q <queue string>] [-n <name_to_grep string >] [-N <name_to_grep2 string >] [-a <status_run string>] [-i <id_job string>] [-j <id_job number as input>] [-c <wc string>] [-r <reservation string>] [-J <name_complete string output>] [-p <id_job string>]" 1>&2; exit 1; }
+usage() { echo "Usage: $0 [-m <machine string >] [-W <format string(yes)>] [-Y <year-date integer(jobID)>] [-d <duration in hours output>] [-q <queue string>] [-n <name_to_grep string >] [-N <name_to_grep2 string >] [-a <status_run string>] [-i <id_job string>] [-j <id_job number as input>] [-c <wc string>] [-r <reservation string>] [-J <name_complete string output>] [-p <id_job string>]" 1>&2; exit 1; }
 
 queue="None"
 scriptname="None"

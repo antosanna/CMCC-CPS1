@@ -171,9 +171,9 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for first month completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   body="Diagnostics for first month completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} first month runtime diags completed"
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for month1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
@@ -227,9 +227,9 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for lead 0 completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   body="Diagnostics for lead 0 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} lead 0 runtime diags completed"
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 0. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
@@ -284,9 +284,9 @@ set -euvx
                    set -euvx
                    rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for lead 1 completed and transferred on drive:$typeofrun/$yyyy$st/runtime_diags"
+                   body="Diagnostics for lead 1 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} lead 1 runtime diags completed"
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
                   body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"

@@ -30,12 +30,7 @@ then
    st=$2
 fi
 launchdir=$DIR_DIAG/SIPN
-if [ $yyyy -gt $endy_hind ]
-then
-   . $DIR_UTIL/descr_forecast.sh
-else
-   . $DIR_UTIL/descr_hindcast.sh
-fi
+. $DIR_UTIL/descr_ensemble.sh $yyyy
 yyyyp1=`date -d "$yyyy${st}01  + 1 month" +%Y`
 stp1=`date -d "$yyyy${st}01  + 1 month" +%m`
 dbg=0    # process only one file

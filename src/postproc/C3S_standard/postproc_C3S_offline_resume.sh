@@ -137,8 +137,9 @@ do
    then
        finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
    fi
-# $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
-   input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic"
+# 
+   checkfile=$HEALED_DIR/${caso}.cam.$ft.DONE
+   input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic $checkfile"
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
             
 done

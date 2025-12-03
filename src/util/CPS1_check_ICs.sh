@@ -35,8 +35,8 @@ if [[ ${nmb_oce_plot} -eq 2 ]] ; then
    done
    conda deactivate $envcondarclone
    title="[NEMOIC] ${CPSSYS} forecast notification"
-   body="On google drive in the folder ${typeofrun}/${yyyy}${st}/IC_plots you may find the SST anomalies of the ${n_ic_nemo} Nemo IC perturbations together with the observed ones (start-date snapshot, last week, last month)"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the SST anomalies of the ${n_ic_nemo} Nemo IC perturbations together with the observed ones (start-date snapshot, last week, last month)"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"
 else
    body="Plots to check NEMO ICs not completed. Check log of SPS4_step1_ICs.sh in ${DIR_LOG}/forecast/${yyyy}${st}. \n\n"
    title="[NEMOIC] ${CPSSYS} forecast warning"
@@ -58,8 +58,8 @@ if [[ ${nmb_ice_plot} -ge 1 ]] ; then
    done
    conda deactivate $envcondarclone
    title="[CICEIC] ${CPSSYS} forecast notification"
-   body="On google drive in the folder ${typeofrun}/${yyyy}${st}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"
 else
    body="Plots to check CICE ICs not completed. Check log of SPS4_step1_ICs.sh in ${DIR_LOG}/forecast/${yyyy}${st}. \n\n"
    title="[NEMOIC] ${CPSSYS} forecast warning"

@@ -123,11 +123,11 @@ do
 done
 conda deactivate $envcondarclone
 title="[CAMIC] ${CPSSYS} forecast notification"
-body="On google drive in the folder ${typeofrun}/${yyyy}${st}/IC_plots you may find the initialization fields for CAM.\n
+body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the initialization fields for CAM.\n
 Comparison between 500hPa $obs and CAM ICs for ${yyyy}${st} start-date.\n
 The first plot is $obs, the following ones are the 10 CAM ICs. \n
 The native levels of each model nearest to 500 hPa (without any vertical interpolation) are plotted.Morever there is also the zonal wind vertical profile of the 10 ICs from 0.01 to 20hPa." 
-$DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" 
 
 
 #body="Dear all, \n
