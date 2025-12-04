@@ -31,6 +31,8 @@ else
    fyy=2021
 fi
 # ---------------------------
+max_elapsed_time_min=45
+elapsed_time_in_loop=900 #15'
 ccmail=$mymail
 for yyyy in `seq $iyy $fyy` ; do
 
@@ -82,7 +84,8 @@ set -euvx
       last_update_log_conformed=`echo ${last_update_log:0:2}``echo ${last_update_log:3:4}`
 # computes how long the scripts has been running for (minutes)
       elapsedm=`${DIR_UTIL}/findjobs.sh -m $machine -d $jobID`
-      if [[ $elapsedm -ge 30 ]] && [[ $(( $last_update_log_conformed - $creation_log )) -lt 5 ]]
+      if [[ $elapsedm -ge $max_elapsed_time_min ]] && [[ $(( $last_update_log_conformed - $creation_log )) -lt 5 ]]
+# if the script has been running fro more than $max_elapsed_time_min and the log has not been updated after the first 5 minutes, kill it
       then
          if [ $debug_push -eq 0 ]
          then
@@ -115,15 +118,15 @@ set -euvx
    ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j pushCERISE2ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s pushCERISE2ECMWF.sh -i "$input"
    ic=0
    while `true`; do
-      # each 15' look for $filedone
-       sleep 900 # 
+      # each 15' (or otherwise defined at the top) look for $filedone
+       sleep $elapsed_time_in_loop # 
        ic=$(( $ic + 1 ))
        anypushC3SDONE=`eval $cmd_anypushC3SDONE`
        if [ $anypushC3SDONE -eq 1 ] ; then          
           break
        fi
-# after 30' kill the process and relaunch
-       if [ $ic -eq 2 ]
+# after 45' (or otherwise defined at the top) kill the process and relaunch
+       if [ $(( $ic * $elapsed_time_in_loop )) -ge $max_elapsed_time_min ]
        then
           ic=0
           if [ $anypushC3SDONE -eq 0 ] ; then          
