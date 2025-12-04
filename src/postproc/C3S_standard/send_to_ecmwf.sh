@@ -2,7 +2,10 @@
 
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-. ~/load_miniconda
+if [[ $machine != "juno" ]]
+then
+   . ~/load_miniconda
+fi
 conda activate $envcondacm3
 ##DO NOT UPLOAD the DESCRIPTOR HERE!! THIS SCRIPT IS USED ON dtn03 !!!
 
@@ -21,8 +24,8 @@ lpushdir=${10}
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
-#nstreams=9
-nstreams=1
+nstreams=9
+#nstreams=1
 REMOTE_DIR="/DATA/CMCC_CERISE"
 # WARNING!! DO NOT PUT / AT THE END
 
@@ -72,7 +75,7 @@ then
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
       cat > $script_send << EOF
 set xfer:log true
-set xfer:log-file "${logfile}"
+set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1

@@ -135,8 +135,8 @@ then
       start_date_proc=`bjobs -l $duration |grep Started|awk '{print $2, $3, $4}'|rev|cut -d ':' -f2-|rev`
       start_date_proc_unix=`date "-d $start_date_proc" +%s`
       now=$(date +%s)
-#in this case command gives back just duration in hours
-      delta=$((($now - $start_date_proc_unix)/3600))
+#in this case command gives back just duration in minutes
+      delta=$((($now - $start_date_proc_unix)/60))
       command="echo $delta"
    fi
 #   set -evx

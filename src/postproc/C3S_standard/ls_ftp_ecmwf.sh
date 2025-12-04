@@ -2,7 +2,10 @@
 
 . ~/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ~/load_miniconda
+if [[ $machine != "juno" ]]
+then
+   . ~/load_miniconda
+fi
 conda activate $envcondacm3
 
 set -euvx

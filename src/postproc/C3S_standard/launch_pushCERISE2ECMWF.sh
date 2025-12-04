@@ -76,12 +76,17 @@ set -euvx
    jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n pushCERISE2ECMWF_${yyyy}${st} -i yes `
    if [ $procsRUN -gt 0 ] ; then
 # if another push running check how long it has being running for
-      elapsedh=`${DIR_UTIL}/findjobs.sh -m $machine -d $jobID`
-      if [ $elapsedh -gt 4 ]
+      last_log=`ls -rt $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.*log| tail -1`
+      creation_log=`basename $last_log|cut -d '.' -f2|cut -d 9-12`
+      last_update_log=`la $last_log|awk '{print $8}'`
+      last_update_log_conformed=`echo ${last_update_log:0:2}``echo ${last_update_log:3:4}`
+# computes how long the scripts has been running for (minutes)
+      elapsedm=`${DIR_UTIL}/findjobs.sh -m $machine -d $jobID`
+      if [[ $elapsedm -ge 30 ]] && [[ $(( $last_update_log_conformed - $creation_log )) -lt 5 ]]
       then
          if [ $debug_push -eq 0 ]
          then
-            body="elapsed hours $elapsedh for pushCERISE2ECMWF_${yyyy}${st}. Too much. Going to kill it"
+            body="log file not updated in the last 30' for send_to_ecmwf.sh ${yyyy}${st}. Too much. Going to kill it"
   	         title="[CERISE] ${SPSSystem} ${typeofrun} warning"
            	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
             $DIR_UTIL/killjobs.sh -m $machine -i $jobID
@@ -89,7 +94,6 @@ set -euvx
       else
 # else exit from launcher
          echo "jobID $jobID"
-         echo "elapsed hours $elapsedh"
          echo "pushCERISE2ECMWF already running"
 	        exit 0
       fi		
@@ -118,8 +122,8 @@ set -euvx
        if [ $anypushC3SDONE -eq 1 ] ; then          
           break
        fi
-# after 4 hours kill the process and relaunch
-       if [ $ic -eq 16 ]
+# after 30' kill the process and relaunch
+       if [ $ic -eq 2 ]
        then
           ic=0
           if [ $anypushC3SDONE -eq 0 ] ; then          
@@ -137,7 +141,6 @@ set -euvx
           fi
        fi
    done
-   exit #exit after one year completed 
 
 done    #loop on hindcasts
 echo "That's all folk's"

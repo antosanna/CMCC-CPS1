@@ -226,7 +226,6 @@ then
 elif [[ "$machine" == "leonardo" ]]
 then
    env_workflow_tag=leonardo
-   envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
 #moved to .bashrc
    if [[ $account_name == "CMCC_reforeca" ]]
    then
