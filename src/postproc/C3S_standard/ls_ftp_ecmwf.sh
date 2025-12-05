@@ -5,6 +5,8 @@
 if [[ $machine != "juno" ]]
 then
    . ~/load_miniconda
+else
+   . ~/load_condasys
 fi
 conda activate $envcondacm3
 

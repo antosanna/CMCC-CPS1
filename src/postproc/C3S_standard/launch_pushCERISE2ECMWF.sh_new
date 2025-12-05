@@ -31,7 +31,7 @@ else
    fyy=2021
 fi
 # ---------------------------
-max_elapsed_time_min=45
+max_elapsed_time_min=120
 elapsed_time_in_loop=900 #15'
 ccmail=$mymail
 for yyyy in `seq $iyy $fyy` ; do
@@ -79,7 +79,7 @@ set -euvx
    if [ $procsRUN -gt 0 ] ; then
 # if another push running check how long it has being running for
       last_log=`ls -rt $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.*log| tail -1`
-      creation_log=`basename $last_log|cut -d '.' -f2|cut -d 9-12`
+      creation_log=`basename $last_log|cut -d '.' -f2|cut -c 9-12`
       last_update_log=`la $last_log|awk '{print $8}'`
       last_update_log_conformed=`echo ${last_update_log:0:2}``echo ${last_update_log:3:4}`
 # computes how long the scripts has been running for (minutes)
@@ -126,7 +126,7 @@ set -euvx
           break
        fi
 # after 45' (or otherwise defined at the top) kill the process and relaunch
-       if [ $(( $ic * $elapsed_time_in_loop )) -ge $max_elapsed_time_min ]
+       if [ $(( $ic * $elapsed_time_in_loop )) -ge $(( $max_elapsed_time_min* 60 )) ]
        then
           ic=0
           if [ $anypushC3SDONE -eq 0 ] ; then          
