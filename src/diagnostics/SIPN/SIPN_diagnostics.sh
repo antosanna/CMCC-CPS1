@@ -1,8 +1,9 @@
 #!/bin/sh -l
-#BSUB -o ../../../../logs/SIPN/SIPN_diagnostics%J.out  # Appends std output to file %J.out.
-#BSUB -e ../../../../logs/SIPN/SIPN_diagnostics%J.err  # Appends std error to file %J.err.
+#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/SIPN/SIPN_diagnostics%J.out  # Appends std output to file %J.out.
+#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/SIPN/SIPN_diagnostics%J.err  # Appends std error to file %J.err.
 #BSUB -J SIPN_diagnostics
 #BSUB -q s_medium       # queue
+#BSUB -M 1000
 #BSUB -P 0490
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
@@ -11,16 +12,10 @@
 
 set -evxu
 
-if [[ `whoami` != "sp2" ]]   #to be defined
-then
-   echo "YOU ARE NOT MEANT TO RUN THIS SCRIPT! please verifty you are doing the right thing"
-   exit 1
-fi
-
 yyyy=`date +%Y`
 st=`date +%m`
-#skipconc=1
-#st=11
+skipconc=0    #set to 1 if you want to skip the computation of concentration
+st=11
 if [[ $# -eq 1 ]]
 then
    yyyy=$1
@@ -39,18 +34,20 @@ then
    seas="DJF"
    hem=SH
 fi
-if [ "$st" == "04" ]
+if [ "$st" == "04" ]  #never implemented 
 then
+   echo "not yet implemented! You should defined the output path before"
+   echo "------EXITING NOW---------"
+   exit
    seas="MJJ"
    hem=NH
 fi
 echo "----- SIPN: Sea-Ice Prediction Network --------------"
 echo "----- you are going to process data relative to $yyyy"
 echo "----- SIPN postprocessing for ${st}, $seas and $hem hemisphere"
-outdir=$OUTDIR_DIAG/SIPN/sea-ice_areas/$yyyy$st/$hem
+outdir=$WORK/CPS/CMCC-${CPSSYS}/SIPN/$yyyy$st/
 mkdir -p $outdir
-outdircon=$OUTDIR_DIAG/SIPN/concentrations/$yyyy$st/$hem
-mkdir -p $outdircon
+outdircon=$outdir
 archdir=$WORK_C3S1/${yyyy}${st}
 datadir=$SCRATCHDIR/SIPN/daily
 mkdir -p $datadir
@@ -87,17 +84,12 @@ then
    esac
 fi
 
-export fila=${datadir}/area.nc
-if [ ! -f $fila ]
-then
-   cdo -gridarea cmcc_sic_${yyyy}${st}_001_${seas}_daily.nc ${datadir}/area.nc
-fi
 
 cd $datadir
 
 if [[ $skipconc -ne 1 ]]
 then
-flist=`ls $archdir/cmcc_CMCC-CM2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_seaIce_day_surface_sic_r*.nc |head -$nrunC3Sfore` 
+flist=`ls $archdir/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_seaIce_day_surface_sic_r*.nc |head -$nrunC3Sfore` 
 
 for ff in $flist 
 do
@@ -118,6 +110,7 @@ do
      fi
 done  #end loop on flist
 
+
 cd $datadir
 
 flist=`ls -1 cmcc_sic_${yyyy}${st}_0??.nc`
@@ -134,18 +127,24 @@ do
 
 done     
 
+export fila=${datadir}/area.nc
+if [ ! -f $fila ]  
+then
+   cdo -gridarea cmcc_sic_${yyyy}${st}_001_${seas}_daily.nc ${fila}
+fi
+
 flist=`ls -1 cmcc_sic_${yyyy}${st}_0??_${seas}_daily.nc |head -$nrunC3Sfore`
 
 for ff in $flist 
 do
     pp=`echo $ff | cut -d '.' -f1 |cut -d '_' -f4`
-    export outfile=$outdircon/cmcc_${pp}_${yyyy}${st}01_${yyyyp1}0228_concentration.nc
+    export outfile=$outdircon/cmcc_${pp}_concentration.nc
     if [ -f $outfile ]
     then
        continue
     fi
     export ifile="cmcc_sic_${yyyy}${st}_${pp}_${seas}_daily.nc"
-    export smask="${REPOSITORY}/cmcc_CMCC-CM2-v${versionSPS}_hindcast_S1993050100_atmos_fix_surface_sftlf_r26i00p00.nc"
+    export smask=${REPOSITORY}/sps4_LANDFRAC_C3S.nc
     export tunits="days since $yyyyp1-$stp1-01"
     export firstmonthdays=`$DIR_UTIL/days_in_month.sh $st $yyyy`
 
@@ -185,3 +184,8 @@ do
         exit 1
     fi
 done
+set +euvx
+. ~/load_miniconda
+conda activate rclone_gdrive
+rclone copy  $WORK/CPS/CMCC-${CPSSYS}/SIPN/$yyyy$st my_drive:CMCC_SEA-ICE/
+

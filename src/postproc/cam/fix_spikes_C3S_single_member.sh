@@ -132,7 +132,7 @@ do
       body="MANUAL INTERVENTION REQUIRED!! $caso iterative healing infinite loop"
       sed -e "s:CASO:$caso:g;s:dummy_DIR_CASES:$dir_cases:g" $DIR_TEMPL/launch_postproc_C3S_after_it_limit.sh > $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh 
       chmod u+x $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh
-      message="$caso more than 5 attempts! Check if treatment effectively needed or false-spike! EXIT NOW AND INSPECT PLOTS IN GDRIVE:SPIKES_warning_${yyyy}${st}. \n If the plots do not show spikes, resubmit the postprocessing with $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh"
+      message="$caso more than 5 attempts! Check if treatment effectively needed or false-spike! EXIT NOW AND INSPECT PLOTS IN GDRIVE:SPIKES_warnings_${yyyy}${st}. \n If the plots do not show spikes, resubmit the postprocessing with $HEALED_DIR/launch_postproc_C3S_after_it_limit.sh"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$body" -r "yes" -s $yyyy$st -E $ens
       touch $HEALED_DIR/${caso}.too_many_it.EXIT
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_${caso} -s plot_timeseries_spike.sh -l $logdir -i "$caso 0 $HEALED_DIR/list_spikes.txt_5"

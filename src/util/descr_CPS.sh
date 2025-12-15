@@ -1,4 +1,4 @@
-e!/bin/sh -l
+#!/bin/sh -l
 set -a
 mymail=sp1@cmcc.it
 #mymail=antonella.sanna@cmcc.it

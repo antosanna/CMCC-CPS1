@@ -155,7 +155,7 @@ then
    echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
 fi
 
-
+cp $DIR_TEMPL/user_nl_hydros $DIR_CASES/$caso
 #----------------------------------------------------------
 
 

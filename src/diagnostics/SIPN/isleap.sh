@@ -1,6 +1,6 @@
 #!/bin/sh -l
 . ~/.bashrc
-. $DIR_SPS35/descr_SPS3.5.sh
+. $DIR_UTIL/descr_CPS.sh
 
 set -eu #vx
 yyyy=$1

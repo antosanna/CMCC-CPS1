@@ -77,9 +77,9 @@ then
    for ft in $filetyp ; do
 
        case $ft in
-           h1) mult=1 ; req_mem=50000 ;;
+           h1) mult=1 ; req_mem=5000 ;;
            h2) mult=4 ; req_mem=20000 ;;
-           h3) mult=1 ; req_mem=5000;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
+           h3) mult=1 ; req_mem=600;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc

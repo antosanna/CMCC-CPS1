@@ -80,10 +80,10 @@ cd $pushdir/$start_date
 #
 # Check if there is some old manifest file and remove
 set +euvx
-nf=`ls -1 $DIR_LOG/$typeofrun/$yyyy$st/cmcc*manifest*txt | wc -l`
+nf=`ls -1 $pushdir/$yyyy$st/cmcc*manifest*txt | wc -l`
 set -euvx
 if [[ $nf -ne 0 ]] ; then
-   rm $DIR_LOG/$typeofrun/$yyyy$st/cmcc*manifest*txt
+   rm $pushdir/$yyyy$st/cmcc*manifest*txt
 fi
 # 
 

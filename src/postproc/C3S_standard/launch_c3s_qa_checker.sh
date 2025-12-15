@@ -91,31 +91,52 @@ namespace+="ocean_mon " #uncomment when adding gli ocean_mon
 
 # Define memory needs for each namespace (attention:keep order)
 # atmos
-memory[0]="5000M" #"2500M " #"atmos_6hr_surface_psl "
-memory[1]="5000M" #"2500M " #"atmos_6hr_surface_prw "
-memory[2]="5000M" #"2500M " #"atmos_6hr_surface_clt "
-memory[3]="5000M" #"2500M " #"atmos_6hr_surface_tas "
-memory[4]="5000M" #"2500M " #"atmos_6hr_surface_tdps "
-memory[5]="7500M" #"2500M " #"atmos_6hr_surface_uas "
-memory[6]="7500M" #"2500M " #"atmos_6hr_surface_vas "
-memory[7]="7500M" #"2500M " #"atmos_6hr_surface_ua100m "
-memory[8]="7500M" #"2500M " #"atmos_6hr_surface_va100m "
-memory[9]="20000M" #"3500M " #"atmos_12hr_pressure_zg "
-memory[10]="20000M" #"4000M " #"atmos_12hr_pressure_ta "
-memory[11]="20000M" #"5000M " #"atmos_12hr_pressure_hus "
-memory[12]="20000M" #"3500M " #"atmos_12hr_pressure_ua "
-memory[13]="20000M" #"3500M " #"atmos_12hr_pressure_va "
-memory[14]="10000M" #"7500M" #"5000M "  #"atmos_day "
-memory[15]="2000M " #"atmos_fix "
+#memory[0]="5000M" #"2500M " #"atmos_6hr_surface_psl "
+#memory[1]="5000M" #"2500M " #"atmos_6hr_surface_prw "
+#memory[2]="5000M" #"2500M " #"atmos_6hr_surface_clt "
+#memory[3]="5000M" #"2500M " #"atmos_6hr_surface_tas "
+#memory[4]="5000M" #"2500M " #"atmos_6hr_surface_tdps "
+#memory[5]="7500M" #"2500M " #"atmos_6hr_surface_uas "
+#memory[6]="7500M" #"2500M " #"atmos_6hr_surface_vas "
+#memory[7]="7500M" #"2500M " #"atmos_6hr_surface_ua100m "
+#memory[8]="7500M" #"2500M " #"atmos_6hr_surface_va100m "
+memory[0]="700M" #"2500M " #"atmos_6hr_surface_psl "
+memory[1]="700M" #"2500M " #"atmos_6hr_surface_prw "
+memory[2]="700M" #"2500M " #"atmos_6hr_surface_clt "
+memory[3]="700M" #"2500M " #"atmos_6hr_surface_tas "
+memory[4]="700M" #"2500M " #"atmos_6hr_surface_tdps "
+memory[5]="700M" #"2500M " #"atmos_6hr_surface_uas "
+memory[6]="700M" #"2500M " #"atmos_6hr_surface_vas "
+memory[7]="700M" #"2500M " #"atmos_6hr_surface_ua100m "
+memory[8]="700M" #"2500M " #"atmos_6hr_surface_va100m "
+#memory[9]="20000M" #"3500M " #"atmos_12hr_pressure_zg "
+#memory[10]="20000M" #"4000M " #"atmos_12hr_pressure_ta "
+#memory[11]="20000M" #"5000M " #"atmos_12hr_pressure_hus "
+#memory[12]="20000M" #"3500M " #"atmos_12hr_pressure_ua "
+#memory[13]="20000M" #"3500M " #"atmos_12hr_pressure_va "
+memory[9]="4000M" #"3500M " #"atmos_12hr_pressure_zg "
+memory[10]="4000M" #"4000M " #"atmos_12hr_pressure_ta "
+memory[11]="4000M" #"5000M " #"atmos_12hr_pressure_hus "
+memory[12]="4000M" #"3500M " #"atmos_12hr_pressure_ua "
+memory[13]="4000M" #"3500M " #"atmos_12hr_pressure_va "
+#memory[14]="10000M" #"7500M" #"5000M "  #"atmos_day "
+memory[14]="16000M" #"7500M" #"5000M "  #"atmos_day "
+#memory[15]="2000M " #"atmos_fix "
+memory[15]="100M " #"atmos_fix "
 # land
-memory[16]="5000M" #"2500M " #"land_6hr "
-memory[17]="5000M" #"2750M " #"land_day "
+#memory[16]="5000M" #"2500M " #"land_6hr "
+memory[16]="700M" #"2500M " #"land_6hr "
+#memory[17]="5000M" #"2750M " #"land_day "
+memory[17]="16000M" #"2750M " #"land_day "
 # seaIce
-memory[18]="5000M" #"3500M " #"seaIce_6hr "
-memory[19]="5000M" #"2000M " #"seaIce_day "
+#memory[18]="5000M" #"3500M " #"seaIce_6hr "
+memory[18]="700M" #"3500M " #"seaIce_6hr "
+#memory[19]="5000M" #"2000M " #"seaIce_day "
+memory[19]="16000M" #"2000M " #"seaIce_day "
 # ocean (only tso)
-memory[20]="12000M" #"2500M " #"ocean_6hr "
-memory[21]="2000M " #"ocean_mon " #uncomment when adding gli ocean_mon
+#memory[20]="12000M" #"2500M " #"ocean_6hr "
+memory[20]="700M" #"2500M " #"ocean_6hr "
+memory[21]="100M " #"ocean_mon " #uncomment when adding gli ocean_mon
     
 # Link or copy temporarily all files to working dir
 cd $wdir
@@ -351,19 +372,34 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
         if [[ "${warninmsg}" =~ "Air Temperature" ]] ; then
             touch $spike_from_cmor
         fi         
-        for w in ${warninmsg}; do
-            if [[ "$w" == "[FIELDWARNING]" ]];then
-                body+=" \n ${w}"
+# NEW VERSION TESTED ONLY OFFLINE 20251209 ANTO
+#        for w in ${warninmsg}; do
+#            if [[ "$w" == "[FIELDWARNING]" ]];then
+#                body+=" \n ${w}"
+#            else
+#                body+=" ${w}"
+#            fi
+#        done
+#  
+#        body+="\n\n Please check in ${DL}/output_${startdate}_${endtime} the output log \n"
+#
+#        for w in $warninlist;do 
+#            body+="${w}\n";
+#        done
+        for f in ${warninlist}; do
+            w=`grep -Rh FIELDWARNING $f`
+            w_pos=`grep -Rhn FIELDWARNING $f|cut -d ":" -f1`
+            line_pos=$(($w_pos - 2))
+            w_pos=`sed -n "${line_pos}p" $f`
+            if [[ "$w" == "[fieldwarning]" ]];then
+                body+=" \n ${w} "
+                body+=" \n ${w_pos} "
             else
                 body+=" ${w}"
+                body+=" \n ${w_pos} "
             fi
         done
-  
-        body+="\n\n Please check in $wdir/output or ${DL}/output_${startdate}_${endtime} the output log of \n"
-
-        for w in $warninlist;do 
-            body+="${w}\n";
-        done
+# NEW VERSION TESTED ONLY OFFLINE 20251209 ANTO -
         
         # save to report
         printf "\n ${body}">> $warningreport

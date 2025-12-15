@@ -59,7 +59,7 @@ input="$caso"
 if [[ $flag -eq 1 ]]
 then
 # healing for too many iterations
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 40000 -j continue_fixing_after_it_limit_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s continue_fixing_after_it_limit.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 400 -j continue_fixing_after_it_limit_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s continue_fixing_after_it_limit.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : continue_fixing_after_it_limit_${caso} submitted" -r "only" -s $yyyy$st
 elif [[ $flag -eq 2 ]]
 then

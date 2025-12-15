@@ -57,7 +57,7 @@
         "min_checked_vars" : {
             "clt":[0],
             "hfls":[-997],
-            "hfss":[-500],
+            "hfss":[-585],
             "hus":[-0.00034],
             "lwepr":[0],
             "lweprc":[0],
@@ -88,10 +88,10 @@
         "max_checked_vars" : {
             "clt":[100],
             "hfls":[2065],
-            "hfss":[2030],
+            "hfss":[2170],
             "hus":[0.04],
             "psl":[1.140e+05],
-            "rlds":[571],
+            "rlds":[581],
             "rsds":[525],
             "rsdt":[581],
             "sic":[1],

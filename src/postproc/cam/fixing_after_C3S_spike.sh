@@ -57,7 +57,7 @@ do
    rsync -av $file2check $inputFV
    export outputFV=$file2check
    checkfile=$HEALED_DIR/${caso}.cam.$ftype.DONE
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_C3S} -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype $caso $inputascii_all $inputFV $outputFV $checkfile"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_C3S} -j poisson_daily_values_${ftype}_${caso} -s poisson_daily_values.sh -l $logdir -i "$ftype cam $caso $inputascii_all $inputFV $outputFV $checkfile"
    message="$caso poisson treatment submitted for $ftype file"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 done

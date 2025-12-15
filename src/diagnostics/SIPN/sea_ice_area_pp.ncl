@@ -13,7 +13,6 @@ begin
    csv_filename=getenv("csv_filename")
    csv_filename_bin=getenv("csv_filename_bin")
    fila=getenv("fila")
-   nrun2diag=toint(getenv("nrun2diag"))
    okfile=getenv("okfile")
 
    f = addfile (diri+"/"+filename, "r")

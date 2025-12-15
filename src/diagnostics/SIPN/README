@@ -1,12 +1,33 @@
 The postprocessing addresses daily data and select a timeseries of 3 months (skipping the first)
 
 OUTPUT DIR 
-/work/csp/sp2/SPS3.5/SIPN/sea-ice_areas
-/work/csp/sp2/SPS3.5/SIPN/concentrations
+/work/cmcc/cp1/CPS/CMCC-CPS1/SIPN/YYYYMM
 
-Data must be uploaded on google drive sp1
-Create a directory
-CMCC-SEA-ICE/YYYYMM
-copy the files locally in a temporary directory and upload them all there
+Data are automatically uploaded to google drive sp1
 
-Before notifying the data are available check them followin instruction doc and in case of doubt ask Dorotea Iovino
+        CMCC-SEA-ICE
+
+
+Before notifying Francois, check the data
+check_concentrations.sh 
+
+It produces ensmean and ensstd for concetrations 
+
+- /work/cmcc/cp1/scratch/SIPN/cmcc_202511_concentration_mean.nc
+- /work/cmcc/cp1/scratch/SIPN/cmcc_202511_concentration_stdev.nc
+
+
+and send to gdrive 
+
+        CMCC-SEA-ICE/checks
+
+- cmcc_total-area.202511.txt
+- cmcc_001_regional-area.202511.txt
+- cmcc_020_regional-area.202511.txt
+- cmcc_046_regional-area.202511.txt
+
+
+On gdrive open a new sheet and import (from file menu) cmcc_total-area.202511.txt, selecting personally defined separator as ;
+Then create a graph with all the members and check if it looks correct
+
+In the same way check the 3 samples for regional areas
