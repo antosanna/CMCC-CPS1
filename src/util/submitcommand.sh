@@ -155,164 +155,6 @@ then
       fi
 fi
    
-if [[  "$machine" == "zeus" ]]
-then
-  # initalize command
-  command='bsub '
-  # if you require a number of cores in the same node
-  if [[ "$coreinnode" != "None" ]]
-  then
-    # if you defined the required number of cores n
-     if [[ "$ntask" != "None" ]]
-     then
-        command+=' -n $ntask -R "span[ptile=$coreinnode]"'
-       # if  this is the model
-        if [[ "$isthemodel" != "None" ]]
-        then
-           command+=' -x'
-        fi
-     else
-        echo "-R activated but -n missing"
-        usage
-     fi
-   fi
-      
-  # first of all add condition for -sla attach to service class [ SC_sp1 or SC_SERIAL_sp1]
-#  if [[ `whoami` == $operational_user ]] || [[ `whoami` == "sp2" ]] || [[ `whoami` == "sps-dev" ]] #  second condition just for test purposes
-#  then
-    # queues on zeus
-    #  serialq_l=s_long
-    #  parallelq_s=p_short
-
-    # queue condition 
-   if [[ "$queue" == "None" ]] # if is not defined
-   then
-      # the only process without $queue is bsub of $case.run -> parallel, with the exception of postrun from st_archive.sh
-      command+=' -P $pID '
-      if [[ $scriptname == *"postrun"* ]]; then
-         command+=' -sla ${sla_serialID} -app $S_apprun'
-      # exception for ag_h process (CAM atmospheric IC condition) don't send over sla (since run 7 days before) 
-#      elif [[ $scriptname == *"ag_h"* ]]; then
-#      :
-      fi
-
-   else 
-      # $queue is defined and contains string poe -> parallel
-      command+=' -P $pID'
-      if [[ "$queue" == *"p_"* ]]; then
-         command+=' -sla $slaID -app $apprun'
-      # $queue is defined and contains string serial -> serial        
-      elif [[ "$queue" == *"s_"* ]]  && [[ "$queue" != *"s_download"* ]] ; then
-         if [[ `whoami` == $operational_user ]]
-         then
-# TEMPORARY
-            command+=' -sla ${sla_serialID} -app $S_apprun'
-        
-         fi
-      fi
-   fi
-
-
-   if [[ "$basic" != "None" ]]
-   then
-      command+=' < '
-      set -evx   
-      command+=' '$scriptdir/$scriptname
-      eval $command 
-      exit 0
-   else
-      command+=" -rn -Ep '$DIR_UTIL/Job_report_email.sh $mymail' -J $jobname -o $logdir/${jobname}_%J.out -e $logdir/${jobname}_%J.err"
-      if [[ "$prevID" != "None" ]]
-      then
-         command+=' -ti -w "done($prev)"'
-      fi
-      if [[ "$prev" != "None" ]]
-      then
-         if [[ "$prev2" != "None" ]]
-         then
-            if [[ "$prev3" != "None" ]]
-            then
-               command+=' -ti -w "done('$prev') && done('$prev2') && done('$prev3')"'
-            else
-               command+=' -ti -w "done('$prev') && done('$prev2')"'
-            fi
-         else
-            command+=' -ti -w "done('$prev')"'
-         fi
-      fi
-      if [[ "$exited" != "None" ]] 
-      then
-         command+=' -ti -w "exit('$exited')"'
-      fi
-      if [[ "$exited" != "None" ]] && [[ "$exited2" != "None" ]]
-      then
-         command+=' -ti -w "exit('$exited') || exit('$exited2')"'
-      fi
-#      if [[ $mem -ne $memdefault ]]
-#      then
-# (mem is expressed in MB)
-         command+=' -R "rusage[mem='$mem']"'
-#      fi
-   fi
-   if [[ "$starttime" != "None" ]]
-   then
-     command+=' -b '"'$starttime'"''
-   fi
-   if [[ "$exclusive" != "None" ]]
-   then
-     command+=' -x '
-   fi
-   
-   if [[ "$localtime" != "None" ]]
-   then
-# discriminate between serial and parallel
-     queue_type=`bqueues -l $queue |grep QUEUE:|awk '{print $2}'|cut -c 1`
-     if [[ $queue_type == "s" ]]
-     then
-# ACHTUNG!!! These limits are strictly dependent on sysmen settings!!!!
-# RUNLIMIT s_medium 360min  s_short 30min
-        if [[ $localtime -ge 1 ]] && [[ $localtime -le $time_limit_serialq_m ]]
-        then
-           queue=$serialq_m
-        elif [[ $localtime -gt $time_limit_serialq_m ]]
-        then
-           queue=$serialq_l
-           if [[ $localtime -gt $time_limit_serialq_m ]]
-           then
-              localtime=$time_limit_serialq_l
-           fi
-        fi
-     elif [[ $queue_type == "p" ]]
-     then
-# RUNLIMIT p_medium 240min and p_short 120min
-        if [[ $localtime -ge $time_limit_parallelq_s ]] && [[ $localtime -le $time_limit_parallelq_m ]]
-        then
-           queue=$parallelq_m
-        elif [[ $localtime -gt $time_limit_parallelq_m ]]
-        then
-           queue=$parallelq_l
-           if [[ $localtime -gt $time_limit_parallelq_l ]]
-           then
-              localtime=$time_limit_parallelq_l
-           fi
-        fi
-     fi   
-     command+=' -W '"'$localtime:00'"' -q $queue'
-   else
-     command+=' -q $queue'
-   fi
-
-   if [[ "$input" == "None" ]]
-   then
-     input=""
-   fi
-
-   set -evx   
-   command+=' '$scriptdir/$scriptname
-#   echo $command $input
-   eval $command ${input}
-   exit 0
-fi 
 
 if [[  "$machine" == "juno" ]] || [[  "$machine" == "cassandra" ]]
 then
@@ -343,8 +185,10 @@ then
       # the only process without $queue is bsub of $case.run -> parallel, with the exception of postrun from st_archive.sh
       command+=' -P $pID '
       if [[ $scriptname == *"postrun"* ]]; then
-#not defined yet
-#         command+=' -app $S_apprun'
+#         if [[ "${slaID}" != "dummy" ]] # if is not defined
+#         then
+#           command+=' -sla $slaID -app $apprun'
+#         fi
          :
       fi
 
@@ -352,7 +196,10 @@ then
       # $queue is defined and contains string poe -> parallel
       command+=' -P $pID'
       if [[ "$queue" == *"p_"* ]]; then
-#         command+=' -sla $slaID -app $apprun'
+#         if [[ "${slaID}" != "dummy" ]] # if is not defined
+#         then
+#           command+=' -sla $slaID -app $apprun'
+#         fi
          :         
          
       # $queue is defined and contains string serial -> serial        
@@ -360,7 +207,10 @@ then
          if [[ `whoami` == $operational_user ]] 
          then
 #not defined yet
-            command+=' -sla ${sla_serialID} -app $S_apprun'
+            if [[ "${sla_serialID}" != "dummy" ]] # if is not defined
+            then
+               command+=' -sla ${sla_serialID} -app $S_apprun'
+            fi
          fi
       fi
    fi
@@ -519,7 +369,7 @@ then
             command+=" $optSLURM --partition=$queue --account=$account_SLURM --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
        fi
     else
-       command+=" --account=$account_SLURM --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=ALL --mail-user=$mymail" 
+       command+=" --account=$account_SLURM --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=FAIL --mail-user=$mymail" 
     fi
 
     # (--nice decrease priority, positive value of nice decrease)

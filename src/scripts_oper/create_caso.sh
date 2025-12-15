@@ -51,7 +51,13 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # refcase changes with scenario but the executable must not
 set +euvx
-$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+#20251031 - some problem with new refcase - getting back to the old one
+if [[ $machine == "leonardo" ]]
+then
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
+else
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+fi
 
 set -euvx
 #----------------------------------------------------------
@@ -68,6 +74,11 @@ then
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_${account_name} $DIR_CASES/$caso/env_workflow.xml
 else
    rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+   if [[ $flag_dev -eq 1 ]]
+   then
+# this one submit without SC
+      rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_noSC $DIR_CASES/$caso/env_workflow.xml
+   fi
 #   if [[ $machine == "juno" ]]
 #   then
 #      rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml

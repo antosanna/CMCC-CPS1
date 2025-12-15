@@ -58,10 +58,10 @@ set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
 set -euvx
-   rclone mkdir my_drive:SPIKES_warnings_${yyyy}${st}
+   rclone mkdir my_drive:$typeofrun/$yyyy$st/SPIKES_warnings_${yyyy}${st}
    nplots=`ls ${pltname_root}* |wc -l`
    for ((k = 1; k<= $nplots; k += 1))
    do
-      rclone copy ${pltname_root}.$k.png my_drive:SPIKES_warnings_${yyyy}${st}
+      rclone copy ${pltname_root}.$k.png my_drive:$typeofrun/$yyyy$st/SPIKES_warnings_${yyyy}${st}
    done
 fi

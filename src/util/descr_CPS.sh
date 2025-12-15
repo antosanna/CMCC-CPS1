@@ -3,13 +3,7 @@ set -a
 mymail=sp1@cmcc.it
 #mymail=antonella.sanna@cmcc.it
 #mymail=andrea.borrelli@cmcc.it
-#ncheck=`grep Juno /etc/mtab|wc -l`
-#ncheckbackup=`grep marconi /etc/mtab|wc -l`
-#if [[ $ncheckbackup -ne 0 ]]
-#then
-#   machine="marconi"
-#elif [[ $ncheck -ne 0 ]]
-#then
+flag_dev=0    # if 1 won't use the SC on cmcc
 cmd_IC_pull_from_remote="sftp -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
 cmd_IC_pull_from_remote_resume="sftp -a -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
 if [[ -n `echo $PS1|grep leonardo` ]]
@@ -425,6 +419,11 @@ DIR_FORE_ANOM=$WORK/CPS/CMCC-${CPSSYS}/forecast_anom
 if [[ $machine == "juno" ]]
 then
    . ~/load_conda;conda activate $envcondacm3
+fi
+if [[ $flag_dev -eq 1 ]]
+then
+   sla_serialID="dummy"
+   slaID="dummy"
 fi
 
 set +a

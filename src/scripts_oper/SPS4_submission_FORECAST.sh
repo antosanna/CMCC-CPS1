@@ -31,10 +31,11 @@ fi
 
 touch $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted
 # check if there is another job submitted by crontab with the same name
+starting_time=`date +%Y%m%d%H%M`
 if [[ $machine == "leonardo" ]]
 then
    conda activate $envcondacm3
-   LOG_FILE=$DIR_LOG/forecast/SPS4_submission_FORECAST.`date +%Y%m%d%H%M`.log
+   LOG_FILE=$DIR_LOG/forecast/SPS4_submission_FORECAST.${starting_time}.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
 
    lastlog=`ls -rt $SCRATCHDIR/cases_${st}/${header}_${yyyy}${st}*log|tail -1`
@@ -298,6 +299,7 @@ echo "case already completed on old $HOME but still to be ported $cnt_old_home "
 echo "running $cnt_run "
 body="Submitted $subm_cnt startdates \n
 \n
+Starting time: ${starting_time} \n
 ${listacasi[@]} \n
 \n
 Climatological start-date: ${st} \n
