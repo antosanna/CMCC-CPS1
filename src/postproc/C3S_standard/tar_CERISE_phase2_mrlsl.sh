@@ -20,36 +20,13 @@ set -euvx
 
 start_date=${yyyy}${st}
 header=cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${start_date}0100
-if [ -f ${check_tar_done} ]
-then
-   body="CERISE: tar_CERISE already done for ${start_date}. Exiting from $DIR_C3S/tar_CERISE.sh now"
-   title="[CERISE] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-#   exit
-fi
 
-CERISEtable=/data/cmcc/cp1/temporary/CERISE_table/CERISE_vars.txt
-#
-{
-while IFS=, read -r line
-do 
-    var_array+=("$line")
-done } < $CERISEtable
-
-dim=`ls $WORK_CERISE_final/$start_date/*r01i00p00.nc|wc -l`
-listavar=`ls $WORK_CERISE_final/$start_date/*r01i00p00.nc|rev|cut -d '_' -f2|rev`
-if [ $dim -ne $nfieldsC3S ]
-then
-   echo "!!!!!!!!!!!!!!!!!!!!!"
-   echo "you are postprocessing only $dim variables instead of the $nfieldsC3S ones"
-   echo "check it beforegoing on and comment these lines"
-   echo "!!!!!!!!!!!!!!!!!!!!!"
-   exit
-fi
+dim=`ls $WORK_CERISE_final/$start_date/*6hr*mrlsl*r01i00p00.nc|wc -l`
+listavar=`ls $WORK_CERISE_final/$start_date/*6hr*mrlsl*r01i00p00.nc|rev|cut -d '_' -f2|rev`
 cd $WORK_CERISE_final/${start_date}
 
 listatocheck=""
-for var in ${listavar}
+for var in mrlsl
 do
    listafiles=""
    echo $var
@@ -86,64 +63,32 @@ fi
 #  CHEKC THAT ALL NEEDED MEMBERS ARE THERE
 #----------------------------
 
-if [ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]
+if [ `ls $listatocheck |wc -l` -ne $nrunC3Sfore ]
 then
-    body="CERISE: $DIR_C3S/tar_CERISE.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_CERISE_final/${start_date}"
+    body="CERISE: $DIR_C3S/tar_CERISE_phase2_mrlsl.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_CERISE_final/${start_date}"
     title="[CERISE] ${CPSSYS} $typeofrun ERROR"
     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date 
     exit 2
 fi
 #
 
-# nel caso in cui change_realization.sh e' ridondante
-listatocheck=" "
-for var in "${var_array[@]}"
-do
-  listatocheck+=" `ls ${header}_*_${var}_*.nc |head -n $nrunC3Sfore`"
-done
-
 pushdir_hc=${pushdir}/${start_date} 
 mkdir -p ${pushdir_hc}
 
 #
-#----------------------------------------------
-# CHECK THE TIME LENGTH OF EACH FILE
-#----------------------------------------------
-
-
-isdaily=`ls $listatocheck|grep day |wc -l`
-if [[ $isdaily -ne 0 ]]  
-then
-   daily=`ls $listatocheck|grep day`
-
-   for file in $daily
-   do
-      echo $file
-      nstep=`cdo -ntime $file`
-      if [ $nstep -ne $fixsimdays ]
-      then
-          body="CERISE: $DIR_C3S/tar_CERISE.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
-          title="[CERISE] ${CPSSYS} forecast ERROR"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
-          exit 1
-      else
-         echo "number of days in file $nstep correct"
-      fi
-   done
-fi
 
 islista6hrly=`ls $listatocheck|grep 6hr |wc -l`
 if [[ $islista6hrly -ne 0 ]]
 then
 
-  lista6hrly=`ls $listatocheck|grep 6hr`
+  lista6hrly=`ls $listatocheck|grep 6hr|grep -v sha`
   n6hr=`expr $fixsimdays \* 4`
   for file in ${lista6hrly}
   do
      nstep=`cdo -ntime $file`
      if [ $n6hr -ne $nstep ]
      then
-        body="CERISE: $DIR_C3S/tar_CERISE.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+        body="CERISE: $DIR_C3S/tar_CERISE_phase2_mrlsl.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
         title="[CERISE] ${CPSSYS} forecast ERROR"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
         exit 1
@@ -153,24 +98,6 @@ then
   done
 fi
 
-islista12hrly=`ls $listatocheck|grep 12hr |wc -l`
-if [[ $islista12hrly -ne 0 ]] ; then
-   lista12hrly=`ls $listatocheck|grep 12hr`
-   n12hr=`expr $fixsimdays \* 2`
-   for file in ${lista12hrly}
-   do
-      nstep=`cdo -ntime $file`
-      if [ $n12hr -ne $nstep ]
-      then
-         body="CERISE: $DIR_C3S/tar_CERISE.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
-         title="[CERISE] ${CPSSYS} forecast ERROR"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
-         exit 1
-      else
-         echo "number of timesteps in file $nstep correct"
-      fi
-   done
-fi
 #
 #----------------------------------------------
 # PRODUCE SHA256 not required by CERISE
@@ -195,12 +122,8 @@ NUMB_CHECK=`expr $nrunC3Sfore + $nrunC3Sfore` # for each field we have the .nc f
 #----------------------------------------------
 echo "NOW PRODUCE  CHECK NUMBER OF FILES AND sha256 AND DO .tar"
 #echo "NOW PRODUCE  CHECK NUMBER OF FILES AND DO .tar"
-for var in "${var_array[@]}"
+for var in mrlsl
 do
-   if [[ $var == "hus" ]] || [[ $var == "ta" ]] || [[  $var == "ua" ]] || [[  $var == "va" ]] || [[  $var == "wap" ]] || [[  $var == "zg" ]]
-   then
-      continue
-   fi
 #controllare! non e' precisissima...
    NUMB_FOUND=`ls -1 ${header}*_${var}_*sha256 | wc -l`
    if [ $((${NUMB_FOUND} * 2)) -eq ${NUMB_CHECK} ] ; then
@@ -215,7 +138,7 @@ do
      done
      if [ `echo $listafile2tar|wc -w` -ne  $(($nrunC3Sfore * 2)) ]
      then
-         body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $nrunC3Sfore found `echo $listafile2tar|wc -w` in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+         body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE_phase2_mrlsl.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $nrunC3Sfore found `echo $listafile2tar|wc -w` in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
          title="[CERISE] ${CPSSYS} $typeofrun ERROR"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
          exit 3
@@ -232,7 +155,7 @@ do
      fi
 
    else
-      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE_phase2_mrlsl.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
       title="[CERISE] ${CPSSYS} $typeofrun ERROR"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s ${yyyy}${st}
       exit
@@ -274,7 +197,7 @@ do
          #FOR SPS4 HINDCAST WE STOP HERE - 30 members in hindcast mode       
   
    else
-      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
+      body="CERISE: standardisation error in script $DIR_C3S/tar_CERISE_phase2_mrlsl.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_CERISE_final/${start_date}. See log $DIR_LOG/$start_date/tar_CERISE..."
       title="[CERISE] ${CPSSYS} $typeofrun ERROR"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
       exit
@@ -282,11 +205,12 @@ do
 done  #end loop on var_array3d
 
 #check if everything is ok inside the tarfiles
+CERISEtable=/data/cmcc/cp1/temporary/CERISE_table/CERISE_vars.txt
 $DIR_C3S/check_tarCERISE_phase2.sh $yyyy $st $CERISEtable
 stat=$?
 if [ $stat -eq 0 ]
 then
-   body="CERISE: $DIR_LOG/tar_CERISE.sh completed for ${start_date}."
+   body="CERISE: $DIR_LOG/tar_CERISE_phase2_mrlsl.sh completed for ${start_date}."
    title="[CERISE] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    touch ${check_tar_done}

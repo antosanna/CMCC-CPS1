@@ -24,8 +24,8 @@ nmaxsubmit=50
 nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_CERISE -c yes`
 if [[ $nsubmit -eq $nmaxsubmit ]]
 then
-    echo "already $nmaxsubmit postproc on the queue, exiting now"
-    exit
+echo "already $nmaxsubmit postproc on the queue, exiting now"
+exit
 fi
 touch ${flag_running}
 cd $DIR_ARCHIVE/
@@ -38,11 +38,12 @@ cd $DIR_ARCHIVE/
 #listofcases="sps4_201702_017"
 #listofcases="sps4_200605_023"
 #listofcases="sps4_200611_009"
-listofcases="sps4_200511_006"
+#listofcases="sps4_200511_006"
+listofcases="sps4_200405_019"
 for caso in $listofcases
 do
-   yyyy=`echo $caso |cut -d '_' -f2|cut -c 1-4`
-   st=`echo $caso |cut -d '_' -f2|cut -c 5-6`
+yyyy=`echo $caso |cut -d '_' -f2|cut -c 1-4`
+st=`echo $caso |cut -d '_' -f2|cut -c 5-6`
    
    list_not_completed=""
    list_done_on_juno=""

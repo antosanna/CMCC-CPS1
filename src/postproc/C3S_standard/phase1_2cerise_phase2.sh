@@ -22,13 +22,12 @@ set +euvx
 set -euvx
 
 GCM_name1=${GCM_name}-v${versionSPS}
-GCM_name2=${GCM_name1}-demonstrator2
+GCM_name2=CERISE-${GCM_name}-demonstrator2-v${versionSPS}
 
 term_phase1=cmcc_CERISE-${GCM_name1}_${typeofrun}_S${yyyy}${st}0100
 
 
 mkdir -p $WORK_CERISE/$yyyy$st
-WORK_CERISE_final=$DIR_ARCHIVE/CERISE_phase2_final
 
 mkdir -p $FINALDIR
 
@@ -47,4 +46,3 @@ do
       ncatted -a valid_max,sftlf,o,c,1 $FINALDIR/$newff
    fi
 done
-

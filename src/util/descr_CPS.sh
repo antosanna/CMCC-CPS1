@@ -45,7 +45,6 @@ then
    envcondarclone=rclone_CPS1
    refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
    refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
-   envcondarclone=rclone_gdrive
    envcondaqachecker=qachecker
 elif [[ "$machine" == "juno" ]]
 then
@@ -226,6 +225,7 @@ then
 elif [[ "$machine" == "leonardo" ]]
 then
    env_workflow_tag=leonardo
+   envcondacm3=/users_home/cmcc/cp1/.conda/envs/cmcc-cm_sps4
 #moved to .bashrc
    if [[ $account_name == "CMCC_reforeca" ]]
    then

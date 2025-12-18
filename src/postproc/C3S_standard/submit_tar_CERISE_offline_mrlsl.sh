@@ -1,8 +1,8 @@
 #!/bin/sh -l 
 #BSUB -q s_medium
-#BSUB -J submit_tar_CERISE_phase2offline
-#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_%J.err
-#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_%J.out
+#BSUB -J submit_tar_CERISE_phase2offline_mrlsl
+#BSUB -e /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_mrlsl_%J.err
+#BSUB -o /work/cmcc/cp2/CPS/CMCC-CPS1/logs/hindcast/submit_tar_CERISEphase2_mrlsl_%J.out
 #BSUB -P 0575
 #BSUB -M 1000
 
@@ -14,23 +14,14 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=08 # startdate
+st=02 # startdate
 onlycheckfileok=0  #if 0 does tar_CERISE
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
-CERISEtable=/data/cmcc/cp1/temporary/CERISE_table/CERISE_vars.txt
-#
-{
-while IFS=, read -r line
-do
-   var_array+=("$line")
-done } < $CERISEtable
-#var_array3d=(hus ta ua va zg wp)
-echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
 #for yyyy in  `seq $iniy_hind $endy_hind`
-for yyyy in  2008
+for yyyy in  2003
 do
   
   startdate=$yyyy$st
@@ -54,8 +45,8 @@ do
   set -uexv
 
   cd ${outdirC3S}
-  allC3Sfiles=`ls ${outdirC3S}/cmcc*.nc|wc -l`
-  if [ $allC3Sfiles -ge $(($nfieldsC3S * $nrunC3Sfore)) ]
+  allC3Sfiles=`ls ${outdirC3S}/cmcc*6hr*mrlsl*.nc|wc -l`
+  if [ $allC3Sfiles -ge $nrunC3Sfore ]
   then
   # check that no job are running for the startdate
         input="$yyyy $st"
@@ -64,7 +55,7 @@ do
         if [ $onlycheckfileok -eq 0 ]
         then 
            echo "Submitting tar_CERISE_phase2 for $startdate"     
-           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_phase2_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE_phase2.sh -i "$input"
+           $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -M 5000 -j tar_CERISE_phase2_mrlsl_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s tar_CERISE_phase2_mrlsl.sh -i "$input"
         fi    
   else
      body="MISSING FILES FOR STARTDATE $startdate"
@@ -73,16 +64,16 @@ do
   
   # checker files
   # all C3S files
-     if [ $allC3Sfiles -ne $(($nfieldsC3S * $nrunC3Sfore)) ]
+     if [ $allC3Sfiles -ne $nrunC3Sfore ]
      then
-       echo "files $allC3Sfiles expected $(($nfieldsC3S * $nrunC3Sfore)) "
+       echo "files $allC3Sfiles expected $nrunC3Sfore "
        for i in `seq -w 01 $nrunC3Sfore`
        do
            missing=" "
-           for var in ${var_array[@]}
+           for var in mrlsl
            do
               nf=0
-              nf=`ls $WORK_CERISE/$startdate/cmcc*${var}_*r${i}i00p00.nc|wc -l`
+              nf=`ls $WORK_CERISE/$startdate/cmcc*6hr*${var}_*r${i}i00p00.nc|wc -l`
               if [ $nf -ne 1 ]
               then
                 missing+=" $var"
