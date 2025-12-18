@@ -31,7 +31,7 @@ cat > $lftp_cmd << EOF
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls *S${yyyy}${st}*|grep hindcast
 quit
 EOF
 lftp -f $lftp_cmd |tee $log_lftp

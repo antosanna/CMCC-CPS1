@@ -160,7 +160,7 @@ listaofsha=`ls -1 *S${yyyy}${st}0100*.sha256`
 #
 for file in ${listaofsha}
 do
-   cat $file >> cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate}
+   cat $file >> cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate}
 done
 
 # AT LAST SEND manifest TO acquisition.ecmwf.int ;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
@@ -180,7 +180,7 @@ fi
 
 # Verify that all files are present in push logs (manifest included)
 cd $DIR_LOG/$typeofrun/$yyyy$st
-cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
+cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
 
 if [ $cntmanifest -gt 1 ]; then
    # Raise error
@@ -210,7 +210,7 @@ if [ $cntmanifest -lt 1 ]; then
       check_status $stat "mirroring manifest"
    fi
 fi
-cntmanifest=`grep cmcc_CERISE-${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
+cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
 if [ $cntmanifest -ne 1 ]; then
    # Raise error
    title=${title_debug}"[CERISE] ${SPSSystem} ERROR"

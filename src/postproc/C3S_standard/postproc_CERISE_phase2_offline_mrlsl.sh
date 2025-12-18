@@ -9,7 +9,9 @@
 
 set -evxu
 
-caso=$2
+for ens in {001..025}
+do 
+   caso=sps4_200302_${ens}
 # only in this special case DIR_CASES must be redefined for it can be different
 # for the different machines the case could have been done on.
 dir_cases=$DIR_CASES
@@ -66,6 +68,7 @@ mkdir -p ${wkdir_clm}
        ${DIR_UTIL}/submitcommand.sh -p create_clm_files2_${ft}_${caso} -m $machine -q $parallelq_l -M ${req_mem} -S qos_resv -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm_CERISE_mrlsl.sh -i "$input"
    done
 
+done
 echo "Done."
 
 exit 0

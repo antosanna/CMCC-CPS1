@@ -50,7 +50,7 @@ then
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
       cat > $script_send << EOF
 set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
+set xfer:log-file "$SCRATCHDIR/${logfile}"
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
@@ -61,7 +61,7 @@ EOF
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
       cat > $script_send << EOF
 set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
+set xfer:log-file "$SCRATCHDIR/${logfile}"
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
@@ -77,7 +77,7 @@ then
       script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp
       cat > $script_send << EOF
 set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
+set xfer:log-file "$SCRATCHDIR/${logfile}"
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1

@@ -14,7 +14,7 @@ set -eu
 # ----------------------------------------------------------
 # Start here
 # ----------------------------------------------------------
-st=05 # startdate
+st=08 # startdate
 onlycheckfileok=0  #if 0 does tar_CERISE
                    #if 1 only check that everything is ready
 # ----------------------------------------------------------
@@ -30,7 +30,7 @@ echo ${var_array[@]}
 # - MAIN LOOP ------------------------------------------------------
 submit_list=" "
 #for yyyy in  `seq $iniy_hind $endy_hind`
-for yyyy in  2019
+for yyyy in  2008
 do
   
   startdate=$yyyy$st
