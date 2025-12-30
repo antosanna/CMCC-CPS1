@@ -38,6 +38,14 @@ firstdtn03=$5
 
 list2rm=""
 log_script=ls_S${yyyy}${st}.log
+# complete path $DIR_LOG/$typeofrun/$yyyy$st/$log_script
+# the file without date is the last one
+if [[ -f $DIR_LOG/$typeofrun/$yyyy$st/$log_script ]]
+then
+# if a previous log_script exists add a suffix with date
+   mv $DIR_LOG/$typeofrun/$yyyy$st/$log_script $DIR_LOG/$typeofrun/$yyyy$st/${log_script}.`date +%Y%m%d%H%M%s`
+fi
+
 if [[ $dbg_push -ge 1 ]]
 then
    log_script=ls_S${yyyy}${st}_cmcc.log
@@ -60,14 +68,7 @@ title="${title_debug} [C3S] ${SPSSystem} forecast notification"
 
 body="push4ECMWF.sh for startdate $yyyy$st started `date` "
 
-if [[ "$machine" == "juno" ]]
-then
-   cmd_cntfirst="ls $firstdtn03 |wc -l "
-elif [[ "$machine" == "leonardo" ]]
-then
-   #module load profile/advanced autoload lftp
-   cmd_cntfirst="ls $firstdtn03 |wc -l "
-fi
+cmd_cntfirst="ls $firstdtn03 |wc -l "
 cntfirst=`eval $cmd_cntfirst`
 if [[ $cntfirst -eq 1 ]]
 then
@@ -75,13 +76,26 @@ then
 fi
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
 
+# check if manifest has already been sent and if so exit
+if [[ $cntfirst -eq 1 ]]
+then
+# from the second launch it checks if there are still appended processes
+   cd $DIR_LOG/$typeofrun/$yyyy$st
+
+   $DIR_C3S/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
+   cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
+   if [[ $cntmanifest -eq 1 ]]
+   then
+      touch $filedone
+      exit 0
+   fi
+fi
+
 start_date=$yyyy$st
 cd $pushdir/$start_date
 #
 # Check if there is some old manifest file and remove
-set +euvx
 nf=`ls -1 $pushdir/$yyyy$st/cmcc*manifest*txt | wc -l`
-set -euvx
 if [[ $nf -ne 0 ]] ; then
    rm $pushdir/$yyyy$st/cmcc*manifest*txt
 fi
@@ -91,22 +105,12 @@ fi
 ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d)) #1 per 2d var e 5 per 3d var=136 in hindcast and 146 in forecast
 ntarandsha=$((ntar * 2))
 
-cntfirst=`eval $cmd_cntfirst`
 if [[ $cntfirst -eq 1 ]]
 then
 # from the second launch it checks if there are still appended processes 
+   cd $DIR_LOG/$typeofrun/$yyyy$st
    
-   if [[ "$machine" == "juno" ]]
-   then
-      $DIR_C3S/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
-      stat=$?
-      check_status $stat ${DIR_C3S}/ls_ftp_ecmwf.sh 
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      ${DIR_C3S}/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
-      stat=$?
-      check_status $stat ${DIR_C3S}/ls_ftp_ecmwf.sh 
-   fi
+   ${DIR_C3S}/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
 # NOW CHECK DIMS
 # do check dimensions of transferred files
    cd $pushdir/$yyyy$st
@@ -129,16 +133,7 @@ original dimension $localdim, transferred dimension $remotedim. check it"
 #  eseguire la rimozione di $list2rm sul sito ftp
    if [[ `echo $list2rm |wc -w` -ne 0 ]]
    then
-      if [[ "$machine" == "juno" ]]
-      then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine ${typeofrun}
-         stat=$?
-      elif [[ "$machine" == "leonardo" ]]
-      then
-         ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine ${typeofrun}
-         stat=$?
-      fi
-      check_status $stat ${DIR_C3S}/rm_ftp_ecmwf.sh
+      ${DIR_C3S}/rm_ftp_ecmwf.sh $yyyy $st $mymail "$list2rm" $dbg_push $machine ${typeofrun}
    fi
 fi
 # do the first send with mirror;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
@@ -146,30 +141,14 @@ fi
 # e ricomincia da capo
 input4send="$yyyy $st $mymail $typeofrun $ntarandsha $firstdtn03 $dbg_push $log_script $machine $pushdir"
 
-if [[ "$machine" == "juno" ]]
-then
-   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-   stat=$?
-   check_status $stat "send_to_ecmwf.sh"
-elif [[ "$machine" == "leonardo" ]]
-then
-   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-   stat=$?
-   check_status $stat "send_to_ecmwf.sh"
-fi
+${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
 
 
 # Check if the files pushed are as expected
 nline=`cat $DIR_LOG/$typeofrun/$yyyy$st/${log_script} | wc -l`
 if [[ $nline -lt $ntarandsha ]] ; then
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
-   then
-      body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
-   fi
+   body="send_to_ecmwf.sh ($DIR_C3S): $nline file sent instead of the $ntarandsha expected"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 fi
@@ -177,78 +156,46 @@ fi
 
 echo `pwd`
 suffixdate=`date +%Y%m%d`"_"`date +%H%M%S`".txt"
+manifest_root=cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_
 listaofsha=`ls -1 *S${yyyy}${st}0100*.sha256`
 #
 for file in ${listaofsha}
 do
-   cat $file >> cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate}
+   cat $file >> ${manifest_root}$suffixdate
 done
 
 
 # AT LAST SEND manifest TO acquisition.ecmwf.int ;send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
 #sh send_to_ecmwf.sh $yyyy $st $mymail $typeofrun AGGIUNTO IN INPUT ntarandsha (qui solo il manifest file conclusivo)
 ntarandsha=1
-if [[ "$machine" == "juno" ]]
-then
-   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-   stat=$?
-   check_status $stat "mirroring manifest"
-elif [[ "$machine" == "leonardo" ]]
-then
-   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-   stat=$?
-   check_status $stat "mirroring manifest"
-fi
+input4send="$yyyy $st $mymail $typeofrun $ntarandsha $firstdtn03 $dbg_push $log_script $machine $pushdir"
+${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
 
 # Verify that all files are present in push logs (manifest included)
 cd $DIR_LOG/$typeofrun/$yyyy$st
-cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
+cntmanifest=`grep ${manifest_root} $log_script|wc -l`
 
 if [[ $cntmanifest -gt 1 ]]; then
    # Raise error
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
-   then
-      body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected" 
-   fi  
+   body="send_to_ecmwf (${DIR_C3S}): more than 1 manifest file in $DIR_LOG/$typeofrun/$yyyy$st instead of the 1 expected"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 fi
 
 if [[ $cntmanifest -lt 1 ]]; then
 # last attempt to send manifest TO acquisition.ecmwf.int; send_to_ecmwf.`date +%Y%m%d%H%M%S`.log will be output in dtn03
-   if [[ "$machine" == "juno" ]]
-   then
-      ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-      stat=$?
-      check_status $stat "mirroring manifest" 
-# Verify that all files are present in push logs (manifest included)
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
-      stat=$?
-      check_status $stat "mirroring manifest" 
-   fi
-
-
+   ${DIR_C3S}/send_to_ecmwf.sh $input4send| tee $DIR_LOG/$typeofrun/$yyyy$st/send_to_ecmwf.`date +%Y%m%d%H%M%S`.log
 fi
-cntmanifest=`grep cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_${suffixdate} $log_script|wc -l`
+cntmanifest=`grep ${manifest_root}${suffixdate} $log_script|wc -l`
 if [[ $cntmanifest -ne 1 ]]; then
    # Raise error
    title=${title_debug}"[C3S] ${SPSSystem} ERROR"
-   if [[ "$machine" == "juno" ]]
-   then
-      body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
-   fi
+   body="send_to_ecmwf.sh  (${DIR_C3S}): $cntmanifest manifest file sent instead of the 1 expected" 
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
    exit 1
 else
+# Verify that all files are present in push logs (manifest included)
 # do check dimensions of transferred files
    cd $pushdir/$yyyy$st
    listafiles=`ls *tar *sha256 *txt`
@@ -289,13 +236,7 @@ Many thanks for your cooperation \n
 CMCC-SPS staff\n"
 
 
-if [[ "$machine" == "juno" ]]
-then
-   checkpushdone=`ls ${filedone} | wc -l`
-elif [[ "$machine" == "leonardo" ]]
-then
-   checkpushdone=`ls ${filedone} | wc -l`
-fi
+checkpushdone=`ls ${filedone} | wc -l`
 if [[ $checkpushdone -eq 1 ]]; then
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
    touch $filedone

@@ -31,11 +31,21 @@ fi
 
 yyIC=`date -d $bkdate +%Y`
 mmIC=`date -d $bkdate +%m`
-st=`date -d $yyIC$mmIC'01 + 1 month' +%m`
-yyyy=`date -d $yyIC$mmIC'01 + 1 month' +%Y`
 set +evxu
 . $DIR_UTIL/descr_ensemble.sh $yyIC 
 set -evxu
+st=`date -d $yyIC$mmIC'01 + 1 month' +%m`
+yyyy=`date -d $yyIC$mmIC'01 + 1 month' +%Y`
+
+while `true`
+do
+   np=`${DIR_UTIL}/findjobs.sh -m $machine -n OPSLAMB -c yes` 
+   if [[ $np -eq 0 ]]
+   then
+      break
+   fi  
+   sleep 600 
+done
 
 flagdir=$MYCESMDATAROOT/temporary/${typeofrun}/${yyyy}${st}/backup
 mkdir -p $flagdir

@@ -35,7 +35,7 @@ if [ $dbg_push -eq 1 ] ; then
    REMOTE_DIR="DATA/CMCC_C3S/test/${yyseas}${sss}"
 else
    user="ftp_cmcc"
-   hostname="210.98.49.14"
+   hostname="210.98.49.15"
    REMOTE_DIR="/apccdata01/CMCC/${yyseas}${sss}"
    option_connect='~/.ssh/apcc_14_ftp_cmcc.key -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oport=21322'
 fi
