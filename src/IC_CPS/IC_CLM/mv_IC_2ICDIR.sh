@@ -73,7 +73,7 @@ if [[ $ifbackup -eq 0 ]] ; then
 else
    title="[CLMIC-backup] ${CPSSYS} ${typeofrun} notification"
 fi
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yy$st
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
 
 touch ${check_mv}
 exit 0
