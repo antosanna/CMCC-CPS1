@@ -46,7 +46,7 @@ done
 # ok, now check for special characters in message and remove them (retain only . _ - () \n \r)
 # "\\\" means that we save character \ in order to retain \n
 #set -vx
-message=`echo $message | tr -dc "'[:alnum:](-:. /_)\\\\\\\\"`
+message=`echo $message | tr -dc "'[:alnum:](-:. /_)=?\\\\\\\\"`
 # After new method with  echo -e "$message \n `date`", there is no need for ()substitution
 # substitute () with \( \)
 #message=`echo $message |  sed 's/(/\\\(/g' `

@@ -12,7 +12,7 @@
 . ${DIR_UTIL}/load_cdo
 . ${DIR_UTIL}/load_nco
 . ${DIR_UTIL}/load_ncl
-. ${DIR_UTIL}/load_convert
+#. ${DIR_UTIL}/load_convert
 
 if [[ $machine == "juno" ]]
 then
@@ -101,10 +101,14 @@ do
       exit
    fi
 done
+$DIR_ATM_IC/Uprofile.sh $st $yyyy $DIR_ATM_IC/ncl $fileokU $dirplots/Uprofile_${yyyy}${st}
+
+set +euvx
+. ${DIR_UTIL}/load_convert
+set -euvx
 convert $dirplots/?500*${obs}*png $dirplots/500hPa_IC_vs_${obs}_${yyyy}$st.pdf
 convert $dirplots/?10*${obs}*png $dirplots/10hPa_IC_vs_${obs}_${yyyy}$st.pdf
 
-$DIR_ATM_IC/Uprofile.sh $st $yyyy $DIR_ATM_IC/ncl $fileokU $dirplots/Uprofile_${yyyy}${st}
 
 if [ ! -f $fileokU ]
 then
@@ -121,7 +125,7 @@ for fplot in $listafile
 do
    rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
 done
-conda deactivate $envcondarclone
+#conda deactivate $envcondarclone
 title="[CAMIC] ${CPSSYS} forecast notification"
 body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the initialization fields for CAM.\n
 Comparison between 500hPa $obs and CAM ICs for ${yyyy}${st} start-date.\n
