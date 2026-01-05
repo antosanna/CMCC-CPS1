@@ -23,10 +23,18 @@ fi
 # check if there is another job submitted by crontab with the same name
 if [[ -f $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted ]]
 then
-   title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
-   body="FORECAST already submitted. If you really want to resubmit first remove $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-   exit 0
+   jobrunning=`${DIR_UTIL}/findjobs.sh -m $machine -n ${yyyy}${st} -N ${SPSSystem} -c yes`
+   if [[ ${jobrunning} -eq 0 ]] ; then
+      title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
+      body="FORECAST already submitted but there are no jobs running. If you really want to resubmit first remove $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+      exit 0
+   else
+      title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
+      body="FORECAST already submitted. If you really want to resubmit first remove $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted" 
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      exit 0
+   fi
 fi
 
 touch $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted
@@ -269,9 +277,9 @@ set -e
   # if $maxnumbertosubmit already running exit
   # this control does not count the cases still in the create_caso phase
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
-     
      if [[ ${cnt_sleep} -eq 10 ]] ; then
-        sleep 1800
+        #sleep 1800
+        sleep 1200
         cnt_sleep=0
      fi
      if [ $np_all -ge $maxnumbertosubmit ]

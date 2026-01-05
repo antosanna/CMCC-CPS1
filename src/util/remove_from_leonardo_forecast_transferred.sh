@@ -42,10 +42,12 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 set -euvx
 echo "GOING TO REMOVE THE FOLLOWING"
 echo $listacasi
-
-for caso in $listacasi ; do
-
- if [[ -f ${DIR_ARCHIVE}/$caso.transfer_from_Leonardo_DONE ]] ; then
+yyyy=`date +%Y`
+st=`date +%m`
+if [[ `ls ${DIR_ARCHIVE}/sps4_${yyyy}${st}_0??.transfer_from_Leonardo_DONE |wc -l` -ge 50 ]] 
+then
+  for ens in `seq -w 001 054` ; do
+    caso=sps4_${yyyy}${st}_${ens}
     if [[ -d ${DIR_ARCHIVE}/$caso ]]; then
         echo $caso   
         chmod -R u+wrx ${DIR_ARCHIVE}/$caso
@@ -53,12 +55,11 @@ for caso in $listacasi ; do
 #    else
 #       echo "$caso already removed"
 #       exit
-    fi
-    if [[ -d ${WORK_CPS}/$caso ]]
-    then
-       rm -r ${WORK_CPS}/$caso
-    fi
-  fi
-
-done
-echo "Succesfully removed $listacasi"
+     fi
+     if [[ -d ${WORK_CPS}/$caso ]]
+     then
+         rm -r ${WORK_CPS}/$caso
+     fi
+  done
+fi
+echo "Succesfully removed cases for forecast $yyyy$st"

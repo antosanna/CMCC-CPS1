@@ -157,7 +157,13 @@ if [[ $yyyy$st -eq 201501 ]]
 then   
    echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
 fi
-
+#in forecast mode CLM ICs comes from an interrupted run covering the previous month
+#so, for january the CLM IC report a date from december of the previous year.
+#this happens as we produce the IC on the 1st of the month - due to the latency of the EDA data
+if [[ ${st} -eq 01 ]] && [[ $typeofrun == "forecast" ]]
+then
+    echo "check_finidat_year_consistency = .false. " >> $DIR_CASES/$caso/user_nl_clm
+fi
 
 cp $DIR_TEMPL/user_nl_hydros $DIR_CASES/$caso
 #----------------------------------------------------------

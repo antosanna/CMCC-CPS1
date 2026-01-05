@@ -15,7 +15,6 @@ set -euxv
 dbg=1
 # to run in dbg mode you must provide $WORK_CPS/archive/$caso/rest
 # and $WORK_CPS/archive/$caso/atm/hist
-
 today=`date +%d`
 if [ `whoami` == "$operational_user" ] 
 then
@@ -178,6 +177,7 @@ set -euvx
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    body="Diagnostics for first month completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} first month runtime diags completed"
+                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
@@ -234,6 +234,7 @@ set -euvx
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    body="Diagnostics for lead 0 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} lead 0 runtime diags completed"
+                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
@@ -291,6 +292,7 @@ set -euvx
                    rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
                    body="Diagnostics for lead 1 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
                    title="${CPSSYS} lead 1 runtime diags completed"
+                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else

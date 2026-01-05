@@ -148,6 +148,14 @@ then
    echo "first input should be dbg=0/1/2"
    exit
 fi
+
+if [[ $typeofrun == "forecast" ]] && [[ -f $DIR_LOG/$typeofrun/${yyyy}${st}/FORECAST_COMPLETED ]]
+then
+  echo "50 members for forecast $yyyy$st completed, exiting now."
+  exit 0
+fi
+
+
 #now the script runs from crontab with submitcommand.sh
 echo "SPANNING $listofcases"
 
