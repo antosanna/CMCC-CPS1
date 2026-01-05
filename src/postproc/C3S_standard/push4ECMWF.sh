@@ -83,7 +83,9 @@ then
    cd $DIR_LOG/$typeofrun/$yyyy$st
 
    $DIR_C3S/ls_ftp_ecmwf.sh $yyyy $st $mymail $typeofrun $dbg_push $log_script $machine
-   cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
+   manifest_root=cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_   
+   cntmanifest=`grep ${manifest_root} $log_script|wc -l`
+   #cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
    if [[ $cntmanifest -eq 1 ]]
    then
       touch $filedone
