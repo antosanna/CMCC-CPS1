@@ -77,7 +77,7 @@ then
    for ft in $filetyp ; do
 
        case $ft in
-           h1) mult=1 ; req_mem=5000 ;;
+           h1) mult=1 ; req_mem=12000 ;;
            h2) mult=4 ; req_mem=20000 ;;
            h3) mult=1 ; req_mem=600;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac

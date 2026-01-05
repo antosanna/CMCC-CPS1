@@ -36,6 +36,7 @@ cd ${WORK_C3S}/$startdate
 # here kill every process with start-date $startdate except this job
 jobIDthisJOB=`${DIR_UTIL}/findjobs.sh -m $machine -N submit_tar_C3S$startdate -i yes`
 jobIDall=`${DIR_UTIL}/findjobs.sh -m $machine -N $startdate  -i yes`
+jobcopy=`${DIR_UTIL}/findjobs.sh -m $machine -N copy_SPS4Forecast -i yes`
 set +e    #this is necessary because the job can be ended 
 for jobID in $jobIDall
 do
@@ -45,6 +46,12 @@ do
     fi
     $DIR_UTIL/killjobs.sh -m $machine -i $jobID
 done
+#killing also copy of DMO from Leonardo, in order to avoid issues during renumbering
+for jobID in $jobcopy
+do
+   $DIR_UTIL/killjobs.sh -m $machine -i $jobID
+done
+
 set -euvx
 
 #TEMPORARY COMMENTED

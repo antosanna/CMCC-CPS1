@@ -278,8 +278,7 @@ set -e
   # this control does not count the cases still in the create_caso phase
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
      if [[ ${cnt_sleep} -eq 10 ]] ; then
-        #sleep 1800
-        sleep 1200
+        sleep 1800
         cnt_sleep=0
      fi
      if [ $np_all -ge $maxnumbertosubmit ]

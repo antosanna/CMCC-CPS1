@@ -24,6 +24,12 @@ st=`date +%m`
 leo_dir=/leonardo_work/CMCC_2025/CMCC-CM/archive/
 leo_dir_CASES=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/cases
 leo_dir_temp=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
+#if submit_tarC3S started, stop the copy from Leonardo to avoid issues with renumbering
+if [[ -f ${DIR_LOG}/forecast/${yyyy}${st}/submit_tar_C3S_${yyyy}${st}_started ]] ; then
+   echo "submit_tarC3S started, no extra cases to be copied. Exiting now."
+   exit 0
+fi
+
 # get the list of completed cases (produced daily in cron on Leonardo)
 
 outdir=${SCRATCHDIR}/Leonardo_transfer_${yyyy}${st}
