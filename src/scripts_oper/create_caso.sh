@@ -51,13 +51,7 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # refcase changes with scenario but the executable must not
 set +euvx
-#20251031 - some problem with new refcase - getting back to the old one
-if [[ $machine == "leonardo" ]]
-then
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
-else
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
-fi
+$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
 
 set -euvx
 #----------------------------------------------------------
@@ -69,20 +63,16 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso TO DO
 #----------------------------------------------------------
 
+rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 if [[ $machine == "leonardo" ]]
 then
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_${account_name} $DIR_CASES/$caso/env_workflow.xml
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 else
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
    if [[ $flag_dev -eq 1 ]]
    then
 # this one submit without SC
       rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_noSC $DIR_CASES/$caso/env_workflow.xml
    fi
-#   if [[ $machine == "juno" ]]
-#   then
-#      rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
-#   fi  
 fi
 
 rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
@@ -94,6 +84,7 @@ rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batc
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
 rsync -av $DIR_TEMPL/file_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
+rsync -av $DIR_TEMPL/field_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 # IC_NEMO_CPS_DIR and IC_CICE_CPS_DIR will contain physical fields
