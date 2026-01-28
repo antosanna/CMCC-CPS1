@@ -67,3 +67,4 @@ if [[ $stat -eq 1 ]]; then
    exit 1
 fi        
 touch ${script}_${datestr}_DONE
+mv $script ${script}_${datestr}

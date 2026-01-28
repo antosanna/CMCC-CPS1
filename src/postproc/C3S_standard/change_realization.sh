@@ -175,7 +175,9 @@ then
             dir=rest
             cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/
             gunzip 20??-??-01-00000.tar.gz
-            tar -xvf 20??-??-01-00000.tar
+            tarfile=`ls 20??-??-01-00000.tar`
+            tar -xvf $tarfile
+            rm $tarfile
             cd ${DIR_ARCHIVE}/$caso_tobecome/$dir/????-??-01-00000
             dirflag=$DIR_LOG/$typeofrun/${yyyy}${st}/change_realization/${caso2change}_${caso_tobecome}_${dir}_done1
             if [[ ! -f $dirflag ]]
@@ -198,6 +200,11 @@ then
                   keepname=`echo $file|cut -d '_' -f4-`
                   mv $file ${caso_tobecome}_${keepname}
                done
+               cd $DIR_ARCHIVE/$caso/rest
+               datarest=`echo $tarfile |cut -d '.' -f1`
+               tar -cvf $tarfile $datarest/*
+               gzip $tarfile
+               rm -rf $datarest
                touch $dirflag
             fi
    set +e

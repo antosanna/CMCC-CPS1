@@ -1,0 +1,18 @@
+Parameter values:
+{'input_globs': '', 'indir': '/work/cmcc/cp2/scratch/pyCECT/sps4_05_test300ens_cubicVSppm/testdir', 'tslice': 4, 'nPC': 30, 'sigMul': 0, 'verbose': False, 'minPCFail': 3, 'minRunFail': 2, 'numRunFile': 11, 'popens': False, 'mpas': False, 'cam': True, 'pop': False, 'jsonfile': '', 'mpi_enable': False, 'nbin': 40, 'minrange': 0.0, 'maxrange': 4.0, 'outfile': 'testcase.result', 'casejson': '', 'npick': 10, 'test_failure': True, 'pop_tol': 3.0, 'pop_threshold': 0.9, 'printStdMean': False, 'lev': 0, 'eet': 0, 'json_case': '', 'sumfile': '/users_home/cmcc/cp2/CPS/CMCC-CPS1/src/diagnostics/stat_equiv_test/PyCECT_SPS4/OUTPUT_CPS1/sps4_05_test300ens_cubicVSppm/summary//ens.summary_4.nc', 'web_enabled': False, 'saveResults': False, 'base_year': 1, 'saveEET': ''}
+ 
+--------pyCECT--------
+ 
+Monday, 09. December 2024 03:22PM
+ 
+Ensemble type =  cam
+ 
+Ensemble summary file = /users_home/cmcc/cp2/CPS/CMCC-CPS1/src/diagnostics/stat_equiv_test/PyCECT_SPS4/OUTPUT_CPS1/sps4_05_test300ens_cubicVSppm/summary//ens.summary_4.nc
+ 
+Testcase file directory = /work/cmcc/cp2/scratch/pyCECT/sps4_05_test300ens_cubicVSppm/testdir
+ 
+nPC =  30
+sigMul =  0
+ 
+ 
+ERROR: Summary file name is not valid.

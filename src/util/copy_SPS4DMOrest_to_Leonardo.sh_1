@@ -1,0 +1,32 @@
+#!/bin/sh -l
+#BSUB -J copy_SPS4DMOrest_to_Leonardo1
+#BSUB -q s_download
+#BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMOrest_to_Leonardo_06_hind.out.%J  
+#BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4DMOrest_to_Leonardo_06_hind.err.%J  
+#BSUB -P 0490
+#BSUB -M 1000
+
+. $HOME/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+#load module for sshpass
+module load intel-2021.6.0/sshpass/.1.06-zarp3
+set -uvx
+
+leo_dir=/leonardo_work/CMCC_2025/scratch/restarts4extended
+leo_dir_temp=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
+# get the list of completed cases (produced daily in cron on Leonardo)
+mkdir -p $SCRATCHDIR/extended
+
+lista="sps4_199511_002"
+
+for caso in $lista ; do
+
+   checkfile=$SCRATCHDIR/extended/$caso.rest.transfer_to_Leonardo_DONE
+   if [[ -f $checkfile ]]
+   then
+      continue
+   fi
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" $DIR_ARCHIVE/$caso/rest a07cmc00@dmover3.leonardo.cineca.it:${leo_dir}/$caso/
+   touch $checkfile
+
+done

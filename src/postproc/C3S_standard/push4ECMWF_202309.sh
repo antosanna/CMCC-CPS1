@@ -122,7 +122,7 @@ fi
 # 
 
 # PROCEDURE TO PUSH FILES TO acquisition.ecmwf.int
-ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d)) #1 per 2d var e 5 per 3d var=136 in hindcast and 146 in forecast
+ntar=$(($nfieldsC3S - $natm3d + $nchunks * $natm3d - 1)) #1 per 2d var e 5 per 3d var=136 in hindcast and 146 in forecast
 ntarandsha=$((ntar * 2))
 
 if [[ $cntfirst -eq 1 ]]

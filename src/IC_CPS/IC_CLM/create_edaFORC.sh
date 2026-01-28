@@ -1,24 +1,21 @@
 #!/bin/sh -l
 #-------------------------------------------------------------------------------
-# Use: create_edaFORC.sh [yyyy] [mm] [member] [dbg]
+# Use: create_edaFORC.sh [yyyy] [mm] [member] [backup] [checkfile] [dbg]
 #   yyyy     year of month preceding start-date
 #   mm       month preceding start-date
 #   member      tag for EDA member
 #   backup   for backup IC tag
-#   checkfe 
+#   checkfilee 
 #   dbg    OPTIONAL (0/1)
 #
 # In operational production, this script is launched in $DIR_LND_IC by launch_forced_run_EDA.sh
 #-------------------------------------------------------------------------------
-#In CLMCRUNCEP mode the CRUNCEP dataset is used and all of it's data is on a 6-hourly interval. 
+# In GSWP3 mode the GSWP dataset is used and the data are on a 3-hourly interval. 
 # Like CLM_QIAN the dataset is divided into those three data streams: solar, precipitation, and everything else (temperature, pressure, humidity and wind). 
 # The time-stamps of the data were also adjusted so that they are the beginning of the interval for solar, and the middle for the other two.
-# you need to include time 00:00 of following month first day to do the 3hourly interpolation for: temperature, pressure, humidity, wind and preci
-# BUT NOT FOR SOLAR
-# This is true in principle BUT EDA accumulated fields (prec and solar) refer to the following 6hour interval so the exact timing should be 3,9,15... instead of 0,6,12,18
-# SO WE HAVE TO INTERPOLATE SOLAR BUT NOT PREC
 
-# the proc forsees 2 checks on the time axis: one on the raw data just after download (check_timestep_raw_eda.ncl) and the other after the time interpolation (check_timestep.ncl)
+# This proc includes 2 checks on the time axis: one on the raw data just after download (check_timestep_raw_eda.ncl - to check possible failure of the retrieve from itv)
+# and the other after the time interpolation (check_timestep.ncl - to check consistency with reference timeaxis)
 #------------------------------------------------
 #-------------------------------------------------------------
 # load variables from descriptor
@@ -40,7 +37,7 @@ dbg=${6:-0}
 # INPUT SECTION
 #-----------------------------------
 yr=$1      #year of month preceding start-date
-m=$2      #month preceding start-date
+m=$2       #month preceding start-date
 member=$3
 backup=$4
 checkfile=$5
@@ -241,7 +238,7 @@ if [ ! -f $DIRDATA/eda_forcings_acc_fc_${yr}${mo}_n${member}.grib ] ; then
 fi
 
 #------------------------------------------------
-# select needed month and time periods
+# check timestep of raw data
 #------------------------------------------------
 #
 cdo -R -f nc copy $DIRDATA/eda_forcings_acc_fc_${yr}${mo}_n${member}.grib eda_forcings_acc_fc_${yr}${mo}_n${member}.nc
@@ -272,19 +269,19 @@ then
    fi
 fi
 
-#PERFORM HERE NEW ACCUMULATION!!!
-#cdo -O -timselsum,6 eda_forcings_acc_fc_${yr}${mo}.nc eda_forcings_acc_fc_${yr}${mo}_6hourly.nc 
 
 #EDA files already accumulated over 3 hour intervals - we have to compute the averages and set the time tag consistently
 #accumulated fields give the sum, divide by 10800 to have averages
 cdo -O divc,10800 eda_forcings_acc_fc_${yr}${mo}_n${member}.nc eda_forcings_fc_${yr}${mo}_n${member}_mean3h.nc
+
 ############################################################
 #now treat separately solar_rad and prec
 #var228 = prec in meters
 cdo -mulc,1000 -selname,var228 eda_forcings_fc_${yr}${mo}_n${member}_mean3h.nc prec.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc
 ncrename -O -v var228,prate prec.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc prate.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc
 rm prec.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc
-##var169 = sol rad
+
+#var169 = sol rad
 cdo -selname,var169 eda_forcings_fc_${yr}${mo}_n${member}_mean3h.nc solar.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc
 ncrename -O -v var169,dswrf solar.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc dswrf.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc
 rm solar.sfc.gauss.${yr}-${mo}_n${member}_tmp.nc 
@@ -316,6 +313,8 @@ do
 
 done
 
+##Trim time axis in order to start at the beginning of the month and end at the last available complete day 
+
 for var in air.2m shum.2m pres.sfc uwnd.10m vwnd.10m dswrf.sfc prate.sfc
 do
       tstepfile=`cdo -ntime $var.gauss.${yr}-${mo}_n${member}.nc`
@@ -327,6 +326,7 @@ do
          if [ $tstepfile -lt $tstep ]
          then
              #--> ncks -O -d time,2 means first day of month at 03 (ncks starts from 0)
+             #e.g. the raw data file covering January start from the last day of prev month at 21:00: 31th Dec 21:00, 1st Jan 00:00, 1st Jan 03:00 (the one I want to start from)
              echo "$tstepfile -lt $tstep"
              tsel=$(($tstepfile - 3))
              ncks -O -d time,2,$tsel tmp$var.nc tmp2$var.nc

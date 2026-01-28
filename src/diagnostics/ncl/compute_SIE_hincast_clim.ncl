@@ -1,4 +1,3 @@
-load "/zeus/opt/ncl/6.6.2/lib/ncarg/nclscripts/contrib/ut_string.ncl"
 
 begin
 
@@ -35,26 +34,34 @@ ne=toint(getenv("nhindmem"))
 print("start hindcast section")
 ;sic_hc5d = new((/ny,ne,ntime+1,nlat/2,nlon/),"float",1.e+20)
 areasic_hc=new((/ny*ne,ntime+1/),"float")
+areasic_hc!0="realization"
+areasic_hc!1="leadtime"
 nrec=0
 do iy=ihiniy,ihendy
    do ens=0,ne-1
-      caso="sps3.5_"+iy+st+"_0"+sprinti("%0.2i",ens+1)
-      filshc      = systemfunc("cd "+dirhc+"/"+caso+" ; ls "+caso+"*.nc")
+      caso="sps4_"+iy+st+"_0"+sprinti("%0.2i",ens+1)
+      dircaso=dirhc+"/"+caso+"/ice/hist/"
+      print(dircaso)
+      filshc=systemfunc("cd "+dircaso+" ; ls "+caso+"*.zip.nc")
       nfils=dimsizes(filshc)
-      if(nfils.ne.6)then
+      if(nfils.lt.6)then
          print("files for case "+caso+" are "+nfils+" instead of 6. EXIT")
          exit
+      else if (nfils .ge. 6)
+          nfils=6
+      end if
       end if
       do ll=0,nfils-1
-         fi = addfile (dirhc+"/"+caso+"/"+filshc(ll), "r")
-         print("hindcast file "+dirhc+"/"+caso+"/"+filshc(ll))
+         fi = addfile (dircaso+filshc(ll), "r")
+         print("hindcast file "+ dircaso+filshc(ll))
 ; I want the first timestep void (for IC)
-         sic=fi->aicen001(0,nlat/2:,:)
+         sic=fi->aice(0,nlat/2:,:)
          sic=where(sic.gt..15,1.,0.)
          areasic_hc(nrec,ll)=dim_sum(dim_sum(sic*area))/1000000
       end do
       nrec=nrec+1
       delete(nfils)
+      delete(filshc)
    end do
 end do
 
@@ -81,7 +88,7 @@ if(dotheplot.eq.1)then
    res@tiMainString          = "Arctic Sea Ice Extent ~C~ "+st
    
    res@tmYLMode              = "Manual"
-   res@trYMinF               = 2
+   res@trYMinF               = 0
    res@trYMaxF               = 18
    res@tmYLTickStartF        = 0
    res@tmYLTickEndF 	  = 18
@@ -119,5 +126,6 @@ dst_file->areasic_hc =areasic_hc
 
 checkfile=getenv("checkfile")
 system("touch "+checkfile)
+
 
 end
