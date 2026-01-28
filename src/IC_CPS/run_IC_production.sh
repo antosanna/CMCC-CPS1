@@ -7,10 +7,9 @@
 
 set -euvx
 
-yyyy=$1                    # year start-date
-mm=$2                    # month start-date: this is a number 
+yyyy=`date +%Y`                    # year start-date
                          # not 2 digits
-st=`printf '%.2d' $((10#$mm))`   # 2 digits
+st=`date +%m`
 
 idcomplete=${3:-0}   
 

@@ -70,8 +70,8 @@ touch $checkfile
 #-----------------------------------
 # IC production
 #-----------------------------------
-input="$yyyy $m"
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j run_IC_production_${yyyy}${st} -l $DIR_LOG/forecast/$yyyy$st -d $IC_CPS -s run_IC_production.sh -i "$input"
+#input="$yyyy $m"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -j run_IC_production_${yyyy}${st} -l $DIR_LOG/forecast/$yyyy$st -d $IC_CPS -s run_IC_production.sh 
 while `true`
 do
    sleep 100
