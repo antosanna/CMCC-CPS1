@@ -11,7 +11,7 @@ yyyy=`date +%Y`                    # year start-date
                          # not 2 digits
 st=`date +%m`
 
-idcomplete=${3:-0}   
+idcomplete=${1:-0}   # we keep this input optional for clm analysis (the 10th of each month)
 
 
 mkdir -p $IC_CAM_CPS_DIR/$st
