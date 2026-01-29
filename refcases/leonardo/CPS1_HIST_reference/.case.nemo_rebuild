@@ -1,0 +1,47 @@
+#!/usr/bin/bash -l
+#SBATCH  --job-name=nemo_rebuild.CPS1_HIST_reference
+#SBATCH  --nodes=3
+#SBATCH  --ntasks-per-node=96
+#SBATCH  --output=nemo_rebuild.CPS1_HIST_reference.%J.out   
+#SBATCH  --error=nemo_rebuild.CPS1_HIST_reference.%J.err   
+#SBATCH  --exclusive             
+#SBATCH  --ntasks-per-node=96
+#. ~/.bashrc
+
+# activate needed env
+module purge
+module load anaconda
+conda activate nemo_rebuild
+module load --auto oneapi-2022.1.0/compiler-rt/2022.1.0 intel-2021.6.0/2021.6.0 impi-2021.6.0/2021.6.0 intel-2021.6.0/curl/7.85.0-djjip intel-2021.6.0/cmake/3.25.1-7wfsx intel-2021.6.0/perl/5.36.0-jj4hw intel-2021.6.0/perl-xml-libxml/2.0201-shybf intel-2021.6.0/xerces-c/3.2.3-witnt oneapi-2022.1.0/tbb/2021.6.0 oneapi-2022.1.0/mkl/2022.1.0 intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7 intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5 intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3 intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn
+
+set -euvx
+CASEROOT=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/refcases/leonardo/CPS1_HIST_reference
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+CASE=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+NTASK=`./xmlquery NTASKS_OCN |cut -d ':' -f2|sed 's/ //g'`
+# this is the number of parallel postprocessign you want to set and must be a an integer
+N=$((NTASK/10))
+CIME_OUTPUT_ROOT=`./xmlquery CIME_OUTPUT_ROOT|cut -d ':' -f2|sed 's/ //g'`
+NEMO_REBUILD_ROOT=`./xmlquery NEMO_REBUILD_ROOT|cut -d ':' -f2|sed 's/ //g'`
+# add your frequencies and grids. The script skip them if not present
+for frq in 1m 1d
+do 
+   for grd in T U V W 
+   do
+      nfile=`ls $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*grid_${grd}_0000.nc|wc -l`
+      if [[ $nfile -eq 0 ]]
+      then
+         continue
+      fi  
+# this should be independent from expID and general
+      data_now=`ls -t $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_*grid_${grd}_0000.nc|tail -1|rev|cut -d '_' -f4-5|rev`
+      mpirun -n $N python -m mpi4py $NEMO_REBUILD_ROOT/py_nemo_rebuild/src/py_nemo_rebuild/nemo_rebuild.py -i $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}
+      stat=$?
+# if correctly merged remove single files
+      if [[ $stat -eq 0 ]]
+      then
+         rm $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${data_now}_grid_${grd}_0???.nc
+      fi
+   done
+done
