@@ -41,7 +41,7 @@ for rea in $realm ; do
    touch $checkf
 
 done
-# now copy triplette file
+# now copy triplette file; this must be the very last operation since it is the go-ahead for the forecast to start on Leonardo
 if [[ $bkup -eq 0 ]]
 then
    rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${TRIP_DIR}/triplette.random.$yyyy$st.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_trip_dir}

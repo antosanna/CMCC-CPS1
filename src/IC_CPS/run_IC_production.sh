@@ -160,7 +160,7 @@ then
 
 
 ###############################################################
-# NOW COMPUTE IC FOR CAM
+# NOW COMPUTE IC FOR CAM  --- temporarily on Cassandra
 # using poce=01 (unperturbed) -
 ###############################################################
 #wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production
