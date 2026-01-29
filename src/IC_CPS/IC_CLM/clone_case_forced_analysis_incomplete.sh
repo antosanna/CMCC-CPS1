@@ -117,7 +117,7 @@ fi
 
 
 ./xmlchange BUILD_COMPLETE=TRUE  
-cp $DIR_EXE/cesm.exe.clm $WORK_CPS/$caso/bld/cesm.exe
+cp $DIR_EXE/cesm.exe.clm_${machine} $WORK_CPS/$caso/bld/cesm.exe
 #./case.build
 
 
