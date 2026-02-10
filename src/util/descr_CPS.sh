@@ -227,6 +227,7 @@ then
 # ######## MARCONI SECTION
 elif [[ "$machine" == "leonardo" ]]
 then 
+   operational_user=a07cmc00
    env_workflow_tag=leonardo
    envcondacm3=cmcc-cm_py
    envcondac3schecker=c3s-nc-checker
@@ -266,7 +267,6 @@ then
    #maxnumbertosubmit=62 #modifyied 20240729
    maxnumbertosubmit=54 #20250801 new partition with 3 nodes free for postproc
    maxnumbertorecover=$maxnumbertosubmit
-   operational_user=`whoami`
    MYCESMDATAROOT=$CESMDATAROOT
    MYCESMDATAROOT1=$CESMDATAROOT
    DIR_CESM=$HOME/CMCC-CM/
@@ -281,20 +281,40 @@ then
    nmb_nemo_domains=336
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
-   WORK=/leonardo_work/$account_name/  #is environment var in leonardo
-   WORK1=$WORK
+   WORK1=/leonardo_work/$account_name/  #is environment var in leonardo
+   WORK=$WORK1/$USER/
+   if [[ $USER == "$operantional_user" ]]
+   then
+      WORK=${WORK1}
+   fi
    WORK_CPS=${WORK}/CMCC-CM/
-   WORK_CPS1=${WORK_CPS1}
+   WORK_CPS1=${WORK1}/CMCC-CM/
+   if [[ $USER == "$operantional_user" ]]
+   then
+      WORK_CPS=${WORK_CPS1}
+   fi
+   DIR_ARCHIVE1=${WORK_CPS1}/archive
    DIR_ARCHIVE=${WORK_CPS}/archive
-   DIR_ARCHIVE1=$DIR_ARCHIVE
+   if [[ $USER == "$operantional_user" ]]
+   then
+      DIR_ARCHIVE=${DIR_ARCHIVE1}
+   fi
 #    BACKUPDIR=/marconi_scratch/usera07cmc/a07cmc00/backup to be defined
 #    pushdir=$WORK/push to be defined
     #SCRATCHDIR=$WORK/scratch
 #    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch 20250915
-    SCRATCHDIR=/leonardo_work/CMCC_2025/scratch
-    SCRATCHDIR1=$SCRATCHDIR
-    FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
-    FINALARCHC3S1=$FINALARCHC3S
+   SCRATCHDIR1=/leonardo_work/CMCC_2025/scratch
+   SCRATCHDIR=/leonardo_work/CMCC_2025/$USER/scratch
+   if [[ $USER == "$operantional_user" ]]
+   then
+      SCRATCHDIR=${SCRATCHDIR1}
+   fi
+   FINALARCHC3S1=$WORK1/CMCC_SPS4/C3S_daily
+   FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
+   if [[ $USER == "$operantional_user" ]]
+   then
+      FINALARCHC3S=${FINALARCHC3S1}
+   fi
     DIR_TEMP=$SCRATCHDIR/CMCC-$CPSSYS/temporary
 # #TO BE DEFINED +
 #    pushdirapec=$SCRATCHDIR1
@@ -303,7 +323,7 @@ then
 #    DATA_ECACCESS=$SCRATCHDIR1
 #    DIR_CLIM=$CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
 # #TO BE DEFINED -
-    DIR_ROOT1=$DIR_ROOT
+    DIR_ROOT1=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1
     OUTDIR_DIAG=$WORK/diagnostics
     DIR_FORE_ANOM=$WORK/CMCC-${CPSSYS}/forecast_anom
 # ######## ICs_CLM
@@ -326,6 +346,10 @@ then
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
 WORK_C3S=$WORK_C3S1
+if [[ $USER == "$operantional_user" ]]
+then
+      WORK_C3S=${WORK_C3S1}
+fi
 DIR_LOG1=$WORK1/CPS/CMCC-${CPSSYS}/logs
 DIR_LOG=$WORK/CPS/CMCC-${CPSSYS}/logs
 HEALED_DIR_ROOT=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
@@ -345,20 +369,24 @@ pushdir=$WORK/CPS/CMCC-${CPSSYS}/push
 # n_notif=6
 FINALARCHIVE=$WORK/data/archive/CESM/${CPSSYS}/
 nmonfore=6      # number of forecast months
+nmonforext=10      # number of forecast months to be additionally run
 fixsimdays=185  # total number of simulation days
+fixsimextdays=305  # total number of simulation days
 # maxjobs_APEC=20 # 20 max number of APEC job submitted
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
- natm3d=5    # number of required fields for C3S 3d atmospheric
- nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
+natm3d=5    # number of required fields for C3S 3d atmospheric
+nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"
+headerext="ensemble4ext"
 # jobIDdummy=1234
 versionSPS=20231101
 GCM_name=CMCC-CM3
-endy_hind=2022
+endy_hind=2024
+iniy_hindext=1995
 iniy_hind=1993
-iniy_fore=2024
+iniy_fore=2025
 freq_forcings=8
 # 
 # #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -399,7 +427,8 @@ DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
 ROOT_CASES_WORK=$WORK1/CPS/CMCC-${CPSSYS}
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S
-WORK_C3S=$DIR_ARCHIVE_C3S
+DIR_ARCHIVE_C3SEXT=$DIR_ARCHIVE/C3Sext
+WORK_C3SEXT=$DIR_ARCHIVE_C3SEXT
 # ####### WORK DIRS FOR ICs
 WORKDIR_LAND=$DIR_TEMP/WORK_LAND_IC
 WORKDIR_OCE=$DIR_TEMP/WORK_OCE_IC

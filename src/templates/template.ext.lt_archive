@@ -1,0 +1,78 @@
+#!/bin/sh -l
+{{ batchdirectives }}
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euvx
+CASEROOT={{ caseroot }}
+# go to archive logdir to read last atm.log and get curryear and currmon
+DOUT_S_ROOT=`./xmlquery DOUT_S_ROOT|cut -d '=' -f2|cut -d ' ' -f2`
+cd $DOUT_S_ROOT/logs
+gunzip `ls -1tr atm.log.* |tail -1`
+logCAM=`ls -1tr atm.log.* |tail -1`
+mese=`grep 'Current date' $logCAM |awk '{print $8}'`
+curryear=`grep 'Current date' $logCAM |awk '{print $7}'`
+gzip $logCAM
+currmon=`printf '%.2d' $mese`
+
+
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+member=`echo $caso|cut -d '_' -f3|cut -c 2-3`
+resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
+
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+st=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f2`
+
+set +euvx
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+set -euvx
+
+# get check_pp_monthly from dictionary
+set +euvx
+. $dictionary
+set -euvx
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
+if [[ ! -f $check_pp_monthly ]] && [[ $stop_op == "nmonths" ]]
+then
+   ./postproc_monthly_${caso}.sh $check_pp_monthly
+fi
+cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
+cyy=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 1`
+nmonthsrun=$(( (cyy - yyyy) * 12 + (cmm - st) ))
+
+
+if [[ $nmonthsrun -eq $((nmonforext + nmonfore)) ]] && [[ $stop_op == "nmonths" ]]
+then
+
+   ./check_10ext_months_output_in_archive_${caso}.sh 
+
+# now modify the environment to run the extra $nmoredays days to get $fixsimextdays
+   ./xmlchange STOP_OPTION="ndays" 
+   dif=`${DIR_UTIL}/days_in_forecast_ext.sh -y $yyyy -m $st -l true | tail -1`
+   nmoredays=$(( $fixsimextdays - $dif ))
+   ./xmlchange STOP_N=$nmoredays
+# from now on the postproc of NEMO is not required anymore
+   ./xmlchange NEMO_REBUILD=FALSE
+   ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+   mkdir -p ${DIR_TEMP}/$caso
+   rsync -auv $DIR_TEMPL/user_nl_nemo_moredays $DIR_CASES/$caso/user_nl_nemo
+set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondacm3
+set -euvx
+   #if [[ $machine == "leonardo" ]]
+   #then
+#should be temporary until a better fix is found (G.F.Marras 20240627)
+#       unset SLURM_CPU_BIND_LIST
+#       unset SLURM_CPU_BIND_TYPE
+#       unset SLURM_CPU_BIND_VERBOSE
+#       echo "check environment for SLURM_CPU_BIND"
+#       env|grep SLURM_CPU_BIND
+    #   salloc -c16 $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 
+    #   srun $optSLURM -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 ./case.submit
+# non funziona       srun -c16 --qos=$qos -A $account_SLURM -p dcgp_usr_prod -t 1:00:00 --export=ALL ./case.submit
+  # else
+       ./case.submit
+   #fi
+fi

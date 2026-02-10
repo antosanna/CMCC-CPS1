@@ -1,0 +1,38 @@
+#!/bin/sh -l
+{{ batchdirectives }}
+. ~/.bashrc
+. $DIR_UTIL/descr_CPS.sh
+set -euvx
+CASEROOT={{ caseroot }}
+
+cd $CASEROOT
+#get case name and cores dedicated to ocean model from xml files
+caso=`./xmlquery CASE|cut -d ':' -f2|sed 's/ //g'`
+resubmit=`./xmlquery RESUBMIT|cut -d ':' -f2|sed 's/ //g'`
+
+yyyy=`./xmlquery RUN_STARTDATE|cut -d ':' -f2|sed 's/ //'|cut -d '-' -f1`
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+
+stop_op=`./xmlquery STOP_OPTION|cut -d ':' -f2|sed 's/ //g'`
+
+if [[ $stop_op == "ndays" ]] && [[ $resubmit -eq 0 ]] 
+then
+# get  check_run_moredays and check_pp_C3S from dictionary
+   set +euvx
+   . $dictionary
+   set -euvx
+   $DIR_UTIL/remove_outputs_and_gzip_restdir.sh $caso
+   touch $check_run_moredays
+# temporary: C3S postproc always offline and performed on Juno
+   exit
+   if [[ $typeofrun == "hindcast" ]] 
+   then
+      exit 0 #disabled for hindcast and done off-line
+   fi
+   if [[ ! -f $check_pp_C3S ]] 
+   then
+      ./postproc_C3Sext_${caso}.sh 
+   fi  
+fi
+
+

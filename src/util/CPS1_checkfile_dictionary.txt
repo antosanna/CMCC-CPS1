@@ -12,7 +12,9 @@ listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
 check_all_postclm=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_all_clm_C3SDONE
 check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SDONE
+check_all_camC3SEXT_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SEXTDONE
 check_regridC3S_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_cam_regrid_C3S
+check_regridC3SEXT_type=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_cam_regrid_C3SEXT
 check_postclm_type=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_clm_regrid_C3S
 check_endrun=$DIR_LOG/$typeofrun/$yyyy$st/forecast_end_
 check_notificate=$DIR_LOG/$typeofrun/$yyyy$st/notificate_fine_forecast
@@ -37,11 +39,13 @@ check_no_SOLIN=$outdirC3S/no_SOLIN_in_${caso}
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive_moredays
 #--#--                and in $DIR_TEMPL/postproc_C3S.sh
 check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE
+check_pp_C3SEXT=$DIR_CASES/$caso/logs/postproc_C3SEXT_${caso}_DONE
 check_run_moredays=${CASEROOT}/logs/run_moredays_${caso}_DONE
 
 
 #--#-- touchfiles defined in $DIR_TEMPL/check_6months_output_in_archive.sh
 check_6months_done=$DIR_CASES/$caso/logs/${caso}_${nmonfore}months_done
+check_10ext_months_done=$DIR_CASES/$caso/logs/${caso}_${nmonforext}ext_months_done
 
 #--#-- touchfiles defined in $DIR_TEMPL/template.lt_archive
 check_pp_monthly=$DIR_CASES/$caso/logs/postproc_monthly_${curryear}${currmon}_done
