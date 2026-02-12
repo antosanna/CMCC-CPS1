@@ -18,6 +18,7 @@ nrun=`printf '%.3d' NRUN`
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${SPSSystem}_${yyyy}${st}_${nrun}
+flag_test=0
 if [[ `whoami` == "$operational_user" ]]
 then
    flag_test=0
@@ -28,7 +29,7 @@ if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
+cesmexe=$DIR_EXE/cesm.exe.CPS1_${machine}
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -50,7 +51,7 @@ set +euvx
 #then
 #   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone /leonardo_work/CMCC_Copernic_4/CPS/CMCC-CPS1/cases/$refcase --cime-output-root $WORK_CPS
 #else
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
+   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$refcase --cime-output-root $WORK_CPS
 #fi
 
 set -euvx
@@ -63,15 +64,17 @@ cd $DIR_CASES/$caso
 # Copy log_cheker from DIR_TEMPL in $caso  TO BE DONE
 #----------------------------------------------------------
 
+rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
 if [[ $USER == "$operational_user" ]]
 then
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
    rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
-   if [[ $machine == "leonardo" ]] ; then
-       rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
-   fi
 else
-   rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
+   if [[ $machine != "leonardo" ]] ; then
+      rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_test $DIR_CASES/$caso/env_workflow.xml
+   fi
+fi
+if [[ $machine == "leonardo" ]] ; then
+       rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
 fi
 #----------------------------------------------------------
 ./case.setup --reset

@@ -196,6 +196,7 @@ f_strairx = "m",
 f_strairy = "m"
 EOF3
 
+# DO NOT COMPILE SINCE YOU WILL USE THE REFERENCE ONE
 #./case.build
 #cp $WORK/CMCC-CM/$caso/bld/cesm.exe $DIR_EXE/cesm.exe.${CPSSYS}_${machine}
 #ln -sf $DIR_EXE/cesm.exe.${CPSSYS}_${machine} $DIR_EXE/cesm.exe.${CPSSYS}

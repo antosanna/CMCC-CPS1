@@ -25,7 +25,7 @@
 
 function write_help_leonardo
 {
-  echo "USE ONLY FROM crontab if not dbg: recover_interrupted.sh -d [<dbg>] -m [<st>] -y [<yyyy>] -e [<1/0>]"
+  echo "USE ONLY FROM crontab if not dbg: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
   echo "     (if hindcast only st else also yyyy)"
   echo ""
   echo "CAVEAT"
@@ -33,50 +33,26 @@ function write_help_leonardo
   echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
   echo ""
   echo "SUBMISSION COMMAND WITH dbg=2:"
-  echo "./recover_interrupted.sh -d 2 i-m \$st"
+  echo "./recover_interrupted.sh 2 \$st"
   echo ""
   echo "SUBMISSION COMMAND EXAMPLE (every 30'):"
-  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh -d 0 -m \$st"
+  echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh 0 \$st"
 }
 #set -euxv
 function write_help
 {
-  echo "Use: recover_interrupted.sh -d [<dbg>] -m [<st>] -y [<yyyy>] -e [<1/0>]"
-  echo "     (if hindcast only -m st else also -y yyyy)"
+  echo "Use: recover_interrupted.sh [<dbg>] [<st>] [<yyyy>]"
+  echo "     (if hindcast only st else also yyyy)"
   echo ""
   echo "SUBMISSION COMMAND:"
-  echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_${stmain}_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"-d \$dbg -m \$stmain\""
+  echo ". $HOME/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j recover_interrupted_${stmain}_debug$dbg -l $DIR_LOG/hindcast/ -d $DIR_RECOVER -s recover_interrupted.sh -i \"\$dbg \$stmain\""
   echo ""
   echo "CAVEAT"
   echo "---First time dbg should be set to 2 to onyl print the list of interrupted jobs; then 1 to postprocess only one; 0 to process all the list"
   echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
 }
 #set -euxv
-st="None"
-yyyy="None"
-dbg=2
-extended=0
-while getopts ":m:e:d:y:" o
-do
-   case "$o" in
-      m)  st=${OPTARG};;
-      y)  yyyy=${OPTARG};;
-      d)  dbg=${OPTARG};;
-      e)  extended=${OPTARG};;
-      *)  if [[ $machine == "leonardo" ]]
-          then
-            echo "sono qui"
-            write_help_leonardo
-            exit
-          else
-            write_help
-            exit
-          fi
-          ;;
-   esac
-done
-
-if [[ "$#" -eq 0 ]] || [[ $st == None ]]
+if [[ "$1" == "-h" ]]
 then
    if [[ $machine == "leonardo" ]]
    then
@@ -87,49 +63,19 @@ then
       exit
    fi
 fi
+set -euxv
+mo_today=`date +%m`
+yy_today=`date +%Y`
 
-
-#   dbg=2  #set to 2 the first time you run in order to print only the list of interrupted 
+dbg=2  #set to 2 the first time you run in order to print only the list of interrupted 
          #set to 1 the second time you run in order to process only one case for category
          #set to 0 to run all interrupted identified
 
 
-   
-if [[ `echo -n $st|wc -c` -ne 2 ]]
-then
-   echo "second input should be st 2 digits"
-   exit
-fi
-
-header=${SPSSystem}
-
-if [[ $extended -eq 1 ]]
-then
-   header=${SPSSystem}ext
-fi 
-
-cd $DIR_CASES/
-listofcases="sps4_202206_028"
-if [[ $yyyy != None ]]
-then
-   if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
-   then
-      echo "third input should be yyyy 4 digits"
-      exit
-   fi
 set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+. ${DIR_UTIL}/descr_ensemble.sh 1993
 #set -euvx
 set -eux
-   echo $typeofrun
-   listofcases=`ls -d ${header}_${yyyy}${st}_0??`
-else
-set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh 1993
-#set -euvx
-set -eux
-   listofcases=`ls -d ${header}_????${st}_0??`
-fi
 
 if [[ $machine == "leonardo" ]]
 then
@@ -151,14 +97,58 @@ then
 fi
 
 
+cd $DIR_CASES/
 
 #submitted 20250801 
 #at 18.00 these are not running yet: sps4_201004_024 sps4_201304_021 sps4_201404_008 sps4_201504_010 sps4_201504_013 sps4_201504_016 sps4_201504_022 sps4_201504_026 sps4_201604_005 sps4_201604_027 sps4_201604_026 sps4_201604_025 sps4_201604_024 sps4_201604_023 sps4_201604_022 sps4_201604_021 sps4_201604_020 sps4_201604_019 sps4_201604_018 sps4_201604_017 sps4_201604_016 sps4_201604_015 sps4_201604_014 sps4_201604_013 sps4_201604_012 sps4_201604_010 sps4_201604_009 sps4_201604_007 sps4_201604_008 sps4_201604_005
 
 #listofcases="sps4_201404_025 sps4_201404_028 sps4_201404_027 sps4_201404_024 sps4_201404_018 sps4_201404_014 sps4_201404_013 sps4_201404_006 sps4_201404_007 sps4_201404_009 sps4_201404_011 sps4_201504_002 sps4_201504_003 sps4_201504_006 sps4_201504_008 sps4_201504_009 sps4_201504_012 sps4_201504_014 sps4_201504_017 sps4_201504_020 sps4_201504_023 sps4_201304_007 sps4_200204_020 sps4_200204_028 sps4_200304_004 sps4_200404_005 sps4_200404_006 sps4_200604_014 sps4_200704_008 sps4_200704_026 sps4_200904_012 sps4_200204_029 sps4_200204_030 sps4_200304_002 sps4_200304_005 sps4_200304_006 sps4_200304_028 sps4_200404_020 sps4_200404_025 sps4_200504_017 sps4_200604_015 sps4_200604_018"
 
+listofcases="sps4_202206_028"
 
-
+if [[ $# -ge 1 ]]
+then
+   dbg=${1}
+set +euvx
+   . ${DIR_UTIL}/descr_ensemble.sh 1993
+#set -euvx
+set -eux
+else
+   dbg=0    #you want to resubmit just the cases listed in your hardcoded $listofcases
+fi
+if [[ $# -ge 2 ]]
+then
+   st=${2:-$mo_today}
+   if [[ `echo -n $st|wc -c` -ne 2 ]]
+   then
+      echo "second input should be st 2 digits"
+      exit
+   fi
+   listofcases=`ls -d ${SPSSystem}_????${st}_0??`
+set +euvx
+   . ${DIR_UTIL}/descr_ensemble.sh 1993
+#set -euvx
+set -eux
+fi
+if [[ $# -ge 3 ]]
+then
+   yyyy=${3:-$yy_today}
+   if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
+   then
+      echo "third input should be yyyy 4 digits"
+      exit
+   fi
+   listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
+set +euvx
+   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+#set -euvx
+set -eux
+fi
+if [[ `echo -n $dbg|wc -c` -ne 1 ]]
+then
+   echo "first input should be dbg=0/1/2"
+   exit
+fi
 
 if [[ $typeofrun == "forecast" ]] && [[ -f $DIR_LOG/$typeofrun/${yyyy}${st}/FORECAST_COMPLETED ]]
 then
@@ -185,7 +175,7 @@ cnt_pp_C3S=0          # CASES WITH INTERRUPTED POSTPROC_C3S
 cnt_first_month=0    #CASES INTERRUPTED DURING THE FIRST MONTH
 cnt_st_archive=0     #CASES INTERRUPTED DURING ST_ARCHIVE
 cnt_arch_moredays=0 #CASES INTERRUPTED DURING LT_ARCHIVE_MOREDAYS
-filecsv=$DIR_LOG/$typeofrun/${header}_${typeofrun}_recover${dbg}_list.${machine}.`date +%Y%m%d%H`.csv
+filecsv=$DIR_LOG/$typeofrun/${SPSSystem}_${typeofrun}_recover${dbg}_list.${machine}.`date +%Y%m%d%H`.csv
 filexls=`echo ${filecsv}|rev |cut -d '.' -f2-|rev`.xlsx
 
 
@@ -289,16 +279,15 @@ set -eux
           report+=" must be resubmitted from lt_archive"
 #get last restart directory month
            cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
-           cyy=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 1`
 #compute num of months run nmonthsrun
-           nmonthsrun=$(( 10#$((cyy - yyyy)) * 12 + 10#$cmm - 10#$st ))
-           # if not all of the $nmonfore have been done resubmit run.$caso
-           nmonths_to_run=$nmonfore
-           if [[ $extended -eq 1 ]]
+           if [[ $((10#$cmm)) -gt $((10#$st)) ]]
            then
-                nmonths_to_run=$((nmonforext + nmonfore))
+               nmonthsrun=$(($((10#$cmm)) - $((10#$st))))
+           else
+               nmonthsrun=$((12+$((10#$cmm)) - $((10#$st))))
            fi
-           if [[ $nmonthsrun -lt $nmonths_to_run ]] 
+           # if not all of the $nmonfore have been done resubmit run.$caso
+           if [[ $nmonthsrun -lt $nmonfore ]] 
            then
               cnt_resubmit=$(($cnt_resubmit + 1))
               lista_resubmit+=" $caso"
@@ -428,7 +417,7 @@ then
    exit 0
 fi
 
-if [[ $dbg -eq 2 ]] && [[ $USER == $operational_user ]]
+if [[ $dbg -eq 2 ]]
 then
 echo "starting conversion to xls and copy with rclone to google drive "`date`
    set +euvx
@@ -459,7 +448,7 @@ if [[ $dbg -ne 2 ]] ; then
       echo "ALREADY RUNNING MAXIMUM NUMBER OF JOBS! exit now"
       exit
    else
-      if [[ $typeofrun == "forecast" ]] && [[ $USER == $operational_user ]]
+      if [[ $typeofrun == "forecast" ]]
       then
          body="RECOVER STARTING: see attached $filexls"
          echo $body
@@ -529,7 +518,7 @@ set -eux
    fi
    for caso in $lista_moredays
    do
-      $DIR_RECOVER/refresh_all_scripts.sh $caso $extended
+      $DIR_RECOVER/refresh_all_scripts.sh $caso
 
       cd $DIR_CASES/$caso
       stopoption=`./xmlquery STOP_OPTION|cut -d '=' -f2|cut -d ' ' -f2||sed 's/ //'`
@@ -607,7 +596,7 @@ set -eux
           while `true`
           do
                #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
-               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${header} -c yes`
+               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
                if [[ $np -eq 0 ]]
                then
                   if [[ $machine == "leonardo" ]]
@@ -633,29 +622,7 @@ set -eux
           . $dictionary
 #          set -euvx
 set -eux
-        #inside casedir
-          cd ${DIR_CASES}/$caso  
-        #example: forecast 202601---> lastforerest=202607
-          lastforerest=`date -d "${yyyy}${st}15 + ${nmonfore} month" +%Y%m`
-          nresub=`./xmlquery RESUBMIT | cut -d ':' -f2|sed 's/ //g'`
-        #given the actual value of RESUBMIT in env_run, the expected restart date ($yyyy$mm) should be:
-          expectrest=`date -d "${lastforerest}15 - $((${nresub}+1)) month" +%Y%m`
-        #oldest (for safety) available restart in $DIR_ARCHIVE:
-          actualrestdir=`ls -drt ${DIR_ARCHIVE}/${caso}/rest/* |head -1`
-          actualrest=`basename $actualrestdir | sed 's/-//g'|cut -c 1-6`  #same format $yyyy$mm     
-        #if last available restart is not the expected one - realign RESUBMIT value in env_run
-          if [[ ${actualrest} -ne ${expectrest} ]] ; then
-             yyact=`date -d "${actualrest}15" +%Y`
-             mmact=`date -d "${actualrest}15" +%m`
-             yylast=`date -d "${lastforerest}15" +%Y`
-             mmlast=`date -d "${lastforerest}15" +%m`
-             newresub=$(((${yylast} - ${yyact}) * 12 + (10#${mmlast} - 10#${mmact}) -1))
-             ./xmlchange RESUBMIT=${newresub}
-          fi
-        #in any case copy again restart files and rpointer in rundir, to avoid mismatch
-        #it may happen if the run is interrupted while writing restart (eg. out-of-time-limit error) 
-          rsync -av $actualrest/* ${WORK_CPS}/${caso}/run/.
-
+          cd ${DIR_CASES}/$caso
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
           echo $command
@@ -729,7 +696,7 @@ set -eux
          while `true`
          do
             #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
-            np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${header} -c yes`
+            np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${SPSSystem} -c yes`
             if [[ $np -eq 0 ]]
             then
                if [[ $machine == "leonardo" ]]
