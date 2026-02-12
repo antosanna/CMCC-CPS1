@@ -411,7 +411,7 @@ else
 fi   
 
 #--------------------------------------------
-# NOW SUBMIT PUSH4ECMWF (only forecast)
+# NOW SUBMIT DO DIAGNOSTICS WITH C3S OUTPUTS (only forecast)
 #--------------------------------------------
 skip=0
 if [[ $skip -eq 0 ]]

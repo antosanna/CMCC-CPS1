@@ -1,0 +1,56 @@
+2026-01-29 15:22:58: xmlchange success <command> ./xmlchange STOP_OPTION=nmonths  </command>
+ ---------------------------------------------------
+2026-01-29 15:22:59: xmlchange success <command> ./xmlchange NTASKS_ATM=-4  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:00: xmlchange success <command> ./xmlchange NTASKS_CPL=-4  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:01: xmlchange success <command> ./xmlchange NTASKS_OCN=279  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:02: xmlchange success <command> ./xmlchange NTASKS_ICE=-4  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:03: xmlchange success <command> ./xmlchange NTASKS_ROF=-4  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:04: xmlchange success <command> ./xmlchange NTASKS_LND=-4  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:05: xmlchange success <command> ./xmlchange PIO_STRIDE=18  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:06: xmlchange success <command> ./xmlchange NTASKS_WAV=1  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:07: xmlchange success <command> ./xmlchange NTASKS_GLC=1  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:07: xmlchange success <command> ./xmlchange NTASKS_ESP=1  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:08: xmlchange success <command> ./xmlchange ROOTPE_ROF=0  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:10: xmlchange success <command> ./xmlchange ROOTPE_ICE=0  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:11: xmlchange success <command> ./xmlchange ROOTPE_OCN=0  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:11: xmlchange success <command> ./xmlchange CAM_CONFIG_OPTS=-phys cam_dev -chem waccm_sc_mam4 -nlev 83  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:13: xmlchange success <command> ./xmlchange RESUBMIT=1  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:14: xmlchange success <command> ./xmlchange CLM_FORCE_COLDSTART=off  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:15: xmlchange success <command> ./xmlchange ROF_NCPL=8  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:16: xmlchange success <command> ./xmlchange CHARGE_ACCOUNT=0490  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:17: xmlchange success <command> ./xmlchange PROJECT=0490  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:18: xmlchange success <command> ./xmlchange STOP_N=1  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:19: xmlchange success <command> ./xmlchange RUN_TYPE=hybrid  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:20: xmlchange success <command> ./xmlchange --force --subgroup case.run JOB_QUEUE=p_long  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:21: xmlchange success <command> ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=08:00  </command>
+ ---------------------------------------------------
+2026-01-29 15:23:22: case.setup starting 
+ ---------------------------------------------------
+2026-01-29 15:23:30: case.setup success 
+ ---------------------------------------------------
+2026-01-29 15:23:31: case.setup starting 
+ ---------------------------------------------------
+2026-01-29 15:23:37: case.setup success 
+ ---------------------------------------------------

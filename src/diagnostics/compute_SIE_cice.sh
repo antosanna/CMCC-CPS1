@@ -101,7 +101,7 @@ do
    if [[ ! -f $fileclim ]] && [[ $typeofrun == "forecast" ]]
    then
       title="${CPSSYS} forecast ERROR"
-      body="$hemis SIE clim not available yet for $st. Compute it with $DIR_DIAG/compute_SIE_hincast_clim.sh"
+      body="$hemis SIE clim not available yet for $st. Compute it with $DIR_DIAG/launch_compute_SIE_hindcast_clim.sh"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
       exit 1
    fi

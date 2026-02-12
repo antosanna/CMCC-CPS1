@@ -1,0 +1,15 @@
+# This file is for user convenience only and is not used by the model
+# Changes to this file will be ignored and overwritten
+# Changes to the environment should be made in env_mach_specific.xml
+# Run ./case.setup --reset to regenerate this file
+source /juno/opt/module-environment/5.2.0/init/csh
+module purge 
+module load oneapi-2022.1.0/compiler-rt/2022.1.0 intel-2021.6.0/rhash/1.4.2-wmyr5 intel-2021.6.0/2021.6.0 intel-2021.6.0/cmake/3.25.1-7wfsx impi-2021.6.0/2021.6.0 intel-2021.6.0/berkeley-db/18.1.40-ybvzh intel-2021.6.0/bzip2/1.0.8-odjrk intel-2021.6.0/readline/8.2-mavzw intel-2021.6.0/libiconv/1.16-rhipz intel-2021.6.0/gdbm/1.23-pxcvo intel-2021.6.0/xz/5.2.6-enkjc intel-2021.6.0/perl/5.36.0-jj4hw intel-2021.6.0/zlib/1.2.13-2hp37 intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae intel-2021.6.0/libxml2/2.10.3-44jnb intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7 intel-2021.6.0/ncurses/6.3-vkhgo intel-2021.6.0/perl-xml-sax/1.02-h4yy7 intel-2021.6.0/gettext/0.21.1-ts5mc intel-2021.6.0/perl-xml-libxml/2.0201-shybf intel-2021.6.0/libunistring/0.9.10-66o5e intel-2021.6.0/xerces-c/3.2.3-witnt intel-2021.6.0/libidn2/2.3.0-vtpwb oneapi-2022.1.0/tbb/2021.6.0 intel-2021.6.0/gmp/6.2.1-7vws4 oneapi-2022.1.0/mkl/2022.1.0 intel-2021.6.0/nettle/3.8.1-xsdhh intel-2021.6.0/libaec/1.0.6-wvsly intel-2021.6.0/gnutls/3.7.8-yl4oz intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip intel-2021.6.0/curl/7.85.0-djjip intel-2021.6.0/zstd/1.5.2-4carj intel-2021.6.0/libmd/1.0.4-egcmy intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy intel-2021.6.0/libbsd/0.11.5-yjcpv intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7 intel-2021.6.0/expat/2.5.0-rr3lh intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5 intel-2021.6.0/lz4/1.9.4-usl2l intel-2021.6.0/blitz/1.0.2-v7pmc intel-2021.6.0/lzo/2.10-o5rf7 intel-2021.6.0/boost/1.80.0-paock intel-2021.6.0/mbedtls/2.28.0-g3uom intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn intel-2021.6.0/libarchive/3.5.2-5bbgw intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3 intel-2021.6.0/libuv/1.44.1-v7e5k intel-2021.6.0/metis/5.1.0-z5fvk intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu
+setenv XIOS_PATH /juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5
+setenv ESMF_RUNTIME_PROFILE ON
+setenv ESMF_RUNTIME_PROFILE_OUTPUT SUMMARY
+setenv PIO_INCDIR /juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/include
+setenv PIO_LIBDIR /juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib
+setenv I_MPI_HYDRA_BOOTSTRAP lsf
+setenv I_MPI_HYDRA_IFACE ib0
+setenv I_MPI_HYDRA_BRANCH_COUNT 4

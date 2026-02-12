@@ -1,0 +1,11 @@
+ndtd = 2
+histfreq = 'm',
+histfreq_n = 1,
+f_aice = "m",
+f_hi = "m",
+f_hs = "m",
+f_tsfc = "m",
+f_uvel = "m",
+f_vvel = "m",
+f_strairx = "m",
+f_strairy = "m"

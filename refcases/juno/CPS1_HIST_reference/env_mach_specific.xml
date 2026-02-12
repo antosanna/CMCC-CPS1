@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<file id="env_mach_specific.xml" version="2.0">
+  <header>
+    These variables control the machine dependent environment including
+    the paths to compilers and libraries external to cime such as netcdf,
+    environment variables for use in the running job should also be set	here.
+    </header>
+  <group id="compliant_values">
+    <entry id="run_exe" value="${EXEROOT}/cesm.exe ">
+      <type>char</type>
+      <desc>executable name</desc>
+    </entry>
+    <entry id="run_misc_suffix" value=" &gt;&gt; cesm.log.$LID 2&gt;&amp;1 ">
+      <type>char</type>
+      <desc>redirect for job output</desc>
+    </entry>
+  </group>
+  <module_system type="module">
+    <init_path lang="perl">/juno/opt/module-environment/5.2.0/init/perl.pm</init_path>
+    <init_path lang="python">/juno/opt/module-environment/5.2.0/init/python.py</init_path>
+    <init_path lang="csh">/juno/opt/module-environment/5.2.0/init/csh</init_path>
+    <init_path lang="sh">/juno/opt/module-environment/5.2.0/init/sh</init_path>
+    <cmd_path lang="perl">/juno/opt/module-environment/5.2.0/bin/modulecmd perl</cmd_path>
+    <cmd_path lang="python">/juno/opt/module-environment/5.2.0/bin/modulecmd python </cmd_path>
+    <cmd_path lang="sh">module</cmd_path>
+    <cmd_path lang="csh">module</cmd_path>
+    <modules>
+      <command name="purge"/>
+    </modules>
+    <modules compiler="intel">
+      <command name="load">oneapi-2022.1.0/compiler-rt/2022.1.0</command>
+      <command name="load">intel-2021.6.0/rhash/1.4.2-wmyr5</command>
+      <command name="load">intel-2021.6.0/2021.6.0</command>
+      <command name="load">intel-2021.6.0/cmake/3.25.1-7wfsx</command>
+      <command name="load">impi-2021.6.0/2021.6.0</command>
+      <command name="load">intel-2021.6.0/berkeley-db/18.1.40-ybvzh</command>
+      <command name="load">intel-2021.6.0/bzip2/1.0.8-odjrk</command>
+      <command name="load">intel-2021.6.0/readline/8.2-mavzw</command>
+      <command name="load">intel-2021.6.0/libiconv/1.16-rhipz</command>
+      <command name="load">intel-2021.6.0/gdbm/1.23-pxcvo</command>
+      <command name="load">intel-2021.6.0/xz/5.2.6-enkjc</command>
+      <command name="load">intel-2021.6.0/perl/5.36.0-jj4hw</command>
+      <command name="load">intel-2021.6.0/zlib/1.2.13-2hp37</command>
+      <command name="load">intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae</command>
+      <command name="load">intel-2021.6.0/libxml2/2.10.3-44jnb</command>
+      <command name="load">intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7</command>
+      <command name="load">intel-2021.6.0/ncurses/6.3-vkhgo</command>
+      <command name="load">intel-2021.6.0/perl-xml-sax/1.02-h4yy7</command>
+      <command name="load">intel-2021.6.0/gettext/0.21.1-ts5mc</command>
+      <command name="load">intel-2021.6.0/perl-xml-libxml/2.0201-shybf</command>
+      <command name="load">intel-2021.6.0/libunistring/0.9.10-66o5e</command>
+      <command name="load">intel-2021.6.0/xerces-c/3.2.3-witnt</command>
+      <command name="load">intel-2021.6.0/libidn2/2.3.0-vtpwb</command>
+      <command name="load">oneapi-2022.1.0/tbb/2021.6.0</command>
+      <command name="load">intel-2021.6.0/gmp/6.2.1-7vws4</command>
+      <command name="load">oneapi-2022.1.0/mkl/2022.1.0</command>
+      <command name="load">intel-2021.6.0/nettle/3.8.1-xsdhh</command>
+      <command name="load">intel-2021.6.0/libaec/1.0.6-wvsly</command>
+      <command name="load">intel-2021.6.0/gnutls/3.7.8-yl4oz</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip</command>
+      <command name="load">intel-2021.6.0/curl/7.85.0-djjip</command>
+      <command name="load">intel-2021.6.0/zstd/1.5.2-4carj</command>
+      <command name="load">intel-2021.6.0/libmd/1.0.4-egcmy</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy</command>
+      <command name="load">intel-2021.6.0/libbsd/0.11.5-yjcpv</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7</command>
+      <command name="load">intel-2021.6.0/expat/2.5.0-rr3lh</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5</command>
+      <command name="load">intel-2021.6.0/lz4/1.9.4-usl2l</command>
+      <command name="load">intel-2021.6.0/blitz/1.0.2-v7pmc</command>
+      <command name="load">intel-2021.6.0/lzo/2.10-o5rf7</command>
+      <command name="load">intel-2021.6.0/boost/1.80.0-paock</command>
+      <command name="load">intel-2021.6.0/mbedtls/2.28.0-g3uom</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn</command>
+      <command name="load">intel-2021.6.0/libarchive/3.5.2-5bbgw</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3</command>
+      <command name="load">intel-2021.6.0/libuv/1.44.1-v7e5k</command>
+      <command name="load">intel-2021.6.0/metis/5.1.0-z5fvk</command>
+      <command name="load">intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn</command>
+    </modules>
+    <modules compiler="intel" DEBUG="TRUE">
+      <command name="load">intel-2021.6.0/impi-2021.6.0/esmf-dbg/8.4.2-pioext_2.6.0-o5yu4</command>
+    </modules>
+    <modules compiler="intel" DEBUG="FALSE">
+      <command name="load">intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu</command>
+    </modules>
+  </module_system>
+  <environment_variables>
+    <env name="XIOS_PATH">/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5</env>
+  </environment_variables>
+  <environment_variables comp_interface="nuopc">
+    <env name="ESMF_RUNTIME_PROFILE">ON</env>
+    <env name="ESMF_RUNTIME_PROFILE_OUTPUT">SUMMARY</env>
+    <env name="PIO_INCDIR">/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/include</env>
+    <env name="PIO_LIBDIR">/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib</env>
+  </environment_variables>
+  <environment_variables compiler="intel">
+    <env name="I_MPI_HYDRA_BOOTSTRAP">lsf</env>
+    <env name="I_MPI_HYDRA_IFACE">ib0</env>
+    <env name="I_MPI_HYDRA_BRANCH_COUNT">4</env>
+  </environment_variables>
+  <mpirun mpilib="default">
+    <executable> mpiexec.hydra </executable>
+  </mpirun>
+</file>

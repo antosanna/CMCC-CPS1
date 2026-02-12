@@ -1,5 +1,5 @@
 #!/bin/sh -l 
-#yyyy=2025;st=05;typeofrun=forecast; ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S $qos -j submit_tar_C3S${yyyy}$st -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st"
+#yyyy=2026;st=02;typeofrun=forecast; ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S $qos -j submit_tar_C3S${yyyy}$st -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st"
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 

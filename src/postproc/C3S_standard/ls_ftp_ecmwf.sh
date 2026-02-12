@@ -14,7 +14,7 @@ log_script=$6
 machine=$7
 #cmd_ftp_cmccbo="open -u c3s,cDx52!lst ftp://downloads.cmcc.bo.it"
 cmd_ftp_cmccbo="open -u c3s,YhjDf733 ftp://ftp4.cmcc.it"
-cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
+cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 sftp://acq.ecmwf.int"
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 

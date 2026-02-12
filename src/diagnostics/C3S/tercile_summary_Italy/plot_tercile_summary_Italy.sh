@@ -15,8 +15,8 @@ lead=1
 export yyyyfore=2026
 export mmfore=01
 export SS=FMA
-export inputmall="/work/cmcc/cp1/CPS/CMCC-CPS1/forecast_anom/"$yyyyfore$mmfore"/t2m_sps4_"$yyyyfore$mmfore"_all_ano.1993-2022.nc"
-export p_inputmall="/work/cmcc/cp1/CPS/CMCC-CPS1/forecast_anom/"$yyyyfore$mmfore"/precip_sps4_"$yyyyfore$mmfore"_all_ano.1993-2022.nc"
+export inputmall="$DIR_FORE_ANOM/"$yyyyfore$mmfore"/t2m_sps4_"$yyyyfore$mmfore"_all_ano.1993-2022.nc"
+export p_inputmall="$DIR_FORE_ANOM/"$yyyyfore$mmfore"/precip_sps4_"$yyyyfore$mmfore"_all_ano.1993-2022.nc"
 
 export prob_low="/work/cmcc/cp1/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/pctl/"$mmfore"/t2m_"$mmfore"_l"$lead"_33.1993-2022.nc"
 export prob_up="/work/cmcc/cp1/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/pctl/"$mmfore"/t2m_"$mmfore"_l"$lead"_66.1993-2022.nc"

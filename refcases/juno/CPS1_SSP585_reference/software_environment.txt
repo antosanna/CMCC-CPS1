@@ -1,0 +1,563 @@
+Currently Loaded Modulefiles:
+ 1) oneapi-2022.1.0/compiler-rt/2022.1.0                   26) oneapi-2022.1.0/mkl/2022.1.0                                
+ 2) intel-2021.6.0/rhash/1.4.2-wmyr5                       27) intel-2021.6.0/nettle/3.8.1-xsdhh                           
+ 3) intel-2021.6.0/2021.6.0                                28) intel-2021.6.0/libaec/1.0.6-wvsly                           
+ 4) intel-2021.6.0/cmake/3.25.1-7wfsx                      29) intel-2021.6.0/gnutls/3.7.8-yl4oz                           
+ 5) impi-2021.6.0/2021.6.0(default)                        30) intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip              
+ 6) intel-2021.6.0/berkeley-db/18.1.40-ybvzh               31) intel-2021.6.0/curl/7.85.0-djjip                            
+ 7) intel-2021.6.0/bzip2/1.0.8-odjrk                       32) intel-2021.6.0/zstd/1.5.2-4carj                             
+ 8) intel-2021.6.0/readline/8.2-mavzw                      33) intel-2021.6.0/libmd/1.0.4-egcmy                            
+ 9) intel-2021.6.0/libiconv/1.16-rhipz                     34) intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy           
+10) intel-2021.6.0/gdbm/1.23-pxcvo                         35) intel-2021.6.0/libbsd/0.11.5-yjcpv                          
+11) intel-2021.6.0/xz/5.2.6-enkjc                          36) intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7     
+12) intel-2021.6.0/perl/5.36.0-jj4hw                       37) intel-2021.6.0/expat/2.5.0-rr3lh                            
+13) intel-2021.6.0/zlib/1.2.13-2hp37                       38) intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5   
+14) intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae  39) intel-2021.6.0/lz4/1.9.4-usl2l                              
+15) intel-2021.6.0/libxml2/2.10.3-44jnb                    40) intel-2021.6.0/blitz/1.0.2-v7pmc                            
+16) intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7            41) intel-2021.6.0/lzo/2.10-o5rf7                               
+17) intel-2021.6.0/ncurses/6.3-vkhgo                       42) intel-2021.6.0/boost/1.80.0-paock                           
+18) intel-2021.6.0/perl-xml-sax/1.02-h4yy7                 43) intel-2021.6.0/mbedtls/2.28.0-g3uom                         
+19) intel-2021.6.0/gettext/0.21.1-ts5mc                    44) intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn                 
+20) intel-2021.6.0/perl-xml-libxml/2.0201-shybf            45) intel-2021.6.0/libarchive/3.5.2-5bbgw                       
+21) intel-2021.6.0/libunistring/0.9.10-66o5e               46) intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3         
+22) intel-2021.6.0/xerces-c/3.2.3-witnt                    47) intel-2021.6.0/libuv/1.44.1-v7e5k                           
+23) intel-2021.6.0/libidn2/2.3.0-vtpwb                     48) intel-2021.6.0/metis/5.1.0-z5fvk                            
+24) oneapi-2022.1.0/tbb/2021.6.0                           49) intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn           
+25) intel-2021.6.0/gmp/6.2.1-7vws4                         50) intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu  
+
+Key:
+(symbolic-version)
+
+AXISCPP_DEPLOY=/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64
+__MODULES_LMINIT=module use --append /juno/opt/module-environment/modulefiles:module use --append /juno/opt/module-environment/modulefiles-gcc12.2.0:module use --append /juno/opt/module-environment/modulefiles-oneapi22:module use --append /juno/opt/module-environment/modulefiles-nvhpc-sdk22:module use --append /juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake:module use --append /juno/opt/module-environment/5.2.0/modulefiles
+DIR_OCE_IC=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/IC_CPS//IC_NEMO
+CONDA_SHLVL=10
+PYTHONUNBUFFERED=1
+nmb_nemo_domains=279
+GUI_CONFDIR=/opt/ibm/lsfsuite/ext/gui/conf
+ESMF=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa
+envcondacm3=cmcc-cm_py39
+LD_LIBRARY_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/lib64:/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0/lib/intel64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd/lib:/juno/opt/intel/oneapi_2022.2.0/tbb/2021.6.0/lib/intel64/gcc4.8:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy/lib:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/libfabric/lib:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/lib/release:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/lib:/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/linux/lib:/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/linux/lib/x64:/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/linux/compiler/lib/intel64_lin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/1.2/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/ego/1.2/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64/lib:/opt/ibm/lsfsuite/lsf/1.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib
+LS_COLORS=rs=0:di=38;5;33:ln=38;5;51:mh=00:pi=40;38;5;11:so=38;5;13:do=38;5;5:bd=48;5;232;38;5;11:cd=48;5;232;38;5;3:or=48;5;232;38;5;9:mi=01;05;37;41:su=48;5;196;38;5;15:sg=48;5;11;38;5;16:ca=48;5;196;38;5;226:tw=48;5;10;38;5;16:ow=48;5;10;38;5;21:st=48;5;21;38;5;15:ex=38;5;40:*.tar=38;5;9:*.tgz=38;5;9:*.arc=38;5;9:*.arj=38;5;9:*.taz=38;5;9:*.lha=38;5;9:*.lz4=38;5;9:*.lzh=38;5;9:*.lzma=38;5;9:*.tlz=38;5;9:*.txz=38;5;9:*.tzo=38;5;9:*.t7z=38;5;9:*.zip=38;5;9:*.z=38;5;9:*.dz=38;5;9:*.gz=38;5;9:*.lrz=38;5;9:*.lz=38;5;9:*.lzo=38;5;9:*.xz=38;5;9:*.zst=38;5;9:*.tzst=38;5;9:*.bz2=38;5;9:*.bz=38;5;9:*.tbz=38;5;9:*.tbz2=38;5;9:*.tz=38;5;9:*.deb=38;5;9:*.rpm=38;5;9:*.jar=38;5;9:*.war=38;5;9:*.ear=38;5;9:*.sar=38;5;9:*.rar=38;5;9:*.alz=38;5;9:*.ace=38;5;9:*.zoo=38;5;9:*.cpio=38;5;9:*.7z=38;5;9:*.rz=38;5;9:*.cab=38;5;9:*.wim=38;5;9:*.swm=38;5;9:*.dwm=38;5;9:*.esd=38;5;9:*.jpg=38;5;13:*.jpeg=38;5;13:*.mjpg=38;5;13:*.mjpeg=38;5;13:*.gif=38;5;13:*.bmp=38;5;13:*.pbm=38;5;13:*.pgm=38;5;13:*.ppm=38;5;13:*.tga=38;5;13:*.xbm=38;5;13:*.xpm=38;5;13:*.tif=38;5;13:*.tiff=38;5;13:*.png=38;5;13:*.svg=38;5;13:*.svgz=38;5;13:*.mng=38;5;13:*.pcx=38;5;13:*.mov=38;5;13:*.mpg=38;5;13:*.mpeg=38;5;13:*.m2v=38;5;13:*.mkv=38;5;13:*.webm=38;5;13:*.ogm=38;5;13:*.mp4=38;5;13:*.m4v=38;5;13:*.mp4v=38;5;13:*.vob=38;5;13:*.qt=38;5;13:*.nuv=38;5;13:*.wmv=38;5;13:*.asf=38;5;13:*.rm=38;5;13:*.rmvb=38;5;13:*.flc=38;5;13:*.avi=38;5;13:*.fli=38;5;13:*.flv=38;5;13:*.gl=38;5;13:*.dl=38;5;13:*.xcf=38;5;13:*.xwd=38;5;13:*.yuv=38;5;13:*.cgm=38;5;13:*.emf=38;5;13:*.ogv=38;5;13:*.ogx=38;5;13:*.aac=38;5;45:*.au=38;5;45:*.flac=38;5;45:*.m4a=38;5;45:*.mid=38;5;45:*.midi=38;5;45:*.mka=38;5;45:*.mp3=38;5;45:*.mpc=38;5;45:*.ogg=38;5;45:*.ra=38;5;45:*.wav=38;5;45:*.oga=38;5;45:*.opus=38;5;45:*.spx=38;5;45:*.xspf=38;5;45:
+CONDA_EXE=/juno/opt/anaconda/3-2022.10/bin/conda
+REQUESTS_CA_BUNDLE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+GETTEXT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm
+natm3d=5
+DIR_REST_OIS=/work/cmcc/aspect/CESM2/rea_archive/
+WORK_CPS=/work/cmcc/cp1//CMCC-CM
+BLITZ_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf
+NCARG_COLORMAPS=/users_home/cmcc/cp1/ncl/colormaps:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncl/6.6.2-p2sqoijwawszna7puyc2z26xtmms75gt/lib/ncarg/colormaps
+JS_ENVDIR=/opt/ibm/lsfsuite/ext/ppm/conf
+LIBXML2_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3
+PCTL_OBS_DIR_DIAG=/work/cmcc/cp1//CPS/VALIDATION/OBS//pctl
+DIR_WEB=/work/cmcc/cp1//CPS/C3Swebpage
+PIO_VERSION_MAJOR=2
+fixsimdays=185
+CLIM_OBS_DIR_DIAG=/work/cmcc/cp1//CPS/VALIDATION/OBS/
+NETCDF_FORTRAN_HOME=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu
+PERF_DATADIR=/opt/ibm/lsfsuite/ext/perf/work/data
+BOOST_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2
+MYCESMDATAROOT1=/data/cmcc/cp1/
+PERL_XML_SAX_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o
+CLUSTER_MODE=Y
+LSF_FULL_VERSION=10.1.0.13
+GDBM_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn
+READLINE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5
+envcondarclone=rclone_gdrive
+maxnumbertorecover=40
+LIBIDN2_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp
+DIVISION=clivap
+GUI_LIBDIR=/opt/ibm/lsfsuite/ext/gui/3.0/lib/linux2.6-glibc2.3-x86_64
+DIR_TEMP_NEMOPLOT=/work/cmcc/cp1/scratch//nemo_timeseries
+GETTEXT_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm
+__MODULES_SHARE_LDFLAGS=-lnetcdf:3
+EXPAT_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx
+IC_CAM_CPS_DIR1=/data/cmcc/cp1/archive/IC/CAM_CPS1/
+NETCDF_FORTRAN=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu
+DIR_REST_INI=/work/cmcc/cp1//CPS/CMCC-CPS1/restart_ini
+VALIDATION=/work/cmcc/cp1//CPS/VALIDATION
+env_workflow_tag=cmcc
+DIR_PCTL=/users_home/cmcc/cp1/CPS/CMCC-SPS_PCTL
+REPOGRID=/data/cmcc/cp1//CMCC-CPS1/regrid_files
+LANG=en_US.UTF-8
+LIBBSD=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl
+time_limit_parallelq_s=2
+CATALINA_WORKDIR=/opt/ibm/lsfsuite/ext/gui/work
+HISTCONTROL=ignoredups
+BINARY_TYPE_HPC=
+mymail=sp1@cmcc.it
+time_limit_parallelq_m=4
+time_limit_parallelq_l=8
+SUDO_GID=5400
+DISPLAY=172.25.1.11:34.0
+TRIP_DIR=/users_home/cmcc/cp1/CPS/CMCC-CPS1/triplette_done
+DIR_ARCHIVE_C3S=/work/cmcc/cp1//CMCC-CM//archive/C3S
+HOSTNAME=login1.juno.cmcc.scc
+DIR_C3S=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/postproc/C3S_standard
+PERL_XML_SAX_BASE_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u
+RHASH_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3
+WLP_SKIP_UMASK=true
+OLDPWD=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/porting
+IC_CLM_CPS_DIR=/data/cmcc/cp1/archive/IC/CLM_CPS1/
+LZO=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6
+refcaseSCEN=CPS1_SSP585_reference
+sla_serialID=SC_SERIAL_sps35
+HEALED_DIR_ROOT=/work/cmcc/cp1//CPS/CMCC-CPS1/fixed_from_spikes
+LIBXML2=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3
+BATCHRUN=RUN
+OUTDIR_DIAG=/work/cmcc/cp1//diagnostics/
+HDF5_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s
+yyyySCEN=2014
+ZSTD=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb
+DIR_ROOT=/users_home/cmcc/cp1/CPS/CMCC-CPS1
+PARMETIS=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y
+GUI_TOP=/opt/ibm/lsfsuite/ext/gui
+PERL_XML_NAMESPACESUPPORT_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl
+LIBUNISTRING=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o
+I_MPI_HYDRA_BRANCH_COUNT=4
+c3s_checker_cmd=c3s-checker
+EGO_VERSION=1.2
+XIOS=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5
+DIR_RECOVER=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/recover
+ESMF_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa
+ZLIB_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo
+WOIS=/work/cmcc/cp1/CPS/CMCC-OIS2/
+ecmwfmail=adrien.owono@ecmwf.int
+GDBM_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn
+PERF_LOGDIR=/opt/ibm/lsfsuite/ext/perf/log
+CONDA_PREFIX=/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39
+JAVA_HOME=/opt/ibm/lsfsuite/ext/perf/jre/linux-x86_64
+SPSSystem=sps4
+NETTLE_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l
+SUDO_COMMAND=/bin/bash -c /bin/bash -c xauth\ add\ login1-ibj:34\ \ MIT-MAGIC-COOKIE-1\ \ e938b23623ce2061be19e8688a7bac59;\ /bin/bash
+LZ4=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b
+PCTL_DIR_DIAG=/work/cmcc/cp1//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/pctl
+CFLAGS=-I/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/include -I/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/include -I/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/include
+PARALLEL_NETCDF=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac
+cmd_IC_pull_from_remote_resume=sftp -a -P 20022  -i /users_home/cmcc/cp1/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it
+IC_CPS=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/IC_CPS/
+LCP=/opt/ibm/lsfsuite/ext/perf/ego/1.2/lib:/opt/ibm/lsfsuite/ext/perf/ego/1.2/lib/perf_ego_loader.jar:/opt/ibm/lsfsuite/ext/perf/license/7.0/lib:/opt/ibm/lsfsuite/ext/perf/license/7.0/lib/licenseloader.jar:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/lib:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/lib/bjobs-sp012.jar:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/lib/coreutil_sp006.jar:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/lib/perf_lsf_advanced_loader.jar:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/lib/perf_lsf_loader.jar:/opt/ibm/lsfsuite/ext/perf/pm/lib:/opt/ibm/lsfsuite/ext/perf/pm/lib/jobflow.jar:/opt/ibm/lsfsuite/ext/perf/pm/lib/perf_pm_loader.jar
+LIBUNISTRING_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o
+I_MPI_HYDRA_BOOTSTRAP=lsf
+LZO_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6
+NETCDF_C_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw
+__MODULES_LMPREREQ=intel-2021.6.0/cmake/3.25.1-7wfsx&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/curl/7.85.0-djjip&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/expat/2.5.0-rr3lh&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/libarchive/3.5.2-5bbgw&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/libuv/1.44.1-v7e5k&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/rhash/1.4.2-wmyr5&intel-2021.6.0/cmake/3.25.1-7wfsx|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/gdbm/1.23-pxcvo&intel-2021.6.0/gdbm/1.23-pxcvo|intel-2021.6.0/readline/8.2-mavzw:intel-2021.6.0/perl/5.36.0-jj4hw&intel-2021.6.0/perl/5.36.0-jj4hw|intel-2021.6.0/berkeley-db/18.1.40-ybvzh&intel-2021.6.0/perl/5.36.0-jj4hw|intel-2021.6.0/bzip2/1.0.8-odjrk&intel-2021.6.0/perl/5.36.0-jj4hw|intel-2021.6.0/gdbm/1.23-pxcvo&intel-2021.6.0/perl/5.36.0-jj4hw|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae&intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae|intel-2021.6.0/perl/5.36.0-jj4hw:intel-2021.6.0/libxml2/2.10.3-44jnb&intel-2021.6.0/libxml2/2.10.3-44jnb|intel-2021.6.0/libiconv/1.16-rhipz&intel-2021.6.0/libxml2/2.10.3-44jnb|intel-2021.6.0/xz/5.2.6-enkjc&intel-2021.6.0/libxml2/2.10.3-44jnb|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7&intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7|intel-2021.6.0/perl/5.36.0-jj4hw:intel-2021.6.0/perl-xml-sax/1.02-h4yy7&intel-2021.6.0/perl-xml-sax/1.02-h4yy7|intel-2021.6.0/perl/5.36.0-jj4hw&intel-2021.6.0/perl-xml-sax/1.02-h4yy7|intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae&intel-2021.6.0/perl-xml-sax/1.02-h4yy7|intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7:intel-2021.6.0/gettext/0.21.1-ts5mc&intel-2021.6.0/gettext/0.21.1-ts5mc|intel-2021.6.0/bzip2/1.0.8-odjrk&intel-2021.6.0/gettext/0.21.1-ts5mc|intel-2021.6.0/libiconv/1.16-rhipz&intel-2021.6.0/gettext/0.21.1-ts5mc|intel-2021.6.0/libxml2/2.10.3-44jnb&intel-2021.6.0/gettext/0.21.1-ts5mc|intel-2021.6.0/xz/5.2.6-enkjc:intel-2021.6.0/perl-xml-libxml/2.0201-shybf&intel-2021.6.0/perl-xml-libxml/2.0201-shybf|intel-2021.6.0/libxml2/2.10.3-44jnb&intel-2021.6.0/perl-xml-libxml/2.0201-shybf|intel-2021.6.0/perl/5.36.0-jj4hw&intel-2021.6.0/perl-xml-libxml/2.0201-shybf|intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae&intel-2021.6.0/perl-xml-libxml/2.0201-shybf|intel-2021.6.0/perl-xml-sax/1.02-h4yy7&intel-2021.6.0/perl-xml-libxml/2.0201-shybf|intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7:intel-2021.6.0/libunistring/0.9.10-66o5e&intel-2021.6.0/libunistring/0.9.10-66o5e|intel-2021.6.0/libiconv/1.16-rhipz:intel-2021.6.0/xerces-c/3.2.3-witnt&intel-2021.6.0/xerces-c/3.2.3-witnt|intel-2021.6.0/curl/7.85.0-djjip&intel-2021.6.0/xerces-c/3.2.3-witnt|intel-2021.6.0/libiconv/1.16-rhipz:intel-2021.6.0/libidn2/2.3.0-vtpwb&intel-2021.6.0/libidn2/2.3.0-vtpwb|intel-2021.6.0/libunistring/0.9.10-66o5e:intel-2021.6.0/nettle/3.8.1-xsdhh&intel-2021.6.0/nettle/3.8.1-xsdhh|intel-2021.6.0/gmp/6.2.1-7vws4:intel-2021.6.0/gnutls/3.7.8-yl4oz&intel-2021.6.0/gnutls/3.7.8-yl4oz|intel-2021.6.0/gettext/0.21.1-ts5mc&intel-2021.6.0/gnutls/3.7.8-yl4oz|intel-2021.6.0/libidn2/2.3.0-vtpwb&intel-2021.6.0/gnutls/3.7.8-yl4oz|intel-2021.6.0/nettle/3.8.1-xsdhh&intel-2021.6.0/gnutls/3.7.8-yl4oz|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip&intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip|intel-2021.6.0/libaec/1.0.6-wvsly&intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/curl/7.85.0-djjip&intel-2021.6.0/curl/7.85.0-djjip|intel-2021.6.0/gnutls/3.7.8-yl4oz&intel-2021.6.0/curl/7.85.0-djjip|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy&intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy|intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip&intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy|intel-2021.6.0/zlib/1.2.13-2hp37&intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy|intel-2021.6.0/zstd/1.5.2-4carj:intel-2021.6.0/libbsd/0.11.5-yjcpv&intel-2021.6.0/libbsd/0.11.5-yjcpv|intel-2021.6.0/libmd/1.0.4-egcmy:intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7&intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7|intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy:intel-2021.6.0/expat/2.5.0-rr3lh&intel-2021.6.0/expat/2.5.0-rr3lh|intel-2021.6.0/libbsd/0.11.5-yjcpv:intel-2021.6.0/boost/1.80.0-paock&intel-2021.6.0/boost/1.80.0-paock|intel-2021.6.0/bzip2/1.0.8-odjrk&intel-2021.6.0/boost/1.80.0-paock|intel-2021.6.0/xz/5.2.6-enkjc&intel-2021.6.0/boost/1.80.0-paock|intel-2021.6.0/zlib/1.2.13-2hp37&intel-2021.6.0/boost/1.80.0-paock|intel-2021.6.0/zstd/1.5.2-4carj:intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn&intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn|intel-2021.6.0/blitz/1.0.2-v7pmc&intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn|intel-2021.6.0/boost/1.80.0-paock&intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn|intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip&intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn|intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy&intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn|intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7:intel-2021.6.0/libarchive/3.5.2-5bbgw&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/bzip2/1.0.8-odjrk&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/expat/2.5.0-rr3lh&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/libiconv/1.16-rhipz&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/lz4/1.9.4-usl2l&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/lzo/2.10-o5rf7&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/mbedtls/2.28.0-g3uom&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/xz/5.2.6-enkjc&intel-2021.6.0/libarchive/3.5.2-5bbgw|intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3&intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3|intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy&intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3|intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7&intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3|intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5:intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn&intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn|intel-2021.6.0/metis/5.1.0-z5fvk:intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/libxml2/2.10.3-44jnb&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/xerces-c/3.2.3-witnt&intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu|intel-2021.6.0/zlib/1.2.13-2hp37
+NETCDF_FORTRAN_LIB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib
+METIS_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf
+EGO_SERVERDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/etc
+LSF_SERVERDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/etc
+FI_PROVIDER_PATH=/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/libfabric/lib/prov:/usr/lib64/libfabric
+cores_per_run=288
+MBEDTLS_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy
+BERKELEY_DB_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy
+DIR_UTIL_OIS2=/users_home/cmcc/cp1/CPS/CMCC-OIS2/util
+iniy_hind=1995
+GNUTLS_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz
+LZ4_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b
+DIR_ROOT1=/users_home/cmcc/cp1/CPS/CMCC-CPS1
+S_COLORS=auto
+LIBAEC_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn
+time_limit_serialq_m_min=360
+ESMFMKFILE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/lib/esmf.mk
+_CE_M=
+which_declare=declare -f
+PARALLEL_NETCDF_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac
+__MODULES_SHARE_FFLAGS=-I/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/include:2
+HDF5_PLUGIN_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/plugins
+PAC_CLUSTER_NAME=ac_cluster
+HPC_SYSTEM=juno
+NETCDF=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw
+CLASSPATH=/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/lib/mpi.jar
+PIO_TYPENAME_VALID_VALUES=netcdf,netcdf4p,netcdf4c,pnetcdf
+nnodes_SC=56
+LSF_ENVDIR=/opt/ibm/lsfsuite/lsf/conf
+DIR_ATM_IC=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/IC_CPS//IC_CAM
+BLITZ_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf
+time_limit_parallelq_l_min=480
+dirdataESA=/data/cmcc/cp1/archive/check_ICs//ESA_sst
+MODULES_CMD=/juno/opt/module-environment/5.2.0/libexec/modulecmd.tcl
+BZIP2=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu
+IC_NEMO_CPS_DIR=/data/cmcc/cp1/archive/IC/NEMO_CPS1/
+endy_hind=2024
+JS_VERSION=10.2
+DATA_ECACCESS=/data/delivery/csp/cp1/in/
+LIBAEC_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn
+USER=cp1
+serial_test=s_long
+CONDA_PREFIX_9=/juno/opt/anaconda/3-2022.10
+CMPLR_ROOT=/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0
+CONDA_PREFIX_8=/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39
+DATA_ARCHIVE=/data/cmcc/cp1/archive
+NETCDF_HOME=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw
+CONDA_PREFIX_5=/juno/opt/anaconda/3-2022.10
+CONDA_PREFIX_4=/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39
+CONDA_PREFIX_7=/juno/opt/anaconda/3-2022.10
+CONDA_PREFIX_6=/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39
+CONDA_PREFIX_1=/juno/opt/anaconda/3-2022.10
+REPOGRID1=/data/cmcc/cp1//CMCC-CPS1/regrid_files
+CONDA_PREFIX_3=/juno/opt/anaconda/3-2022.10
+ZLIB_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo
+CONDA_PREFIX_2=/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39
+DIR_CASES1=/work/cmcc/cp1//CPS/CMCC-CPS1/cases
+DIR_ARCHIVE1=/work/cmcc/cp1//CMCC-CM//archive
+LIBARCHIVE_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u
+PERF_VERSION=1.2
+LIBUV_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs
+FINALARCHC3S=/data/products/CMCC_SPS4/C3S_daily
+SERVER_NAME=platform
+SCRATCHDIR1=/work/cmcc/cp1//scratch
+PERF_CONFDIR=/opt/ibm/lsfsuite/ext/perf/conf
+NETTLE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l
+EGO_ESRVDIR=/opt/ibm/lsfsuite/lsf/conf/ego/juno/eservice
+DIR_TEMP_CICEPLOT=/work/cmcc/cp1/scratch//SIE
+PARMETIS_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y
+GUI_VERSION=3.0
+__MODULES_SHARE_DIAGUTIL_PATH=/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/sys_check/sys_check.sh:2
+parallelq_m=p_medium
+parallelq_l=p_long
+LIBARCHIVE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u
+NETCDF_C_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw
+NETCDF_C=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw
+DATEMSK=/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64/etc/datemsk
+WORK_C3S1=/work/cmcc/cp1//CMCC-CM//archive/C3S
+DIR_SUBM_SCRIPTS1=/work/cmcc/cp1//CPS/CMCC-CPS1/SUBM_SCRIPTS
+parallelq_s=p_short
+LIBAEC=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn
+DIR_ROOT_SCORES=/users_home/cmcc/cp1/CPS/CMCC-SPS_SKILL_SCORES
+PWD=/users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno/CPS1_SSP585_reference
+PERL_XML_LIBXML_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g
+WORK_IC4CAM=/work/cmcc/cp1//CPS/CMCC-CPS1/WORK_IC4CAM
+DIR_POST=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/postproc
+LIBBSD_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl
+LIBICONV=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf
+NETCDF_FORTRAN_INCLUDE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/include
+BLITZ=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf
+HOME=/users_home/cmcc/cp1
+flag_dev=0
+CONDA_PYTHON_EXE=/juno/opt/anaconda/3-2022.10/bin/python
+DIR_DIAG=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/diagnostics
+LC_CTYPE=en_US.UTF-8
+header=ensemble4
+CMAKE_PREFIX_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa
+PERF_INDEPENDENCY=true
+envcondaclm=postpc_CLM_C3S
+EGO_TOP=/opt/ibm/lsfsuite/lsf
+LIBARCHIVE_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u
+PERF_ENV=-DPERF_TOP=/opt/ibm/lsfsuite/ext/perf -DPERF_CONFDIR=/opt/ibm/lsfsuite/ext/perf/conf -DPERF_WORKDIR=/opt/ibm/lsfsuite/ext/perf/work -DPERF_LOGDIR=/opt/ibm/lsfsuite/ext/perf/log -DPERF_DATADIR=/opt/ibm/lsfsuite/ext/perf/work/data
+SUDO_USER=as34319
+CPATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/include:/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd/include:/juno/opt/intel/oneapi_2022.2.0/tbb/2021.6.0/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy/include:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/include:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/include
+IC_CICE_CPS_DIR=/data/cmcc/cp1/archive/IC/CICE_CPS1/
+JS_SERVERDIR=/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/etc
+BOOST=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2
+IC_NEMO_CPS_DIR1=/data/cmcc/cp1/archive/IC/NEMO_CPS1/
+WORK=/work/cmcc/cp1/
+LIBMD=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3
+DIR_REFCASES=/users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno
+LIBUNISTRING_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o
+JS_HOME=/opt/ibm/lsfsuite/ext/ppm
+LIBICONV_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf
+IC_CLM_CPS_DIR1=/data/cmcc/cp1/archive/IC/CLM_CPS1/
+serialq_push=s_download
+DIR_SUBM_SCRIPTS=/work/cmcc/cp1//CPS/CMCC-CPS1/SUBM_SCRIPTS
+WLP_SKIP_MAXPERMSIZE=Y
+CURL_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs
+PERL_XML_SAX_BASE_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u
+PERL_XML_NAMESPACESUPPORT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl
+WORKDIR_LAND=/work/cmcc/cp1/scratch//CMCC-CPS1/temporary/WORK_LAND_IC
+DIR_EXE=/users_home/cmcc/cp1/CPS/CMCC-CPS1/executables_cesm
+XZ_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek
+BOOST_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2
+DPSSystem=dps3
+LIBIDN2=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp
+_CE_CONDA=
+NLSPATH=/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0/lib/intel64/locale/%l_%t/%N
+LIBMD_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3
+DIR_CHECK=/users_home/cmcc/cp1/CPS/CMCC-CPS1/checklists
+LOG_DIR=/opt/ibm/lsfsuite/ext/gui/logs/login1.juno.cmcc.scc
+HDF5=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s
+XIOS_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5
+envcondanemo=nemo_rebuild
+EXPAT_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx
+time_limit_serialq_l=24
+LSF_BINDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/bin
+PERL_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod
+time_limit_serialq_m=6
+DIR_CPS=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/scripts_oper
+JS_ARCH=linux2.6-glibc2.3-x86_64
+__MODULES_SHARE_MANPATH=:1
+PERL_XML_NAMESPACESUPPORT_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl
+__MODULES_LMALTNAME=oneapi-2022.1.0/compiler-rt/2022.1.0&as|oneapi-2022.1.0/compiler-rt/default&as|oneapi-2022.1.0/compiler-rt/latest:intel-2021.6.0/rhash/1.4.2-wmyr5&as|intel-2021.6.0/rhash/default&as|intel-2021.6.0/rhash/latest:intel-2021.6.0/2021.6.0&intel-2021.6.0&as|intel-2021.6.0/default:intel-2021.6.0/cmake/3.25.1-7wfsx&as|intel-2021.6.0/cmake/default&as|intel-2021.6.0/cmake/latest:impi-2021.6.0/2021.6.0&impi-2021.6.0/default&impi-2021.6.0&as|impi-2021.6.0/latest:intel-2021.6.0/berkeley-db/18.1.40-ybvzh&as|intel-2021.6.0/berkeley-db/default&as|intel-2021.6.0/berkeley-db/latest:intel-2021.6.0/bzip2/1.0.8-odjrk&as|intel-2021.6.0/bzip2/default&as|intel-2021.6.0/bzip2/latest:intel-2021.6.0/readline/8.2-mavzw&as|intel-2021.6.0/readline/default&as|intel-2021.6.0/readline/latest:intel-2021.6.0/libiconv/1.16-rhipz&as|intel-2021.6.0/libiconv/default&as|intel-2021.6.0/libiconv/latest:intel-2021.6.0/gdbm/1.23-pxcvo&as|intel-2021.6.0/gdbm/default&as|intel-2021.6.0/gdbm/latest:intel-2021.6.0/xz/5.2.6-enkjc&as|intel-2021.6.0/xz/default&as|intel-2021.6.0/xz/latest:intel-2021.6.0/perl/5.36.0-jj4hw&as|intel-2021.6.0/perl/default&as|intel-2021.6.0/perl/latest:intel-2021.6.0/zlib/1.2.13-2hp37&as|intel-2021.6.0/zlib/default&as|intel-2021.6.0/zlib/latest:intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae&as|intel-2021.6.0/perl-xml-namespacesupport/default&as|intel-2021.6.0/perl-xml-namespacesupport/latest:intel-2021.6.0/libxml2/2.10.3-44jnb&as|intel-2021.6.0/libxml2/default&as|intel-2021.6.0/libxml2/latest:intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7&as|intel-2021.6.0/perl-xml-sax-base/default&as|intel-2021.6.0/perl-xml-sax-base/latest:intel-2021.6.0/ncurses/6.3-vkhgo&as|intel-2021.6.0/ncurses/default&as|intel-2021.6.0/ncurses/latest:intel-2021.6.0/perl-xml-sax/1.02-h4yy7&as|intel-2021.6.0/perl-xml-sax/default&as|intel-2021.6.0/perl-xml-sax/latest:intel-2021.6.0/gettext/0.21.1-ts5mc&as|intel-2021.6.0/gettext/default&as|intel-2021.6.0/gettext/latest:intel-2021.6.0/perl-xml-libxml/2.0201-shybf&as|intel-2021.6.0/perl-xml-libxml/default&as|intel-2021.6.0/perl-xml-libxml/latest:intel-2021.6.0/libunistring/0.9.10-66o5e&as|intel-2021.6.0/libunistring/default&as|intel-2021.6.0/libunistring/latest:intel-2021.6.0/xerces-c/3.2.3-witnt&as|intel-2021.6.0/xerces-c/default&as|intel-2021.6.0/xerces-c/latest:intel-2021.6.0/libidn2/2.3.0-vtpwb&as|intel-2021.6.0/libidn2/default&as|intel-2021.6.0/libidn2/latest:oneapi-2022.1.0/tbb/2021.6.0&as|oneapi-2022.1.0/tbb/default&as|oneapi-2022.1.0/tbb/latest:intel-2021.6.0/gmp/6.2.1-7vws4&as|intel-2021.6.0/gmp/default&as|intel-2021.6.0/gmp/latest:oneapi-2022.1.0/mkl/2022.1.0&as|oneapi-2022.1.0/mkl/default&as|oneapi-2022.1.0/mkl/latest:intel-2021.6.0/nettle/3.8.1-xsdhh&as|intel-2021.6.0/nettle/default&as|intel-2021.6.0/nettle/latest:intel-2021.6.0/libaec/1.0.6-wvsly&as|intel-2021.6.0/libaec/default&as|intel-2021.6.0/libaec/latest:intel-2021.6.0/gnutls/3.7.8-yl4oz&as|intel-2021.6.0/gnutls/default&as|intel-2021.6.0/gnutls/latest:intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip&as|intel-2021.6.0/impi-2021.6.0/hdf5/default&as|intel-2021.6.0/impi-2021.6.0/hdf5/latest:intel-2021.6.0/curl/7.85.0-djjip&as|intel-2021.6.0/curl/default&as|intel-2021.6.0/curl/latest:intel-2021.6.0/zstd/1.5.2-4carj&as|intel-2021.6.0/default&as|intel-2021.6.0/latest&as|intel-2021.6.0/zstd/default&as|intel-2021.6.0/zstd/latest:intel-2021.6.0/libmd/1.0.4-egcmy&as|intel-2021.6.0/libmd/default&as|intel-2021.6.0/libmd/latest:intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy&as|intel-2021.6.0/impi-2021.6.0/netcdf-c/default&as|intel-2021.6.0/impi-2021.6.0/netcdf-c/latest:intel-2021.6.0/libbsd/0.11.5-yjcpv&as|intel-2021.6.0/libbsd/default&as|intel-2021.6.0/libbsd/latest:intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7&as|intel-2021.6.0/impi-2021.6.0/netcdf-fortran/default&as|intel-2021.6.0/impi-2021.6.0/netcdf-fortran/latest:intel-2021.6.0/expat/2.5.0-rr3lh&as|intel-2021.6.0/expat/default&as|intel-2021.6.0/expat/latest:intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5&as|intel-2021.6.0/impi-2021.6.0/parallel-netcdf/default&as|intel-2021.6.0/impi-2021.6.0/parallel-netcdf/latest:intel-2021.6.0/lz4/1.9.4-usl2l&as|intel-2021.6.0/lz4/default&as|intel-2021.6.0/lz4/latest:intel-2021.6.0/blitz/1.0.2-v7pmc&as|intel-2021.6.0/blitz/default&as|intel-2021.6.0/blitz/latest:intel-2021.6.0/lzo/2.10-o5rf7&as|intel-2021.6.0/lzo/default&as|intel-2021.6.0/lzo/latest:intel-2021.6.0/boost/1.80.0-paock&as|intel-2021.6.0/boost/default&as|intel-2021.6.0/boost/latest:intel-2021.6.0/mbedtls/2.28.0-g3uom&as|intel-2021.6.0/mbedtls/default&as|intel-2021.6.0/mbedtls/latest:intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn&as|intel-2021.6.0/impi-2021.6.0/xios/default&as|intel-2021.6.0/impi-2021.6.0/xios/latest:intel-2021.6.0/libarchive/3.5.2-5bbgw&as|intel-2021.6.0/libarchive/default&as|intel-2021.6.0/libarchive/latest:intel-2021.6.0/libuv/1.44.1-v7e5k&as|intel-2021.6.0/libuv/default&as|intel-2021.6.0/libuv/latest:intel-2021.6.0/metis/5.1.0-z5fvk&as|intel-2021.6.0/metis/default&as|intel-2021.6.0/metis/latest:intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn&as|intel-2021.6.0/impi-2021.6.0/parmetis/default&as|intel-2021.6.0/impi-2021.6.0/parmetis/latest
+WORK1=/work/cmcc/cp1/
+DIR_DIAG_C3S=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/diagnostics/C3S
+XIOS_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5
+PERF_WORKDIR=/opt/ibm/lsfsuite/ext/perf/work
+NETCDF_INCLUDE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/include
+XIOS_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5
+GMP_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd
+PMC_TOP=/opt/ibm/lsfsuite/ext
+LIBRARY_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/lib64:/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0/lib/intel64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd/lib:/juno/opt/intel/oneapi_2022.2.0/tbb/2021.6.0/lib/intel64/gcc4.8:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy/lib:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/libfabric/lib:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/lib/release:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/lib:/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/linux/lib
+iniy_fore=2025
+LIBXML2_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3
+DIR_REP=/work/cmcc/cp1//CPS/CMCC-CPS1/logs/REPORTS
+HEAD=cmcc
+CMAKE_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsxioabtmvvxcv6wbrhp2gco6cpj4p
+BERKELEY_DB_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy
+SCRATCHDIR=/work/cmcc/cp1//scratch
+LIBBSD_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl
+REPOSITORY=/data/cmcc/cp1//CMCC-CPS1/files4CPS1
+DIR_UTIL=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/util
+JVM_ARGS=-DSERVER_HOSTNAME=login1.juno.cmcc.scc -DWLP_CloneID=login1.juno.cmcc.scc -DGUI_LOGDIR=/opt/ibm/lsfsuite/ext/gui/logs/login1.juno.cmcc.scc -Dspring.profiles.active=HA
+DIR_NEMO_REBUILD=/users_home/cmcc/cp1/CMCC-CM//components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
+LOADEDMODULES=oneapi-2022.1.0/compiler-rt/2022.1.0:intel-2021.6.0/rhash/1.4.2-wmyr5:intel-2021.6.0/2021.6.0:intel-2021.6.0/cmake/3.25.1-7wfsx:impi-2021.6.0/2021.6.0:intel-2021.6.0/berkeley-db/18.1.40-ybvzh:intel-2021.6.0/bzip2/1.0.8-odjrk:intel-2021.6.0/readline/8.2-mavzw:intel-2021.6.0/libiconv/1.16-rhipz:intel-2021.6.0/gdbm/1.23-pxcvo:intel-2021.6.0/xz/5.2.6-enkjc:intel-2021.6.0/perl/5.36.0-jj4hw:intel-2021.6.0/zlib/1.2.13-2hp37:intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae:intel-2021.6.0/libxml2/2.10.3-44jnb:intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7:intel-2021.6.0/ncurses/6.3-vkhgo:intel-2021.6.0/perl-xml-sax/1.02-h4yy7:intel-2021.6.0/gettext/0.21.1-ts5mc:intel-2021.6.0/perl-xml-libxml/2.0201-shybf:intel-2021.6.0/libunistring/0.9.10-66o5e:intel-2021.6.0/xerces-c/3.2.3-witnt:intel-2021.6.0/libidn2/2.3.0-vtpwb:oneapi-2022.1.0/tbb/2021.6.0:intel-2021.6.0/gmp/6.2.1-7vws4:oneapi-2022.1.0/mkl/2022.1.0:intel-2021.6.0/nettle/3.8.1-xsdhh:intel-2021.6.0/libaec/1.0.6-wvsly:intel-2021.6.0/gnutls/3.7.8-yl4oz:intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip:intel-2021.6.0/curl/7.85.0-djjip:intel-2021.6.0/zstd/1.5.2-4carj:intel-2021.6.0/libmd/1.0.4-egcmy:intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy:intel-2021.6.0/libbsd/0.11.5-yjcpv:intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7:intel-2021.6.0/expat/2.5.0-rr3lh:intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5:intel-2021.6.0/lz4/1.9.4-usl2l:intel-2021.6.0/blitz/1.0.2-v7pmc:intel-2021.6.0/lzo/2.10-o5rf7:intel-2021.6.0/boost/1.80.0-paock:intel-2021.6.0/mbedtls/2.28.0-g3uom:intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn:intel-2021.6.0/libarchive/3.5.2-5bbgw:intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3:intel-2021.6.0/libuv/1.44.1-v7e5k:intel-2021.6.0/metis/5.1.0-z5fvk:intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn:intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu
+NETCDF_LIB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib
+cmd_IC_pull_from_remote=sftp -P 20022  -i /users_home/cmcc/cp1/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it
+I_MPI_HYDRA_IFACE=ib0
+dirdatacheckIC=/data/cmcc/cp1/archive/check_ICs/
+DIR_LOG=/work/cmcc/cp1//CPS/CMCC-CPS1/logs
+NCURSES=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf
+DIAGUTIL_PATH=/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/sys_check/sys_check.sh
+RHASH_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3
+OIS2_home=/users_home/cmcc/cp1/CPS/CMCC-OIS2
+BERKELEY_DB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy
+LIBUV_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs
+GCM_name=CMCC-CM3
+DIR_CASES=/work/cmcc/cp1//CPS/CMCC-CPS1/cases
+pushdir=/work/cmcc/cp1//CPS/CMCC-CPS1/push
+S_apprun=SERIAL_sps35
+PIO_INCDIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/include
+FINALARCHIVE=/work/cmcc/cp1//data/archive/CESM/CPS1/
+HDF5_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s
+BATCHUNKNOWN=UNKN
+machine=juno
+PERL_XML_SAX_BASE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u
+CONDA_PROMPT_MODIFIER=(cmcc-cm_py39) 
+METIS=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf
+nfieldsC3S=56
+HAS_SHARED_CONFDIR=Y
+SUDO_UID=5401
+GNUTLS_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz
+METIS_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf
+NETCDF_FORTRAN_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu
+MAIL=/var/spool/mail/cp1
+EXPAT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx
+maxnumbertosubmit=18
+NCURSES_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf
+FINALARCHC3S1=/data/products/CMCC_SPS4/C3S_daily
+PERF_ETC=/opt/ibm/lsfsuite/ext/perf/license/7.0/linux-x86_64/etc
+BZIP2_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu
+DIR_EXE1=/users_home/cmcc/cp1/CPS/CMCC-CPS1/executables_cesm
+EGO_CONFDIR=/opt/ibm/lsfsuite/lsf/conf/ego/juno/kernel
+apprun=sps35
+SHELL=/bin/bash
+TERM=xterm-256color
+PERL=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod
+maxnumberguarantee=7
+ZSTD_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb
+XZ=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek
+LZO_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6
+XERCES_C=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm
+PERL_XML_LIBXML_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g
+time_limit_parallelq_m_min=240
+NETTLE_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l
+REPOSITORY1=/data/cmcc/cp1//CMCC-CPS1/files4CPS1
+WORK_C3S=/work/cmcc/cp1//CMCC-CM//archive/C3S
+CURL=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs
+__MODULES_LMCONFLICT=oneapi-2022.1.0/compiler-rt/2022.1.0&compiler-rt32&compiler-rt:intel-2021.6.0/2021.6.0&icc32&icc:impi-2021.6.0/2021.6.0&mpi32&mpi:oneapi-2022.1.0/tbb/2021.6.0&tbb32&tbb:oneapi-2022.1.0/mkl/2022.1.0&mkl32&mkl
+WLP_OUTPUT_DIR=/opt/ibm/lsfsuite/ext/gui/work/login1.juno.cmcc.scc
+versionSPS=20231101
+PARALLELIO_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u
+WORKDIR_OCE=/work/cmcc/cp1/scratch//CMCC-CPS1/temporary/WORK_OCE_IC
+DIR_REFCASES1=/users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno
+IC_CPS_guess=/work/cmcc/cp1//CPS/CMCC-CPS1/IC_CPS_guess
+RHASH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3
+EGO_BINDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/bin
+ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+PERF_LIB_TYPE=linux-x86_64
+cores_per_node=72
+CESMDATAROOT=/data/inputs/CESM
+PERL5LIB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g/lib/perl5:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/lib/perl5:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/lib/perl5:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/lib/perl5
+WORK_CPS1=/work/cmcc/cp1//CMCC-CM
+serialq_l=s_long
+serialq_m=s_medium
+MODULES_AUTO_HANDLING=0
+DIR_ARCHIVE=/work/cmcc/cp1//CMCC-CM//archive
+serialq_s=s_short
+refcaseHIST=CPS1_HIST_reference
+EGO_LIBDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib
+qos=qos_lowprio
+DIR_LOG1=/work/cmcc/cp1//CPS/CMCC-CPS1/logs
+PIO_LIBDIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib
+GNUTLS=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz
+pID=0490
+LD_RUN_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paockud6pd73p6ut6cdmf7qcnfciqgc2/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/lib64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5eh6pjuqpesw7aidvmt6iwvziya2o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy/lib:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/lib
+CURL_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs
+CLIM_DIR_DIAG=/work/cmcc/cp1//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/monthly
+ESMF_RUNTIME_PROFILE_OUTPUT=SUMMARY
+time_limit_parallelq_s_min=120
+SHLVL=5
+freq_forcings=8
+EGO_LOCAL_CONFDIR=/opt/ibm/lsfsuite/lsf/conf/ego/juno/kernel
+PYTHONPATH=/users_home/cmcc/cp1/CMCC-CM/cime:/users_home/cmcc/cp1/CMCC-CM/cime/CIME/Tools
+LIBUV=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs
+ACLOCAL_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/share/aclocal:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/share/aclocal:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/share/aclocal:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsxioabtmvvxcv6wbrhp2gco6cpj4p/share/aclocal
+CMAKE_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsxioabtmvvxcv6wbrhp2gco6cpj4p
+MBEDTLS_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy
+FFLAGS=-I/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/include
+CMAKE=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsxioabtmvvxcv6wbrhp2gco6cpj4p
+MANPATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/share/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/man:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/man:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/share/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/ext/ppm/10.2/man:/opt/ibm/lsfsuite/lsf/10.1/man::/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/documentation/en/man/common
+GUI_LOGDIR=/opt/ibm/lsfsuite/ext/gui/logs/login1.juno.cmcc.scc
+GMP=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd
+OS_TYPE=linux-x86_64
+LSF_LIBDIR=/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/lib
+EVALUATION=/work/cmcc/cp1//CPS/EVALUATION
+WORK_SCORES=/work/cmcc/cp1//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
+PARMETIS_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y
+DIR_SRC=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src
+PERL_XML_LIBXML=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybfhohkkqjt43s24b6dg33mz5bmm3g
+PARALLEL_NETCDF_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac
+PERF_TOP=/opt/ibm/lsfsuite/ext/perf
+ZLIB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo
+MODULEPATH=/juno/opt/module-environment/modulefiles:/juno/opt/module-environment/modulefiles-gcc12.2.0:/juno/opt/module-environment/modulefiles-oneapi22:/juno/opt/module-environment/modulefiles-nvhpc-sdk22:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake:/juno/opt/module-environment/5.2.0/modulefiles
+CIMEROOT=/users_home/cmcc/cp1/CMCC-CM/cime
+XERCES_C_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm
+DIR_TEMP=/work/cmcc/cp1/scratch//CMCC-CPS1/temporary
+ANALYTICS_FLAG=N
+NCURSES_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf
+BATCHPEND=PEND
+LOGNAME=cp1
+GETTEXT_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm
+MBEDTLS=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy
+NETCDF_FORTRAN_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu
+READLINE_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5
+MKLROOT=/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0
+LDFLAGS=-L/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib -lnetcdf -L/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib -lnetcdff -lm
+LIBIDN2_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp
+nmb_nemo_dmofiles=48
+XERCES_C_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm
+DIR_TEMPL=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/templates
+nmonfore=6
+CPSSYS=CPS1
+LIBICONV_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf
+PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/parmetis/4.0.3-ocsgnm6g4rbw54e4fzycmtlfft2p6v3y/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvkcwoekae4wrpefsszy7abeyhbwlf/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xios/2.5-36kwnuq7kykbrljrnubnwenyvyzbbmz5/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uomxwesrlenogodccqo7hlq7pscdqy/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvslybj7knloex6sxnxm7ii2vuuyzftn/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mcrprgxwnyrvbnlzripvv64iyfphm/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipzhqqqsbvxxgszxcb7frna4zxtnzf/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzhshoxo4sepbetz2z7b64fevurkuy/bin:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/libfabric/bin:/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0/bin:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsxioabtmvvxcv6wbrhp2gco6cpj4p/bin:/juno/opt/intel/oneapi_2022.2.0/compiler/2022.1.0/linux/bin/intel64:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/bin:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/etc:/opt/ibm/lsfsuite/lsf/10.1/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/lenovo/onecli:/opt/ibm/jre/bin:/juno/opt/anaconda/3-2022.10/envs/cmcc-cm_py39/bin:/juno/opt/anaconda/3-2022.10/condabin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/lenovo/onecli:/opt/ibm/jre/bin:/users_home/cmcc/cp1/.local/bin:/users_home/cmcc/cp1/bin:/juno/opt/module-environment/5.2.0/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/perf/1.2/bin:/usr/bsd:/usr/ucb:/usr/local/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/ibm/lsfsuite/ext/gui/3.0/wlp/bin:/opt/ibm/lsfsuite/ext/gui/3.0/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/bin:/opt/ibm/lsfsuite/ext/ppm/10.2/linux2.6-glibc2.3-x86_64/bin:/opt/lenovo/onecli:/opt/ibm/jre/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/juno/opt/batch_tools/bin:/juno/opt/tools/bin:/bin:/usr/bin:/bin:/usr/bin:/bin:/usr/bin:/juno/opt/batch_tools/bin:/juno/opt/tools/bin:/bin:/usr/bin:/bin:/usr/bin:/bin:/usr/bin:/juno/opt/batch_tools/bin:/juno/opt/tools/bin:/bin:/usr/bin:/bin:/usr/bin:/bin:/usr/bin
+ESMF_RUNTIME_PROFILE=ON
+TBBROOT=/juno/opt/intel/oneapi_2022.2.0/tbb/2021.6.0
+_LMFILES_=/juno/opt/module-environment/modulefiles-oneapi22/oneapi-2022.1.0/compiler-rt/2022.1.0:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr5:/juno/opt/module-environment/modulefiles-oneapi22/intel-2021.6.0/2021.6.0:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/cmake/3.25.1-7wfsx:/juno/opt/module-environment/modulefiles-oneapi22/impi-2021.6.0/2021.6.0:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/berkeley-db/18.1.40-ybvzh:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrk:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzw:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libiconv/1.16-rhipz:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjc:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hw:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnb:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/gettext/0.21.1-ts5mc:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/perl-xml-libxml/2.0201-shybf:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libunistring/0.9.10-66o5e:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witnt:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwb:/juno/opt/module-environment/modulefiles-oneapi22/oneapi-2022.1.0/tbb/2021.6.0:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4:/juno/opt/module-environment/modulefiles-oneapi22/oneapi-2022.1.0/mkl/2022.1.0:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhh:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libaec/1.0.6-wvsly:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4oz:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/hdf5/1.13.3-76cip:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjip:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/netcdf-c/4.9.0-qbuoy:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpv:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/netcdf-fortran/4.6.0-gohn7:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lh:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/parallel-netcdf/1.12.3-eshb5:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2l:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmc:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/boost/1.80.0-paock:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/mbedtls/2.28.0-g3uom:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/xios/2.5-36kwn:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/parallelio/2.6.0-tc4q3:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5k:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/metis/5.1.0-z5fvk:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/parmetis/4.0.3-ocsgn:/juno/opt/spacks/0.20.0/share/spack/modules/linux-rhel8-icelake/intel-2021.6.0/impi-2021.6.0/esmf/8.4.2-pioext_2.6.0-dnjmu
+MYCESMDATAROOT=/data/cmcc/cp1/
+PERL_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl/5.36.0-jj4hwapndt376dpcqa5gzs36jieqxvod
+dictionary=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/util/CPS1_checkfile_dictionary.txt
+PARALLELIO=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u
+ROOT_CASES_WORK=/work/cmcc/cp1//CPS/CMCC-CPS1
+operational_user=cp1
+MODULESHOME=/juno/opt/module-environment/5.2.0
+PKG_CONFIG_PATH=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libuv/1.44.1-v7e5kqn2suhfdbbar6hbzrkaysufnqfs/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libarchive/3.5.2-5bbgw6mvywgucyk3stglrtyhzfss2y6u/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lzo/2.10-o5rf7yc5qjqxzsao5hg4xva7zawv7hj6/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/blitz/1.0.2-v7pmctcg5qit2onwyd6zzwvzqyfuofyf/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallel-netcdf/1.12.3-eshb5fyfcgnsdtajnwbrnooe7mvsdcac/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/expat/2.5.0-rr3lhptjjaqbvjxtd7hdxur3dl5vqlcx/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/netcdf-fortran/4.6.0-gohn7hphjkiqoud24iiluttdvqvrfqnu/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libbsd/0.11.5-yjcpvnye6zsunfdznotvv7jn2ybgysvl/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/netcdf-c/4.9.0-qbuoy54nahnlx3p6ete6a3vp4otmifjw/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/curl/7.85.0-djjipgozvqvuwfqwppvkn72jewlwrjrs/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/hdf5/1.13.3-76cipa76dsrhk42shwy4g6eblyhnhp7s/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gnutls/3.7.8-yl4ozwzao3wfoinesxp67wysmoi2f4bz/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/nettle/3.8.1-xsdhhxfvdpmxred3midjvmuhekualb3l/lib64/pkgconfig:/juno/opt/intel/oneapi_2022.2.0/mkl/2022.1.0/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libidn2/2.3.0-vtpwbexbby2yviqmnfqtz5j2xmgu7adp/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xerces-c/3.2.3-witntw6kh77tp7mqhlrvpk2ezimigecm/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/ncurses/6.3-vkhgo3nqzz537nsjnthpog74iz4luhjf/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libxml2/2.10.3-44jnbdeqorasgtsllanpfkfgd67jcrs3/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zlib/1.2.13-2hp37qrossjpqk6ftenywbajrbmdp3bo/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5/lib/pkgconfig:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/rhash/1.4.2-wmyr57ua3rtgp6ma4gyvgevifwt2hch3/lib/pkgconfig
+DIR_CLIM=/work/cmcc/cp1//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
+CONDA_DEFAULT_ENV=cmcc-cm_py39
+__MODULES_SHARE_PERL5LIB=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o/lib/perl5:2:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-namespacesupport/1.12_9-pbxae56ypihq5qkjss4szhrjt4q5rnxl/lib/perl5:3:/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax-base/1.09-kxxp7myapu6ohfph2zi72fhpnvxtw37u/lib/perl5:3
+CATALINA_TMPDIR=/opt/ibm/lsfsuite/ext/gui/work
+GMP_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gmp/6.2.1-7vws4wmofmgv3p7kww7zlypmz3dmttgd
+BZIP2_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/bzip2/1.0.8-odjrkb5zx72miwlt7tlyynpvhjpjfxvu
+I_MPI_ROOT=/juno/opt/intel/oneapi_2022.2.0/mpi/2021.6.0
+DATA_ARCHIVE1=/data/cmcc/cp1/archive
+DIR_LND_IC=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/IC_CPS//IC_CLM
+PERL_XML_SAX_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o
+HISTSIZE=1000
+PERL_XML_SAX=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/perl-xml-sax/1.02-h4yy7assauip5u3cqsphwvzb2papdk7o
+hsmmail=hsm@cmcc.it
+LIBMD_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/libmd/1.0.4-egcmy75imbxawviznoc6tfvqjhss7pv3
+slaID=SC_sps35
+GDBM=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/gdbm/1.23-pxcvo6beb5vponrm43a3cpekpk7lmjyn
+PARALLELIO_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/parallelio/2.6.0-tc4q35xniwdvqw4pihkv3fr5j2q5yl7u
+DIR_PORT=/users_home/cmcc/cp1/CPS/CMCC-CPS1/src/porting
+DIR_REST_OIS_FORE=/work/cmcc/cp1//OIS2/archive/
+IC_CICE_CPS_DIR1=/data/cmcc/cp1/archive/IC/CICE_CPS1/
+DIR_CESM=/users_home/cmcc/cp1/CMCC-CM/
+PERF_LIB=/opt/ibm/lsfsuite/ext/perf/1.2/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/ego/1.2/linux-x86_64/lib:/opt/ibm/lsfsuite/ext/perf/lsf/10.0/linux-x86_64/lib
+time_limit_serialq_l_min=1440
+envcondac3schecker=c3schecker
+READLINE_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/readline/8.2-mavzwujrba7p2f53p2yakelxkt7jutn5
+ESMF_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/intel-oneapi-mpi-2021.6.0/esmf/8.4.2-dnjmuxdku7qcx5zwocnmzntofopjoooa
+DIR_FORE_ANOM=/work/cmcc/cp1//CPS/CMCC-CPS1/forecast_anom
+mpirun4py_nemo_rebuild=mpiexec.hydra
+IC_CAM_CPS_DIR=/data/cmcc/cp1/archive/IC/CAM_CPS1/
+ZSTD_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/zstd/1.5.2-4carj72tksvdgrcimq3mmtpheh6s2bvb
+LICENSE_FILE=/opt/ibm/lsfsuite/ext/perf/conf/license.dat
+OMP_NUM_THREADS=1
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+LZ4_DIR=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/lz4/1.9.4-usl2lbnydakiwwtobvhdarmnngdgtb7b
+forcDIReda=/data/cmcc/cp1//CMCC-CPS1/inputs/FORC4CLM
+XZ_ROOT=/juno/opt/spacks/0.20.0/opt/spack/linux-rhel8-icelake/intel-2021.6.0/xz/5.2.6-enkjcsfuv7dhhfrt3ussvjbnpysk2lek
+mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
+BASH_FUNC___conda_hashr%%=() {  if [ -n "${ZSH_VERSION:+x}" ]; then
+ \rehash;
+ else
+ if [ -n "${POSH_VERSION:+x}" ]; then
+ :;
+ else
+ \hash -r;
+ fi;
+ fi
+}
+BASH_FUNC_which%%=() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+BASH_FUNC_module%%=() {  local _mlredir=1;
+ if [ -n "${MODULES_REDIRECT_OUTPUT+x}" ]; then
+ if [ "$MODULES_REDIRECT_OUTPUT" = '0' ]; then
+ _mlredir=0;
+ else
+ if [ "$MODULES_REDIRECT_OUTPUT" = '1' ]; then
+ _mlredir=1;
+ fi;
+ fi;
+ fi;
+ case " $@ " in 
+ *' --no-redirect '*)
+ _mlredir=0
+ ;;
+ *' --redirect '*)
+ _mlredir=1
+ ;;
+ esac;
+ if [ $_mlredir -eq 0 ]; then
+ _module_raw "$@";
+ else
+ _module_raw "$@" 2>&1;
+ fi
+}
+BASH_FUNC__module_raw%%=() {  eval "$(/usr/bin/tclsh '/juno/opt/module-environment/5.2.0/libexec/modulecmd.tcl' sh "$@")";
+ _mlstatus=$?;
+ return $_mlstatus
+}
+BASH_FUNC_conda%%=() {  \local cmd="${1-__missing__}";
+ case "$cmd" in 
+ activate | deactivate)
+ __conda_activate "$@"
+ ;;
+ install | update | upgrade | remove | uninstall)
+ __conda_exe "$@" || \return;
+ __conda_reactivate
+ ;;
+ *)
+ __conda_exe "$@"
+ ;;
+ esac
+}
+BASH_FUNC___conda_activate%%=() {  if [ -n "${CONDA_PS1_BACKUP:+x}" ]; then
+ PS1="$CONDA_PS1_BACKUP";
+ \unset CONDA_PS1_BACKUP;
+ fi;
+ \local ask_conda;
+ ask_conda="$(PS1="${PS1:-}" __conda_exe shell.posix "$@")" || \return;
+ \eval "$ask_conda";
+ __conda_hashr
+}
+BASH_FUNC___conda_exe%%=() {  ( "$CONDA_EXE" $_CE_M $_CE_CONDA "$@" )
+}
+BASH_FUNC___conda_reactivate%%=() {  \local ask_conda;
+ ask_conda="$(PS1="${PS1:-}" __conda_exe shell.posix reactivate)" || \return;
+ \eval "$ask_conda";
+ __conda_hashr
+}
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+_=/bin/env
