@@ -39,7 +39,7 @@ then
 fi
 cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
 cyy=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 1`
-nmonthsrun=$(( (cyy - yyyy) * 12 + (cmm - st) ))
+nmonthsrun=$(( 10#$((cyy - yyyy)) * 12 + 10#$cmm - 10#$st ))
 
 
 if [[ $nmonthsrun -eq $((nmonforext + nmonfore)) ]] && [[ $stop_op == "nmonths" ]]
