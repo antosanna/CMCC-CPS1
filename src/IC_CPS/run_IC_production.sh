@@ -7,12 +7,11 @@
 
 set -euvx
 
-yyyy=$1                    # year start-date
-mm=$2                    # month start-date: this is a number 
+yyyy=`date +%Y`                    # year start-date
                          # not 2 digits
-st=`printf '%.2d' $((10#$mm))`   # 2 digits
+st=`date +%m`
 
-idcomplete=${3:-0}   
+idcomplete=${1:-0}   # we keep this input optional for clm analysis (the 10th of each month)
 
 
 mkdir -p $IC_CAM_CPS_DIR/$st
@@ -161,7 +160,7 @@ then
 
 
 ###############################################################
-# NOW COMPUTE IC FOR CAM
+# NOW COMPUTE IC FOR CAM  --- temporarily on Cassandra
 # using poce=01 (unperturbed) -
 ###############################################################
 #wait until all make_atm_ic_l83_ processes are done so that you are sure that no CAM ICs are in production

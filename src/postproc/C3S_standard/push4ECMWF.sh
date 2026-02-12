@@ -88,6 +88,24 @@ then
    #cntmanifest=`grep cmcc_CERISE-CERISE-${GCM_name}-demonstrator2-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_manifest_ $log_script|wc -l`
    if [[ $cntmanifest -eq 1 ]]
    then
+      cd $pushdir/$yyyy$st
+      tarlist=`ls -1 *S${yyyy}${st}0100*.tar`
+      attachtxt=${DIR_LOG}/$typeofrun/${yyyy}${st}/tartvf_${yyyy}${st}.txt
+      if [[ -f ${attachtxt} ]] ; then
+         	rm ${attachtxt}
+      fi
+      for tarf in $tarlist ; do
+         	tar -tvf $tarf >> ${attachtxt}
+      done
+      title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
+      body="Dear Volkan, \n
+      \n
+      this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
+   \n
+      Many thanks for your cooperation \n
+      CMCC-SPS staff\n"
+
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
       touch $filedone
       exit 0
    fi
@@ -228,18 +246,18 @@ for tarf in $tarlist ; do
 done
 
 
-# AT LAST SEND notification both to sp1 and to ECMWF
-title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-body="Dear Volkan, \n
-\n
-this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
-\n
-Many thanks for your cooperation \n
-CMCC-SPS staff\n"
-
 
 checkpushdone=`ls ${filedone} | wc -l`
 if [[ $checkpushdone -eq 1 ]]; then
+# AT LAST SEND notification both to sp1 and to ECMWF
+   title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
+   body="Dear Volkan, \n
+   \n
+   this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
+   \n
+   Many thanks for your cooperation \n
+   CMCC-SPS staff\n"
+
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a ${attachtxt} -c $ccecmwfmail -b $mymail -r $typeofrun -s $yyyy$st
    touch $filedone
    echo "Done."

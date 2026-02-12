@@ -41,7 +41,7 @@ then
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls | grep S${yyyy}${st}
 quit
 EOF
    lftp -f $lftp_cmd |tee $log_lftp
@@ -67,7 +67,7 @@ then
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    lftp -f $lftp_cmd |tee $log_lftp

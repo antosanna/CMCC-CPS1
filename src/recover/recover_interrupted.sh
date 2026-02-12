@@ -633,7 +633,29 @@ set -eux
           . $dictionary
 #          set -euvx
 set -eux
-          cd ${DIR_CASES}/$caso
+        #inside casedir
+          cd ${DIR_CASES}/$caso  
+        #example: forecast 202601---> lastforerest=202607
+          lastforerest=`date -d "${yyyy}${st}15 + ${nmonfore} month" +%Y%m`
+          nresub=`./xmlquery RESUBMIT | cut -d ':' -f2|sed 's/ //g'`
+        #given the actual value of RESUBMIT in env_run, the expected restart date ($yyyy$mm) should be:
+          expectrest=`date -d "${lastforerest}15 - $((${nresub}+1)) month" +%Y%m`
+        #oldest (for safety) available restart in $DIR_ARCHIVE:
+          actualrestdir=`ls -drt ${DIR_ARCHIVE}/${caso}/rest/* |head -1`
+          actualrest=`basename $actualrestdir | sed 's/-//g'|cut -c 1-6`  #same format $yyyy$mm     
+        #if last available restart is not the expected one - realign RESUBMIT value in env_run
+          if [[ ${actualrest} -ne ${expectrest} ]] ; then
+             yyact=`date -d "${actualrest}15" +%Y`
+             mmact=`date -d "${actualrest}15" +%m`
+             yylast=`date -d "${lastforerest}15" +%Y`
+             mmlast=`date -d "${lastforerest}15" +%m`
+             newresub=$(((${yylast} - ${yyact}) * 12 + (10#${mmlast} - 10#${mmact}) -1))
+             ./xmlchange RESUBMIT=${newresub}
+          fi
+        #in any case copy again restart files and rpointer in rundir, to avoid mismatch
+        #it may happen if the run is interrupted while writing restart (eg. out-of-time-limit error) 
+          rsync -av $actualrest/* ${WORK_CPS}/${caso}/run/.
+
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
           echo $command

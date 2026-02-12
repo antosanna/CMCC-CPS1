@@ -95,10 +95,8 @@ do
          fi
          mkdir -p $OUTDIR_DIAG/C3S_statistics/$st/$var
          outfile=$OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.nc
-         if [[ -f $outfile ]]
+         if [[ ! -f $outfile ]]
          then
-            continue
-         else
             if [[ $flag == "max" ]]
             then
                nces -O -y max -v ${var} ${OUTDIR_DIAG}/C3S_statistics/$st/19??/${var}/${fileroot}_S????${st}_*${var}_max.nc ${OUTDIR_DIAG}/C3S_statistics/$st/20[012]?/${var}/${fileroot}_S????${st}_*${var}_max.nc  ${outfile}

@@ -40,8 +40,9 @@ logfile="push_${type_fore}_S${yyyy}${st}.$datestr.log"
 #cmd_ftp_cmccbo="open -u c3s,cDx52!lst ftp://downloads.cmcc.bo.it"
 #new ftp server Bologna
 #cmd_ftp_cmccbo="open -u cp1,dpw937045+B ftp://downloads.cmcc.bo.it"
-cmd_ftp_cmccbo="open -u c3s,YhjDf733 ftp://ftp4.cmcc.it"
-cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
+cmd_ftp_cmccbo="open -u c3s,YhjDf733 sftp://ftp4.cmcc.it"
+# ftp does not work properly!!! USE ONLY SFTP
+cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 sftp://acq.ecmwf.int"
 
 
 if [[ ! -f $first ]]
@@ -50,56 +51,30 @@ then
 fi
 if [[ $dbg_push -eq 1 ]]
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
-      cat > $script_send << EOF
+   script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
+   cat > $script_send << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
 set ftp:list-options -a
+set ftp:rest-stor no
 $cmd_ftp_cmccbo
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
 quit
 EOF
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.cmcc
-      cat > $script_send << EOF
-set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
-set ftp:list-options -a
-$cmd_ftp_cmccbo
-mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
-quit
-EOF
-   fi
    chmod 744 $script_send
 
 elif [[ $dbg_push -eq 2 ]] || [[ $dbg_push -eq 0 ]] 
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.ecmwf
-      cat > $script_send << EOF
+   script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.ecmwf
+   cat > $script_send << EOF
 set xfer:log true
 set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
+set ftp:rest-stor no
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
 quit
 EOF
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      script_send=$DIR_LOG/${type_fore}/$yyyy$st/send.lftp.ecmwf
-      cat > $script_send << EOF
-set xfer:log true
-set xfer:log-file "$DIR_LOG/${type_fore}/$yyyy$st/${logfile}"
-set ftp:list-options -a
-$cmd_ftp_ecmwf
-mirror -v --reverse --ignore-time --parallel=${nstreams} $LOCAL_DIR $REMOTE_DIR || exit 1
-quit
-EOF
-   fi
    chmod 744 $script_send
 
 fi  #if dbg
@@ -120,7 +95,7 @@ then
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    elif [[ "$machine" == "leonardo" ]]
@@ -131,7 +106,7 @@ EOF
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    fi
@@ -146,7 +121,7 @@ then
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    elif [[ "$machine" == "leonardo" ]]
@@ -157,7 +132,7 @@ EOF
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    fi  

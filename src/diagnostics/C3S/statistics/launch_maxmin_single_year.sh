@@ -10,15 +10,15 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/descr_ensemble.sh $iniy_hind
 
-# THIS SCRIPT IS MEANT TO BE LAUNCHED FROM CRONTAB AND cp2 USER
-
 set -uexv
 stnow=$1
 maxjob=10       # max number of procs to be simultaneously submitted
 do_only_test_var=0   # if you want to compute only myvar
 myvar=tas
+ocean_vars=0   # set to 1 if you want to compute also ocean var statistics
 #
 namescript=compute_maxmin
+namescript2=compute_maxmin_monthly_refperiod
 outdir=$OUTDIR_DIAG/C3S_statistics   #OUTDIR_DIAG
 mkdir -p $outdir
 
@@ -54,6 +54,9 @@ while IFS=, read -r flname C3S realm prec coord lname sname units freq level add
 do
    var_arrayC3S+=("$C3S")
 done } < $C3Stable_clm
+# presently skip ocean vars
+if [[ $ocean_vars -eq 1 ]]
+then
 {
 read 
 while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
@@ -90,6 +93,7 @@ while IFS=, read -r flname C3S lname sname units realm level addfact coord cell 
 do
    var_arrayC3S+=("$C3S")
 done } < $C3Stable_oce6
+fi   # ocean vars
 
 echo "going to process var_arrayC3S "
 echo ${var_arrayC3S[@]}
@@ -146,7 +150,8 @@ done    #loop on $var
 if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${stnow}_*_done |wc -l` -eq $((${#var_arrayC3S[@]} - 3)) ]]
 then
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
-   $DIR_DIAG_C3S/statistics/compute_maxmin_monthly_refperiod.sh $stnow
+   input=$stnow
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 8000 -t 1 -q $serialq_m -j ${namescript2}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
 fi
 
 exit 0
