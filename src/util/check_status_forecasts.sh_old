@@ -2,9 +2,8 @@
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 
-set -eux
+set -eu
 stdate=`date +%Y%m`
-st=`date +%m`
 mkdir -p $DIR_LOG/forecast/$stdate/
 LOG_FILE=$DIR_LOG/forecast/$stdate/check_status_forecasts.`date +%Y%m%d%H%M`.log
 exec 3>&1 1>>${LOG_FILE} 2>&1
@@ -30,7 +29,7 @@ if [[ -f $report ]]
 then
    rm $report
 fi
-printf "${fmt}" "CASE" "STATUS" "last-for-day" "running-month" > $report
+printf "${fmt}" "CASE" "STATUS" "last-for-day" "last-rest" > $report
 for i in {001..054}
 do
    fmt="%-15s %-15s %-15s %-15s\n"
@@ -51,29 +50,29 @@ set -e
    lastday1="$caso        "
    last_updated_file=`ls -rt $WORK_CPS/$caso/run/*`
    log2check=`ls -rt $WORK_CPS/$caso/run/rof.log*[0-9]|tail -1`
-   lastday2="--------       "
    if [[ ! -z $log2check ]]
    then
       teststring=`grep "model date" $log2check|tail -1|awk '{print $5}'`
       if [[ ! -z $teststring ]]
       then
-         lastday2="$teststring       "
+         lastday2=$teststring
       fi
+   else
+      lastday2="--------"
    fi
    if [[ -d $DIR_ARCHIVE/$caso/rest ]]
    then
       cd $DIR_ARCHIVE/$caso/rest
       restlist+=" `ls |cut -d '-' -f2`"
-      lastday3=`ls |tail -1|cut -d '-' -f2`
-      run_mon=$((10#$lastday3 - 10#$st + 1))
+      lastday3="      `ls |cut -d '-' -f2`"
       if [[ `echo $lastday3|wc -w` -eq 2 ]]
       then
          fmt="%-15s %-15s %-15s %-15s %-15s\n"
       fi
    else
-      run_mon="1"
+      lastday3="first-month"
    fi
-   printf "${fmt}" $lastday1  $status $lastday2 $run_mon >>$report
+   printf "${fmt}" $lastday1  $status $lastday2 $lastday3 >>$report
    
 done
 echo "file with status advancement here $report "
@@ -87,7 +86,7 @@ do
    message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
 #   message+=" number of member with restart month ${uniq_rest[$i]} is $n \n"
 done
-${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "[SPS4 notification] $stdate status update" -r yes -s $stdate
+${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "SPS4 $stdate status" -r yes -s $stdate
 set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone

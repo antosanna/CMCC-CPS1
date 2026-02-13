@@ -282,10 +282,11 @@ then
    serialq_push=lrd_all_serial
    serial_test=lrd_all_serial
    WORK1=/leonardo_work/$account_name/  #is environment var in leonardo
-   WORK=$WORK1/$USER/
-   if [[ $USER == "$operantional_user" ]]
+   if [[ $USER == "$operational_user" ]]
    then
       WORK=${WORK1}
+   else
+      WORK=$WORK1/$USER/
    fi
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
@@ -424,6 +425,8 @@ WORK_CPS=$WORK/CMCC-CM
 WORK_CPS1=$WORK1/CMCC-CM
 DIR_CASES=$WORK/CPS/CMCC-${CPSSYS}/cases
 DIR_CASES1=$WORK1/CPS/CMCC-${CPSSYS}/cases
+DIR_REFCASES1=$DIR_ROOT1/refcases/$machine
+DIR_REFCASES=$DIR_ROOT/refcases/$machine
 ROOT_CASES_WORK=$WORK1/CPS/CMCC-${CPSSYS}
 # ######## WORK DIRS FOR C3S 
 DIR_ARCHIVE_C3S=$DIR_ARCHIVE/C3S

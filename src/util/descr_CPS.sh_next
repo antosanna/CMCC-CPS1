@@ -356,8 +356,8 @@ header="ensemble4"
 # jobIDdummy=1234
 versionSPS=20231101
 GCM_name=CMCC-CM3
-endy_hind=2024
-iniy_hind=1995
+endy_hind=2022
+iniy_hind=1993
 iniy_fore=2025
 freq_forcings=8
 # 

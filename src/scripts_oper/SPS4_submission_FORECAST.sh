@@ -73,6 +73,7 @@ else
       exit
    fi
 fi
+echo "FORECAST SUBMISSION STARTING NOW `date +%Y%m%d%H%M`"
 # this can be redundant on Juno
 $IC_CPS/set_forecast_ICs.sh $yyyy $st
 # Input **********************
@@ -279,6 +280,7 @@ set -e
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
      if [[ ${cnt_sleep} -eq 10 ]] ; then
         sleep 1800
+        echo "add 30' sleep to prevent overload of workload manager"
         cnt_sleep=0
      fi
      if [ $np_all -ge $maxnumbertosubmit ]

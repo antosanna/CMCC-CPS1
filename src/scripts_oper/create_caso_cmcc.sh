@@ -8,28 +8,16 @@ set -euvx
 #----------------------------------------------------------
 # get from the parent script start-date and perturbations
 #----------------------------------------------------------
-if [[ $machine == "leonardo" ]]
-then
-   module use -p $modpath
-   yyyy=YYYY
-   st=STDATE
-   pp=`printf '%.2d' PATM`            # CAM perturbation 2 digits
-   ppland=`printf '%.2d' PLAND`
-   poce=`printf '%.2d' POCE`
-   nrun=`printf '%.3d' NRUN`
-   flag_test=0
-else
-   yyyy=$1
-   st=$2
-   pp=`printf '%.2d' $3`            # CAM perturbation 2 digits
-   ppland=`printf '%.2d' $4`
-   poce=`printf '%.2d' $5`
-   nrun=`printf '%.3d' $6`
-   flag_test=${7:-0}  # if set this flag disables the "true" run and activates 
+yyyy=$1
+st=$2
+pp=`printf '%.2d' $3`            # CAM perturbation 2 digits
+ppland=`printf '%.2d' $4`
+poce=`printf '%.2d' $5`
+nrun=`printf '%.3d' $6`
+flag_test=${7:-0}  # if set this flag disables the "true" run and activates 
                    # the test suites (just work for the specific test case 
                    # ${SPSSystem}_202110_054)
                    # 1=tests from lt_archive_C3S.sh
-fi
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${SPSSystem}_${yyyy}${st}_${nrun}
@@ -38,17 +26,17 @@ then
    flag_test=0
 fi
 
-if [ $yyyy$st -ge ${yyyySCEN}07 ]; then
+if [[ $machine == "leonardo" ]]
+then
+   module use -p $modpath
+fi
+
+if [[ $yyyy$st -ge ${yyyySCEN}07 ]]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
 cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
-if [[ $machine == "leonardo" ]]
-then
-# Leonardo's $HOME are locked and not readable among users
-   cesmexe=$DIR_EXE/cesm.exe.CPS1_${machine}
-fi
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -63,12 +51,7 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # refcase changes with scenario but the executable must not
 set +euvx
-if [[ $machine == "leonardo" ]]
-then
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_REFCASES/$refcase --cime-output-root $WORK_CPS
-else
-   $DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_REFCASES1/$refcase --cime-output-root $WORK_CPS
-fi
+$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
 
 set -euvx
 #----------------------------------------------------------
@@ -77,27 +60,27 @@ echo "$ic" > $DIR_CASES/$caso/logs/ic_${caso}.txt
 
 cd $DIR_CASES/$caso
 #----------------------------------------------------------
-# Copy log_cheker from DIR_TEMPL in $caso  TO BE DONE
+# Copy log_cheker from DIR_TEMPL in $caso TO DO
 #----------------------------------------------------------
 
 rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
-rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
-if [[ $USER != "$operational_user" ]] && [[ $machine != "leonardo" ]]
+if [[ $machine == "leonardo" ]]
 then
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
+else
    if [[ $flag_dev -eq 1 ]]
    then
+# this one submit without SC
       rsync -av $DIR_TEMPL/env_workflow_sps4.xml_${env_workflow_tag}_noSC $DIR_CASES/$caso/env_workflow.xml
    fi
 fi
-#if [[ $machine == "leonardo" ]] ; then
-# this is mandatory in Leo since libraries have been changed since the model was compiled and we cannot use those defined in ccs_config. 
-#    rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
-#fi
+
+rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batch.xml
+# this makes use of SC and if a user has no access to the SC it cannot run
+# TO DO
+# set-up the case after modfication env_workflow
 #----------------------------------------------------------
 ./case.setup --reset
-if [[ $machine == "leonardo" ]] ; then
-   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
-fi
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
 rsync -av $DIR_TEMPL/file_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
@@ -144,20 +127,13 @@ then
    ./xmlchange PIO_NUMTASKS_ROF=21
    ./xmlchange PIO_NUMTASKS_ICE=21
 fi
+
 if [[ $typeofrun == "hindcast" ]]
 then
    ./xmlchange --subgroup case.checklist prereq=0
 else
-   if [[ $machine != "leonardo" ]]
-   then
-      ./xmlchange --subgroup case.checklist prereq=1
-   fi
+   ./xmlchange --subgroup case.checklist prereq=1
 fi
-
-#20240715 - test
-#WE HAVE TRIED AND IT DOES NOT WORK REGARLESS THE FIGURE TESTED. THERE MUST BE A PROBLEM WITH THE INTERPRATATION OF VARIABLES FROM THE COMPILED LIBRARY
-#./xmlchange PIO_NUMTASKS=4
-
 
 sed -e "s/CASO/$caso/g;s/YYYY/$yyyy/g;s/mese/$st/g;s/member/$nrun/g" $DIR_TEMPL/check_6months_output_in_archive.sh > $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
 chmod u+x $DIR_CASES/$caso/check_6months_output_in_archive_${caso}.sh
@@ -180,15 +156,15 @@ mkdir -p $DIR_CASES/$caso/logs
 echo "IC CAM $ncdatanow"
 sed -i '/ncdata/d' $DIR_CASES/$caso/user_nl_cam
 echo "ncdata='$ncdatanow'">>$DIR_CASES/$caso/user_nl_cam
-
 if [[ $yyyy$st -ge ${yyyySCEN}07 ]] && [[ $yyyy$st -le ${yyyySCEN}12 ]]
 then
    echo "prescribed_ozone_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
    echo "prescribed_strataero_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
    echo "use_init_interp = .true.">>$DIR_CASES/$caso/user_nl_clm
 fi
+
 #for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
-if [[ $yyyy$st -eq 201501 ]]  
+if [[ $yyyy$st -eq 201501 ]] 
 then   
    echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
 fi
@@ -200,14 +176,12 @@ then
     echo "check_finidat_year_consistency = .false. " >> $DIR_CASES/$caso/user_nl_clm
 fi
 
-cp $DIR_TEMPL/user_nl_hydros $DIR_CASES/$caso
 #----------------------------------------------------------
-
+cp $DIR_TEMPL/user_nl_hydros $DIR_CASES/$caso/
 
 cp $cesmexe $WORK_CPS/$caso/bld/cesm.exe
 
 cd $DIR_CASES/$caso
-#----------------------------------------------------------
 
 if [[ $flag_test -ne 0 ]]
 then
