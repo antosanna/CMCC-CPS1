@@ -11,6 +11,16 @@ then
    continue
 fi 
 cd $DIR_ARCHIVE/$caso/rest
+n_tarfile=`ls |grep *.tar |wc -l`
+if [[ $n_tarfile -eq 1 ]] 
+then
+   tarfile=`ls |grep 00000.tar`
+   cd $DIR_ARCHIVE/$caso/rest
+   gzip $tarfile
+   rm $tarfile
+   echo "tar for caso $caso already done, yet not compressed. Now fixed and exit"
+   exit 0
+fi
 n_dirrest=`ls |grep 00000|grep -v *.tar.gz |wc -l`
 if [[ $n_dirrest -ne 1 ]]
 then
@@ -31,6 +41,14 @@ then
 			list2rm=`ls *.h?.*`
 			rm $list2rm
 fi
+
 cd $DIR_ARCHIVE/$caso/rest
+# if exist, remove links
+flink=`find . -type l`
+for ff in $flink
+do
+   unlink $ff
+done
+
 tar -czvf $dirrest.tar.gz $dirrest
 rm -rf $dirrest
