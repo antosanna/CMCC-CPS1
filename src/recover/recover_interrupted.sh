@@ -636,7 +636,12 @@ set -eux
         #inside casedir
           cd ${DIR_CASES}/$caso  
         #example: forecast 202601---> lastforerest=202607
-          lastforerest=`date -d "${yyyy}${st}15 + ${nmonfore} month" +%Y%m`
+          nmonths_to_run=$nmonfore
+          if [[ $extended -eq 1 ]]
+          then
+              nmonths_to_run=$((nmonforext + nmonfore))
+          fi
+          lastforerest=`date -d "${yyyy}${st}15 + ${nmonths_to_run} month" +%Y%m`
           nresub=`./xmlquery RESUBMIT | cut -d ':' -f2|sed 's/ //g'`
         #given the actual value of RESUBMIT in env_run, the expected restart date ($yyyy$mm) should be:
           expectrest=`date -d "${lastforerest}15 - $((${nresub}+1)) month" +%Y%m`
@@ -654,7 +659,7 @@ set -eux
           fi
         #in any case copy again restart files and rpointer in rundir, to avoid mismatch
         #it may happen if the run is interrupted while writing restart (eg. out-of-time-limit error) 
-          rsync -av $actualrest/* ${WORK_CPS}/${caso}/run/.
+          rsync -av $actualrestdir/* ${WORK_CPS}/${caso}/run/.
 
 # workaround in order to keep the syntax highlights correct (case is a shell command)
           command="case.submit"
