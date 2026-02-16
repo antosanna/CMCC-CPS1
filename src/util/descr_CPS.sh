@@ -290,13 +290,13 @@ then
    fi
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
-   if [[ $USER == "$operantional_user" ]]
+   if [[ $USER == "$operational_user" ]]
    then
       WORK_CPS=${WORK_CPS1}
    fi
    DIR_ARCHIVE1=${WORK_CPS1}/archive
    DIR_ARCHIVE=${WORK_CPS}/archive
-   if [[ $USER == "$operantional_user" ]]
+   if [[ $USER == "$operational_user" ]]
    then
       DIR_ARCHIVE=${DIR_ARCHIVE1}
    fi
@@ -306,13 +306,13 @@ then
 #    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch 20250915
    SCRATCHDIR1=/leonardo_work/CMCC_2025/scratch
    SCRATCHDIR=/leonardo_work/CMCC_2025/$USER/scratch
-   if [[ $USER == "$operantional_user" ]]
+   if [[ $USER == "$operational_user" ]]
    then
       SCRATCHDIR=${SCRATCHDIR1}
    fi
    FINALARCHC3S1=$WORK1/CMCC_SPS4/C3S_daily
    FINALARCHC3S=$WORK/CMCC_SPS4/C3S_daily
-   if [[ $USER == "$operantional_user" ]]
+   if [[ $USER == "$operational_user" ]]
    then
       FINALARCHC3S=${FINALARCHC3S1}
    fi
@@ -347,7 +347,7 @@ then
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
 WORK_C3S=$WORK_C3S1
-if [[ $USER == "$operantional_user" ]]
+if [[ $USER == "$operational_user" ]]
 then
       WORK_C3S=${WORK_C3S1}
 fi
