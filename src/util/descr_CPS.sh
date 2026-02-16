@@ -386,7 +386,7 @@ versionSPS=20231101
 GCM_name=CMCC-CM3
 endy_hind=2024
 iniy_hindext=1995
-iniy_hind=1993
+iniy_hind=1995   #1993
 iniy_fore=2025
 freq_forcings=8
 # 
