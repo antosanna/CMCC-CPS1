@@ -3,7 +3,7 @@
 #BSUB -J submit_tar_C3S_offline
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.err
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/hindcast/submit_tar_C3S%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 
 . $HOME/.bashrc

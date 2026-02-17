@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -R "rusage[mem=1G]"
 #BSUB -J postprocAPEC
 #BSUB -q s_long

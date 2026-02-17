@@ -25,7 +25,7 @@ dirlog=${DIR_LOG}/${typeofrun}/${start_date}/diagnostics
 mkdir -p $dirlog
 
 refperiod=$iniy_hind-$endy_hind
-all=3      #only for fc: 3 - if monthly mean + anom + plot; 2 - if only anom + plot ; 1 - if only plot
+all=3      #only for fc: 3 - if monthly mean + anom + plot; 2 - if only anom + plot 
 typefore="fc"
 ###HERE WE KEEP JUST SEASONAL - IF THIS WILL BE MODIFIED IN THE FUTURE, CHECK NUMBER OF FLAG CONTROL in $DIR_UTIL/launch_diagnostic_website.sh 
 export reglist="global Europe Tropics NH SH"
@@ -36,11 +36,17 @@ then
 else
    varlist="sst"
 fi
+
+DATASET=ERA5
 for var in $varlist
 do
+     if [[ $var == "precip" ]]
+     then
+        DATASET=MSWEP
+     fi
      cd $DIR_DIAG_C3S
      echo 'postprocessing $var '$st
-     input="$yyyy $st $var $all '$reglist' '$ensorgl' ${flag_done} $dbg"
+     input="$yyyy $st $var $all '$reglist' '$ensorgl' ${flag_done} $DATASET $dbg"
      echo $input
      ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 30000 -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
 

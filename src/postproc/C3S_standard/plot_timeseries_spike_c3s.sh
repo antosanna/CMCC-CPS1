@@ -2,7 +2,7 @@
 #BSUB -J plot_timeseries_spike
 #BSUB -e logs/plot_timeseries_spike_%J.err
 #BSUB -o logs/plot_timeseries_spike_%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 40000
 #BSUB -q s_medium
 #--------------------------------

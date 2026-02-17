@@ -4,7 +4,7 @@
 #BSUB -J checktar
 #BSUB -e logs/checktar_%J.err
 #BSUB -o logs/checktar_%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 
 # load variables from descriptor
 . $HOME/.bashrc

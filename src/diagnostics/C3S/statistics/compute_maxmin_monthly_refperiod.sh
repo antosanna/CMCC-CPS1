@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_medium
 #BSUB -J monthly_maxmin
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/DIAGS/C3S_statistics/monthly_maxmin_%J.err

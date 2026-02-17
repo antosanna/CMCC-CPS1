@@ -1,7 +1,7 @@
 #!/bin/sh -l
 #--------------------------------
 #BSUB -J check_min
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 25000
 #BSUB -o logs/check_min.%J.out
 #BSUB -e logs/check_min.%J.err

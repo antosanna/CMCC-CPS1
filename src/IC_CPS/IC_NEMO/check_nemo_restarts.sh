@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_medium
 #BSUB -J check_NEMO_rest
 #BSUB -e logs/check_NEMO_rest_%J.err

@@ -1,5 +1,5 @@
 #!/bin/sh -l
-##BSUB -P 0490
+##BSUB -P 0784
 ##BSUB -J test
 ##BSUB -e logs/test_%J.err
 ##BSUB -o logs/test_%J.out

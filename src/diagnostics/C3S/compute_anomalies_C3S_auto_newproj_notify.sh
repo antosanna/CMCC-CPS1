@@ -12,7 +12,8 @@ all=$4
 reglist="$5"
 ensorgl="$6"
 flag_done=${7}
-dbg=${8}
+DATASET=$8
+dbg=${9}
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -145,16 +146,19 @@ for flgmnth in {0..1} ; do
       leadlist="1 2 3 4"
       flgmnth_fname="seasonal"
    else
-      leadlist="1 2 3 4 5 6"
+#      leadlist="1 2 3 4 5 6"
+      leadlist="1 2"
       flgmnth_fname="monthly"
    fi
 
-   $DIR_DIAG_C3S/single_var_forecast_C3S_auto_newproj_notify.sh $yyyy $st $varm "$reglist" $anomdir "$dirplots" $flgmnth ${flgmnth_fname} "$leadlist"
+   $DIR_DIAG_C3S/single_var_forecast_C3S_auto_newproj_notify.sh $yyyy $st $varm "$reglist" $anomdir "$dirplots" $flgmnth ${flgmnth_fname} $DATASET "$leadlist"
 done
 
 
 # must be loaded here to not raise conflicts among conda envs
+set +euvx
 . $DIR_UTIL/load_convert
+set -euvx
 for flgmnth in {0..1} ; do
    if [[ $flgmnth -eq 0 ]]  ; then
       leadlist="1 2 3 4"
@@ -173,8 +177,8 @@ for flgmnth in {0..1} ; do
   nplotexpected=$(($nplotprob + $nplotdet))   #120 for seasonal 
   nfcplotDONE=`ls -1 ${dirplots}/${varm}_*_${yyyy}_${st}_${flgmnth_fname}_l?_DONE | wc -l`
   if [ $nfcplotDONE -ne $nplotexpected ] ; then
-     title="[diags] ${CPSSYS} $typeofrun plot ERROR"
-     body="Something in ${DIR_DIAG_C3S}/ncl/forecast_prob_season_lead_newproj.ncl \n or $DIR_DIAG_C3S/ncl/forecast_deterministic_season_lead_newproj.ncl went wrong"
+     title="[diags] ERROR ${CPSSYS} $typeofrun plot $varm"
+     body="compute_anomalies_C3S_auto_newproj_notify.sh: Something in ${DIR_DIAG_C3S}/ncl/forecast_prob_season_lead_newproj.ncl \n or $DIR_DIAG_C3S/ncl/forecast_deterministic_season_lead_newproj.ncl went wrong"
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
      rm ${dirplots}/${varm}_*_${yyyy}_${st}_*l?_DONE
      exit 1

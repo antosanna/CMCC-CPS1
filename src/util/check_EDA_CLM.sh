@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 #BSUB -J check_EDA_CLM
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/forecast/check_ICs/check_EDA_CLM_%J.err

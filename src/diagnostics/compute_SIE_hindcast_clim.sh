@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #BSUB -q s_long
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -J SIE_NH
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/tests/SIE_NH_%J.err
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/tests/SIE_NH_%J.out

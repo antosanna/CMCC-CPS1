@@ -2,7 +2,7 @@
 #BSUB -J C3S_daily_offline
 #BSUB -e logs/C3S_daily_offline_%J.err
 #BSUB -o logs/C3S_daily_offline_%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 3000
 #BSUB -q s_long
 

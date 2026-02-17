@@ -70,8 +70,8 @@ fi
 ./xmlchange RESUBMIT=1
 ./xmlchange CLM_FORCE_COLDSTART=off
 ./xmlchange ROF_NCPL=8
-./xmlchange CHARGE_ACCOUNT=0490
-./xmlchange PROJECT=0490
+./xmlchange CHARGE_ACCOUNT=0784
+./xmlchange PROJECT=0784
 ./xmlchange STOP_N=1
 ./xmlchange RUN_TYPE=hybrid
 ./xmlchange --force --subgroup case.run JOB_QUEUE=$parallelq_l

@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_medium
 #BSUB -J SeaIce_ICs_plot
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/tests/SeaIce_ICs_plot_%J.out

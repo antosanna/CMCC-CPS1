@@ -33,6 +33,7 @@ plist=`ls |grep ${SPSSystem}_${yyyy}$st|cut -d '.' -f1|cut -d '_' -f2-5`
 for caso in $plist ; do
 	  cdo sub $workdir/${var}_${caso}.nc $climdir/${var}_${SPSSystem}_clim_$refperiod.${st}.nc $anomdir/${var}_${caso}_ano.$refperiod.nc
 	  touch ${dirlog}/anom_${caso}_${var}_DONE
+   rm $workdir/${var}_${caso}.nc
 	  ic=`expr $ic + 1`
   	ensalllist="$ensalllist $anomdir/${var}_${caso}_ano.$refperiod.nc"
 	  if [ $ic -eq $nrunC3Sfore ]

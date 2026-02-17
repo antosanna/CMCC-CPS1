@@ -5,7 +5,7 @@
 #BSUB -x
 #BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/stat_test/stat_test_sps4.%J.out
 #BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/stat_test/stat_test_sps4.%J.err
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 70000
 
 

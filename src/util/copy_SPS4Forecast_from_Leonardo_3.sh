@@ -3,7 +3,7 @@
 #BSUB -q s_download
 #BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4Forecast_from_Leonardo_3.out.%J  
 #BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_SPS4Forecast_from_Leonardo_3.err.%J  
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 
 . $HOME/.bashrc

@@ -2,7 +2,7 @@
 #BSUB -J remove_files
 #BSUB -e /work/cmcc/cp1//scratch/remove_files%J.err
 #BSUB -o /work/cmcc/cp1//scratch/remove_files%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 #BSUB -q s_long
 

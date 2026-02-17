@@ -1,6 +1,6 @@
 #!/bin/sh -l 
 # TO BE MODIFIED
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_short
 #BSUB -J create_qa_test
 #BSUB -o logs/create_qa_test_%J.out

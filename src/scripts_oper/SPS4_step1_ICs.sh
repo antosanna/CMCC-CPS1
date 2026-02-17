@@ -4,7 +4,7 @@
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/forecast/SPS4_step1_out.%J
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/forecast/SPS4_step1_err.%J
 #BSUB -J SPS4_step1
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -sla SC_c3s2
 
 . $HOME/.bashrc

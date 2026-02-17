@@ -2,7 +2,7 @@
 #BSUB -J plotItaly
 #BSUB -e plotItaly_%J.err
 #BSUB -o plotItaly_%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 
 . $DIR_UTIL/descr_CPS.sh

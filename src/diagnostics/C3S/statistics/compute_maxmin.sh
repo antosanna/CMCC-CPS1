@@ -3,7 +3,7 @@
 #BSUB -J clim_hind_CPS1
 #BSUB -o logs/clim_hind_CPS1_%J.out
 #BSUB -e logs/clim_hind_CPS1_%J.err
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 10000
 
 # Load descriptor

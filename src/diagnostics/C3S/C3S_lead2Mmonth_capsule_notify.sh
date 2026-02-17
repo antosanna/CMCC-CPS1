@@ -22,9 +22,9 @@ intoutput="output.2.nc"		#cdo intermediate output
 
 
 # Create Dirs
-if [ -d $workdir ] ; then 
-   	rm -rf $workdir
-fi
+#if [ -d $workdir ] ; then 
+#   	rm -rf $workdir
+#fi
 mkdir -p $workdir
 cd $workdir
 

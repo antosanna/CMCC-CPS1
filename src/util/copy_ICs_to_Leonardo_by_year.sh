@@ -3,7 +3,7 @@
 #BSUB -q s_download
 #BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo_by_year.%J.out  
 #BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/copy_ICs_to_Leonardo_by_year.%J.err  
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 
 #set -euvx

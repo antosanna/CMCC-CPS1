@@ -4,7 +4,7 @@
 #BSUB -J ocean_area
 #BSUB -q s_medium       # queue
 #BSUB -M 1000
-#BSUB -P 0490
+#BSUB -P 0784
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo

@@ -4,7 +4,7 @@
 #BSUB  -q s_long
 #BSUB  -o logs/make_clim_eda_4spinup.out.%J  
 #BSUB  -e logs/make_clim_eda_4spinup.err.%J  
-#BSUB  -P 0490
+#BSUB  -P 0784
 
 
 set +euxv     

@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_short
 #BSUB -J check_CAM_IC
 #BSUB -e logs/check_CAM_IC_%J.err

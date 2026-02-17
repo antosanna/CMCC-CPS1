@@ -4,7 +4,7 @@
 #BSUB -e logs/C3S_monitor%J.err
 #BSUB -o logs/C3S_monitor%J.out
 #BSUB -sla SC_SERIAL_sps35 
-#BSUB -P 0490 
+#BSUB -P 0784 
 
 # load variables from descriptor
 . $HOME/.bashrc

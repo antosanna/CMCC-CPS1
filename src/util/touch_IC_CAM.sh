@@ -2,7 +2,7 @@
 #BSUB -J touch_IC_CAM
 #BSUB -e logs/touch_IC_CAM_%J.err
 #BSUB -o logs/touch_IC_CAM_%J.out
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 1000
 
 # 20240108: the production of CAM ICs is opertional only on Zeus and this script just creates checkfiles to ensure the ICs already created on Juno

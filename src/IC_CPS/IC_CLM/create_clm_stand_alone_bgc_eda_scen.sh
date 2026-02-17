@@ -38,8 +38,8 @@ cd ${DIR_CASES}/$caze
 ./xmlchange RESUBMIT=95
 
 ./xmlchange DATM_MODE=CLMGSWP3v1
-./xmlchange PROJECT=0490
-./xmlchange CHARGE_ACCOUNT=0490
+./xmlchange PROJECT=0784
+./xmlchange CHARGE_ACCOUNT=0784
 ./xmlchange RUN_TYPE=hybrid
 ./xmlchange DATM_YR_ALIGN=2015
 ./xmlchange DATM_YR_START=2015

@@ -3,7 +3,7 @@
 #BSUB -J check_all_stats_done
 #BSUB -o ../../../../logs/DIAGS/stats/check_all_stats_done%J.out
 #BSUB -e ../../../../logs/DIAGS/stats/check_all_stats_done%J.err
-#BSUB -P 0490
+#BSUB -P 0784
 
 . ~/.bashrc
 . $DIR_SPS35/descr_SPS3.5.sh

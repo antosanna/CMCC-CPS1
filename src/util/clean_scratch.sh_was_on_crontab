@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -J clean_scratch
 #BSUB -o ../../logs/SCRATCH/clean_scratch%J.out
 #BSUB -e ../../logs/SCRATCH/clean_scratch%J.err

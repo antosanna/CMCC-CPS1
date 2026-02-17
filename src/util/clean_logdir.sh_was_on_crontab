@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_long
 #BSUB -J clean_logdir
 #BSUB -o TOBEDEFINED/../logs/SCRATCH/clean_logdir%J.out

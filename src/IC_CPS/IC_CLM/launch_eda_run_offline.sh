@@ -3,7 +3,7 @@
 #BSUB  -q s_long
 #BSUB  -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/IC_CLM/launch_eda_run_offline.stdout.%J  
 #BSUB  -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/IC_CLM/launch_eda_run_offline.stderr.%J  
-#BSUB  -P 0490
+#BSUB  -P 0784
 #BSUB  -M 500
 
 # load variables from descriptor

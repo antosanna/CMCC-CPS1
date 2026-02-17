@@ -6,7 +6,7 @@
 #BSUB -o ../../logs/launch_push4WMO.%J.out
 #BSUB -e ../../logs/launch_push4WMO.%J.err
 #BSUB -J launch_push4WMO
-#BSUB -P 0490
+#BSUB -P 0784
 
 # SET INPUT VARIABLE BY CRONTAB  !!!!!
 

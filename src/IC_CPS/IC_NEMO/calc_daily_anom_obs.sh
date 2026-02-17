@@ -1,5 +1,5 @@
 #!/bin/sh -l
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -q s_medium
 #BSUB -J calc_daily_anom
 #BSUB -e logs/calc_daily_anom_%J.err

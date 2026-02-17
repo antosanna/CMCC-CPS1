@@ -3,7 +3,7 @@
 #BSUB -J launch_maxmin_single_year
 #BSUB -o /work/cmcc/cp1//CPS/CMCC-CPS1/logs/DIAGS/C3S_statistics/launch_compute_maxmin_single_year%J.out
 #BSUB -e /work/cmcc/cp1//CPS/CMCC-CPS1/logs/DIAGS/C3S_statistics/launch_compute_maxmin_single_year%J.err
-#BSUB -P 0490
+#BSUB -P 0784
 #BSUB -M 10000
 
 . ~/.bashrc
