@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH -A CMCC_2025
+#SBATCH -A CMCC_2026
 #SBATCH -p lrd_all_serial
 #SBATCH --time 03:00:00     # format: HH:MM:SS
 #SBATCH --ntasks=1 # 4 tasks out of 112
 #SBATCH --job-name=check_timing
-#SBATCH --err=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs/hindcast/monitor/check_timing_%J.err
-#SBATCH --out=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs/hindcast/monitor/check_timing_%J.txt
+#SBATCH --err=/leonardo_work/CMCC_2026//CPS/CMCC-CPS1/logs/hindcast/monitor/check_timing_%J.err
+#SBATCH --out=/leonardo_work/CMCC_2026//CPS/CMCC-CPS1/logs/hindcast/monitor/check_timing_%J.txt
 #SBATCH --qos=qos_lowprio
 
 . $HOME/.bashrc

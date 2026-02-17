@@ -64,4 +64,3 @@ CMCC-SPS Staff
 "
 
 echo -e $body|mailx -r "CMCC-SPS <scc-noreply@cmcc.it>" -s "CMCC-SPS reservation $mese $yyyy - richiesta di attivazione" -b a.bocchinfuso@cineca.it -b superc@cineca.it sp1@cmcc.it
-#echo -e $body|mailx -r "CMCC-SPS <scc-noreply@cmcc.it>" -s "CMCC_2025 reservation $mese $yyyy - richiesta di attivazione" -b antonella.sanna@cmcc.it sp1@cmcc.it

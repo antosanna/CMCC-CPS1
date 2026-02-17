@@ -253,7 +253,7 @@ then
      parallelq_m=dcgp_usr_prod
      parallelq_l=dcgp_usr_prod
    else   
-      #for running with account CMCC_2025
+      #for running with account $account_SLURM
       #optSLURM="--reservation=s_met_cmcc"
       optSLURM="--qos=$qos"
       serialq_s=dcgp_cmcc_prod
@@ -304,8 +304,8 @@ then
 #    pushdir=$WORK/push to be defined
     #SCRATCHDIR=$WORK/scratch
 #    SCRATCHDIR=/leonardo_work/CMCC_reforeca/scratch 20250915
-   SCRATCHDIR1=/leonardo_work/CMCC_2025/scratch
-   SCRATCHDIR=/leonardo_work/CMCC_2025/$USER/scratch
+   SCRATCHDIR1=/leonardo_work/$account_SLURM/scratch
+   SCRATCHDIR=/leonardo_work/$account_SLURM/$USER/scratch
    if [[ $USER == "$operational_user" ]]
    then
       SCRATCHDIR=${SCRATCHDIR1}
