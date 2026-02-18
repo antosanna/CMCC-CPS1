@@ -211,7 +211,7 @@ then
    ecmwfmail=${mymail}
    ccmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
-     	ecmwfmail=adrien.owono@ecmwf.int
+     	ecmwfmail=volkan.firat@ecmwf.int
       ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
 	     hsmmail=hsm@cmcc.it
    fi
