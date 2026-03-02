@@ -10,7 +10,6 @@ set -euvx
 
 LOG_FILE=$DIR_LOG/hindcast/launch_push4ECMWF_prompt.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
-scriptname=`basename $0 | rev | cut -d '.' -f2 | rev`
 if [[ `bjobs |grep s_download|wc -l` -ne 0 ]]
 then
    exit
@@ -31,8 +30,8 @@ then
    iyy=`date +%Y`
    fyy=$iyy
 else
-   iyy=2012
-   fyy=2012
+   iyy=2009
+   fyy=2009
 fi
 # ---------------------------
 for yyyy in `seq $iyy $fyy` ; do
