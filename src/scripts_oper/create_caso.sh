@@ -144,15 +144,8 @@ then
    ./xmlchange PIO_NUMTASKS_ROF=21
    ./xmlchange PIO_NUMTASKS_ICE=21
 fi
-if [[ $typeofrun == "hindcast" ]]
-then
-   ./xmlchange --subgroup case.checklist prereq=0
-else
-   if [[ $machine != "leonardo" ]]
-   then
-      ./xmlchange --subgroup case.checklist prereq=1
-   fi
-fi
+#not implemented 
+./xmlchange --subgroup case.checklist prereq=0
 
 #20240715 - test
 #WE HAVE TRIED AND IT DOES NOT WORK REGARLESS THE FIGURE TESTED. THERE MUST BE A PROBLEM WITH THE INTERPRATATION OF VARIABLES FROM THE COMPILED LIBRARY

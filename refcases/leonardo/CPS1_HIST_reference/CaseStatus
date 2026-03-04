@@ -1,0 +1,70 @@
+2026-01-29 13:52:12: xmlchange success <command> ./xmlchange STOP_OPTION=nmonths  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:12: xmlchange success <command> ./xmlchange NTASKS_ATM=288  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:13: xmlchange success <command> ./xmlchange NTASKS_CPL=288  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:13: xmlchange success <command> ./xmlchange NTASKS_OCN=279  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:14: xmlchange success <command> ./xmlchange NTASKS_ICE=288  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:14: xmlchange success <command> ./xmlchange NTASKS_ROF=288  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:15: xmlchange success <command> ./xmlchange NTASKS_LND=288  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:15: xmlchange success <command> ./xmlchange PIO_STRIDE=-99  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:15: xmlchange success <command> ./xmlchange NTASKS_WAV=1  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:16: xmlchange success <command> ./xmlchange NTASKS_GLC=1  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:16: xmlchange success <command> ./xmlchange NTASKS_ESP=1  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:17: xmlchange success <command> ./xmlchange ROOTPE_ROF=0  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:17: xmlchange success <command> ./xmlchange ROOTPE_ICE=0  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:18: xmlchange success <command> ./xmlchange ROOTPE_OCN=0  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:18: xmlchange success <command> ./xmlchange CAM_CONFIG_OPTS=-phys cam_dev -chem waccm_sc_mam4 -nlev 83  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:19: xmlchange success <command> ./xmlchange RESUBMIT=1  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:19: xmlchange success <command> ./xmlchange CLM_FORCE_COLDSTART=off  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:20: xmlchange success <command> ./xmlchange ROF_NCPL=8  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:20: xmlchange success <command> ./xmlchange CHARGE_ACCOUNT=0490  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:21: xmlchange success <command> ./xmlchange PROJECT=0490  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:21: xmlchange success <command> ./xmlchange STOP_N=1  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:22: xmlchange success <command> ./xmlchange RUN_TYPE=hybrid  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:22: xmlchange success <command> ./xmlchange --force --subgroup case.run JOB_QUEUE=dcgp_cmcc_prod  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:23: xmlchange success <command> ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=08:00  </command>
+ ---------------------------------------------------
+2026-01-29 13:52:23: case.setup starting 
+ ---------------------------------------------------
+2026-01-29 13:52:25: case.setup error 
+ERROR: module command /leonardo/prod/opt/environment/module/current/bin/modulecmd python  load /leonardo/prod/opt/modulefiles/base/compilers/intel-oneapi-compilers/2023.2.1 /leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mkl/2023.2.0 /leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mpi/2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0 /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0 failed with message:
+ERROR: No such file or directory on '/leonardo/prod/opt/modulefiles/base/compilers/intel-oneapi-compilers/2023.2.1'
+ERROR: No such file or directory on '/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mkl/2023.2.0'
+ERROR: No such file or directory on '/leonardo/prod/opt/modulefiles/base/libraries/intel-oneapi-mpi/2021.10.0'
+
+Loading /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe
+  Loading requirement: intel-oneapi-mpi/2021.10.0
+
+Loading /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0
+  Loading requirement: intel-oneapi-mkl/2023.2.0
+ ---------------------------------------------------
+2026-01-29 13:52:26: case.setup starting 
+ ---------------------------------------------------
+2026-01-29 13:52:29: case.setup success 
+ ---------------------------------------------------
+2026-02-23 15:19:17: case.build starting 
+ ---------------------------------------------------
+2026-02-23 15:27:42: case.build success 
+ ---------------------------------------------------

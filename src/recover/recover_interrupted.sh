@@ -53,9 +53,11 @@ function write_help
 }
 #set -euxv
 st="None"
-yyyy="None"
 dbg=2
 extended=0
+set +euvx
+. $DIR_UTIL/descr_ensemble.sh 1993
+set -euvx
 while getopts ":m:e:d:y:" o
 do
    case "$o" in
@@ -110,13 +112,8 @@ fi
 
 cd $DIR_CASES/
 listofcases="sps4_202206_028"
-if [[ $yyyy != None ]]
+if [[ $yyyy -ne 1993 ]]
 then
-   if [[ `echo -n $yyyy|wc -c` -ne 4 ]]
-   then
-      echo "third input should be yyyy 4 digits"
-      exit
-   fi
 set +euvx
    . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 #set -euvx
@@ -124,10 +121,6 @@ set -eux
    echo $typeofrun
    listofcases=`ls -d ${header}_${yyyy}${st}_0??`
 else
-set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh 1993
-#set -euvx
-set -eux
    listofcases=`ls -d ${header}_????${st}_0??`
 fi
 

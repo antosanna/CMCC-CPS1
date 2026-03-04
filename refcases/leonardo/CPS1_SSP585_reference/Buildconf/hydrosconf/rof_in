@@ -1,0 +1,19 @@
+&hydros_inparm
+  finidat_hydros = "case.std.hydros.r.0001-01-01-00000.nc"
+  flakinp_hydros = "/leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/rtmdata/LakMap_hydrosParam_0.5x0.5_c220204.nc"
+  flood_mode = "NULL"
+  frivinp_hydros = "/leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/rtmdata/rdirc_hydrosParam_0.5x0.5_c230927.nc"
+  hydros_effvel = "ACTIVE"
+  hydros_mode = "ACTIVE"
+  hydros_tstep = 10800
+  hydroshist_fexcl1 = ""
+  hydroshist_fexcl2 = ""
+  hydroshist_fexcl3 = ""
+  hydroshist_fincl1 = ""
+  hydroshist_fincl2 = ""
+  hydroshist_fincl3 = ""
+  hydroshist_mfilt = 1
+  hydroshist_ndens = 1
+  hydroshist_nhtfrq = 0
+  ice_runoff = .false.
+/

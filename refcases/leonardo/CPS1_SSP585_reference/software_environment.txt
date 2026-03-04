@@ -1,0 +1,483 @@
+Currently Loaded Modulefiles:
+ 1) profile/base(default)                                                                                                            
+ 2) cintools/1.0                                                                                                                     
+ 3) intel-oneapi-compilers/2023.2.1                                                                                                  
+ 4) intel-oneapi-mkl/2023.2.0                                                                                                        
+ 5) intel-oneapi-mpi/2021.10.0                                                                                                       
+ 6) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0                                        
+ 7) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0                                          
+ 8) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c                               
+ 9) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe  
+10) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0          
+11) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0    
+12) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0  
+13) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0        
+14) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0              
+15) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0                                          
+16) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0                                        
+17) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0          
+18) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0                                        
+19) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0                                          
+20) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0                     
+21) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0                               
+22) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0                                    
+23) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0                               
+24) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0                                          
+25) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0                                       
+26) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa                                  
+27) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm                          
+28) /leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0                
+
+Key:
+(symbolic-version)
+
+__MODULES_LMINIT=module use --append /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi/modulefiles
+ESMF_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m
+HDF5_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/include
+DIR_OCE_IC=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/IC_CPS//IC_NEMO
+LIBMD_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r
+CONDA_SHLVL=6
+PYTHONUNBUFFERED=1
+LIBMD_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/include
+nmb_nemo_domains=336
+envcondacm3=cmcc-cm_py
+LC_ALL=en_US.UTF-8
+LD_LIBRARY_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib64:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/lib64:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//libfabric/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//lib/release:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/lib/intel64:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/lib:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/x64:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/oclfpga/host/linux64/lib:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/compiler/lib/intel64_lin:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/lib
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.m4a=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.oga=01;36:*.opus=01;36:*.spx=01;36:*.xspf=01;36:
+CONDA_EXE=/leonardo/home/usera07cmc/a07cmc00/miniconda/bin/conda
+PERL_XML_NAMESPACESUPPORT_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/lib
+natm3d=5
+DIR_SPS35=/leonardo/home/usera07cmc/a07cmc00/SPS/CMCC-SPS3.5/src/scripts_oper/
+I_MPI_EXTRA_FILESYSTEM_LIST=lustre
+WORK_CPS=/leonardo_work/CMCC_2025//CMCC-CM
+XIOS_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/lib
+BLITZ_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs
+PIO_VERSION_MAJOR=2
+fixsimdays=185
+NETCDF_FORTRAN_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p
+FPGA_VARS_ARGS=
+BOOST_ROOT=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4
+PERL_XML_NAMESPACESUPPORT_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm
+PERL_HOME=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf
+MYCESMDATAROOT1=/leonardo_work/CMCC_2025/CESMDATAROOT
+LIBXML2_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/lib
+envcondarclone=rclone_gdrive
+maxnumbertorecover=54
+I_MPI_PMI_LIBRARY=/usr/lib64/libpmi.so
+ESMF_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/lib
+METIS_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/include
+OCL_ICD_FILENAMES=libintelocl_emu.so:libalteracl.so:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/x64/libintelocl.so
+IC_CAM_CPS_DIR1=/leonardo_work/CMCC_2025/scratch/IC/CAM_CPS1/
+INTEL_ONEAPI_MPI_INCLUDE=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/include
+INTEL_ONEAPI_MKL_INC=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/include
+MODULES_RUN_QUARANTINE=LD_LIBRARY_PATH LD_PRELOAD
+NETCDF_C_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/include
+DIR_REST_INI=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/restart_ini
+NETCDF_FORTRAN=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p
+env_workflow_tag=leonardo
+DIR_PCTL=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-SPS_PCTL
+REPOGRID=/leonardo_work/CMCC_2025/CESMDATAROOT/CMCC-CPS1/regrid_files
+LANG=en_US.UTF-8
+PARALLELIO_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj
+PARMETIS_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/lib
+LIBSZIP_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w
+BOOST_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/lib
+__MODULES_SHARE_ACLOCAL_PATH=/usr/share/aclocal:6
+HISTCONTROL=ignoredups
+MBEDTLS_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/include
+ZLIB_NG_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si
+LIBMD_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/include
+mymail=sp1@cmcc.it
+SUDO_GID=25200
+optSLURM=--qos=qos_cmcc
+HDF5_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/include
+HDF5_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb
+TRIP_DIR=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/triplette_done
+DIR_ARCHIVE_C3S=/leonardo_work/CMCC_2025//CMCC-CM//archive/C3S
+HOSTNAME=login05.leonardo.local
+DIR_C3S=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/postproc/C3S_standard
+I_MPI_EXTRA_FILESYSTEM=on
+PUBLIC=/leonardo/pub/usera07cmc/a07cmc00
+OLDPWD=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/porting
+IC_CLM_CPS_DIR=/leonardo_work/CMCC_2025/scratch/IC/CLM_CPS1/
+refcaseSCEN=CPS1_SSP585_reference
+LIBICONV_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4
+sla_serialID=s_met_cmcc_s
+HEALED_DIR_ROOT=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/fixed_from_spikes
+MBEDTLS_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l
+LIBXML2_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/include
+BATCHRUN=RUN
+C_INCLUDE_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/include
+OUTDIR_DIAG=/leonardo_work/CMCC_2025//diagnostics
+yyyySCEN=2014
+PNETCDF_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm
+HDF5_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/lib
+DIR_ROOT=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1
+CINECA_SCRATCH=/leonardo_scratch/large/usera07cmc/a07cmc00
+ACL_BOARD_VENDOR_PATH=/opt/Intel/OpenCLFPGA/oneAPI/Boards
+NETCDF_FORTRAN_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/include
+INTEL_ONEAPI_MPI_HOME=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc
+c3s_checker_cmd=c3s-checker
+modpath=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/
+DIR_RECOVER=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/recover
+ecmwfmail=sp1@cmcc.it
+XERCES_C_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe
+PARMETIS_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q
+CONDA_PREFIX=/leonardo/home/usera07cmc/a07cmc00/miniconda/envs/cmcc-cm_py
+SPSSystem=sps4
+SUDO_COMMAND=/bin/bash -c /bin/bash -c xauth\ add\ login05.leonardo.local/unix:66\ \ MIT-MAGIC-COOKIE-1\ \ eebb5f77be789fdfeab9e1e1c135912e\
+login05.leonardo.local/unix:60\ \ MIT-MAGIC-COOKIE-1\ \ 0fedfd792098ab917d238d90b916337b\
+login05.leonardo.local/unix:72\ \ MIT-MAGIC-COOKIE-1\ \ b54bd96396a867c96f534f02930a73b8\
+login05.leonardo.local/unix:74\ \ MIT-MAGIC-COOKIE-1\ \ 9150e3774c1c81b9528b33b124b3e62b\
+login05.leonardo.local/unix:61\ \ MIT-MAGIC-COOKIE-1\ \ 3583e143ae758b6b48cf2a5689d14f01\
+login05.leonardo.local/unix:67\ \ MIT-MAGIC-COOKIE-1\ \ dfb48b528a09d7e26ee43a9fec4896a6\
+login05.leonardo.local/unix:65\ \ MIT-MAGIC-COOKIE-1\ \ d114aa7b8dcf6c1196adcda48c9ff256\
+login05.leonardo.local/unix:68\ \ MIT-MAGIC-COOKIE-1\ \ da4e0d0b8473458bd85fa1ac13c9dc98\
+login05.leonardo.local/unix:107\ \ MIT-MAGIC-COOKIE-1\ \ 060fe0da9981f6ff99a0bc6055262e8f\
+login05.leonardo.local/unix:99\ \ MIT-MAGIC-COOKIE-1\ \ f999632caa0e77d0fd872e4c2748139c\
+login05.leonardo.local/unix:86\ \ MIT-MAGIC-COOKIE-1\ \ 26c8bb72d81e989dd729c8f604c906d2\
+login05.leonardo.local/unix:85\ \ MIT-MAGIC-COOKIE-1\ \ a5a21b5fa96dd0a07b3dbf4cf5facfb6\
+login05.leonardo.local/unix:84\ \ MIT-MAGIC-COOKIE-1\ \ 6e07a049d2a5d0458807140c722a4f9f\
+login05.leonardo.local/unix:80\ \ MIT-MAGIC-COOKIE-1\ \ fa7fca54068e8ea45e0a2699b302f10b\
+login05.leonardo.local/unix:79\ \ MIT-MAGIC-COOKIE-1\ \ 89b7edd6e71f6029d68383776e40e327\
+login05.leonardo.local/unix:77\ \ MIT-MAGIC-COOKIE-1\ \ f4b18f4f2d2f712816e342af4b346b56\
+login05.leonardo.local/unix:78\ \ MIT-MAGIC-COOKIE-1\ \ 073ff37071eddc3168e08712ae361dc1\
+login05.leonardo.local/unix:70\ \ MIT-MAGIC-COOKIE-1\ \ 6f5c27b4b88030c808f5723ad8ec7ea9\
+login05.leonardo.local/unix:63\ \ MIT-MAGIC-COOKIE-1\ \ 4d38b0a5adc98bc2a15ee2e4f642ec09\
+login05.leonardo.local/unix:81\ \ MIT-MAGIC-COOKIE-1\ \ 1642e52bd9322ee1697e29221e467418\
+login05.leonardo.local/unix:92\ \ MIT-MAGIC-COOKIE-1\ \ cb9193fffca101c8442d2394eec34fb7\
+login05.leonardo.local/unix:93\ \ MIT-MAGIC-COOKIE-1\ \ 84945b6ef0d0014ea0d6f976158e4ef5\
+login05.leonardo.local/unix:64\ \ MIT-MAGIC-COOKIE-1\ \ c07d3fe3318c6bd8ab61b37849e72307\
+login05.leonardo.local/unix:76\ \ MIT-MAGIC-COOKIE-1\ \ d0e1a8f1042d2fa3998f72b5bfc4ff19\
+login05.leonardo.local/unix:18\ \ MIT-MAGIC-COOKIE-1\ \ ea011c451a81c13261713f010bbb1f4e\
+login05.leonardo.local/unix:49\ \ MIT-MAGIC-COOKIE-1\ \ 96d910f2caf6206dccbbc11b30149a42\
+login05.leonardo.local/unix:34\ \ MIT-MAGIC-COOKIE-1\ \ 25518b86d49266714e0bc593274de95f\
+login05.leonardo.local/unix:52\ \ MIT-MAGIC-COOKIE-1\ \ 2cd4ce60062f9963b23f3c754bb7254d\
+login05.leonardo.local/unix:40\ \ MIT-MAGIC-COOKIE-1\ \ 6d0ae552976d7c6c74c0ac40d4037d2b\
+login05.leonardo.local/unix:58\ \ MIT-MAGIC-COOKIE-1\ \ 8c0d78d92b68314ae8f27ad0aac637c5\
+login05.leonardo.local/unix:22\ \ MIT-MAGIC-COOKIE-1\ \ 5a1844a0c77bee3b4d51079e993bdc9c\
+login05.leonardo.local/unix:15\ \ MIT-MAGIC-COOKIE-1\ \ 91d00e886e44585d1276174a27c67559\
+login05.leonardo.local/unix:10\ \ MIT-MAGIC-COOKIE-1\ \ bae09d3efe7996c39a899805034462de\
+login05.leonardo.local/unix:23\ \ MIT-MAGIC-COOKIE-1\ \ 3399b733cfae8a7cb97c5370dd8b1b2f\
+login05.leonardo.local/unix:20\ \ MIT-MAGIC-COOKIE-1\ \ bd9b78f6cc81eb794dd925e8cadc7019\
+login05.leonardo.local/unix:37\ \ MIT-MAGIC-COOKIE-1\ \ 21ddedc399a0956aff9f6d9ad79cb642\
+login05.leonardo.local/unix:21\ \ MIT-MAGIC-COOKIE-1\ \ cb501c4db8bdf8834d58e0e428bcb7d3\
+login05.leonardo.local/unix:55\ \ MIT-MAGIC-COOKIE-1\ \ 36ac372de6de0c03d2f9bb806a85f2c3\
+login05.leonardo.local/unix:62\ \ MIT-MAGIC-COOKIE-1\ \ 9755967ecc2ea09180126b8e544b6d33\
+login05.leonardo.local/unix:38\ \ MIT-MAGIC-COOKIE-1\ \ c4848ba8926b80cb9b45cad0329ef199\
+login05.leonardo.local/unix:43\ \ MIT-MAGIC-COOKIE-1\ \ b8bb1949305d31a0f616811800f84028\
+login05.leonardo.local/unix:44\ \ MIT-MAGIC-COOKIE-1\ \ a09706ee1d3bb67bcee16d79c9a806a8\
+login05.leonardo.local/unix:35\ \ MIT-MAGIC-COOKIE-1\ \ 193b5cc42c441b2e0f24497efc8cbe38\
+login05.leonardo.local/unix:11\ \ MIT-MAGIC-COOKIE-1\ \ 2ecb1256787a9a0ec7c0550d50b5a011\
+login05.leonardo.local/unix:17\ \ MIT-MAGIC-COOKIE-1\ \ fb30c948edc08c8c6713c91c99de3890\
+login05.leonardo.
+PCTL_DIR_DIAG=/leonardo_work/CMCC_2025//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/pctl//
+PARALLEL_NETCDF=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm
+cmd_IC_pull_from_remote_resume=sftp -a -P 20022  -i /leonardo/home/usera07cmc/a07cmc00/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it
+IC_CPS=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/IC_CPS/
+MODULES_SITECONFIG=/leonardo/prod/opt/environment/module/current/etc/siteconfig.tcl
+LIBICONV_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/include
+DRES=/no/project/defined
+__MODULES_LMPREREQ=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c&lz4/1.8.3-fd534ej&snappy/1.1.8-r3b2hj7&zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe&intel-oneapi-mpi/2021.10.0&libszip/2.1.1--intel--2021.10.0-avru3b4&pkgconf/1.4.2-jm3og67&zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&bzip2/1.0.6-lejb5uv&c-blosc/1.21.5--intel--2021.10.0-57xo45c&hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe&intel-oneapi-mpi/2021.10.0&libszip/2.1.1--intel--2021.10.0-avru3b4&zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&intel-oneapi-mpi/2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&intel-oneapi-mpi/2021.10.0&netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&intel-oneapi-mkl/2023.2.0&intel-oneapi-mpi/2021.10.0&netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0&libmd/1.0.4--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&intel-oneapi-mpi/2021.10.0&metis/5.1.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0&perl/5.38.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0&perl/5.38.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0&perl/5.38.0--intel--2021.10.0&perl-xml-namespacesupport/1.12_9--intel--2021.10.0&perl-xml-sax-base/1.09--intel--2021.10.0:libxml2/2.10.3--intel--2021.10.0-mzft5lm&libiconv/1.17--intel--2021.10.0&xz/5.2.4-hs77kfz&zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0&libxml2/2.10.3--intel--2021.10.0-mzft5lm&perl/5.38.0--intel--2021.10.0&perl-xml-namespacesupport/1.12_9--intel--2021.10.0&perl-xml-sax/1.02--intel--2021.10.0&perl-xml-sax-base/1.09--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0&curl/7.61.1-n6q6yyf&libiconv/1.17--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm&bzip2/1.0.6-lejb5uv&xz/5.2.4-hs77kfz&zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&blitz/1.0.2--intel--2021.10.0-nkjhtoa&boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm&hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe&intel-oneapi-mpi/2021.10.0&netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0
+NETCDF_FORTRAN_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/lib
+METIS_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n
+FI_PROVIDER_PATH=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//libfabric/lib/prov:/usr/lib64/libfabric
+BOOST_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4
+XIOS_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m
+iniy_hind=1995
+DIR_ROOT1=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1
+INTEL_ONEAPI_MKL_INCLUDE=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/include
+MBEDTLS_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/lib
+INTEL_ONEAPI_COMPILERS_LIB=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/lib
+ESMFMKFILE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/lib/esmf.mk
+_CE_M=
+C_BLOSC_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/include
+which_declare=declare -f
+HDF5_PLUGIN_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/plugins
+LIBSZIP_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/include
+LIBSZIP_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/include
+HPC_SYSTEM=leonardo
+CLASSPATH=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//lib/mpi.jar
+PIO_TYPENAME_VALID_VALUES=netcdf,netcdf4p,netcdf4c,pnetcdf
+CC=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin/icx
+PERL_XML_SAX_BASE_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs
+RHASH_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb
+MPIF90=mpiifort
+DIR_ATM_IC=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/IC_CPS//IC_CAM
+MODULES_CMD=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi/libexec/modulecmd.tcl
+IC_NEMO_CPS_DIR=/leonardo_work/CMCC_2025/scratch/IC/NEMO_CPS1/
+MBEDTLS_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/include
+endy_hind=2024
+USER=a07cmc00
+FPGA_VARS_DIR=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/oclfpga
+serial_test=lrd_all_serial
+ESMF_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/include
+CMPLR_ROOT=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1
+__MODULES_LMTAG=lz4/1.8.3-fd534ej&hidden-loaded&auto-loaded:snappy/1.1.8-r3b2hj7&hidden-loaded&auto-loaded:zlib-ng/2.1.4--intel--2021.10.0-fdylt2o&hidden-loaded&auto-loaded:libszip/2.1.1--intel--2021.10.0-avru3b4&hidden-loaded&auto-loaded:pkgconf/1.4.2-jm3og67&hidden-loaded&auto-loaded:bzip2/1.0.6-lejb5uv&hidden-loaded&auto-loaded:xz/5.2.4-hs77kfz&hidden-loaded&auto-loaded:libxml2/2.10.3--intel--2021.10.0-mzft5lm&hidden-loaded&auto-loaded:curl/7.61.1-n6q6yyf&hidden-loaded&auto-loaded
+CONDA_PREFIX_5=/leonardo/home/usera07cmc/a07cmc00/miniconda
+CONDA_PREFIX_4=/leonardo/home/usera07cmc/a07cmc00/miniconda/envs/cmcc-cm_py
+LIBBSD_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl
+CONDA_PREFIX_1=/leonardo/home/usera07cmc/a07cmc00/miniconda
+REPOGRID1=/leonardo_work/CMCC_2025/CESMDATAROOT/CMCC-CPS1/regrid_files
+CONDA_PREFIX_3=/leonardo/home/usera07cmc/a07cmc00/miniconda
+CONDA_PREFIX_2=/leonardo/home/usera07cmc/a07cmc00/miniconda/envs/cmcc-cm_py
+DIR_CASES1=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/cases
+DIR_ARCHIVE1=/leonardo_work/CMCC_2025//CMCC-CM//archive
+FINALARCHC3S=/leonardo_work/CMCC_2025//CMCC_SPS4/C3S_daily
+SCRATCHDIR1=/leonardo_work/CMCC_2025/scratch
+PERL_XML_SAX_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43
+MPICXX=mpiicpc
+parallelq_m=dcgp_cmcc_prod
+parallelq_l=dcgp_cmcc_prod
+__MODULES_SHARE_PKG_CONFIG_PATH=/usr/lib64/pkgconfig:6:/usr/share/pkgconfig:6
+NETCDF_C=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4
+WORK_C3S1=/leonardo_work/CMCC_2025//CMCC-CM//archive/C3S
+DIR_SUBM_SCRIPTS1=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/SUBM_SCRIPTS
+parallelq_s=dcgp_cmcc_prod
+DIR_ROOT_SCORES=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-SPS_SKILL_SCORES
+NETCDF_FORTRAN_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p
+PWD=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/refcases/leonardo/CPS1_SSP585_reference
+WORK_IC4CAM=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/WORK_IC4CAM
+DIR_POST=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/postproc
+NETCDF_FORTRAN_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/include
+LZ4_HOME=/usr
+PARMETIS_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/include
+HOME=/leonardo/home/usera07cmc/a07cmc00
+flag_dev=0
+CONDA_PYTHON_EXE=/leonardo/home/usera07cmc/a07cmc00/miniconda/bin/python
+DIR_DIAG=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/diagnostics
+LC_CTYPE=en_US.UTF-8
+header=ensemble4
+XZ_HOME=/usr
+CMAKE_PREFIX_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/.:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/.:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/.:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/.:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/.:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/IntelDPCPP:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/.
+envcondaclm=postpc_CLM_C3S
+BOOST_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/include
+INTEL_ONEAPI_MKL_LIB=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/lib
+RHASH_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/include
+SUDO_USER=asanna00
+CPATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/include:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/oclfpga/include
+IC_CICE_CPS_DIR=/leonardo_work/CMCC_2025/scratch/IC/CICE_CPS1/
+INTELFPGAOCLSDKROOT=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/oclfpga
+IC_NEMO_CPS_DIR1=/leonardo_work/CMCC_2025/scratch/IC/NEMO_CPS1/
+LIBICONV_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/include
+XERCES_C_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/include
+WORK=/leonardo_work/CMCC_2025/
+DIR_REFCASES=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/refcases/leonardo
+PERL_XML_LIBXML_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4
+IC_CLM_CPS_DIR1=/leonardo_work/CMCC_2025/scratch/IC/CLM_CPS1/
+F77=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin/ifx
+serialq_push=lrd_all_serial
+DIR_SUBM_SCRIPTS=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/SUBM_SCRIPTS
+BLITZ_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/include
+LIBMD_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/lib
+PARALLEL_NETCDF_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/include
+WORKDIR_LAND=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary/WORK_LAND_IC
+DIR_EXE=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/executables_cesm
+C_BLOSC_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/include
+INTEL_ONEAPI_MPI_LIB=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/lib
+DPSSystem=dps3
+PARALLEL_NETCDF_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm
+BLITZ_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib64:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib
+_CE_CONDA=
+NLSPATH=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/lib/intel64/locale/%l_%t/%N:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/compiler/lib/intel64_lin/locale/%l_%t/%N
+DIR_CHECK=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/checklists
+INTEL_ONEAPI_MPI_INC=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/include
+XERCES_C_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/include
+envcondanemo=nemo_rebuild
+DIR_CPS=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/scripts_oper
+__MODULES_SHARE_MANPATH=:25:/usr/share/man:6
+__MODULES_LMALTNAME=profile/base&profile/default&profile:cintools/1.0&as|cintools/default&as|cintools/latest:intel-oneapi-compilers/2023.2.1&as|intel-oneapi-compilers/default&as|intel-oneapi-compilers/latest:intel-oneapi-mkl/2023.2.0&as|intel-oneapi-mkl/default&as|intel-oneapi-mkl/latest:intel-oneapi-mpi/2021.10.0&as|intel-oneapi-mpi/default&as|intel-oneapi-mpi/latest:lz4/1.8.3-fd534ej&as|lz4/default&as|lz4/latest:snappy/1.1.8-r3b2hj7&as|snappy/default&as|snappy/latest:zlib-ng/2.1.4--intel--2021.10.0-fdylt2o&as|zlib-ng/default&as|zlib-ng/latest:libszip/2.1.1--intel--2021.10.0-avru3b4&as|libszip/default&as|libszip/latest:pkgconf/1.4.2-jm3og67&as|pkgconf/default&as|pkgconf/latest:bzip2/1.0.6-lejb5uv&as|bzip2/default&as|bzip2/latest:xz/5.2.4-hs77kfz&as|xz/default&as|xz/latest:libxml2/2.10.3--intel--2021.10.0-mzft5lm&as|libxml2/default&as|libxml2/latest:curl/7.61.1-n6q6yyf&as|curl/default&as|curl/latest
+NETCDF_C_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4
+WORK1=/leonardo_work/CMCC_2025/
+DIR_DIAG_C3S=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/diagnostics/C3S
+ESMF_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/include
+XIOS_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m
+LIBRARY_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib64:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/lib64:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/lib:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//libfabric/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//lib/release:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/lib:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/lib/intel64:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/lib:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/compiler/lib/intel64_lin:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/lib
+iniy_fore=2025
+DIR_REP=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs/REPORTS
+account_name=CMCC_2025
+XIOS_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/include
+SCRATCHDIR=/leonardo_work/CMCC_2025/scratch
+REPOSITORY=/leonardo_work/CMCC_2025/CESMDATAROOT/CMCC-CPS1/files4CPS1
+DIR_UTIL=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/util
+ZLIB_NG_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/include
+DIR_NEMO_REBUILD=/leonardo/home/usera07cmc/a07cmc00/CMCC-CM//components/nemo/source/utils/py_nemo_rebuild/src/py_nemo_rebuild/
+LOADEDMODULES=profile/base:cintools/1.0:intel-oneapi-compilers/2023.2.1:intel-oneapi-mkl/2023.2.0:intel-oneapi-mpi/2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0:lz4/1.8.3-fd534ej:snappy/1.1.8-r3b2hj7:zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c:libszip/2.1.1--intel--2021.10.0-avru3b4:pkgconf/1.4.2-jm3og67:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe:bzip2/1.0.6-lejb5uv:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0:xz/5.2.4-hs77kfz:libxml2/2.10.3--intel--2021.10.0-mzft5lm:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0:curl/7.61.1-n6q6yyf:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0
+cmd_IC_pull_from_remote=sftp -P 20022  -i /leonardo/home/usera07cmc/a07cmc00/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it
+I_MPI_HYDRA_IFACE=ib0
+DIR_LOG=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs
+DIAGUTIL_PATH=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/sys_check/sys_check.sh
+FC=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin/ifx
+XIOS_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/include
+GCM_name=CMCC-CM3
+DIR_CASES=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/cases
+INTEL_ONEAPI_MKL_HOME=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt
+pushdir=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/push
+S_apprun=dummy
+PIO_INCDIR=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include
+SCRATCH=/leonardo_scratch/large/usera07cmc/a07cmc00
+XERCES_C_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/lib
+FINALARCHIVE=/leonardo_work/CMCC_2025//data/archive/CESM/CPS1/
+NETCDF_C_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/lib
+MPICC=mpiicc
+machine=leonardo
+CONDA_PROMPT_MODIFIER=(cmcc-cm_py) 
+PARMETIS_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/include
+nfieldsC3S=56
+SUDO_UID=29016
+BZIP2_HOME=/usr
+CINTOOLS_HOME=/leonardo/prod/opt/tools/cintools/1.0/none
+LIBXML2_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm
+LIBBSD_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/include
+MAIL=/var/spool/mail/a07cmc00
+RHASH_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/lib
+maxnumbertosubmit=54
+PERL_LIB=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/lib
+MPIFC=mpiifort
+INTEL_ONEAPI_COMPILERS_HOME=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp
+FINALARCHC3S1=/leonardo_work/CMCC_2025//CMCC_SPS4/C3S_daily
+DIR_EXE1=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/executables_cesm
+CXX=/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin/icpx
+LIBBSD_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/include
+PERL_XML_SAX_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/lib
+apprun=dummy
+SHELL=/bin/bash
+TERM=xterm
+PKGCONF_HOME=/usr
+BOOST_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/include
+__MODULES_SHARE_LD_LIBRARY_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/lib:2
+LIBBSD_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/lib
+REPOSITORY1=/leonardo_work/CMCC_2025/CESMDATAROOT/CMCC-CPS1/files4CPS1
+LIBXML2_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/include
+WORK_C3S=/leonardo_work/CMCC_2025//CMCC-CM//archive/C3S
+__MODULES_LMCONFLICT=cintools/1.0&cintools:intel-oneapi-compilers/2023.2.1&intel-oneapi-compilers:intel-oneapi-mkl/2023.2.0&intel-oneapi-mkl:intel-oneapi-mpi/2021.10.0&intel-oneapi-mpi:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0&mbedtls:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0&metis:lz4/1.8.3-fd534ej&lz4:snappy/1.1.8-r3b2hj7&snappy:zlib-ng/2.1.4--intel--2021.10.0-fdylt2o&zlib-ng:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c&c-blosc:libszip/2.1.1--intel--2021.10.0-avru3b4&libszip:pkgconf/1.4.2-jm3og67&pkgconf:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe&hdf5:bzip2/1.0.6-lejb5uv&bzip2:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-c:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&netcdf-fortran:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parallel-netcdf:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parallelio:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&esmf:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0&libmd:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0&libbsd:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&parmetis:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0&libiconv:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0&perl:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0&perl-xml-namespacesupport:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0&perl-xml-sax-base:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0&perl-xml-sax:xz/5.2.4-hs77kfz&xz:libxml2/2.10.3--intel--2021.10.0-mzft5lm&libxml2:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0&perl-xml-libxml:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0&rhash:curl/7.61.1-n6q6yyf&curl:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0&xerces-c:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa&blitz:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm&boost:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0&xios
+versionSPS=20231101
+WORKDIR_OCE=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary/WORK_OCE_IC
+ZLIB_NG_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/lib
+IC_CPS_guess=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/IC_CPS_guess
+DIR_REFCASES1=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/refcases/leonardo
+FAST=/leonardo_scratch/fast/CMCC_Copernic_4
+ccmail=sp1@cmcc.it
+CESMDATAROOT=/leonardo_work/CMCC_2025/CESMDATAROOT
+PERL5LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/lib/perl5:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/lib/perl5:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/lib/perl5:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/lib/5.38.0/x86_64-linux-thread-multi:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/lib/perl5/x86_64-linux-thread-multi:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/lib/perl5
+WORK_CPS1=/leonardo_work/CMCC_2025//CMCC-CM
+serialq_l=dcgp_cmcc_prod
+serialq_m=dcgp_cmcc_prod
+DIR_ARCHIVE=/leonardo_work/CMCC_2025//CMCC-CM//archive
+serialq_s=dcgp_cmcc_prod
+refcaseHIST=CPS1_HIST_reference
+qos=qos_cmcc
+BA_MPM_PROFILE=base
+DIR_LOG1=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/logs
+SACCT_FORMAT=JobID%20,JobName,MaxRSS,Elapsed,maxdiskwrite,maxvmsize,nodelist%20
+PIO_LIBDIR=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/lib
+pID=1234
+CLIM_DIR_DIAG=/leonardo_work/CMCC_2025//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4/monthly/
+LIBICONV_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/lib
+ESMF_RUNTIME_PROFILE_OUTPUT=SUMMARY
+PARALLEL_NETCDF_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/lib
+SHLVL=5
+freq_forcings=8
+LANGUAGE=en_US.UTF-8
+I_MPI_DEBUG=6
+PYTHONPATH=/leonardo/home/usera07cmc/a07cmc00/CMCC-CM/cime:/leonardo/home/usera07cmc/a07cmc00/CMCC-CM/cime/CIME/Tools
+MPIF77=mpiifort
+METIS_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/include
+ACLOCAL_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/share/aclocal:/usr/share/aclocal
+PARALLEL_NETCDF_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/include
+NETCDF_C_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/include
+MANPATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-1.02-pffsd7omzoqswp4ekqtzc7cjm2xpbh43/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-namespacesupport-1.12_9-4jsmrvtpucjtcbg6mbribqhp7pelu3xm/man:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/share/man:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/share/man:/usr/share/man:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0/man:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/documentation/en/man/common:
+WORK_SCORES=/leonardo_work/CMCC_2025//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
+LIBSZIP_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/lib
+DIR_SRC=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src
+C_BLOSC_HOME=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6
+MODULEPATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi/modulefiles:/leonardo/prod/opt/modulefiles/profiles:/leonardo/prod/opt/modulefiles/base/archive:/leonardo/prod/opt/modulefiles/base/dependencies:/leonardo/prod/opt/modulefiles/base/data:/leonardo/prod/opt/modulefiles/base/environment:/leonardo/prod/opt/modulefiles/base/libraries:/leonardo/prod/opt/modulefiles/base/tools:/leonardo/prod/opt/modulefiles/base/compilers:/leonardo/prod/opt/modulefiles/base/applications
+CIMEROOT=/leonardo/home/usera07cmc/a07cmc00/CMCC-CM/cime
+PERL_XML_LIBXML_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-libxml-2.0201-mnzfgwze4etdfn6gdyvcgpqn6hef3gs4/lib
+DIR_TEMP=/leonardo_work/CMCC_2025/scratch/CMCC-CPS1/temporary
+NETCDFF_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p
+BATCHPEND=PEND
+NETCDF_C_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4
+LOGNAME=a07cmc00
+PARALLELIO_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include
+RHASH_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/include
+CPLUS_INCLUDE_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/boost-1.83.0-nj2uhhmqg2ydwq72s7jgxvlwvh2whbe4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libszip-2.1.1-avru3b4t3mdv7od7rtq7d7th35nycl6w/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/include:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/include:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/include
+MKLROOT=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0
+PERL_XML_SAX_BASE_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/lib
+METIS_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/lib
+DIR_TEMPL=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/templates
+nmonfore=6
+CPSSYS=CPS1
+SNAPPY_HOME=/usr
+PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xios-2.5-hc73aefarj232vb47rxtfp2rjarfob6m/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/bin:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/perl-5.38.0-6w7wodqa2ibkcjabg6f2iy3y3smnnddf/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libiconv-1.17-337rxmbtkegquybmnmvdzb7bfptw46x4/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parmetis-4.0.3-l77gyj5ubl2epk7azvydhi7gfup46h6q/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/esmf-8.4.2-f7xq75gqywqp77talct2m3albpwss55m/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/metis-5.1.0-bez2mqj77ildhrfi2w3saxxrafih6h3n/bin:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/mbedtls-3.3.0-wjxwkposf4ky5of76qkwvcw7lf6r3g6l/bin:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//libfabric/bin:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0//bin:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/bin:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/bin/intel64:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/binutils-2.41-gzwp3ai6qpc44qi4ajukobnetdxqd6za/bin:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/lib/oclfpga/bin:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin/intel64:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/linux/bin:/cineca/bin:/cineca/bin:/leonardo/home/usera07cmc/a07cmc00/miniconda/envs/cmcc-cm_py/bin:/leonardo/home/usera07cmc/a07cmc00/miniconda/condabin:/leonardo/home/usera07cmc/a07cmc00/.local/bin:/leonardo/home/usera07cmc/a07cmc00/bin:/cineca/bin:/leonardo/prod/opt/tools/cintools/1.0/none/bin:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin
+ESMF_RUNTIME_PROFILE=ON
+MYCESMDATAROOT=/leonardo_work/CMCC_2025/CESMDATAROOT
+_LMFILES_=/leonardo/prod/opt/modulefiles/profiles/profile/base:/leonardo/prod/opt/modulefiles/base/tools/cintools/1.0:/leonardo/prod/opt/modulefiles/base/archive/intel-oneapi-compilers/2023.2.1:/leonardo/prod/opt/modulefiles/base/archive/intel-oneapi-mkl/2023.2.0:/leonardo/prod/opt/modulefiles/base/archive/intel-oneapi-mpi/2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/mbedtls/3.3.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/metis/5.1.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/lz4/1.8.3-fd534ej:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/snappy/1.1.8-r3b2hj7:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/zlib-ng/2.1.4--intel--2021.10.0-fdylt2o:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/c-blosc/1.21.5--intel--2021.10.0-57xo45c:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libszip/2.1.1--intel--2021.10.0-avru3b4:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/pkgconf/1.4.2-jm3og67:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/hdf5/1.14.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0-threadsafe:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/bzip2/1.0.6-lejb5uv:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-c/4.9.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/netcdf-fortran/4.6.1--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallel-netcdf/1.12.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parallelio/2.6.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/esmf/8.4.2--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libmd/1.0.4--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libbsd/0.11.7--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/parmetis/4.0.3--intel-oneapi-mpi--2021.10.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libiconv/1.17--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl/5.38.0--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-namespacesupport/1.12_9--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax-base/1.09--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-sax/1.02--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xz/5.2.4-hs77kfz:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/libxml2/2.10.3--intel--2021.10.0-mzft5lm:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/perl-xml-libxml/2.0201--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/rhash/1.4.2--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/curl/7.61.1-n6q6yyf:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xerces-c/3.2.4--intel--2021.10.0:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/blitz/1.0.2--intel--2021.10.0-nkjhtoa:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/boost/1.83.0--intel--2021.10.0-atomic-nj2uhhm:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/modules/xios/2.5--intel-oneapi-mpi--2021.10.0--intel--2021.10.0
+CURL_HOME=/usr
+dictionary=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/util/CPS1_checkfile_dictionary.txt
+ROOT_CASES_WORK=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1
+operational_user=a07cmc00
+NETCDF_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4
+MODULESHOME=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi
+PKG_CONFIG_PATH=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/lib64/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/xerces-c-3.2.4-tav2scxipeqat4nhfzsac44fg4btevoe/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/rhash-1.4.2-vqrbadrde5lcpr356zapk5ic7zpsyekb/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libxml2-2.10.3-mzft5lmzpfldqkugftfnlwrphayehnlm/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libbsd-0.11.7-u7uocnlzioyem5p3prv4vjp677dpstvl/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/libmd-1.0.4-iy7hhe52zgpgrgcbj5wwxytmsafiho3r/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallel-netcdf-1.12.3-buqtawhw64qwwthvtl4iapow2xj7pvwm/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-fortran-4.6.1-aj6gr56tya5z7rlntyumhgat4dz6up4p/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/netcdf-c-4.9.2-7dk3jthfs6ggjmeud6q7s6kzr5n5tvr4/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/hdf5-1.14.3-c36guddpxkwu6bqpucq7b7fpe6jquctb/lib/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/lib64/pkgconfig:/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/lib/pkgconfig:/usr/share/pkgconfig:/usr/lib64/pkgconfig:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0/lib/pkgconfig:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/lib/pkgconfig:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/mkl/2023.2.0/lib/pkgconfig:/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mkl-2023.2.0-4sr2vqxowjw5hjteersaff5uzql66ybt/lib/pkgconfig:/leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-compilers-2023.2.1-iwg23xx5a2h5fwje4542ggaspe2iartp/compiler/2023.2.1/lib/pkgconfig
+DIR_CLIM=/leonardo_work/CMCC_2025//CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
+CONDA_DEFAULT_ENV=cmcc-cm_py
+__MODULES_SHARE_PERL5LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/perl-xml-sax-base-1.09-saxdoml5ueentpys423evafkcwtyklxs/lib/perl5:2
+I_MPI_ROOT=/leonardo/prod/spack/05/install/0.21/linux-rhel8-icelake/gcc-8.5.0/intel-oneapi-mpi-2021.10.0-6ff7efudnkj4xa7o4j67mxatygwzfwqc/mpi/2021.10.0
+DIR_LND_IC=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/IC_CPS//IC_CLM
+HISTSIZE=1000
+hsmmail=sp1@cmcc.it
+ZLIB_NG_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/zlib-ng-2.1.4-fdylt2oeal7kp7mlhgunbsjsihqiv7si/include
+slaID=s_met_cmcc_p
+DIR_PORT=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/src/porting
+IC_CICE_CPS_DIR1=/leonardo_work/CMCC_2025/scratch/IC/CICE_CPS1/
+XML_CATALOG_FILES=file:///leonardo/home/usera07cmc/a07cmc00/miniconda/envs/cmcc-cm_py/etc/xml/catalog file:///etc/xml/catalog
+DIR_CESM=/leonardo/home/usera07cmc/a07cmc00/CMCC-CM/
+PARALLELIO_INCLUDE=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/include
+C_BLOSC_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/c-blosc-1.21.5-57xo45ctzcq52vco6c3itxo5ze7qh3c6/lib64
+account_SLURM=CMCC_2025
+envcondac3schecker=c3s-nc-checker
+PARALLELIO_LIB=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/parallelio-2.6.2-apfpcpe7b4cv6hwfjy6r4h5zx6ehmlcj/lib
+BLITZ_INC=/leonardo/pub/usera07cmc/a07cmc00/spack-0.21.0-05/install/linux-rhel8-icelake/intel-2021.10.0/blitz-1.0.2-nkjhtoam3dcypuxsmxxscok2pvdqhjxs/include
+DIR_FORE_ANOM=/leonardo_work/CMCC_2025//CPS/CMCC-CPS1/forecast_anom
+mpirun4py_nemo_rebuild=srun
+IC_CAM_CPS_DIR=/leonardo_work/CMCC_2025/scratch/IC/CAM_CPS1/
+I_MPI_EXTRA_FILESYSTEM_FORCE=lustre
+OMP_NUM_THREADS=1
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+forcDIReda=/leonardo_work/CMCC_2025/CESMDATAROOT/CMCC-CPS1/inputs/FORC4CLM
+mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
+BASH_FUNC_which%%=() {  ( alias;
+ eval ${which_declare} ) | /usr/bin/which --tty-only --read-alias --read-functions --show-tilde --show-dot $@
+}
+BASH_FUNC_module%%=() {  local _mlredir=1;
+ if [ -n "${MODULES_REDIRECT_OUTPUT+x}" ]; then
+ if [ "$MODULES_REDIRECT_OUTPUT" = '0' ]; then
+ _mlredir=0;
+ else
+ if [ "$MODULES_REDIRECT_OUTPUT" = '1' ]; then
+ _mlredir=1;
+ fi;
+ fi;
+ fi;
+ case " $@ " in 
+ *' --no-redirect '*)
+ _mlredir=0
+ ;;
+ *' --redirect '*)
+ _mlredir=1
+ ;;
+ esac;
+ if [ $_mlredir -eq 0 ]; then
+ _module_raw "$@";
+ else
+ _module_raw "$@" 2>&1;
+ fi
+}
+BASH_FUNC__module_raw%%=() {  eval "$(/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/tcl-8.6.12-rdtv2pt4tnckxsgwtowik3sbexmxolve/bin/tclsh '/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/environment-modules-5.2.0-rz47odw4phlhzhhbz7b65nv5s5othgmi/libexec/modulecmd.tcl' sh "$@")";
+ _mlstatus=$?;
+ return $_mlstatus
+}
+BASH_FUNC_ml%%=() {  module ml "$@"
+}
+_=/bin/env

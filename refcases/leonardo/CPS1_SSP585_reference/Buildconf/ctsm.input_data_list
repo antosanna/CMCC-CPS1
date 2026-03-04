@@ -1,0 +1,16 @@
+stream_fldfilename_popdens = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP5_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc
+stream_meshfile_popdens = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/firedata/clmforc.Li_2017_HYDEv3.2_CMIP6_hdm_0.5x0_ESMFmesh_cdf5_100621.nc
+flanduse_timeseries = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_SSP5-8.5_16pfts_Irrig_CMIP6_simyr1850-2100_c231218.nc
+stream_fldfilename_urbantv = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1.25_simyr1849-2106_c160923.nc
+stream_meshfile_urbantv = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1_ESMFmesh_cdf5_100621.nc
+stream_fldfilename_ch4finundated = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/paramdata/finundated_inversiondata_0.9x1.25_c170706.nc
+stream_meshfile_ch4finundated = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/paramdata/finundated_inversiondata_0.9x1_ESMFmesh_cdf5_130621.nc
+finidat = case.std.clm2.r.0001-01-01-00000.nc
+paramfile = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/paramdata/ctsm51_params.c211112.nc
+fsurdat = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/surfdata_map/surfdata_0.47x0.63_SSP5-8.5_16pfts_Irrig_CMIP6_simyr1850_c231218.nc
+fsnowaging = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/snicardata/snicar_drdt_bst_fit_60_c070416.nc
+fsnowoptics = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/snicardata/snicar_optics_5bnd_c090915.nc
+stream_fldfilename_ndep = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP5-8.5-WACCM_1849-2101_monthly_c191007.nc
+stream_meshfile_ndep = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/share/meshes/fv0.9x1.25_141008_polemod_ESMFmesh.nc
+stream_meshfile_lightng = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/atm/datm7/NASA_LIS/clmforc.Li_2016_climo1995-2013.360x720_ESMFmesh_cdf5_150621.nc
+stream_fldfilename_lightng = /leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/atm/datm7/NASA_LIS/clmforc.Li_2016_climo1995-2013.360x720.lnfm_Total_c160825.nc
