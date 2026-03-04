@@ -52,10 +52,10 @@ set -euvx
    fi
    
    if [[ -f $DIR_CASES/$caso/logs/run_moredays_${caso}_DONE ]] || [[ ${flag_from_remote} -eq 1 ]] ; then
-         if [[ -f $DIR_TEMP/C3S_postproc_offline_$caso ]] ; then
-            echo "cleaning $DIR_TEMP/C3S_postproc_offline_$caso"
+         if [[ -f ${check_postproc_started_header}_${caso} ]] ; then
+            echo "cleaning ${check_postproc_started_header}_${caso}"
             if [[ $dbg -eq 0 ]] ; then
-              rm $DIR_TEMP/C3S_postproc_offline_$caso
+              rm ${check_postproc_started_header}_${caso}
             fi
          fi
          if [[ -d $SCRATCHDIR/regrid_C3S/$caso/ ]] ; then
@@ -95,11 +95,11 @@ set -euvx
                 rm $SCRATCHDIR/CMCC-CPS1/temporary/C3S_postproc_remote_${caso}
              fi
          fi   
-         if [[ -f $SCRATCHDIR/CMCC-CPS1/temporary/C3S_postproc_offline_${caso}  ]]  
+         if [[ -f ${check_postproc_started_header}_${caso}  ]]  
          then
-             echo "cleaning $SCRATCHDIR/CMCC-CPS1/temporary/C3S_postproc_offline_${caso}"
+             echo "cleaning ${check_postproc_started_header}_${caso}"
              if [[ $dbg -eq 0 ]] ; then
-                rm $SCRATCHDIR/CMCC-CPS1/temporary/C3S_postproc_offline_${caso}
+                rm ${check_postproc_started_header}_${caso}
              fi  
          fi   
 

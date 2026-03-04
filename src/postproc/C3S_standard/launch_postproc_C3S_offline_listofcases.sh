@@ -64,7 +64,7 @@ do
     mkdir -p $logdir
     flagpostproc_done=$logdir/postproc_C3S_${caso}_DONE    #not for dictionary to have a unique definition btw remote and local cases  
 
-    flag_postproc_offline_on=$DIR_TEMP/C3S_postproc_offline_${caso}
+    flag_postproc_offline_on=${check_postproc_started_header}_${caso}
     if [[ -f ${flag_postproc_offline_on} ]]  
     then
          #postproc already submitted - continue

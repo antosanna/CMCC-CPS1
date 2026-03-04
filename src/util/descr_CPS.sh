@@ -28,6 +28,7 @@ else
    echo "MACHINE UNKNOWN!! EXITING NOW!!"
    exit -1
 fi
+account_SLURM=CMCC_2026  #THIS WILL CHANGE EVERY YEAR
 c3s_checker_cmd=c3s-checker
 envcondac3schecker=c3schecker
 SPSSystem=sps4

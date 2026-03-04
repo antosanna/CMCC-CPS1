@@ -1,0 +1,8 @@
+mesh_mask = /data/inputs/CESM/inputdata/share/scripgrids/tn0.25v3_160721.nc
+mesh_atm = /data/inputs/CESM/inputdata/share/meshes/fv0.47x0.63_141008_FIX102722_polemod_ESMFMesh.nc
+mesh_ice = /data/inputs/CESM/inputdata/share/scripgrids/tn0.25v3_160721.nc
+mesh_lnd = /data/inputs/CESM/inputdata/share/meshes/fv0.47x0.63_141008_FIX102722_polemod_ESMFMesh.nc
+mesh_ocn = /data/inputs/CESM/inputdata/share/scripgrids/tn0.25v3_160721.nc
+rof2ocn_liq_rmapname = /data/inputs/CESM/inputdata/cpl/cpl6/map_r05_to_tn0.25v3_e1000r300_160721.nc
+rof2ocn_ice_rmapname = /data/inputs/CESM/inputdata/cpl/cpl6/map_r05_to_tn0.25v3_e1000r300_160721.nc
+mesh_rof = /data/inputs/CESM/inputdata/share/meshes/r05_nomask_c110308_ESMFmesh.nc

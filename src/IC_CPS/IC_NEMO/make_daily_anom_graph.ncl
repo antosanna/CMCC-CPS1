@@ -146,6 +146,8 @@ begin
   on                            = getenv("OUTPUT")
   ; REFDATE 
   refdate                            = getenv("refdate")  
+  iniy=getenv("iniy")
+  endy=getenv("endy")
 ;----------------------------------------------------------------------
 ; Turn on graphics
 ;----------------------------------------------------------------------
@@ -192,7 +194,7 @@ begin
 ;************************************************
 ; create panel
 ;************************************************
-  maititle                      = "ESACCI sst anomalies (1993-2022) for "+refdate
+  maititle                      = "ESACCI sst anomalies ("+iniy+"-"+endy+") for "+refdate
   subtitle                      = "sst data from Copernicus Marine Data Store"
   resP                          = True                 ; modify the panel plot
   resP@gsnFrame                 = False                ; Turn off so we can add titles

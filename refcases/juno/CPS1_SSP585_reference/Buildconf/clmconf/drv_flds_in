@@ -1,0 +1,15 @@
+&drydep_inparm
+/
+&megan_emis_nl
+/
+&fire_emis_nl
+/
+&carma_inparm
+/
+!#--------------------------------------------------------------------------------------------------------------------------
+!# drv_flds_in:: Comment:
+!# This namelist was created using the following command-line:
+!#     /users_home/cmcc/cp1/CMCC-CM/components/clm/bld/CLM build-namelist -cimeroot /users_home/cmcc/cp1/CMCC-CM/cime -infile /users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno/CPS1_SSP585_reference/Buildconf/clmconf/namelist -csmdata /data/inputs/CESM/inputdata -inputdata /users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno/CPS1_SSP585_reference/Buildconf/ctsm.input_data_list -ignore_ic_year -namelist &clm_inparm  start_ymd=00010101 /  -no-megan -use_case 1850-2100_SSP5-8.5_transient -res 0.47x0.63 -clm_start_type startup -envxml_dir /users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno/CPS1_SSP585_reference -configuration clm -structure standard -glc_nec 10 -co2_ppmv 284.7 -co2_type diagnostic -config /users_home/cmcc/cp1/CPS/CMCC-CPS1/refcases/juno/CPS1_SSP585_reference/Buildconf/clmconf/config_cache.xml -driver nuopc -bgc bgc -crop -clm_accelerated_spinup off -lnd_tuning_mode clm5_1_GSWP3v1 -mask tn0.25v3
+!# 
+!# For help on options use: /users_home/cmcc/cp1/CMCC-CM/components/clm/bld/CLM build-namelist -help
+!#--------------------------------------------------------------------------------------------------------------------------

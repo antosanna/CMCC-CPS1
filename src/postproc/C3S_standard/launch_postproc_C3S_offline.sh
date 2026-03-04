@@ -33,7 +33,7 @@ fi
 touch ${flag_running}
 
 if [[ ${recover} -eq 0 ]] ; then
-   cnt_subm=`ls $DIR_TEMP/C3S_postproc_offline_sps4_????${st}_0?? |wc -l`
+   cnt_subm=`ls ${check_postproc_started_header}_sps4_????${st}_0?? |wc -l`
    nmbhindyr=$((${endy_hind} - ${iniy_hind} +1))
    ntot=$((${nrunhind}*${nmbhindyr})) #30members x 30 years
    if [[ ${cnt_subm} -eq ${ntot} ]] ; then
@@ -61,7 +61,7 @@ do
 
    for caso in $listofcases
    do
-      flag_postproc_offline_on=$DIR_TEMP/C3S_postproc_offline_${caso}
+      flag_postproc_offline_on=${check_postproc_started_header}_${caso}
       if [[ -f ${flag_postproc_offline_on} ]] 
       then
          if [[ ${recover} -eq 1 ]] ; then

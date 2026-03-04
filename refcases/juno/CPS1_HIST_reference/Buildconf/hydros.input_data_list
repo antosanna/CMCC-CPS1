@@ -1,0 +1,2 @@
+frivinp_hydros = /data/inputs/CESM/inputdata/lnd/clm2/rtmdata/rdirc_hydrosParam_0.5x0.5_c230927.nc
+flakinp_hydros = /data/inputs/CESM/inputdata/lnd/clm2/rtmdata/LakMap_hydrosParam_0.5x0.5_c220204.nc

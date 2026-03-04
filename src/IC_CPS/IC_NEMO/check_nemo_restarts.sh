@@ -47,7 +47,7 @@ for pp in $plist ; do
        ncks -Oh -F -d nav_lev,1,1  CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce_tmp.nc  CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce.nc  
    fi
    # difference
-   ncdiff -O CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce.nc  ${CLIMDIR}/CPS1.nemo.r.clim_1993_2022.${st}.Toce.nc ${ANOMDIR}/CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce_anom.nc
+   ncdiff -O CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce.nc  ${CLIMDIR}/CPS1.nemo.r.clim_${iniy_hind}_${endy_hind}.${st}.Toce.nc ${ANOMDIR}/CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce_anom.nc
    rm CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce_tmp.nc
    rm CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.Toce.nc
    rm CPS1.nemo.r.${yyyy}-${st}-01-00000.${pp}.nc

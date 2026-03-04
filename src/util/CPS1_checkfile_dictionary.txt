@@ -10,6 +10,7 @@ listfileIC_NEMO=${SPSSystem}_${typeofrun}_IC_NEMO_list.csv
 listfileIC_CAM=${SPSSystem}_${typeofrun}_IC_CAM_list.csv
 
 #--#-- touchfiles defined in $DIR_TEMPL/postproc_C3S.sh
+check_postproc_started_header=$DIR_TEMP/C3S_postproc_offline_
 check_all_postclm=$SCRATCHDIR/regrid_C3S/$caso/CLM/${caso}_all_clm_C3SDONE
 check_all_camC3S_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SDONE
 check_all_camC3SEXT_done=$SCRATCHDIR/regrid_C3S/$caso/CAM/${caso}_all_cam_C3SEXTDONE

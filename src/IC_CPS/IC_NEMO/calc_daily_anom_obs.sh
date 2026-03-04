@@ -33,8 +33,9 @@ mkdir -p $odir
 idir=$WOIS/inputdata/SST/ESACCI/ARCHIVE
 #dirdataESA=/work/cmcc/cp1//scratch/MARI/test_esa/
 #dirdataESA defined in descr_CPS.sh on /data (for portability on Cassandra)
-climdir=${dirdataESA}/clim_1993-2022
-
+climdir=${dirdataESA}/clim_${iniy_hind}-${endy_hind}
+export iniy=${iniy_hind}
+export endy=${endy_hind}
 # PROC ------------------------------------------------------
 ys=`echo $ymds | cut -c 1-4`
 

@@ -81,18 +81,30 @@ if [[ $typeofrun == "forecast" ]]
 then
   if [[ $allcheckersok -ge $nrunC3Sfore ]] 
   then
-      ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
-      nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
-      if [[ $ns -eq 0 ]] && [[ $nt -eq 0 ]] 
-      then
-#         body="$startdate forecast completed. \n
-#                       Now submitting submit_tar_C3S.sh"
+#      ns=`${DIR_UTIL}/findjobs.sh -m $machine -n submit_tar_C3S${startdate} -c yes`
+#      nt=`${DIR_UTIL}/findjobs.sh -m $machine -n tar_C3S_${startdate} -c yes`
+#      if [[ $ns -eq 0 ]] && [[ $nt -eq 0 ]] 
+#      then
          body="$startdate forecast standardisation completed. \n
-               CHECK AND FIX ALL THE SPIKE ISSUES RAISED BY EMAILS, IF APPLICABLE. Once done, submit $DIR_C3S/submit_tar_C3S.sh either from prompt or crontab conveniently modifying the specific line"
-         title="[${CPSSYS} WARNING] $startdate FORECAST: MANUAL ACTION FOR OFRECASTER"
+               Submit $DIR_C3S/submit_tar_C3S.sh either from prompt or crontab conveniently modifying the specific line"
+         title="[${CPSSYS} WARNING] $startdate FORECAST: MANUAL ACTION FOR FORECASTER"
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
-  #  	    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -S $qos -j submit_tar_C3S${startdate} -l ${DIR_LOG}/$typeofrun/$startdate -d ${DIR_C3S} -s submit_tar_C3S.sh -i "${yyyy} $st" 
-      fi
+#      fi
+  else
+      if [[ `ls ${check_postproc_started_header}_*|wc -l` -ge $nrunC3Sfore ]]
+      then
+# meaning that all have been submitted yet not all have passed the checkers (likely due to spikes)
+         ns=`${DIR_UTIL}/findjobs.sh -m $machine -n ${startdate} -c yes`
+# ns=1 means that this very script is the only one running
+         if [[ $ns -eq 1 ]] 
+         then
+            body="Standardization process completed yet not succesfull for all of the needed members $nrunC3Sfore. \n CHECK EMAILS AND HEAL SPIKES. Other issues can be related to machine failure"
+            title="[${CPSSYS} ERROR] $startdate FORECAST: MANUAL INTERVENTION FOR SPIKE HEALING"
+
+       	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+            exit 1
+         fi
+      fi 
   fi  
 fi  
 echo "$0 completed"

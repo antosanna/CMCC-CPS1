@@ -34,7 +34,7 @@ touch ${flag_running}
 for st in 11 12 01 02 03 04 05 06 07 08 09 10
 do
   if [[ ${recover} -eq 0 ]] ; then
-     cnt_subm=`ls $DIR_TEMP/C3S_postproc_offline_sps4_????${st}_0??|grep -v 2025 |wc -l`  #to exclude forecast postproc
+     cnt_subm=`ls ${check_postproc_started_header}_sps4_????${st}_0??|grep -v 2025 |wc -l`  #to exclude forecast postproc
      nmbhindyr=$((${endy_hind} - ${iniy_hind} +1))
      ntot=$((${nrunhind}*${nmbhindyr})) #30members x 30 years--> now 30members x 32 years
      if [[ ${cnt_subm} -eq ${ntot} ]] ; then
@@ -67,7 +67,7 @@ do
 
      for caso in $listofcases
      do
-        flag_postproc_offline_on=$DIR_TEMP/C3S_postproc_offline_${caso}
+        flag_postproc_offline_on=${check_postproc_started_header}_${caso}
         if [[ -f ${flag_postproc_offline_on} ]] 
         then
            if [[ ${recover} -eq 1 ]] ; then

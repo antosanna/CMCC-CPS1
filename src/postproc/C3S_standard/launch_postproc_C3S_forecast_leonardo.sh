@@ -38,7 +38,7 @@ listofcases=`ls -d sps4_${yyyy}${st}_0?? |head -n $nrunmax`
 
 for caso in $listofcases
 do
-      flag_postproc_offline_on=$DIR_TEMP/C3S_postproc_offline_${caso}
+      flag_postproc_offline_on=${check_postproc_started_header}_${caso}
       if [[ -f ${flag_postproc_offline_on} ]]  
       then
            #postproc already submitted - continue

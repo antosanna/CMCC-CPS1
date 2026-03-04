@@ -62,3 +62,7 @@ cd "${CASEDIR}"
 
 ./case.setup
 
+./case.build
+
+./case.build
+
