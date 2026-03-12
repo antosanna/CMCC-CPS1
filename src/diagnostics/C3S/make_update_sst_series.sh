@@ -15,7 +15,7 @@ archdir=/data/cmcc/cp1/archive/OIS/data_oce/esa_sst  # repository dati daily -->
 actualdir=/work/cmcc/cp1/CPS/CMCC-OIS2/inputdata/SST/ESACCI/ARCHIVE
 #${inputdata_sp1}/noaa_sst/clim_1993-2016 # climatologie daily --> trasformare in monthly
 esa_dir=$3
-climdir=/work/cmcc/cp1/CPS/VALIDATION/OBS/ESA_sst/monthly/clim_1993-2022
+climdir=/work/cmcc/cp1/CPS/VALIDATION/OBS/ESA_sst/monthly/clim_${iniy_hind}-${endy_hind}
         #/data/cmcc/cp1/archive/check_ICs/ESA_sst/clim_1993-2022  #clim daily da trasformare in monthly
 anomdir=${esa_dir}/anom
 mkdir -p $anomdir

@@ -25,10 +25,10 @@ dir=getenv("anomdir")
 v1    = addfile (dir+"/sst_"+SPSSystem+"_"+tend+st+"_all_ano."+refperiod+".nc","r")
 tstmp    = v1->tso(:,0:5,:,:)
 timetmp  = v1->time(0:5)
-ts=new((/nens,18,180,360/),typeof(tstmp),tstmp@_FillValue)
-ts(:,12:17,:,:)=tstmp
-time=new((/18/),typeof(timetmp))
-time=fspan(0,17,18)
+ts=new((/nens,15,180,360/),typeof(tstmp),tstmp@_FillValue)
+ts(:,7:12,:,:)=tstmp
+time=new((/15/),typeof(timetmp))
+time=fspan(0,14,15)+0.5
 time@units="months since "+tstart+"-"+stm1+"-15 12:00:00"
 delete(time@calendar)
 format= "%c ~C~%Y"
@@ -67,7 +67,7 @@ ts!3    = "lon"
  end if
  delete(tmp)
  tmp = stringtofloat(str_get_field(strs, field, delim))
- onino3=tmp(dimsizes(tmp)-12:dimsizes(tmp)-1)
+ onino3=tmp(dimsizes(tmp)-7:dimsizes(tmp)-1)
  delete(tmp)
 
 ;*****************************************************   
@@ -88,7 +88,7 @@ nino3!1    = "time"
 nino3&time = time
 ninoemtmp=dim_avg_n_Wrap(nino3,0)
 
-ninoem=ninoemtmp(12:17)
+ninoem=ninoemtmp(7:12)
 
 printVarSummary(ninoem)
 print(ninoem)
@@ -96,31 +96,29 @@ print(ninoem)
 onino3!0    = "time"
 
 print(dimsizes(onino3))
-onino3new=new((/18/),double,nino3@_FillValue)
-onino3new(0:11)=onino3
+onino3new=new((/15/),double,nino3@_FillValue)
+onino3new(0:6)=onino3
 
 onino3new!0    = "time"
 onino3new&time = time
 
-
-;print(onino3new)
 ;*****************************************************   
 ; CALCULATE MIN & MAX and Ensemble Mean
 ;*****************************************************
 
-mnmx      = new ((/6,18/), double)
+mnmx      = new ((/6,15/), double)
 mnmx@_FillValue=-999.
 mnmx(0,:) = dim_min( nino3(time|:,ensemble|:) )
 mnmx(1,:) = dim_max( nino3(time|:,ensemble|:) )
 mnmx(2,:) = dim_median( nino3(time|:,ensemble|:) )
 mnmx(3,:) = dim_avg( nino3(time|:,ensemble|:) )
-mnmx(3,0:10)=mnmx@_FillValue
-printVarSummary(mnmx)
+mnmx(3,0:5)=mnmx@_FillValue
 mnmx(4,:) = onino3new 
-mnmx(4,0:10)=mnmx@_FillValue
-mnmx(4,12)=mnmx(3,12)
-mnmx(4,13:17)=mnmx@_FillValue
+mnmx(4,0:5)=mnmx@_FillValue
+mnmx(4,7)=ninoem(0) ;mnmx(3,6)
+mnmx(4,8:14)=mnmx@_FillValue
 mnmx(5,:) = onino3new
+print("Ho finito di caricare tutto in mnmx")
 
 mmax=max(mnmx)+1
 mmin=min(mnmx)-1
@@ -157,41 +155,46 @@ res@tiMainString     = REG+" Index issued "+tend+st
 
 
 res@tmXBFormat = "f"        ; remove the trailing ".0"
-res@trXMinF    = 0       ; starting point along X axis
-res@trXMaxF    = 17
+res@trXMinF    = min(ispan(0,14,1)+0.5)       ; starting point along X axis
+res@trXMaxF    = max(ispan(0,14,1)+0.5)
 res@tmXBMode   = "Explicit"
-res@tmXBValues = ispan(0,17,1)     ; choose first 13 timesteps
+res@tmXBValues = ispan(0,14,1)+0.5     ; choose first 13 timesteps
 labelsx=stime
-labelsx(1)=" "
-labelsx(3)=" "
-labelsx(5)=" "
-labelsx(7)=" "
-labelsx(9)=" "
-labelsx(11)=" "
-labelsx(13)=" "
-labelsx(15)=" "
-labelsx(17)=" "
+do i=0,dimsizes(stime)-1,2
+   labelsx(i)=""
+end do
 res@tmXBLabels = labelsx    
+
+res@tmXBMinorValues   = ispan(0,14,1)
+res@tmXBMinorPerMajor = 1
+res@tmXBMajorLengthF  = 0.0
+
+
+x=ispan(0,14,1)+0.5
 
 res@xyLineColor = "black"
 res@xyLineThicknessF = 3
-obs_plot = gsn_csm_y (wks,mnmx(5,:),res)       ; create line plot
+obs_plot = gsn_csm_xy (wks,x,mnmx(5,:),res)       ; create line plot
 
 delete(res@xyLineColor)
 delete(res@xyLineThicknessF)
 res@xyLineColor = "Grey"
 res@xyLineThicknessF = 2
-raccordo_plot = gsn_csm_y (wks,mnmx(4,:),res)       ; create line plot
+raccordo_plot = gsn_csm_xy (wks,x,mnmx(4,:),res)       ; create line plot
 
 ; Create a plot with the ensemble plume in red.
 
 delete(res@xyLineColor)
 delete(res@xyLineThicknessF)
 res@xyLineColor    = "red"
-res@xyLineThicknessF = 1      ; line thicknesses
+res@xyLineThicknessF = 2      ; line thicknesses
 res@xyDashPattern = 1
+res@xyMarkLineMode = "MarkLines" 
+res@xyMarker = 16
+res@xyMarkerColor = "red"
+res@xyMarkerSizeF = 3
 
-mid_plot  = gsn_csm_y (wks,nino3,res)  ; Create another filled XY plot.
+mid_plot  = gsn_csm_xy (wks,x,nino3,res)  ; Create another filled XY plot.
 
 delete(res@xyLineThicknessF)
 delete(res@xyDashPattern)
@@ -199,7 +202,14 @@ delete(res@xyLineColor)
 res@xyLineColor = "Green"
 res@xyLineThicknessF = 5
 res@xyDashPattern = 0
-ensm_plot = gsn_csm_y (wks,mnmx(3,:),res)
+res@xyMarkLineMode = "MarkLines" 
+res@xyMarker = 16
+res@xyMarkerColor = "Green"
+res@xyMarkerSizeF = 5
+
+ensm_plot = gsn_csm_xy (wks,x,mnmx(3,:),res)
+
+
 ;
 ; Overlay the top and mid plots on the bottom plot.
 ;
@@ -218,64 +228,39 @@ end getvalues
 ;***********************************************
 ; legend resources
 ;***********************************************
-lbres                    = True          ; labelbar only resources
-lbres@lbAutoManage       = True          ; Necessary to control sizes
-lbres@vpWidthF           = 0.2 * vpw     ; labelbar width
-lbres@vpHeightF          = 0.2 * vph     ; labelbar height
-lbres@lbBoxMajorExtentF  = 0.75          ; puts space between color boxes
-lbres@lbFillColors       = (/"black","Green","Red"/)  ; labelbar colors
-lbres@lbMonoFillPattern  = True          ; Solid fill pattern
-lbres@lbAutoManage       = False 
-lbres@lbLabelFontHeightF = 0.01          ; font height. default is small
-lbres@lbLabelJust        = "CenterLeft"  ; left justify labels
+lgres                    = True
 
-lbid = gsn_create_labelbar(wks,3,(/"NCEP","SPS4 ensemble mean","SPS4 members"/),lbres)         ; create legend
+lgres@lgAutoManage        = False
+lgres@lgMonoItemType      = False
+lgres@lgMonoDashIndex     = False
+lgres@lgMonoLineThickness = False
+
+lgres@lgItemTypes        = (/"Lines","MarkLines","MarkLines"/)
+lgres@lgLineColors       = (/"black","green","red"/)
+lgres@lgDashIndexes      = (/0,0,1/)
+lgres@lgLineThicknesses  = (/3,5,3/)
+
+lgres@lgMarkerIndexes    = (/-1,16,16/)
+lgres@lgMarkerColors     = (/"black","green","red"/)
+lgres@lgMarkerSizeF      = 0.005
+
+
+lgres@lgLabelFontHeightF = .1            ; set the legend label font thickness
+lgres@vpWidthF           = 0.24           ; width of legend (NDC)
+lgres@vpHeightF          = 0.08            ; height of legend (NDC)
+lgres@lgPerimOn          = False
+labels = (/"   NCEP","   SPS4 ensemble mean","   SPS4"/)
+
+lbid   = gsn_create_legend(wks,3,labels,lgres)
 
 amres = True
 amres@amJust           = "TopRight"
-amres@amParallelPosF   = -0.2         ; move legend to the right
-amres@amOrthogonalPosF = -0.5            ; move the legend down
+amres@amParallelPosF   = -0.15         ; move legend to the right
+amres@amOrthogonalPosF = -0.48            ; move the legend down
 annoid1 = gsn_add_annotation(obs_plot,lbid,amres)   ; add legend to plot
 
 draw(obs_plot)   ; Draw base plot.
 frame(wks)    ; advance frame
-;*******************************************************************
-  if ( write .eq. "TRUE" ) then
-
-    ntime  = 6  ;dimsizes(time)
-
-    diro = "./files/"                     ; Output directory
-    filo = "SPS3_"+REG+"_"+tend+st+".nc"  ; Output file
-    system("/bin/rm -f " + diro + filo)    ; remove if exists
-    fout  = addfile (diro + filo, "c")  ; open output file
-
-    setfileoption(fout,"DefineMode",True)
-
-    fAtt               = True            ; assign file attributes
-    fAtt@title         = REG
-    fAtt@Conventions   = "CF compliant"
-    fAtt@creation_date = systemfunc ("date")
-    fileattdef( fout, fAtt )            ; copy file attributes  ; MODIFY
-
-    dimNames = (/"time"/)
-    dimSizes = (/ ntime/)
-    dimUnlim = (/False/)
-    filedimdef(fout,dimNames,dimSizes,dimUnlim)
-
-    filevardef(fout, "time"  ,typeof(time),getvardims(time))  ; MODIFY
-    filevardef(fout, "nino"  ,typeof(ninoem),getvardims(ninoem))  ; MODIFY
-
-
-   filevarattdef(fout,"time"  ,time)
-   probAtt           = 0 
-   probAtt@units     = "degC"
-   probAtt@long_name = REG
-   filevarattdef( fout, "nino" , probAtt )
-
-   fout->time    = time(12:17)
-   fout->nino = (/ninoem/)
-
-  end if
 ;*******************************************************************
 geom_value=" 80x80+930+670" 
 system("pwd")

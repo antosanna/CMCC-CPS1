@@ -82,7 +82,17 @@ do
          zg | ta | ua | va | hus) freq=12hour;;
          mlotstheta001 | mlotstheta003 | sithick | sos | sot300 | thetaot300 | zos | t14d | t17d | t20d | t26d | t28d )freq=1month;;
       esac
-      if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/????/$var/maxminDONE_${var}_????$st |wc -l` -ne 30 ]]
+      listaflag=" "
+      counter=0
+      for yyyy in `seq $iniy_hind $endy_hind`
+      do
+         if [[ -f ${OUTDIR_DIAG}/C3S_statistics/$st/$yyyy/${var}/maxminDONE_${var}_${yyyy}${st} ]]
+         then
+            listaflag+=" ${OUTDIR_DIAG}/C3S_statistics/$st/$yyyy/${var}/maxminDONE_${var}_${yyyy}${st}"
+             counter=$((counter + 1))
+         fi
+      done
+      if [[ $counter -ne 30 ]]
       then
          $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -M "single year statistics missing for ${var} $st. First run $DIR_DIAG_C3S/statistics/launch_maxmin_single_year.sh" -t "missing maxminDONE_${var}_????$st"
          continue
@@ -99,10 +109,20 @@ do
          then
             if [[ $flag == "max" ]]
             then
-               nces -O -y max -v ${var} ${OUTDIR_DIAG}/C3S_statistics/$st/19??/${var}/${fileroot}_S????${st}_*${var}_max.nc ${OUTDIR_DIAG}/C3S_statistics/$st/20[012]?/${var}/${fileroot}_S????${st}_*${var}_max.nc  ${outfile}
+               listaf=" "
+               for yyyy in `seq $iniy_hind $endy_hind`
+               do
+                  listaf+=" "`ls ${OUTDIR_DIAG}/C3S_statistics/$st/$yyyy/${var}/${fileroot}_S${yyyy}${st}_*${var}_max.nc`
+               done
+               nces -O -y max -v ${var} ${listaf} ${outfile}
             elif [[ $flag == "min" ]]
             then
-               nces -O -y min -v ${var} ${OUTDIR_DIAG}/C3S_statistics/$st/19??/${var}/${fileroot}_S????${st}_*${var}_min.nc ${OUTDIR_DIAG}/C3S_statistics/$st/20[012]?/${var}/${fileroot}_S????${st}_*${var}_min.nc  ${outfile}
+               listaf=" "
+               for yyyy in `seq $iniy_hind $endy_hind`
+               do
+                  listaf+=" "`ls ${OUTDIR_DIAG}/C3S_statistics/$st/$yyyy/${var}/${fileroot}_S${yyyy}${st}_*${var}_min.nc`
+               done
+               nces -O -y min -v ${var} ${listaf} ${outfile}
             fi
          fi
          
@@ -152,10 +172,10 @@ do
       fi
    done
 done
-#if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/*/${fileroot}_${st}.${iniy_hind}-${endy_hind}_*.C3S.nc|wc -l` -eq 106 ]]
 if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/*/${fileroot}_${st}.${iniy_hind}-${endy_hind}_*.C3S.nc|wc -l` -eq 82 ]]
 then
    $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics done for $st" -M "completed"
+   touch ${OUTDIR_DIAG}/C3S_statistics/$st/C3S_statistics_${st}_DONE
 else
    $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics not complete for $st" -M "WARNING $st C3S_statistics "
 fi

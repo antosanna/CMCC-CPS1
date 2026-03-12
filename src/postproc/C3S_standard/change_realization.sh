@@ -200,7 +200,7 @@ then
                   keepname=`echo $file|cut -d '_' -f4-`
                   mv $file ${caso_tobecome}_${keepname}
                done
-               cd $DIR_ARCHIVE/$caso/rest
+               cd $DIR_ARCHIVE/$caso_tobecome/rest
                datarest=`echo $tarfile |cut -d '.' -f1`
                tar -cvf $tarfile $datarest/*
                gzip $tarfile

@@ -13,14 +13,7 @@
 . $DIR_UTIL/descr_ensemble.sh $iniy_hind
 
 set -uexv
-script=launch_maxmin_single_year
-np=`${DIR_UTIL}/findjobs.sh -m $machine -n ${script} -c yes`
-if [[ $np -gt 1 ]]
-then
-   echo "already running"
-   exit
-fi
-
+stnow=$1
 maxjob=10       # max number of procs to be simultaneously submitted
 do_only_test_var=0   # if you want to compute only myvar
 myvar=tas
@@ -122,7 +115,7 @@ for var in ${var_arrayC3S[@]}; do
     fi
     echo "Launch $var"
         
-    for st in {01..12}
+    for st in $stnow
     do
        if [[ -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
        then

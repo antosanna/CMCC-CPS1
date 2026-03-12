@@ -146,8 +146,8 @@ for flgmnth in {0..1} ; do
       leadlist="1 2 3 4"
       flgmnth_fname="seasonal"
    else
-#      leadlist="1 2 3 4 5 6"
-      leadlist="1 2"
+      leadlist="1 2 3 4 5 6"
+#      leadlist="1 2"
       flgmnth_fname="monthly"
    fi
 

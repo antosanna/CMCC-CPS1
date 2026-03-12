@@ -12,44 +12,22 @@ write="FALSE"
 REG=getenv("REG")
 tend = getenv("yyyy")
 tstart= getenv("yyyy2")
-tendobs=getenv("yyyym1")
+tendobs= getenv("yyyym1")
 st   = getenv("st")
 stm1= getenv("stm1")
 refperiod   = getenv("refperiod")
 dirplots = getenv("dirplots")
-nens=tointeger(getenv("nens"))
+nens= tointeger(getenv("nens"))
 figtype=getenv("figtype")
 dir = getenv("dir")
-anomdir  = getenv("anomdir")
-vhc  = addfile (anomdir+"/sst_sps4_"+st+"_all_ano."+refperiod+".nc","r")
-tshc = vhc->tso(:,:,0:5,:,:)
-timehc = vhc->time(0:5)
-sstmhc=new((/30,30,18,180,360/),typeof(tshc),tshc@_FillValue)
-sstmhc(:,:,12:17,:,:)=tshc
-time=new((/18/),typeof(timehc))
-time=fspan(0,17,18)
-time@units="months since "+tstart+"-"+st+"-15 12:00:00"
-delete(time@calendar)
-format= "%c ~C~%Y"
-stime=cd_string(time,format)
-sstmhc@_FillValue=1.e+20
-
-sstm_iod_w=wgt_areaave_Wrap(sstmhc(:,:,:,{-10:10},{50:70}),1.0,1.0,1)
-sstm_iod_e=wgt_areaave_Wrap(sstmhc(:,:,:,{-10:0},{90:108}),1.0,1.0,1)
-sstm_iod=sstm_iod_w-sstm_iod_e
-delete(sstm_iod_w)
-delete(sstm_iod_e)
-sstmhc_iod=reshape(sstm_iod,(/30*30,18/))
-delete(sstm_iod)
-printVarSummary(sstmhc_iod)
 
 v1    = addfile (dir+"/sst_sps4_"+tend+st+"_all_ano."+refperiod+".nc","r")
 tstmp    = v1->tso(:,0:5,:,:)
 timetmp  = v1->time(0:5)
-sstm=new((/nens,18,180,360/),typeof(tstmp),tstmp@_FillValue)
-sstm(:,12:17,:,:)=tstmp
-time=new((/18/),typeof(timetmp))
-time=fspan(0,17,18)
+sstm=new((/nens,15,180,360/),typeof(tstmp),tstmp@_FillValue)
+sstm(:,7:12,:,:)=tstmp
+time=new((/15/),typeof(timetmp))
+time=fspan(0,14,15)+0.5
 time@units="months since "+tstart+"-"+st+"-15 12:00:00"
 delete(time@calendar)
 format= "%c ~C~%Y"
@@ -69,7 +47,7 @@ dirobs=getenv("dirobs")
 fobsname = dirobs+"/anom_sst_"+tstart+st+"-"+tendobs+stm1+".nc"
 print(fobsname)
 fobs=addfile(fobsname,"r")
-ssto=fobs->analysed_sst
+ssto=fobs->analysed_sst(5:11,:,:)
 ssto_iod_w=wgt_areaave_Wrap(ssto(:,{-10:10},{50:70}),1.0,1.0,1)
 ssto_iod_e=wgt_areaave_Wrap(ssto(:,{-10:0},{90:108}),1.0,1.0,1)
 ssto_iod=ssto_iod_w-ssto_iod_e
@@ -80,15 +58,15 @@ sstm_iod!1    = "time"
 sstm_iod&time = time
 sstm_iodemtmp=dim_avg_n_Wrap(sstm_iod,0)
 
-sstm_iodem=sstm_iodemtmp(12:17)
+sstm_iodem=sstm_iodemtmp(7:12)
 
 printVarSummary(sstm_iodem)
 
 ssto_iod!0    = "time"
 
 print(dimsizes(ssto_iod))
-ssto_iodnew=new((/18/),double,sstm_iod@_FillValue)
-ssto_iodnew(0:11)=ssto_iod
+ssto_iodnew=new((/15/),double,sstm_iod@_FillValue)
+ssto_iodnew(0:6)=ssto_iod
 
 ssto_iodnew!0    = "time"
 ssto_iodnew&time = time
@@ -100,18 +78,18 @@ ssto_iodnew&time = time
 ;mmax=2  ;dim_max_n(dim_max_n(sstmhc_iod,0),0)+1
 ;mmin=-2 ;dim_min_n(dim_min_n(sstmhc_iod,0),0)-1
 
-mnmx      = new ((/6,18/), double)
+mnmx      = new ((/6,15/), double)
 mnmx@_FillValue=-999.
 mnmx(0,:) = dim_min(sstm_iod(time|:,ensemble|:))
 mnmx(1,:) = dim_max(sstm_iod(time|:,ensemble|:))
 mnmx(2,:) = dim_median(sstm_iod(time|:,ensemble|:) )
 mnmx(3,:) = dim_avg(sstm_iod(time|:,ensemble|:))
-mnmx(3,0:10)=mnmx@_FillValue
+mnmx(3,0:5)=mnmx@_FillValue
 printVarSummary(mnmx)
 mnmx(4,:) = ssto_iodnew 
-mnmx(4,0:10)=mnmx@_FillValue
-mnmx(4,12)=mnmx(3,12)
-mnmx(4,13:17)=mnmx@_FillValue
+mnmx(4,0:5)=mnmx@_FillValue
+mnmx(4,7)=sstm_iodem(0)  ;mnmx(3,12)
+mnmx(4,8:14)=mnmx@_FillValue
 mnmx(5,:) = ssto_iodnew
 
 mmax=max(mnmx)+1
@@ -160,41 +138,46 @@ res@tiMainString     = REG+" Index issued "+tend+st
 
 
 res@tmXBFormat = "f"        ; remove the trailing ".0"
-res@trXMinF    = 0       ; starting point along X axis
-res@trXMaxF    = 17
+res@trXMinF    = min(ispan(0,14,1)+0.5)       ; starting point along X axis
+res@trXMaxF    = max(ispan(0,14,1)+0.5)
 res@tmXBMode   = "Explicit"
-res@tmXBValues = ispan(0,17,1)     ; choose first 13 timesteps
+res@tmXBValues = ispan(0,14,1)+0.5     ; choose first 13 timesteps
 labelsx=stime
-labelsx(1)=" "
-labelsx(3)=" "
-labelsx(5)=" "
-labelsx(7)=" "
-labelsx(9)=" "
-labelsx(11)=" "
-labelsx(13)=" "
-labelsx(15)=" "
-labelsx(17)=" "
+do i=0,dimsizes(stime)-1,2
+   labelsx(i)=""
+end do
 res@tmXBLabels = labelsx    
 
-res@xyLineColor    = "black"
+res@tmXBMinorValues   = ispan(0,14,1)
+res@tmXBMinorPerMajor = 1
+res@tmXBMajorLengthF  = 0.0
+
+
+x=ispan(0,14,1)+0.5
+
+res@xyLineColor = "black"
 res@xyLineThicknessF = 3
-obs_plot = gsn_csm_y (wks,mnmx(5,:),res)       ; create line plot
+obs_plot = gsn_csm_xy (wks,x,mnmx(5,:),res)       ; create line plot
 
 delete(res@xyLineColor)
 delete(res@xyLineThicknessF)
 res@xyLineColor = "Grey"
 res@xyLineThicknessF = 2
-raccordo_plot = gsn_csm_y (wks,mnmx(4,:),res)       ; create line plot
+raccordo_plot = gsn_csm_xy (wks,x,mnmx(4,:),res)       ; create line plot
 
 ; Create a plot with the ensemble plume in red.
 
 delete(res@xyLineColor)
 delete(res@xyLineThicknessF)
 res@xyLineColor    = "red"
-res@xyLineThicknessF = 1      ; line thicknesses
+res@xyLineThicknessF = 2      ; line thicknesses
 res@xyDashPattern = 1
+res@xyMarkLineMode = "MarkLines" 
+res@xyMarker = 16
+res@xyMarkerColor = "red"
+res@xyMarkerSizeF = 3
 
-mid_plot  = gsn_csm_y (wks,sstm_iod,res)  ; Create another filled XY plot.
+mid_plot  = gsn_csm_xy (wks,x,sstm_iod,res)  ; Create another filled XY plot.
 
 delete(res@xyLineThicknessF)
 delete(res@xyDashPattern)
@@ -202,7 +185,14 @@ delete(res@xyLineColor)
 res@xyLineColor = "Green"
 res@xyLineThicknessF = 5
 res@xyDashPattern = 0
-ensm_plot = gsn_csm_y (wks,mnmx(3,:),res)
+res@xyMarkLineMode = "MarkLines" 
+res@xyMarker = 16
+res@xyMarkerColor = "Green"
+res@xyMarkerSizeF = 5
+
+ensm_plot = gsn_csm_xy (wks,x,mnmx(3,:),res)
+
+
 ;
 ; Overlay the top and mid plots on the bottom plot.
 ;
@@ -221,23 +211,35 @@ end getvalues
 ;***********************************************
 ; legend resources
 ;***********************************************
-lbres                    = True          ; labelbar only resources
-lbres@lbAutoManage       = True          ; Necessary to control sizes
-lbres@vpWidthF           = 0.2 * vpw     ; labelbar width
-lbres@vpHeightF          = 0.2 * vph     ; labelbar height
-lbres@lbBoxMajorExtentF  = 0.75          ; puts space between color boxes
-lbres@lbFillColors       = (/"black","Green","Red"/)  ; labelbar colors
-lbres@lbMonoFillPattern  = True          ; Solid fill pattern
-lbres@lbAutoManage       = False 
-lbres@lbLabelFontHeightF = 0.01          ; font height. default is small
-lbres@lbLabelJust        = "CenterLeft"  ; left justify labels
+lgres                    = True
 
-lbid = gsn_create_labelbar(wks,3,(/"ESA CCI","SPS4 ensemble mean","SPS4 members"/),lbres)         ; create legend
+lgres@lgAutoManage        = False
+lgres@lgMonoItemType      = False
+lgres@lgMonoDashIndex     = False
+lgres@lgMonoLineThickness = False
+
+lgres@lgItemTypes        = (/"Lines","MarkLines","MarkLines"/)
+lgres@lgLineColors       = (/"black","green","red"/)
+lgres@lgDashIndexes      = (/0,0,1/)
+lgres@lgLineThicknesses  = (/3,5,3/)
+
+lgres@lgMarkerIndexes    = (/-1,16,16/)
+lgres@lgMarkerColors     = (/"black","green","red"/)
+lgres@lgMarkerSizeF      = 0.005
+
+
+lgres@lgLabelFontHeightF = .1            ; set the legend label font thickness
+lgres@vpWidthF           = 0.24           ; width of legend (NDC)
+lgres@vpHeightF          = 0.08            ; height of legend (NDC)
+lgres@lgPerimOn          = False
+labels = (/"  ESA CCI","  SPS4 ensemble mean","  SPS4"/)
+
+lbid   = gsn_create_legend(wks,3,labels,lgres)
 
 amres = True
 amres@amJust           = "TopRight"
-amres@amParallelPosF   = -0.2         ; move legend to the right
-amres@amOrthogonalPosF = -0.5            ; move the legend down
+amres@amParallelPosF   = -0.15         ; move legend to the right
+amres@amOrthogonalPosF = -0.48            ; move the legend down
 annoid1 = gsn_add_annotation(obs_plot,lbid,amres)   ; add legend to plot
 
 draw(obs_plot)   ; Draw base plot.
