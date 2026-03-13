@@ -149,17 +149,17 @@ for var in ${var_arrayC3S[@]}; do
        done    #loop on $yyyy
        if [[ ! -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
        then
-          body="all year from $iniy_hind $endy_hind and start-date $stnow done"
+          body="all year from $iniy_hind $endy_hind and start-date $st done"
           title="C3S_statistics maxmin start-date $st all years $var completed"
           $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
           touch     $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done    
        fi
    done    #loop on $st
 done    #loop on $var
-if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${stnow}_*_done |wc -l` -eq $((${#var_arrayC3S[@]} - 3)) ]]
+if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_*_done |wc -l` -eq $((${#var_arrayC3S[@]} - 3)) ]]
 then
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
-   input=$stnow
+   input=$st
    ${DIR_UTIL}/submitcommand.sh -m $machine -M 8000 -t 1 -q $serialq_m -j ${namescript2}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
 fi
 

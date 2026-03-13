@@ -162,7 +162,8 @@ do
          cdo -O mergetime $SCRATCHDIR/C3S_statistics/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.??.nc $OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.C3S.nc
          if [[ ! -f $OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.C3S.nc ]]
          then
-            $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -M "C3S statistics not done for ${var} $st" -t "WARNING $var"
+            $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -M "C3S statistics not done for ${var} $st" -t "Message from compute_maxmin_monthly_refperiod.sh: WARNING $var"
+
             exit
          fi
       done
@@ -177,6 +178,6 @@ then
    $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics done for $st" -M "completed"
    touch ${OUTDIR_DIAG}/C3S_statistics/$st/C3S_statistics_${st}_DONE
 else
-   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics not complete for $st" -M "WARNING $st C3S_statistics "
+   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics not complete for $st" -M "Message from compute_maxmin_monthly_refperiod.sh: WARNING $st C3S_statistics not complete"
 fi
 
