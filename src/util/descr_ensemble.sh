@@ -6,6 +6,8 @@ yyyy=$1
 n_ic_cam=10
 n_ic_clm=3
 nrunhind=30  # 30 number of realizations required in hindcast
+nrunhindext=20  # 30 number of realizations required in hindcast
+nrunmaxext=$nrunhindext
 if [[ $yyyy -lt 2025 ]]
 then
    n_ic_nemo=4
