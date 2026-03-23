@@ -139,7 +139,12 @@ for var in ${var_arrayC3S[@]}; do
           odir=$outdir/$st/$yyyy/${var}
           mkdir -p $odir
           input="$var $yyyy $st $odir $fileok"
-          ${DIR_UTIL}/submitcommand.sh -m $machine -M 8000 -t 1 -q $serialq_m -j ${namescript}_${var}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript}.sh -i "$input"
+          memory=1000
+          if [[ $var == "zg" ]] || [[ $var == "ua" ]] || [[ $var == "va" ]] || [[ $var == "hus" ]] || [[ $var == "ta" ]]
+          then
+             memory=3000
+          fi
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M $memory -t 1 -q $serialq_m -j ${namescript}_${var}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript}.sh -i "$input"
           npint=`${DIR_UTIL}/findjobs.sh -m $machine -n ${namescript} -c yes`
 #          if [[ $npint -ge 10 ]]
           if [[ $npint -ge $maxjob ]]
@@ -160,7 +165,7 @@ if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_*_done |
 then
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
    input=$st
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 8000 -t 1 -q $serialq_m -j ${namescript2}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -t 1 -q $serialq_m -j ${namescript2}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
 fi
 
 exit 0
