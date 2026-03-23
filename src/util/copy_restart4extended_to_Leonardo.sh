@@ -19,7 +19,8 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 
 st=11
 strest=05
-for yyyy in `seq 1995 2024`
+#for yyyy in `seq 1995 2024`
+for yyyy in `seq 1999 2024`
 do
    yyyyrest=$((yyyy + 1))
    for ens in {01..20}

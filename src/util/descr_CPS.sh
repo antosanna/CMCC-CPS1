@@ -448,6 +448,11 @@ DIR_PCTL=$HOME/CPS/CMCC-SPS_PCTL
 WORK_SCORES=$WORK/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4
 DIR_CLIM=$WORK_SCORES
 DIR_FORE_ANOM=$WORK/CPS/CMCC-${CPSSYS}/forecast_anom
+if [[ $machine == "cassandra" ]]
+then
+   DIR_REFCASES1=$DIR_CASES1
+   DIR_REFCASES=$DIR_CASES
+fi
 #
 if [[ $machine == "juno" ]]
 then

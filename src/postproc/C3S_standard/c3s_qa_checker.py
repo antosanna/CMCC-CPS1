@@ -335,7 +335,7 @@ def main():
                                 print("   Files must be named as follows: ")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_[quantile value]quantile.nc")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_[1 - quantile value]quantile.nc")
-                                print("        i.e cmcc_CMCC-CM2-v20191201_hindcast_11.1993-2016_hus_0.10quantile.nc")
+                                print("        i.e cmcc_CMCC-CM3-v20231101_hindcast_11.1995-2024_hus_0.10quantile.nc")
                             raise InputError('Cannot open one or more climatological files in '+os.path.join(args.path_clim,lab_month,shortname)+' \n'+file_quant_min+", \n"+file_quant_max)
                         # open upper quantile
                         try:
@@ -372,7 +372,7 @@ def main():
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_min.nc")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_max.nc")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_emean_highfreq.nc")
-                                print("        i.e cmcc_CMCC-CM2-v20191201_hindcast_11.1993-2016_hus_min.nc")
+                                print("        i.e cmcc_CMCC-CM3-v20231101_hindcast_11.1995-2024_hus_min.nc")
                             raise InputError('Cannot open one or more climatological files in '+os.path.join(args.path_clim,lab_month,shortname)+' \n'+file_clim_min+", \n"+file_clim_max+", \n"+file_clim_mean)
                         # open climatology
                         DSmax  = xr.open_dataset(os.path.join(args.path_clim,lab_month,shortname,file_clim_max), decode_times=False)
@@ -399,7 +399,7 @@ def main():
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_min.nc")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_max.nc")
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_emean_highfreq.nc")
-                                print("        i.e cmcc_CMCC-CM2-v20191201_hindcast_11.1993-2016_hus_min.nc")
+                                print("        i.e cmcc_CMCC-CM3-v20231101_hindcast_11.1995-2024_hus_min.nc")
                             raise InputError('Cannot open one or more climatological files in '+os.path.join(args.path_clim,lab_month,shortname)+' \n'+file_clim_monmin+", \n"+file_clim_monmax)
                        
 
@@ -439,7 +439,7 @@ def main():
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_min.nc")       ###
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_max.nc")       ### 
                                 print("        [preffix]_[startdate].[hindcast-period]_[shortname]_emean_highfreq.nc")   ###
-                                print("        i.e cmcc_CMCC-CM2-v20191201_hindcast_11.1993-2016_hus_min.nc")   ###
+                                print("        i.e cmcc_CMCC-CM3-v20231101_hindcast_11.1995-2024_hus_min.nc")   ###
                             raise InputError('Cannot open one or more climatological files in '+os.path.join(args.path_clim,lab_month,shortname)+' \n'+file_clim_monmin+", \n"+file_clim_monmax)
                         # open climatology
                         #TO-BE_MODIF

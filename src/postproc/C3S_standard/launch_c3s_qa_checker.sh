@@ -27,6 +27,7 @@ set +evxu
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -evxu
 #
+reduced=1    #reduced=1 json version of the checker
 memberstocheck=1 # only 1 member DO NOT CHANGE
 
 #touch $checkfile     # check file qa started in $DIR_CASES/$caso  unlikely needed anymore
@@ -89,57 +90,65 @@ namespace+="seaIce_day "
 namespace+="ocean_6hr "
 namespace+="ocean_mon " 
 
+if [[ ${reduced} -eq 1 ]] 
+then
 # Define memory needs for each namespace (attention:keep order)
 # atmos
-#memory[0]="5000M" #"atmos_6hr_surface_psl "
-#memory[1]="5000M" #"atmos_6hr_surface_prw "
-#memory[2]="5000M" #"atmos_6hr_surface_clt "
-#memory[3]="5000M" #"atmos_6hr_surface_tas "
-#memory[4]="5000M" #"atmos_6hr_surface_tdps "
-#memory[5]="7500M" #"atmos_6hr_surface_uas "
-#memory[6]="7500M" #"atmos_6hr_surface_vas "
-#memory[7]="7500M" #"atmos_6hr_surface_ua100m "
-#memory[8]="7500M" #"atmos_6hr_surface_va100m "
-memory[0]="700M"  #"atmos_6hr_surface_psl "
-memory[1]="700M" #"atmos_6hr_surface_prw "
-memory[2]="700M" #"atmos_6hr_surface_clt "
-memory[3]="700M" #"atmos_6hr_surface_tas "
-memory[4]="700M" #"atmos_6hr_surface_tdps "
-memory[5]="700M" #"atmos_6hr_surface_uas "
-memory[6]="700M" #"atmos_6hr_surface_vas "
-memory[7]="700M" #"atmos_6hr_surface_ua100m "
-memory[8]="700M" #"atmos_6hr_surface_va100m "
-#memory[9]="20000M" #"atmos_12hr_pressure_zg "
-#memory[10]="20000M" #"atmos_12hr_pressure_ta "
-#memory[11]="20000M" #"atmos_12hr_pressure_hus "
-#memory[12]="20000M" #"atmos_12hr_pressure_ua "
-#memory[13]="20000M" #"atmos_12hr_pressure_va "
-memory[9]="4000M" #"atmos_12hr_pressure_zg "
-memory[10]="4000M" #"atmos_12hr_pressure_ta "
-memory[11]="4000M" #"atmos_12hr_pressure_hus "
-memory[12]="4000M" #"atmos_12hr_pressure_ua "
-memory[13]="4000M" #"atmos_12hr_pressure_va "
-#memory[14]="10000M"  #"atmos_day "
-memory[14]="16000M"  #"atmos_day "
-#memory[15]="2000M " #"atmos_fix "
-memory[15]="100M " #"atmos_fix "
+   memory[0]="700M"  #"atmos_6hr_surface_psl "
+   memory[1]="700M" #"atmos_6hr_surface_prw "
+   memory[2]="700M" #"atmos_6hr_surface_clt "
+   memory[3]="700M" #"atmos_6hr_surface_tas "
+   memory[4]="700M" #"atmos_6hr_surface_tdps "
+   memory[5]="700M" #"atmos_6hr_surface_uas "
+   memory[6]="700M" #"atmos_6hr_surface_vas "
+   memory[7]="700M" #"atmos_6hr_surface_ua100m "
+   memory[8]="700M" #"atmos_6hr_surface_va100m "
+   memory[9]="4000M" #"atmos_12hr_pressure_zg "
+   memory[10]="4000M" #"atmos_12hr_pressure_ta "
+   memory[11]="4000M" #"atmos_12hr_pressure_hus "
+   memory[12]="4000M" #"atmos_12hr_pressure_ua "
+   memory[13]="4000M" #"atmos_12hr_pressure_va "
+   memory[14]="1000M"  #"atmos_day "
+   memory[15]="100M " #"atmos_fix "
 # land
-#memory[16]="5000M" #"land_6hr "
-memory[16]="700M"  #"land_6hr "
-#memory[17]="5000M" #"land_day "
-memory[17]="16000M" #"land_day "
+   memory[16]="700M"  #"land_6hr "
+   memory[17]="2000M" #"land_day "
 # seaIce
-#memory[18]="5000M"  #"seaIce_6hr "
-memory[18]="700M"  #"seaIce_6hr "
-#memory[19]="5000M"  #"seaIce_day "
-memory[19]="16000M"  #"seaIce_day "
+   memory[18]="700M"  #"seaIce_6hr "
+   memory[19]="500M"  #"seaIce_day "
+# ocean 
+   memory[20]="1000M"  #"ocean_6hr "
+   memory[21]="100M " #"ocean_mon " 
+else
+# Define memory needs for each namespace (attention:keep order)
+# atmos
+   memory[0]="5000M" #"atmos_6hr_surface_psl "
+   memory[1]="5000M" #"atmos_6hr_surface_prw "
+   memory[2]="5000M" #"atmos_6hr_surface_clt "
+   memory[3]="5000M" #"atmos_6hr_surface_tas "
+   memory[4]="5000M" #"atmos_6hr_surface_tdps "
+   memory[5]="7500M" #"atmos_6hr_surface_uas "
+   memory[6]="7500M" #"atmos_6hr_surface_vas "
+   memory[7]="7500M" #"atmos_6hr_surface_ua100m "
+   memory[8]="7500M" #"atmos_6hr_surface_va100m "
+   memory[9]="20000M" #"atmos_12hr_pressure_zg "
+   memory[10]="20000M" #"atmos_12hr_pressure_ta "
+   memory[11]="20000M" #"atmos_12hr_pressure_hus "
+   memory[12]="20000M" #"atmos_12hr_pressure_ua "
+   memory[13]="20000M" #"atmos_12hr_pressure_va "
+   memory[14]="10000M"  #"atmos_day "
+   memory[15]="2000M " #"atmos_fix "
+# land
+   memory[16]="5000M" #"land_6hr "
+   memory[17]="5000M" #"land_day "
+# seaIce
+   memory[18]="5000M"  #"seaIce_6hr "
+   memory[19]="5000M"  #"seaIce_day "
 # ocean (only tso)
-#memory[20]="12000M" #"ocean_6hr "
-#memory[20]="700M"  #"ocean_6hr " --> Before was this, but on Leonardo is not enough!
-memory[20]="1000M"  #"ocean_6hr "
-#memory[21]="2000M " #"ocean_mon " 
-memory[21]="100M " #"ocean_mon " 
-    
+   memory[20]="12000M" #"ocean_6hr "
+   memory[21]="2000M " #"ocean_mon " 
+fi
+
 # Link or copy temporarily all files to working dir
 cd $wdir
 
@@ -211,6 +220,7 @@ namespace=\$1
 startdate=\$2
 member=\$3
 jsonf=\$4
+reduced=\$5
 
 echo "activate env *********************"
 
@@ -258,13 +268,14 @@ for ncfile in \$netcdf2check ; do
         rm -r \$scratch4outl
     fi
     mkdir -p \$scratch4outl
-    # launch python (checking files in tempdir_\$namespace)
-    # adding -pclim input activates the climatological check on monthly min/max, while -pqval activates the interquantile one 
-    #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pqval 0.01 -mf 1. -pclim \$OUTDIR_DIAG/C3S_statistics -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-# WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
-    #python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-    python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-
+    if [[ \$reduced -eq 1 ]] ; then
+      # launch python (checking files in tempdir_\$namespace)
+      # adding -pclim input activates the climatological check on monthly min/max, while -pqval activates the interquantile one 
+         python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
+    else
+       # WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
+       python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
+    fi
     # remove files
     if [[ \$? -eq 0 ]] ; then
         echo Once finished, clean file...
@@ -294,7 +305,7 @@ EOF
 
     chmod u+x launch_c3s_qa_checker.${ns}.sh
 # modified 20201021 from serialq_s to serialq_l for priority reasons
-    input="$ns ${startdate} ${ens} ${json}"
+    input="$ns ${startdate} ${ens} ${json} ${reduced}"
 
 #
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l $DL -i "$input"
