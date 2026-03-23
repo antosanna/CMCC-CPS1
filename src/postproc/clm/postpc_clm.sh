@@ -62,7 +62,8 @@ set -uexv
 if [[ $machine == "leonardo" ]] ;then
 set +euvx
   . $DIR_UTIL/condaactivation.sh
-  condafunction activate env_tools_test
+  #condafunction activate env_tools_test
+  condafunction activate env_tools
 set -euvx
 fi
 #file name:$caso.clm2.$ft.$yyyy-$st.zip.nc
@@ -169,10 +170,6 @@ then
    
    cd $outdirC3S
    
-   set +euvx
-   condafunction deactivate $envcondaclm 
-   set -euvx   
-
    echo "postpc_clm.sh DONE"
    touch ${check_postclm}
 else

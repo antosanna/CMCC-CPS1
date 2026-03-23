@@ -125,7 +125,7 @@ for fplot in $listafile
 do
    rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
 done
-#conda deactivate $envcondarclone
+
 title="[CAMIC] ${CPSSYS} forecast notification"
 body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the initialization fields for CAM.\n
 Comparison between 500hPa $obs and CAM ICs for ${yyyy}${st} start-date.\n

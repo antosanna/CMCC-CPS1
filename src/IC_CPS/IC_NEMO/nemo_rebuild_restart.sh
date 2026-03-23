@@ -90,4 +90,4 @@ then
    rsync -auv $f_ice $ciceic
 fi
 set +euvx
-condafunction deactivate $envcondanemo
+

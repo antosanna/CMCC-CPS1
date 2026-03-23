@@ -65,10 +65,8 @@ cd $DIR_CASES/$caso
 #----------------------------------------------------------
 
 rsync -av $DIR_TEMPL/env_workflow_sps4ext.xml_${env_workflow_tag} $DIR_CASES/$caso/env_workflow.xml
-if [[ $machine == "leonardo" ]]
+if [[ $machine != "leonardo" ]]
 then
-   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
-else
    if [[ $flag_dev -eq 1 ]]
    then
 # this one submit without SC
@@ -82,52 +80,37 @@ rsync -av $DIR_TEMPL/env_batch.xml_${env_workflow_tag} $DIR_CASES/$caso/env_batc
 # set-up the case after modfication env_workflow
 #----------------------------------------------------------
 ./case.setup --reset
+if [[ $machine == "leonardo" ]]
+then
+   rsync -av $DIR_TEMPL/env_mach_specific.xml_${env_workflow_tag} $DIR_CASES/$caso/env_mach_specific.xml
+fi
 ./case.setup
 ./xmlchange BUILD_COMPLETE=TRUE
 rsync -av $DIR_TEMPL/file_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 rsync -av $DIR_TEMPL/field_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
-# IC_NEMO_CPS_DIR and IC_CICE_CPS_DIR will contain physical fields
-if [[ "$USER" == "${operational_user}" ]]
+
+refdirREST=$SCRATCHDIR1/restarts4extended/$casoREST/rest
+#if [[ "$USER" == "${operational_user}" ]]
+#then
+restyyyy=$yyyy
+restmon=$((10#$st + $nmonfore ))
+if [[ $restmon -gt 12 ]]
 then
-   cd $SCRATCHDIR1/restarts4extended/$casoREST/rest
-   restyyyy=$yyyy
-   restmon=$((10#$st + $nmonfore ))
-   if [[ $restmon -gt 12 ]]
-   then
-       restmon=0$(($restmon - 12))
-       restyyyy=$(($yyyy + 1))
-   elif [[ $restmon -lt 10 ]]
-   then
-       restmon=0$restmon
-   fi
-   if [[ -f $restyyyy-$restmon-01-00000.tar.gz ]]
-   then
-      gunzip $restyyyy-$restmon-01-00000.tar.gz
-   fi
-   refdirREST=$DIR_ARCHIVE/$casoREST/rest/$restyyyy-$restmon-01-00000
-else
-   restyyyy=$yyyy
-   restmon=$((10#$st + $nmonfore ))
-   if [[ $restmon -gt 12 ]]
-   then
-       restmon=0$(($restmon - 12))
-       restyyyy=$(($yyyy + 1))
-   elif [[ $restmon -lt 10 ]]
-   then
-       restmon=0$restmon
-   fi
-   mkdir -p $SCRATCHDIR/$casoREST/rest/
-   if [[ -f $SCRATCHDIR1/restarts4extended/$casoREST/rest/$restyyyy-$restmon-01-00000.tar.gz ]]
-   then
-      rsync -auv $SCRATCHDIR1/restarts4extended/$casoREST/rest/$restyyyy-$restmon-01-00000.tar.gz $SCRATCHDIR/$casoREST/rest/
-      gunzip $SCRATCHDIR/$casoREST/rest/$restyyyy-$restmon-01-00000.tar.gz
-   else
-      rsync -auv $SCRATCHDIR1/restarts4extended/$casoREST/rest/$restyyyy-$restmon-01-00000 $SCRATCHDIR/$casoREST/rest/
-   fi   
-   refdirREST=$SCRATCHDIR/$casoREST/rest/$restyyyy-$restmon-01-00000
+   restmon=0$(($restmon - 12))
+   restyyyy=$(($yyyy + 1))
+elif [[ $restmon -lt 10 ]]
+then
+   restmon=0$restmon
 fi
+if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
+then
+#      rsync -auv $SCRATCHDIR1/restarts4extended/$casoREST/rest/$restyyyy-$restmon-01-00000.tar.gz $SCRATCHDIR/$casoREST/rest/
+      gunzip $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
+      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+fi   
+$DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 
 cd $DIR_CASES/$caso
 #-----------

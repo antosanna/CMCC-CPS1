@@ -72,7 +72,7 @@ esac
 cd  $ncep_dir
 # TEMPORARILY COMMENTED (NOT WORKING ON LEONARD)
 [ -f sstoi.indices ] && rm sstoi.indices
-wget -4 --no-check-certificate https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices
+wget -4 --no-check-certificate https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices 
 cat sstoi.indices | uniq > sstoi.indices.tmp
 mv sstoi.indices.tmp sstoi.indices
 # END OF TEMPORARY COMMENT

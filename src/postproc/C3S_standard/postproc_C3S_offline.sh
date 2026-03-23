@@ -13,6 +13,8 @@ caso=$2
 # only in this special case DIR_CASES must be redefined for it can be different
 # for the different machines the case could have been done on.
 dir_cases=$3
+#flag postproc done
+flagpostproc_done=$4
 # this modification will affect $dictionary too!!!!
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
@@ -88,7 +90,6 @@ then
        jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
        if [[ $ft == "h2" ]]
        then
-# contains additional variables for CERISE, not operational
           continue
        fi
        echo "start of postpc_clm "`date`
@@ -242,7 +243,7 @@ do
 done
 #
 #check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE - it is $check_pp_C3S in dictionary, here explicit for remote cases
-touch $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE 
+touch $flagpostproc_done
 
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it

@@ -328,20 +328,23 @@ then
     #command="sbatch --account=CMCC_Copern20 --partition=$queue --qos=qos_resv --reservation=s_met_cmcc --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=05:00:00 --mail-type=ALL --mail-user=$mymail"
     # If qos is defined, then add it serial
     # If reservation is defined, then add it serial
-    if [[ "$reservation" != "None" ]]
-    then
-       if [[ "$queue" != "None" ]] # if is not defined
-       then
-          if [[ "$queue" == "$serialq_l" ]]
-          then
-             command+=" --reservation=$sla_serialID "
-          else
-             command+=" --reservation=$slaID "
-          fi
-       else
-          command+=" --reservation=$reservation"
-       fi
-    fi
+
+####ON LEONARDO not reservation defined, only partition and qos needed
+#    if [[ "$reservation" != "None" ]]
+#    then
+#       if [[ "$queue" != "None" ]] # if is not defined
+#       then
+#          if [[ "$queue" == "$serialq_l" ]]
+#          then
+#             command+=" --reservation=$sla_serialID "
+#          else
+#             command+=" --reservation=$slaID "
+#          fi
+#       else
+#          command+=" --reservation=$reservation"
+#       fi
+#    fi
+
     # If exclusive is defined, then add it 
     if [[ "$exclusive" != "None" ]]
     then
@@ -357,20 +360,20 @@ then
       command+=' --time=06:00:00 '
     fi
 
-    if [[ "$account_name" == "CMCC_reforeca" ]]
-    then
+   # if [[ "$account_name" == "CMCC_reforeca" ]]
+   # then
     # sbatch $account_name with reservation
-#      command+=" --qos=qos_lowprio --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
-       if [[ "$queue" == "lrd_all_serial" ]]
+    # command+=" --qos=qos_lowprio --account=$account_name  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
+       if [[ "$queue" == "lrd_all_serial" ]] ##bdw_all_serial ???? for push
        then
              command+=" --account=$account_SLURM  --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err --mail-type=FAIL --mail-user=$mymail"
        else
 #           command+=" --qos=qos_lowprio --partition=dcgp_usr_prod --account=$account_name --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
             command+=" $optSLURM --partition=$queue --account=$account_SLURM --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err   --mail-type=FAIL --mail-user=$mymail"
        fi
-    else
-       command+=" --account=$account_SLURM --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=FAIL --mail-user=$mymail" 
-    fi
+ #   else
+ #      command+=" --account=$account_SLURM --partition=$queue --job-name=$jobname --out=$logdir/${jobname}_%J.out --err=$logdir/${jobname}_%J.err  --time=03:59:00 --mail-type=FAIL --mail-user=$mymail" 
+ #   fi
 
     # (--nice decrease priority, positive value of nice decrease)
     # (usually regrid cam is 99767 but postrun 98000) now postrun is 154406

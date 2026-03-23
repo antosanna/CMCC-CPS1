@@ -9,14 +9,14 @@
 set -euvx
 
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
-LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_forecast_leonardo.`date +%Y%m%d%H%M`
+LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_leonardo.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 st=$2  #stdate as input
 yyyy=$1
 
 dbg=0 # dbg=1 -> just one member for test
-flag_running=$DIR_TEMP/launch_postproc_C3S_forecast_${yyyy}${st}_leonardo_on #to avoid multiple submission from crontab
+flag_running=$DIR_TEMP/launch_postproc_C3S_${typeofrun}_${yyyy}${st}_leonardo_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
 then
    exit
@@ -34,10 +34,13 @@ cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
 #for yyyy in `seq $iniy_hind $endy_hind`
-listofcases=`ls -d sps4_${yyyy}${st}_0?? |head -n $nrunmax`
+listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0?? |head -n $nrunmax`
 
 for caso in $listofcases
 do
+      set +euvx
+      . $dictionary
+      set -euvx
       flag_postproc_offline_on=${check_postproc_started_header}_${caso}
       if [[ -f ${flag_postproc_offline_on} ]]  
       then
@@ -67,7 +70,7 @@ do
        touch ${flag_postproc_offline_on}
    
        mkdir -p $DIR_LOG/$typeofrun/C3S_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases}"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
    
    
        if [[ $dbg -eq 1 ]]

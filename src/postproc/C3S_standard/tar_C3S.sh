@@ -416,16 +416,16 @@ fi
 skip=0
 if [[ $skip -eq 0 ]]
 then
-if [[ $typeofrun == "forecast" ]]
-then
-   input="$yyyy $st"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
+   if [[ $typeofrun == "forecast" ]]
+   then
+      input="$yyyy $st"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
   
-   body="Diagnostics from C3S just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_CPS/launch_end_forecast_${CPSSYS}.sh manually"
-   title="[C3S] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
+      body="Diagnostics from C3S just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_CPS/launch_end_forecast_${CPSSYS}.sh manually"
+      title="[C3S] ${CPSSYS} $typeofrun notification"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
-fi
+   fi
 fi
 
 #--------------------------------------------

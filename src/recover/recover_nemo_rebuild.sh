@@ -41,9 +41,6 @@ do
    fi
    mm=$(($mm + 1))
 done
-set +euvx
-condafunction deactivate $envcondanemo
-set -euvx
 list_files_to_compress=`ls $DIR_ARCHIVE/$CASE/ocn/hist/*.nc`
 for ff in $list_files_to_compress
 do

@@ -118,9 +118,6 @@ do
     fi
 
 done
-set +evxu
-  condafunction deactivate $envcondac3schecker
-set -euvx
 
 # If ERRORs encountered, then send a mail
 if [[ $list_error != "" ]];then

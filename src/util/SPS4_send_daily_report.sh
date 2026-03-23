@@ -22,6 +22,4 @@ condafunction activate $envcondarclone
 set -euvx
 rclone mkdir my_drive:hindcast/$stdate/REPORTS
 rclone copy ${DIR_LOG}/report/$typeofrun/report_${SPSSystem}.${machine}.`date +%Y%m%d` my_drive:hindcast/$stdate/REPORTS
-set +euvx
-condafunction deactivate $envcondarclone
 exit 0

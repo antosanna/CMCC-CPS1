@@ -10,7 +10,8 @@ set -evx
 if [[ $machine == "leonardo" ]]
 then
    conda activate $envcondacm3
-   LOG_FILE=$DIR_LOG/hindcast/SPS4_submission_hindcast.`date +%Y%m%d%H%M`.log
+   mkdir -p $DIR_LOG/hindcastext
+   LOG_FILE=$DIR_LOG/hindcastext/SPS4_submission_HINDCASTSextended.`date +%Y%m%d%H%M`.log
    exec 3>&1 1>>${LOG_FILE} 2>&1
 
    cnt_this_script_running=$(ps -u ${operational_user} -f |grep SPS4_sub | grep -v $$|wc -l)
@@ -31,7 +32,7 @@ else
 # kill it
          $DIR_UTIL/killjobs.sh -m $machine -i $ID_unknown
 # it often occurs that if a job is in unknown status others too are in the same.
-         title="WARNING!!! HINDCAST LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
+         title="WARNING!!! HINDCAST EXTENDED LAUNCHER FOUND IN UNKNOWN STATUS on $machine"
          body="Check if other jobs are in unknown status too!!"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes"
       else
@@ -43,22 +44,17 @@ else
 fi
 # Input **********************
 stlist=11
+dbg=0   #if 1 submit just one caso and exit
 
 #max number of ens member to be submitted per startdate
 #to advance with the diagnostic it has been decided to run first
 #a reduced ensemble over all the timeseries 
-nmaxens=${2:-${nrunmaxext}}
-
-#if by mistake the input is greater than $nrunmaxext (20) 
-#nrunmaxext is restored
-if [[ $nmaxens -gt ${nrunmaxext} ]] ; then
-   nmaxens=${nrunmaxext}
-fi
+nmaxens=${nrunmaxext}
 
 np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive.${SPSSystem}ext_ -c yes`
 if [[ $np_all -lt $maxnumbertosubmit ]]
 then
-   echo "go on with hindcast submission"
+   echo "go on with hindcast extended submission"
    tobesubmitted=$(( $maxnumbertosubmit - ${np_all} + 1 ))
 else
    echo "Exiting now! already $np_all job on parallel queue"
@@ -93,8 +89,13 @@ subm_cnt=0
 
 for st in $stlist
 do
-   for yyyy in $(seq $iniy_hind $endyear)
+   for yyyy in $(seq $iniy_hind $endy_hind)
    do
+       if [[ $yyyy -lt 1995 ]]
+       then
+          echo "something wrong with seq"
+          exit
+       fi
        echo "YEAR $yyyy *****************************"
        
        #check how many members done per year
@@ -160,11 +161,11 @@ do
          if [[ -f $script_to_submit ]] ; then
   
             restdirext=$SCRATCHDIR/restarts4extended/${SPSSystem}_${yyyy}${st}_${ens}
-            if [[ ! -d $restdirext ]] || [[ `ls $restdirext/*|wc -l` -ne 295` ]]
+            if [[ ! -d $restdirext ]] 
             then
           
                 echo ""
-                echo "Restdir or rest files missing from caso ${SPSSystem}_${yyyy}${st}_${ens} in $restdirext ************** "
+                echo "Restdir missing from caso ${SPSSystem}_${yyyy}${st}_${ens} in $restdirext ************** "
                 echo "skip $caso                                  "
                 echo ""
                 cnt_rest=$(( $cnt_rest + 1 ))              
@@ -198,6 +199,10 @@ do
             then
                ylast=$yyyy
                break 4
+            fi
+            if [[ $dbg -eq 1 ]]
+            then
+               exit
             fi
 
          fi

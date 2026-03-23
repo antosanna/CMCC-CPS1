@@ -32,6 +32,9 @@ set -euvx
    member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
    startdate=$yyyy$st
    outdirC3S=${WORK_C3S}/$yyyy$st
+   set +euvx
+   . $dictionary
+   set -euvx
 
    #sps4_201312_023.transfer_from_Leonardo_DONE
    flag_from_remote=`ls $DIR_ARCHIVE/${caso}.transfer_from_*_DONE |wc -l`

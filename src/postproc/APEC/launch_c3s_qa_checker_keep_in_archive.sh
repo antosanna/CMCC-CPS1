@@ -199,10 +199,6 @@ done
 
 cd $ACTDIR
 
-#set +evxu
-#condafunction deactivate CHECK_ENV_DEV
-#set -evxu
-
 if [ -f NSDONE_\$namespace ] ; then
 	rm -r NSDONE_\$namespace
 fi 

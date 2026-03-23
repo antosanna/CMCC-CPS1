@@ -285,5 +285,4 @@ then
 else
    rclone copy ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx my_drive:
 fi
-condafunction deactivate $envcondarclone
 exit 0

@@ -135,7 +135,8 @@ memory[18]="700M"  #"seaIce_6hr "
 memory[19]="16000M"  #"seaIce_day "
 # ocean (only tso)
 #memory[20]="12000M" #"ocean_6hr "
-memory[20]="700M"  #"ocean_6hr "
+#memory[20]="700M"  #"ocean_6hr " --> Before was this, but on Leonardo is not enough!
+memory[20]="1000M"  #"ocean_6hr "
 #memory[21]="2000M " #"ocean_mon " 
 memory[21]="100M " #"ocean_mon " 
     
@@ -275,11 +276,6 @@ for ncfile in \$netcdf2check ; do
 done
 
 cd $ACTDIR
-
-#set +evxu
-#  condafunction deactivate qachecker  
-#set -euvx
-
 
 # remove and touch done file
 if [[ -f NSDONE_\$namespace ]] ; then

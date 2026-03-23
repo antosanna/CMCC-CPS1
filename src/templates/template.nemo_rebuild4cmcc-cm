@@ -30,7 +30,6 @@ then
    module purge
 fi
 . $DIR_UTIL/condaactivation.sh 
-condafunction deactivate $envcondacm3
 condafunction activate $envcondanemo
 set -euvx
 # add your frequencies and grids. The script skip them if not present

@@ -57,6 +57,4 @@ do
       rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
    fi
 done
-set +euvx
-condafunction deactivate $envcondarclone
 exit 0

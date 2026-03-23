@@ -430,9 +430,6 @@ echo "starting conversion to xls and copy with rclone to google drive "`date`
    set -eux
    python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
    rclone copy ${filexls} my_drive:recover
-   set +euvx
-   condafunction deactivate $envcondarclone
-   set -eux
    echo "end of conversion to xls and copy with rclone to google drive "`date`
 fi
 
@@ -463,9 +460,6 @@ if [[ $dbg -ne 2 ]] ; then
          set -eux
          python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
          rclone copy ${filexls} my_drive:$typeofrun/$yyyy$st/REPORTS
-         set +euvx
-         condafunction deactivate $envcondarclone
-         set -eux
       fi
    fi
 set +euv
