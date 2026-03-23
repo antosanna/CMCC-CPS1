@@ -56,7 +56,7 @@ then
     
       nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc`
     
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
+      expected_ts=$(( $fixsimextdays * $mult + 1 ))
       if [[ $nt -lt $expected_ts  ]]
       then
          body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.$yyyy-$st.nc , ne to $expected_ts but is $nt. Exit "
@@ -91,7 +91,7 @@ then
       then
       # take from 2nd timestep
          echo "start ncks for $ft "`date`
-         expected_h4=$(( $fixsimdays * $mult ))
+         expected_h4=$(( $fixsimextdays * $mult ))
          rsync -auv $finalfile $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc 
          ncks -O -F -d time,1,$expected_h4 $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile
       fi

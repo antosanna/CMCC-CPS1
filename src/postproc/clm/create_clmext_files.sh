@@ -46,7 +46,7 @@ then
      # clm (II) check that number of timesteps is the expected one and remove extra timestep
      #--------------------------------------------
 
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
+      expected_ts=$(( $fixsimextdays * $mult + 1 ))
       nt=`cdo -ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
       if [[ $nt -lt $expected_ts  ]]
       then
@@ -76,7 +76,7 @@ then
 # this exception holds since CERISE files (h2) had already been zipped for a few start-dates but not postprocessed for spikes
       if [[ $ft == "h2" ]]
       then
-         expected_h2=$(( $fixsimdays * $mult ))
+         expected_h2=$(( $fixsimextdays * $mult ))
          nt=`cdo -ntime $finalfile`
          if [ $nt -gt $expected_h2  ]
          then

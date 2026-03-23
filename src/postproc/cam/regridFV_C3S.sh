@@ -18,6 +18,8 @@ export outdirC3S=$3
 wkdir=$4
 export type=$5 
 export ic=$6
+export nsimdays=$7
+
 export st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
 member=`echo $caso|cut -d '_' -f 3|cut -c 2,3`

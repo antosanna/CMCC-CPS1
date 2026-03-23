@@ -128,7 +128,7 @@ begin
   srcFileName   = getenv("inputFV")
   srcGridName   = getenv("srcGridNameFV")
   dstGridName   = getenv("dstGridName")
-  fixsimdays      = getenv("fixsimdays")   ; impostiamo da fuori 185 C3S2_370
+  fixsimdays      = getenv("nsimdays")   ; impostiamo da fuori 185 C3S2_370
 
 ; output required precision
   C3S_type="double"

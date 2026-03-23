@@ -14,8 +14,6 @@ caso=$2
 # for the different machines the case could have been done on.
 dir_cases=$3
 # this modification will affect $dictionary too!!!!
-#flag postproc done
-flagpostproc_done=$4
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
 yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
@@ -30,10 +28,9 @@ HEALED_DIR=$HEALED_DIR_ROOT/$caso
 chmod -R u+w $DIR_ARCHIVE/$caso
 ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
-nsimdays=$fixsimdays
-
 outdirC3S=${WORK_C3S}/$yyyy$st/
 
+nsimdays=$fixsimextdays
 set +euvx
 . $dictionary
 set -euvx
@@ -246,7 +243,7 @@ do
 done
 #
 #check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE - it is $check_pp_C3S in dictionary, here explicit for remote cases
-touch $flagpostproc_done
+touch $dir_cases/$caso/logs/postproc_C3S_${caso}_DONE 
 
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it

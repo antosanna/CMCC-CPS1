@@ -117,7 +117,7 @@ then
    memory[18]="700M"  #"seaIce_6hr "
    memory[19]="500M"  #"seaIce_day "
 # ocean 
-   memory[20]="1000M"  #"ocean_6hr "
+   memory[20]="1000M"  #"ocean_6hr "  # previously seto to 700 yet on Leonoardo not enough
    memory[21]="100M " #"ocean_mon " 
 else
 # Define memory needs for each namespace (attention:keep order)

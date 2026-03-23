@@ -22,8 +22,8 @@ set -euvx
 start_date=${yyyy}${st}
 if [[ -f ${check_tar_done} ]]
 then
-   body="C3S: tar_C3S already done for ${start_date}. Exiting from $DIR_C3S/tar_C3S.sh now"
-   title="[C3S] ${CPSSYS} $typeofrun notification"
+   body="C3Sext: tar_C3Sext already done for ${start_date}. Exiting from $DIR_C3S/tar_C3Sext.sh now"
+   title="[C3Sext] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    exit
 fi
@@ -106,7 +106,7 @@ then
    echo "!!!!!!!!!!!!!!!!!!!!!"
    exit
 fi
-cd $WORK_C3S/${start_date}
+cd $WORK_C3Sext/${start_date}
 
 listatocheck=""
 for var in ${var_array[@]}
@@ -123,20 +123,20 @@ do
        fi
    fi
    echo "cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*"
-   cd $WORK_C3S/${start_date}
-   nmb_tar_wkdir=`ls $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar |wc -l`
+   cd $WORK_C3SEXT/${start_date}
+   nmb_tar_wkdir=`ls $WORK_C3SEXT/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar |wc -l`
    if [[ ${nmb_tar_wkdir} -ne 0 ]]
    then
-        rm $WORK_C3S/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar
+        rm $WORK_C3SEXT/${start_date}/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*n*-n*.tar
    fi  
 
-   listatocheck+="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc | head -n $nrunC3Sfore` "
+   listatocheck+="`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc | head -n $nrunhindext` "
 
 done
 echo $listatocheck
 
 
-cd $WORK_C3S/${start_date}
+cd $WORK_C3SEXT/${start_date}
 if [[ `ls $listatocheck|wc -l` -eq 0 ]]
 then
    echo "$listatocheck is empty! Please check if this is really what you want"
@@ -146,10 +146,10 @@ fi
 #  CHEKC THAT ALL NEEDED MEMBERS ARE THERE
 #----------------------------
 
-if [[ `ls $listatocheck |wc -l` -ne $(($nrunC3Sfore * $nfieldsC3S)) ]]
+if [[ `ls $listatocheck |wc -l` -ne $(($nrunhindext * $nfieldsC3S)) ]]
 then
-    body="C3S: $DIR_C3S/tar_C3S.sh found `ls $listatocheck |wc -l`files instead of $(($nrunC3Sfore * $nfieldsC3S)) in $WORK_C3S/${start_date}"
-    title="[C3S] ${CPSSYS} $typeofrun ERROR"
+    body="C3Sext: $DIR_C3S/tar_C3Sext.sh found `ls $listatocheck |wc -l`files instead of $(($nrunhindext * $nfieldsC3S)) in $WORK_C3SEXT/${start_date}"
+    title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date 
     exit 2
 fi
@@ -163,7 +163,7 @@ ${DIR_C3S}/change_realization.sh $yyyy $st
 listatocheck=" "
 for var in "${var_array[@]}"
 do
-  listatocheck+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc |head -n $nrunC3Sfore`"
+  listatocheck+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${start_date}0100_*_${var}_*.nc |head -n $nrunhindext`"
 done
 #
 # clean pushdir
@@ -185,10 +185,10 @@ then
    do
       echo $file
       nstep=`cdo -ntime $file`
-      if [[ $nstep -ne $fixsimdays ]]
+      if [[ $nstep -ne $fixsimextdays ]]
       then
-          body="C3S: $DIR_C3S/tar_C3S.sh found number of days in file $nstep different from expected $fixsimdays for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-          title="[C3S] ${CPSSYS} forecast ERROR"
+          body="C3Sext: $DIR_C3S/tar_C3Sext.sh found number of days in file $nstep different from expected $fixsimextdays for file $file in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+          title="[C3Sext] ${CPSSYS} forecast ERROR"
           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
           exit 1
       else
@@ -202,14 +202,14 @@ if [[ $islista6hrly -ne 0 ]]
 then
 
   lista6hrly=`ls $listatocheck|grep 6hr`
-  n6hr=`expr $fixsimdays \* 4`
+  n6hr=`expr $fixsimextdays \* 4`
   for file in ${lista6hrly}
   do
      nstep=`cdo -ntime $file`
      if [[ $n6hr -ne $nstep ]]
      then
-        body="C3S: $DIR_C3S/tar_C3S.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-        title="[C3S] ${CPSSYS} forecast ERROR"
+        body="C3Sext: $DIR_C3S/tar_C3Sext.sh found number of timesteps in file $nstep different from expected ${n6hr}  for file $file in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+        title="[C3Sext] ${CPSSYS} forecast ERROR"
         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
         exit 1
      else
@@ -221,14 +221,14 @@ fi
 islista12hrly=`ls $listatocheck|grep 12hr |wc -l`
 if [[ $islista12hrly -ne 0 ]] ; then
    lista12hrly=`ls $listatocheck|grep 12hr`
-   n12hr=`expr $fixsimdays \* 2`
+   n12hr=`expr $fixsimextdays \* 2`
    for file in ${lista12hrly}
    do
       nstep=`cdo -ntime $file`
       if [[ $n12hr -ne $nstep ]]
       then
-         body="C3S: $DIR_C3S/tar_C3S.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-         title="[C3S] ${CPSSYS} forecast ERROR"
+         body="C3Sext: $DIR_C3S/tar_C3Sext.sh found number of timesteps in file $nstep different from expected ${n12hr}  for file $file in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+         title="[C3Sext] ${CPSSYS} forecast ERROR"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
          exit 1
       else
@@ -252,7 +252,7 @@ do
 done
 
 donotsend=0
-NUMB_CHECK=`expr $nrunC3Sfore + $nrunC3Sfore` # for each field we have the .nc file and .sha
+NUMB_CHECK=`expr $nrunhindext + $nrunhindext` # for each field we have the .nc file and .sha
 
 
 #----------------------------------------------
@@ -271,32 +271,32 @@ do
      f=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r* | head -1`
      mft=`echo $f | cut -d '_' -f5-7`
      listafile2tar=" "
-     for ens in `seq -w 01 $nrunC3Sfore`
+     for ens in `seq -w 01 $nrunhindext`
      do
         listafile2tar+=" `ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r${ens}*`"
      done
-     if [[ `echo $listafile2tar|wc -w` -ne $(($nrunC3Sfore * 2)) ]]
+     if [[ `echo $listafile2tar|wc -w` -ne $(($nrunhindext * 2)) ]]
      then
-         body="C3S: standardisation error in script $DIR_C3S/tar_C3S.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunC3Sfore * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-         title="[C3S] ${CPSSYS} $typeofrun ERROR"
+         body="C3Sext: standardisation error in script $DIR_C3S/tar_C3Sext.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected $(($nrunhindext * 2)) found `echo $listafile2tar|wc -w` in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+         title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
          exit 3
      fi
-     tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar $listafile2tar
+     tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunhindext}.tar $listafile2tar
      
      if [[ $? -eq 0 ]] ; then
-        sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.sha256 
+        sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunhindext}.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunhindext}.sha256 
      
      #copy in dtn01 to push
-        rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunC3Sfore}.* $pushdir_hc
+        rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n${nrunhindext}.* $pushdir_hc
      else
         echo "something wrong in shasum ${yyyy}${st} $var"
      fi
 
    else
 #mail MACHINE DEPENDENT chek if present
-      body="C3S: standardisation error in script $DIR_C3S/tar_C3S.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-      title="[C3S] ${CPSSYS} $typeofrun ERROR"
+      body="C3Sext: standardisation error in script $DIR_C3S/tar_C3Sext.sh: start date ${yyyy}${st} incorrect number of files to tar for variable : ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+      title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s ${yyyy}${st}
       donotsend=1
       exit
@@ -313,12 +313,12 @@ do
 # need to extract model,freq and type
       f=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r* | head -1`
       mft=`echo $f | cut -d '_' -f5-7`
-      numb_nc=$nrunC3Sfore
-      if [[ $nrunC3Sfore -lt 10 ]] ; then  #SHOULD BE THE TEST CASE
+      numb_nc=$nrunhindext
+      if [[ $nrunhindext -lt 10 ]] ; then  #SHOULD BE THE TEST CASE
          if [[ `whoami` == "$operational_user" ]] && [[ "$machine" == "juno" ]]
          then
-              body="nrunC3Sfore set to $nrunC3Sfore instead of the required for operations. Exiting from tar_C3S.sh"
-              title="[C3S] ${CPSSYS} $typeofrun ERROR"
+              body="nrunhindext set to $nrunhindext instead of the required for operations. Exiting from tar_C3Sext.sh"
+              title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
               ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
               exit 2
          fi
@@ -363,7 +363,7 @@ do
          fi
          #FOR SPS4 HINDCAST WE STOP HERE - 30 members in hindcast mode       
   
-         if [[ $nrunC3Sfore -eq 50 ]]
+         if [[ $nrunhindext -eq 50 ]]
          then 
              #fourth 10
              list_3=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r3[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r40*`
@@ -387,8 +387,8 @@ do
          fi
       fi
    else
-      body="C3S: standardisation error in script $DIR_C3S/tar_C3S.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3S/${start_date}. See log $DIR_LOG/$start_date/tar_C3S..."
-      title="[C3S] ${CPSSYS} $typeofrun ERROR"
+      body="C3Sext: standardisation error in script $DIR_C3S/tar_C3Sext.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+      title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
       donotsend=1
       exit
@@ -396,17 +396,17 @@ do
 done  #end loop on var_array3d
 
 #check if everything is ok inside the tarfiles
-$DIR_C3S/check_tarC3S.sh $yyyy $st
+$DIR_C3S/check_tarC3Sext.sh $yyyy $st
 stat=$?
 if [[ $stat -eq 0 ]]
 then
-   body="C3S: $DIR_LOG/tar_C3S.sh completed for ${start_date}."
-   title="[C3S] ${CPSSYS} $typeofrun notification"
+   body="C3Sext: $DIR_LOG/tar_C3Sext.sh completed for ${start_date}."
+   title="[C3Sext] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    touch ${check_tar_done}
 else
-   body="C3S: $DIR_C3S/check_tarC3S.sh failed for ${start_date}. Exiting now. Check and fix"
-   title="[C3S] ${CPSSYS} $typeofrun ERROR"
+   body="C3Sext: $DIR_C3S/check_tarC3Sext.sh failed for ${start_date}. Exiting now. Check and fix"
+   title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
    exit 1
 fi   
@@ -422,8 +422,8 @@ then
    input="$yyyy $st"
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
   
-   body="Diagnostics from C3S just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_CPS/launch_end_forecast_${CPSSYS}.sh manually"
-   title="[C3S] ${CPSSYS} $typeofrun notification"
+   body="Diagnostics from C3Sext just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_CPS/launch_end_forecast_${CPSSYS}.sh manually"
+   title="[C3Sext] ${CPSSYS} $typeofrun notification"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 
 fi
