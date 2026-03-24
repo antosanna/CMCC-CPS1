@@ -137,67 +137,8 @@ then
 #  fi  
 
   #https://stackoverflow.com/questions/63319313/sendmail-sending-corrupted-unreadable-pdf-over-mail-sending-with-base64-encodin  - working sendmail example for single attachment
-  message+="<br> `date`"
-  ARG_EMAIL_TO="$email"
-  ARG_EMAIL_FROM="sp1 <sp1@cmcc.it>"
-  ARG_EMAIL_SUBJECT="$title"
+  sed -e "s@MESSAGE@$message@g;s@TITLE@$title@g" send_mail_leonardo_template.sh > $DIR_TEMP/mails/send_mail_leonardo_`date +%s`.sh
 
-  #echo "Mime-Version: 1.0"
-  #echo "Content-Type: text/html; charset='utf-8'"
-  # echo -e "$message" is the key to keep new line
-
-  attaching_section=" " 
-  if [[ `ls $applist|wc -w` -ne 0 ]]
-  then
-      for app in $applist
-      do
-         a="$app"
-         attaching_section+=`echo -e "echo "---q1w2e3r4t5";\necho 'Content-Type: application; name=\"'$(basename $a)'\"';\necho 'Content-Transfer-Encoding: base64';\necho 'Content-Disposition: attachment; filename=\"'$(basename $a)'\"';\necho;\nbase64 < \"$a\";\necho;\n"`
-      done
-  else
-      attaching_section= "echo"
-  fi
-  if [[ ! -z $cc ]]
-  then
-    ARG_EMAIL_CC="$cc"
-    (
-    echo "To: ${ARG_EMAIL_TO}"
-    echo "From: ${ARG_EMAIL_FROM}"
-    echo "Cc:  ${ARG_EMAIL_CC}"
-    echo "Subject: ${ARG_EMAIL_SUBJECT}"
-    echo "MIME-Version: 1.0"
-    echo 'Content-Type: multipart/mixed; boundary="-q1w2e3r4t5"'
-    echo
-    echo '---q1w2e3r4t5'
-    echo 'Content-Type: text/html; charset=utf-8'
-    echo 'Content-Transfer-Encoding: 8bit'
-    echo
-    echo "$message" 
-    echo
-    eval $attaching_section
-    ) | sendmail -t
-
-
-  else
- 
-  (
-    echo "To: ${ARG_EMAIL_TO}"
-    echo "From: ${ARG_EMAIL_FROM}"
-    echo "Subject: ${ARG_EMAIL_SUBJECT}"
-    echo "MIME-Version: 1.0"
-    echo 'Content-Type: multipart/mixed; boundary="-q1w2e3r4t5"'
-    echo
-    echo '---q1w2e3r4t5'
-    echo 'Content-Type: text/html; charset=utf-8'
-    echo 'Content-Transfer-Encoding: 8bit'
-    echo
-    echo "$message" 
-    echo
-    eval $attaching_section
-  ) | sendmail -t 
-
-  fi
-
-
+  sbatch $DIR_TEMP/mails/send_mail_leonardo_`date +%s`.sh
   exit 0 
 fi

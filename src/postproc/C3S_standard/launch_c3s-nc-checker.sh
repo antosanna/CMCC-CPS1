@@ -95,12 +95,12 @@ do
     
 
     #$c3s_checker_cmd -p $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
-    set +e
     $c3s_checker_cmd $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
-    if [[ $? -eq 1 ]] ; then
-      echo "error for $var"
-    fi
-    set -e
+#    set +e
+#    if [[ $? -eq 1 ]] ; then
+#      echo "error for $var"
+#    fi
+#    set -e
     # python writes an error or ok file
     #ERROR string present 2 times anyway - even if test is passed
     #one option is evaluate ERROR -gt 2

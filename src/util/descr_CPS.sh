@@ -231,7 +231,7 @@ then
    operational_user=a07cmc00
    env_workflow_tag=leonardo
    envcondacm3=cmcc-cm_py
-   envcondac3schecker=c3s-nc-checker
+   #envcondac3schecker=c3s-nc-checker
    mpirun4py_nemo_rebuild=srun
    mpilib4py_nemo_rebuild=intel-oneapi-mpi/2021.10.0
 #moved to .bashrc
