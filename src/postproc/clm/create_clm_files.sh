@@ -26,6 +26,17 @@ set -evxu
 #we are in workdir
 cd ${wkdir_clm}
 
+if [[ $caso =~ "ext" ]]; then
+   nsimdays=$fixsimextdays
+   case $ft in
+     h2 ) suffix=01-21600;; # 6h
+     h1 ) suffix=02-00000;; # daily
+     h3 ) suffix=02-00000;; # daily
+   esac
+else
+   nsimdays=$fixsimdays
+   suffix=01-00000
+fi
 
 if [[ ! -f $checkfile ]]
 then
@@ -38,7 +49,7 @@ then
           
       if [[ ! -f pre.$caso.clm2.$ft.$yyyy-$st.zip.nc ]] 
       then 
-         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-01-00000.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-$suffix.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
       fi
       ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
 
@@ -46,7 +57,7 @@ then
      # clm (II) check that number of timesteps is the expected one and remove extra timestep
      #--------------------------------------------
 
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
+      expected_ts=$(( $nsimdays * $mult + 1 ))
       nt=`cdo -ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
       if [[ $nt -lt $expected_ts  ]]
       then
@@ -76,7 +87,7 @@ then
 # this exception holds since CERISE files (h2) had already been zipped for a few start-dates but not postprocessed for spikes
       if [[ $ft == "h2" ]]
       then
-         expected_h2=$(( $fixsimdays * $mult ))
+         expected_h2=$(( $nsimdays * $mult ))
          nt=`cdo -ntime $finalfile`
          if [ $nt -gt $expected_h2  ]
          then

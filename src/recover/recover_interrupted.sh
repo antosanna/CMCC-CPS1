@@ -33,7 +33,7 @@ function write_help_leonardo
   echo "---If you want to recover a specific list of cases hardcoded in the script just enter one argument (dbg)"
   echo ""
   echo "SUBMISSION COMMAND WITH dbg=2:"
-  echo "./recover_interrupted.sh -d 2 i-m \$st"
+  echo "./recover_interrupted.sh -d 2 -m \$st"
   echo ""
   echo "SUBMISSION COMMAND EXAMPLE (every 30'):"
   echo "*/30 * * * * . /etc/profile; export RUNBYCRONTAB=1 ;. /leonardo/home/usera07cmc/a07cmc00/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_RECOVER}/recover_interrupted.sh -d 0 -m \$st"
@@ -78,7 +78,7 @@ do
    esac
 done
 
-if [[ "$#" -eq 0 ]] || [[ $st == None ]]
+if [[ "$#" -eq 0 ]] # || [[ $st == None ]]
 then
    if [[ $machine == "leonardo" ]]
    then
@@ -97,7 +97,7 @@ fi
 
 
    
-if [[ `echo -n $st|wc -c` -ne 2 ]]
+if [[ `echo -n $st|wc -c` -ne 2 ]] && [[ $st != "None" ]]
 then
    echo "second input should be st 2 digits"
    exit
@@ -111,7 +111,9 @@ then
 fi 
 
 cd $DIR_CASES/
-listofcases="sps4_202206_028"
+listofcases="sps4ext_199511_001"
+if [[ $st != "None" ]]
+then
 if [[ $yyyy -ne 1993 ]]
 then
 set +euvx
@@ -122,6 +124,7 @@ set -eux
    listofcases=`ls -d ${header}_${yyyy}${st}_0??`
 else
    listofcases=`ls -d ${header}_????${st}_0??`
+fi
 fi
 
 if [[ $machine == "leonardo" ]]
@@ -435,7 +438,7 @@ fi
 
 if [[ $dbg -eq 2 ]]
 then
-   echo "DEBUG=2: NO ACTION REQUIRED, JUST LISTING OF INTERRUPTED JOBS"
+   echo "DEBUG=2: NO ACTION REQUIRED, JUST SENDING THE LIST OF INTERRUPTED JOBS TO GOOGLE DRIVE/recover "
 fi
 
 ### REMEMBER: if dbg=1 only 1 case for category will be processed and you could check that everything was ok.

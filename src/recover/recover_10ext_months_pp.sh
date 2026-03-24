@@ -164,18 +164,18 @@ do
    if [[ -d $DIR_ARCHIVE/$CASE/rest/${curryear}-$currmon-01-00000 ]] ; then
       rm -rf $DIR_ARCHIVE/$CASE/rest/${curryear}-$currmon-01-00000
    fi
-   # now rebuild EquT from NEMO
-   if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
-   then
-      if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc|wc -l` -eq 1 ]]
-      then
-         rootname=`basename $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc  |rev |cut -d '.' -f1 --complement|rev`
-         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.nc $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
-         ncatted -O -a ic,global,a,c,"$ic" $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
-         continue
-      fi
-     $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
-   fi
+#   # now rebuild EquT from NEMO
+#   if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.zip.nc|wc -l` -eq 0 ]]
+#   then
+#      if [[ `ls $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc|wc -l` -eq 1 ]]
+#      then
+#         rootname=`basename $DIR_ARCHIVE/$CASE/ocn/hist/${CASE}_1d_${curryear}${currmon}01_${curryear}${currmon}??_grid_EquT_T.nc  |rev |cut -d '.' -f1 --complement|rev`
+#         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.nc $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
+#         ncatted -O -a ic,global,a,c,"$ic" $DIR_ARCHIVE/$CASE/ocn/hist/${rootname}.zip.nc
+#         continue
+#      fi
+#     $DIR_POST/nemo/rebuild_EquT_1month.sh ${CASE} $yyyy $curryear $currmon "$ic" $DIR_ARCHIVE/$CASE/ocn/hist
+#   fi
    echo "-----------postproc_monthly_${CASE}.sh COMPLETED-------- "`date`
    touch  $check_pp_monthly
 done

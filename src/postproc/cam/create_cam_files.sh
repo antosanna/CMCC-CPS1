@@ -28,12 +28,24 @@ set +evxu
 . $dictionary
 set -evxu
 
-case $ft in
-  h1 ) mult=4 ;; # 6h
-  h2 ) mult=2 ;; # 12h
-  h3 ) mult=1 ;; # daily
-  h4 ) mult=8 ;; # 3h
-esac
+if [[ $caso =~ "ext" ]]; then
+   nsimdays=$fixsimextdays
+   case $ft in
+     h1 ) mult=4 ;suffix=01-21600;; # 6h
+     h2 ) mult=2 ;suffix=01-43200;; # 12h
+     h3 ) mult=1 ;suffix=02-00000;; # daily
+     h4 ) mult=8 ;suffix=01-10800;; # 3h
+   esac
+else
+   nsimdays=$fixsimdays
+   case $ft in
+     h1 ) mult=4 ;suffix=01-00000;; # 6h
+     h2 ) mult=2 ;suffix=01-00000;; # 12h
+     h3 ) mult=1 ;suffix=01-00000;; # daily
+     h4 ) mult=8 ;suffix=01-00000;; # 3h
+   esac
+fi
+
 if [[ ! -f ${check_merge_cam_files}_${ft} ]]
 then
    #--------------------------------------------
@@ -42,20 +54,20 @@ then
    #--------------------------------------------
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
-   inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
+   inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-$suffix.nc
    if [[ ! -f $finalfile ]] || { [[ -f $inputfile ]] && [[ "$st" == "05" ]] && [[ $typeofrun == "hindcast" ]]; }
    then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc ]]
       then
-         ${DIR_UTIL}/compress.sh $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
+         ${DIR_UTIL}/compress.sh $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-$suffix.nc $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
       fi
 #         ic=(from txt in casedir)
       ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc
     
       nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.$yyyy-$st.zip.nc`
     
-      expected_ts=$(( $fixsimdays * $mult + 1 ))
+      expected_ts=$(( $nsimdays * $mult + 1 ))
       if [[ $nt -lt $expected_ts  ]]
       then
          body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.$yyyy-$st.nc , ne to $expected_ts but is $nt. Exit "
@@ -90,7 +102,7 @@ then
       then
       # take from 2nd timestep
          echo "start ncks for $ft "`date`
-         expected_h4=$(( $fixsimdays * $mult ))
+         expected_h4=$(( $nsimdays * $mult ))
          rsync -auv $finalfile $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc 
          ncks -O -F -d time,1,$expected_h4 $wkdir/tmp.$caso.cam.$ft.$yyyy-$st.zip.nc $finalfile
       fi

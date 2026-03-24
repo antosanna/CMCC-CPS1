@@ -16,7 +16,6 @@ function Count_files()
    ic=$1
    n_lnd=`ls $DIR_ARCHIVE/CASO/lnd/hist/CASO*.nc | grep "clm2.h0"| grep zip | wc -l`
 # EquT are already zip; Tglobal will be by interp_ORCA2_1X1_gridT2C3S.sh
-   n1d_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "1d_"  | wc -l`
    n1m_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "_1m_" | grep "grid_[TUVW]" |wc -l`
 #TEMPORARY COMMENTED BECAUSE OF BUG IN MULTIPLE FILE 20240115
 #   nptr_ocn=`ls $DIR_ARCHIVE/CASO/ocn/hist/CASO*.nc | grep "_ptr" |wc -l`
@@ -24,7 +23,7 @@ function Count_files()
    n_ice=`ls $DIR_ARCHIVE/CASO/ice/hist/CASO*.nc | wc -l`
    n_rof=`ls $DIR_ARCHIVE/CASO/rof/hist/CASO*zip*.nc | wc -l`
    n_atm=`ls $DIR_ARCHIVE/CASO/atm/hist/CASO*.nc | grep cam.h0| grep zip | wc -l`
-   if [[ $n_lnd -ne $nmonforext ]] || [[ $n_ice  -ne $nmonforext ]] || [[ $n_rof -ne $nmonforext ]] || [[ $n_atm -ne $nmonforext ]] || [[ $n1d_ocn -ne $(($nmonforext * 2)) ]] || [[ $n1m_ocn -ne $(($nmonforext * 4)) ]] || [[ $nsca_ocn -ne $nmonforext ]]
+   if [[ $n_lnd -ne $nmonforext ]] || [[ $n_ice  -ne $nmonforext ]] || [[ $n_rof -ne $nmonforext ]] || [[ $n_atm -ne $nmonforext ]] || [[ $n1m_ocn -ne $(($nmonforext * 4)) ]] || [[ $nsca_ocn -ne $nmonforext ]]
    then
        ret=1
        if [[ $ic -eq 2 ]]
@@ -33,7 +32,6 @@ function Count_files()
 #           ocn ptr expected $nmonforext, got $nptr_ocn in $DIR_ARCHIVE/CASO/ocn/hist,  \n
            body="CASO Number of output monthly output files is not the expected one \n
            atm expected $nmonforext, got $n_atm in $DIR_ARCHIVE/CASO/atm/hist,  \n
-           ocn 1d expected $(($nmonforext * 2)), got $n1d_ocn in $DIR_ARCHIVE/CASO/ocn/hist,   \n
            ocn scalar expected $nmonforext, got $nsca_ocn in $DIR_ARCHIVE/CASO/ocn/hist,  \n
            ocn 1m 3d expected $(($nmonforext * 4)), got $n1m_ocn in $DIR_ARCHIVE/CASO/ocn/hist,  \n
            ice expected $nmonforext, got $n_ice in $DIR_ARCHIVE/CASO/ice/hist,  \n

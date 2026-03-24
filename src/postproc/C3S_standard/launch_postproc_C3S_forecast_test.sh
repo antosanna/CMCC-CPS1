@@ -7,16 +7,16 @@
 set -euvx
 
 
-dbg=0 # dbg=1 -> just one member for test
+dbg=1 # dbg=1 -> just one member for test
 
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
-stdate=202602 #`date +%Y%m`
+stdate=202512 #`date +%Y%m`
 mkdir -p $DIR_LOG/${typeofrun}/$stdate/
 LOG_FILE=$DIR_LOG/$typeofrun/$stdate/launch_postproc_C3S_${typeofrun}.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-yyyy=2026 #`date +%Y`
-st=02 #`date +%m`
+yyyy=2025 #`date +%Y`
+st=12 #`date +%m`
 check_completed=$DIR_LOG/forecast/$stdate/FORECAST_COMPLETED
 
 flag_running=$DIR_TEMP/launch_postproc_C3S_${typeofrun}_${yyyy}${st}_on #to avoid multiple submission from crontab
@@ -29,7 +29,7 @@ fi
 if [[ ! -f $check_completed ]]
 then
    n_completed=0
-   for ens in {001..054}
+   for ens in 061 #{001..054}
    do
       caso=sps4_${stdate}_${ens}
       if [[ -f $DIR_CASES/$caso/logs/run_moredays_sps4_${stdate}_${ens}_DONE ]]
@@ -63,7 +63,8 @@ cd $DIR_ARCHIVE/
 # to be modified with the list of spiked cases
 #for yyyy in `seq $iniy_hind $endy_hind`
 #listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0?? |head -n $nrunmax`
-listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
+#listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0??`
+listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_061`
 count_cases=0
 echo ${check_postproc_started_header}
 for caso in $listofcases
