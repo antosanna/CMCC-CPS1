@@ -359,6 +359,7 @@ dictionary=$DIR_UTIL/CPS1_checkfile_dictionary.txt
 DIR_DIAG=$DIR_SRC/diagnostics
 DIR_DIAG_C3S=$DIR_DIAG/C3S
 DIR_TEMPL=$DIR_SRC/templates
+DIR_TEMPL1=$DIR_ROOT1/src/templates
 DIR_PORT=$DIR_SRC/porting
 TRIP_DIR=$DIR_ROOT/triplette_done
 IC_CPS=$DIR_SRC/IC_CPS/
