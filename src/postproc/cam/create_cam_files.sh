@@ -31,6 +31,7 @@ set -evxu
 if [[ $caso =~ "ext" ]]; then
    nsimdays=$fixsimextdays
    case $ft in
+     h0 ) suffix="" ;;
      h1 ) mult=4 ;suffix=01-21600;; # 6h
      h2 ) mult=2 ;suffix=01-43200;; # 12h
      h3 ) mult=1 ;suffix=02-00000;; # daily
@@ -39,6 +40,7 @@ if [[ $caso =~ "ext" ]]; then
 else
    nsimdays=$fixsimdays
    case $ft in
+     h0 ) suffix="" ;;
      h1 ) mult=4 ;suffix=01-00000;; # 6h
      h2 ) mult=2 ;suffix=01-00000;; # 12h
      h3 ) mult=1 ;suffix=01-00000;; # daily

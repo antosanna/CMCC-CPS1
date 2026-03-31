@@ -108,7 +108,7 @@ do
        touch ${flag_postproc_offline_on}
    
        mkdir -p $DIR_LOG/hindcast/C3S_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "${yyyy} $caso ${dir_cases}"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "${yyyy} $caso ${dir_cases} $flagpostproc_done"
    
    
        if [[ $dbg -eq 1 ]]

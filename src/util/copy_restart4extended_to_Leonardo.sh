@@ -20,14 +20,31 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 st=11
 strest=05
 #for yyyy in `seq 1995 2024`
-for yyyy in `seq 1999 2024`
+for yyyy in `seq 2023 2024`
 do
    yyyyrest=$((yyyy + 1))
    for ens in {01..20}
    do
 
       jun_dir=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000/
+      jun_file=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000.tar.gz
       leo_dir=/leonardo_work/$account_SLURM/scratch/restarts4extended/${SPSSystem}_${yyyy}${st}_0${ens}/rest
-       rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/* a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      if [[ -d $jun_dir ]]
+      then
+         rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/* a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      elif [[ -f $jun_file ]]
+      then
+         rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_file} a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+      else
+         body="$DIR_UTIL/copy_restart4extended_to_Leonardo.sh No restart present for caso ${SPSSystem}_${yyyy}${st}_0${ens}"
+         title="EXTENDED FORECAST ISSUE: restart not found"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+      fi
    done
 done
+yyyy=2000
+yyyyrest=$((yyyy + 1))
+ens=16
+jun_dir=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000/
+leo_dir=/leonardo_work/$account_SLURM/scratch/restarts4extended/${SPSSystem}_${yyyy}${st}_0${ens}/rest
+rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/* a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
