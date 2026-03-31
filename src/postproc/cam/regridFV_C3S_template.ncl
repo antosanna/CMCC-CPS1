@@ -396,6 +396,7 @@ begin
   typeofrun=getenv("typeofrun")
   Opt = True
   Opt@WgtFileName       = wgtFileName
+  end_term=getenv("end_term")
   do k=0,dimsizes(varin)-1
     Opt@InterpMethod  ="bilinear" 
     if ( typein.eq.type(k)) then
@@ -405,7 +406,7 @@ begin
        print(" ")
        print("Output C3S field -------- "+varout(k))
        print("type C3S field -------- "+type(k))
-       dstFileName=outDir+"/"+ini_term+"_"+realm(k)+"_"+frq(k)+"_"+level(k)+"_"+varout(k)+"_"+real+".nc"
+       dstFileName=outDir+"/"+ini_term+"_"+realm(k)+"_"+frq(k)+"_"+level(k)+"_"+varout(k)+"_"+real+end_term
        print("DST:"+dstFileName)
        if(isfilepresent(dstFileName)) then
          system("rm "+dstFileName)

@@ -260,6 +260,7 @@ begin
 ;---------------------------------------------
     outdir=getenv("outdirC3S")
     print("this is the output dir "+outdir)
+    end_term=getenv("end_term")
     system("/bin/rm -f "+outdir+"/interp_cice2C3S_through_nemo.ncl_"+real+"_ok")
     do i=0,nv-1
        if(model(i).eq."cice") then
@@ -375,7 +376,7 @@ begin
           ini_term=getenv("ini_term")
           ic=getenv("ic")
       
-          filename3=outdir+"/"+ini_term+"_"+realm(i)+"_mon_"+level(i)+"_"+varnameout(i)+"_"+real+".nc"
+          filename3=outdir+"/"+ini_term+"_"+realm(i)+"_mon_"+level(i)+"_"+varnameout(i)+"_"+real+end_term
           print(filename3)
           system("/bin/rm -f "+filename3)   ; remove any pre-existing file
           setfileoption("nc","Format",  "NetCDF4Classic")

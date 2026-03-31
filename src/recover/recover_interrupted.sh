@@ -194,7 +194,7 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 lista_arch_moredays=" "
-lista_caso_ignored="sps4_202510_014"
+lista_caso_ignored="${header}_199811_018 ${header}_200011_016"
 #"sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t

@@ -114,7 +114,7 @@ C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
 C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 
 inputlist=" "
-for mon in `seq 0 $(($nmonfore - 1))`
+for mon in `seq $firstm $lastm`
 do
    curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
    currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
@@ -138,6 +138,15 @@ fi
 
 prefix=${GCM_name}-v${versionSPS}
 ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
+if [[ $caso =~ "ext" ]]; then
+   export end_term=_slicetime4446to11808.nc
+   firstm=$nmonfore 
+   lastm=$(($nmonforext + $nmonfore - 1))
+else
+   export end_term=.nc
+   firstm=0
+   lastm=$(($nmonforext - 1))
+fi
 level="ocean2d"
 frq="mon"
 
@@ -249,7 +258,7 @@ do
 done } < $C3Stable_oce6
 for v in ${varout[@]}
 do 
-   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc
+   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00${end_term}
    if [[ ! -f $C3Sfile ]]
    then
       title="${CPSSYS} forecast ERROR"

@@ -13,14 +13,21 @@ set -euvx
 LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
+header=$SPSSystem
+if [[ $ext -eq 1 ]]
+then
+   header=${header}ext
+fi
 st=$1  #stdate as input
+
 recover=${2:-0} #default recover=0 (do not relaunch cases with missing all_checkers_ok)
 
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]
 then
-      exit
+   echo "${DIR_C3S}/launch_postproc_C3S_forecast.sh already running"
+   exit 0
 fi
 
 nmaxsubmit=30
@@ -33,7 +40,7 @@ fi
 touch ${flag_running}
 
 if [[ ${recover} -eq 0 ]] ; then
-   cnt_subm=`ls ${check_postproc_started_header}_sps4_????${st}_0?? |wc -l`
+   cnt_subm=`ls ${check_postproc_started_header}_${header}_????${st}_0?? |wc -l`
    nmbhindyr=$((${endy_hind} - ${iniy_hind} +1))
    ntot=$((${nrunhind}*${nmbhindyr})) #30members x 30 years
    if [[ ${cnt_subm} -eq ${ntot} ]] ; then
@@ -57,7 +64,7 @@ cd $DIR_ARCHIVE/
 # to be modified with the list of spiked cases
 for yyyy in `seq $iniy_hind $endy_hind`
 do
-   listofcases=`ls -d sps4_${yyyy}${st}_0?? |head -n $nrunC3Sfore`
+   listofcases=`ls -d ${header}_${yyyy}${st}_0?? |head -n $nrunC3Sfore`
 
    for caso in $listofcases
    do
@@ -79,7 +86,7 @@ do
              continue
          fi
       fi
-      $DIR_C3S/clean4C3S_listofcases.sh $caso
+      $DIR_C3S/clean4C3S_listofcases.sh $caso $ext
       isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
       if [[ ${isremote} -eq 1 ]] 
       then

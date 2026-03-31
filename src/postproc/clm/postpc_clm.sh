@@ -147,6 +147,11 @@ then
 #************************************************************************
 # C3S vars    prefix
    prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
+   if [[ $caso =~ "ext" ]]; then
+      export suffix=_slicetime4446to11808.nc
+   else
+      export suffix=.nc
+   fi
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx
@@ -155,7 +160,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix
+   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix
    if [[ $? -ne 0 ]]
    then
 # intermidiate product
