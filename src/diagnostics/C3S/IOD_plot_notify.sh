@@ -15,6 +15,7 @@ export nens=$8
 export refperiod=$iniy_hind-$endy_hind
 export figtype="png"
 export stm1=`date -d "${yyyy}${st}01-1 month" +%m`
+export stm7=`date -d "${yyyy}${st}01-7 month" +%m`
 export yyyym1=`date -d "${yyyy}${st}01-1 month" +%Y`
 export yyyy2=`date -d "${yyyy}${st}01-12 month" +%Y`
 
