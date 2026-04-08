@@ -580,6 +580,13 @@ set -eux
                 #(the most frequent one)
                 if [[ $clmerr -ne 0 ]] ; then
                    domodify=1
+                   if [[ $extended -eq 1 ]]
+                   then
+                      domodify=0
+                      body="$caso exited yet not recovered since modify_triplette.sh cannot be involed this time"
+                      title="[$CPSSYS] $caso not recoverable since modify_triplette cannot be applied this time"
+                      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
+                   fi
                 fi
              fi
           fi
@@ -709,6 +716,13 @@ set -eux
                 #(the most frequent one)
                 if [[ $clmerr -ne 0 ]] ; then
                    domodify=1
+                   if [[ $extended -eq 1 ]]
+                   then
+                      domodify=0
+                      body="$caso exited yet not recovered since modify_triplette.sh cannot be involed this time"
+                      title="[$CPSSYS] $caso not recoverable since modify_triplette cannot be applied this time"
+                      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st
+                   fi
                 fi
              fi
           fi
