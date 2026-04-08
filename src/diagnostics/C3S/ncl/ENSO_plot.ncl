@@ -10,11 +10,11 @@ begin
 ;*****************************************************
 write="FALSE"
 REG=getenv("REG")
-tstart =getenv("yyyym1")
-tend   =getenv("yyyy")
+tstart =getenv("yyyym7")
+yyyyfore =getenv("yyyy")
 st   = getenv("st")
 nens   = toint(getenv("nens"))
-stm1=getenv("st")
+stm7=getenv("stm7")
 SPSSystem=getenv("SPSSystem")
 refperiod   = getenv("refperiod")
 dirplots=getenv("dirplots")
@@ -22,14 +22,14 @@ dirplots=getenv("dirplots")
 figtype=getenv("figtype")
 dir=getenv("anomdir")
 
-v1    = addfile (dir+"/sst_"+SPSSystem+"_"+tend+st+"_all_ano."+refperiod+".nc","r")
+v1    = addfile (dir+"/sst_"+SPSSystem+"_"+yyyyfore+st+"_all_ano."+refperiod+".nc","r")
 tstmp    = v1->tso(:,0:5,:,:)
 timetmp  = v1->time(0:5)
 ts=new((/nens,15,180,360/),typeof(tstmp),tstmp@_FillValue)
 ts(:,7:12,:,:)=tstmp
 time=new((/15/),typeof(timetmp))
 time=fspan(0,14,15)+0.5
-time@units="months since "+tstart+"-"+stm1+"-15 12:00:00"
+time@units="months since "+tstart+"-"+stm7+"-15 12:00:00"
 delete(time@calendar)
 format= "%c ~C~%Y"
 stime=cd_string(time,format)
@@ -126,7 +126,7 @@ mmin=min(mnmx)-1
 ;*****************************************************
 ; -- PLOT SETTINGS
 ;*****************************************************
-plname=dirplots+"/sst_"+REG+"_mem_"+tend+"_"+st
+plname=dirplots+"/sst_"+REG+"_mem_"+yyyyfore+"_"+st
 wks = gsn_open_wks(figtype,plname)                 ; create plot
 colors = (/"white","black","Red","LightBlue","lightpink"/)
 gsn_define_colormap(wks, colors)  
@@ -151,7 +151,7 @@ res@txFontHeightF    = 0.007            ; change title font heights
 res@gsnYRefLine      = 0.0             ; create a reference line
 res@tmYLLabelFontHeightF    = 0.012
 res@tmXBLabelFontHeightF    = 0.012
-res@tiMainString     = REG+" Index issued "+tend+st
+res@tiMainString     = REG+" Index issued "+yyyyfore+st
 
 
 res@tmXBFormat = "f"        ; remove the trailing ".0"
