@@ -27,6 +27,8 @@ echo "launching diagnostic on C3S files for website"
 input="$yyyy $st $flag_done $dbg" 
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -j FORECAST_C3S_stlist_newproj_notify_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_C3S_stlist_newproj_notify.sh -i "$input"
 
+exit
+
 echo "launching ocean diagnostics on DMO for website"
 input="$yyyy $st $flag_done $dbg"
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j FORECAST_OCE_stlist_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG_C3S -s FORECAST_OCE_stlist.sh -i "$input"

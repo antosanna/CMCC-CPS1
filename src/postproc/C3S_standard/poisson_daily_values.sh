@@ -24,6 +24,9 @@ st=`echo $caso|cut -d '_' -f2|cut -c 5-6`
 mem=`echo $caso|cut -d '_' -f3|cut -c 2-3`
 export npoints=3
 export lastday=$(( $fixsimdays - 1 ))
+if [[ $caso =~ "ext" ]]; then
+   export lastday=$(( $fixsimextdays - 1 ))
+fi
 export templateFileName=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
 if [[  -f $checkfile ]]
 then

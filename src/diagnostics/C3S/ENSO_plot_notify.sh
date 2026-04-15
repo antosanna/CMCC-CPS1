@@ -23,20 +23,9 @@ export nyearhc=$(($endy_hind-$iniy_hind + 1))
 
 # do not modify
 export refperiod=$iniy_hind-$endy_hind
-export yyyym1=$(($yyyy - 1))
+export yyyym7=`date -d "${yyyy}${st}01 -7 month" +%Y`   #$(($yyyy - 1))
+export stm7=`date -d "${yyyy}${st}01 -7 month" +%m`  #$((10#$st - 1))
 export figtype="png"
-
-stm1=$((10#$st - 1))
-if [ $stm1 -eq 0 ] ; then
-    stm1=12
-fi
-export stm1=`printf "%.02d" $stm1`
-
-case $st
-    in
-    01) export yyyy2=$(($yyyy - 1)) ;;
-    *)  export yyyy2=$yyyy ;;
-esac
 
 
 export lt1=0

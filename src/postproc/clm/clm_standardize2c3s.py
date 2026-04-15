@@ -302,7 +302,7 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
     # create the new NetCDF file
     file_name = output_dir + '/' + prefix + '_' + c3s_el[10] + '_' + \
                 c3s_el[8] + '_' + c3s_el[9] + '_' + c3s_el[1] + '_' + \
-                realization + '.nc'
+                realization + suffix
     
     # remove file if exist yet (should not)
     try:
@@ -424,6 +424,7 @@ if __name__ == '__main__':
     case       = str(sys.argv[13])
     lsmfile    = str(sys.argv[14])   
     prefix     = str(sys.argv[15]) 
+    suffix     = str(sys.argv[16]) 
  
     year = startdate[0:4]
     month = startdate[4:6]

@@ -24,6 +24,16 @@ set +evxu
 . $dictionary
 set -evxu
 
+if [[ $caso =~ "ext" ]]; then
+   export end_term=_slicetime4446to11808.nc
+   firstm=$nmonfore
+   lastm=$(($nmonfore + $nmonforeext - 1))
+else
+   firstm=0
+   lastm=$(($nmonfore - 1))
+   export end_term=.nc
+fi
+
 export check_iceregrid
 #NEW 202103  +
 if [[ -f $check_iceregrid ]]
@@ -53,7 +63,7 @@ else
    if [[ ! -f $inputfile ]]
    then
       inputlist=" "
-      for mon in `seq 0 $(($nmonfore - 1))`
+      for mon in `seq $firstm $lastm`
       do
          curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
          currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
@@ -67,13 +77,12 @@ else
    
    #this one will be compressed via ncks at the end
    prefix=`sed -n 4p $DIR_TEMPL/C3S_globalatt.txt |cut -d '=' -f2|cut -d ':' -f1|awk '{$1=$1};1'`
+#ANTO not used; keeped just for sake of safety for forecast 20260331
    export fore_type=$typeofrun
    export frq="mon"
    export level="ocean2d"
    
    export ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
-   
-   export nmonfore=$nmonfore
    
    echo "---------------------------------------------"
    echo "launching $scriptname "`date`

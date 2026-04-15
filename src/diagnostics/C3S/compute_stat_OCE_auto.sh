@@ -106,6 +106,9 @@ if [ $make_plot -eq 1 ] ; then
    export dirlogo="$DIR_DIAG_C3S/ncl/"
    export plname="$workdir/temperature_pac_trop_ensmean_${yyyyfore}_${mmfore}"
 
+   set +euvx
+   . $DIR_UTIL/load_convert
+   set -euvx
    ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    if [ -f ${plname}.gif ] ; then
       touch ${flag_done}_OCE
