@@ -4,7 +4,8 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-. ${DIR_UTIL}/descr_ensemble.sh $1
+#. ${DIR_UTIL}/descr_ensemble.sh $1
+. ${DIR_UTIL}/descr_ensemble.sh `date +%Y`
 
 set -euvx
 
@@ -12,8 +13,8 @@ set -euvx
 LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
-st=$2  #stdate as input
-yyyy=$1
+st=`date +%m`   #$2  #stdate as input
+yyyy=`date +%Y`  #$1
 
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_${typeofrun}_${yyyy}${st}_${machine}_on #to avoid multiple submission from crontab
@@ -75,7 +76,8 @@ do
        touch ${flag_postproc_offline_on}
    
        mkdir -p $DIR_LOG/$typeofrun/C3S_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
+#       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
    
    
        if [[ $dbg -eq 1 ]]

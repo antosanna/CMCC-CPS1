@@ -14,13 +14,14 @@ LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 header=$SPSSystem
+ext=$1
 if [[ $ext -eq 1 ]]
 then
    header=${header}ext
 fi
-st=$1  #stdate as input
+st=$2  #stdate as input
 
-recover=${2:-0} #default recover=0 (do not relaunch cases with missing all_checkers_ok)
+recover=${3:-0} #default recover=0 (do not relaunch cases with missing all_checkers_ok)
 
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_offline_on #to avoid multiple submission from crontab
@@ -86,7 +87,7 @@ do
              continue
          fi
       fi
-      $DIR_C3S/clean4C3S_listofcases.sh $caso $ext
+      $DIR_C3S/clean4C3S_listofcases.sh $caso 
       isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
       if [[ ${isremote} -eq 1 ]] 
       then

@@ -247,11 +247,8 @@ then
       then
          command+=' -ti -w "exit('$exited') || exit('$exited2')"'
       fi
-#      if [[ $mem -ne $memdefault ]]
-#      then
 # (mem is expressed in MB)
-         command+=' -R "rusage[mem='$mem']"'
-#      fi
+      command+=' -R "rusage[mem='$mem']"'
    fi
    if [[ "$starttime" != "None" ]]
    then
@@ -416,11 +413,7 @@ then
               command+=' --dependency=afternotok:$jid1 '
          fi
       fi
-#      if [[ $mem -ne $memdefault ]]
-#      then
-      # (mem is expressed directly)
-        command+=' --mem=$mem '
-#      fi
+      command+=' --mem=$mem '
       if [[ "$ntask" != "None" ]]
       then
              command+=' --ntasks=$ntask '

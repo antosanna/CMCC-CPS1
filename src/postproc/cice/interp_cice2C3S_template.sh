@@ -78,9 +78,9 @@ else
    #this one will be compressed via ncks at the end
    prefix=`sed -n 4p $DIR_TEMPL/C3S_globalatt.txt |cut -d '=' -f2|cut -d ':' -f1|awk '{$1=$1};1'`
 #ANTO not used; keeped just for sake of safety for forecast 20260331
-#   export fore_type=$typeofrun
-#   export frq="mon"
-#   export level="ocean2d"
+   export fore_type=$typeofrun
+   export frq="mon"
+   export level="ocean2d"
    
    export ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
    

@@ -4,13 +4,23 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
-. $DIR_UTIL/load_ncl
+#. $DIR_UTIL/load_ncl
+
+set -exuv
 
 export outdirC3S=OUTDIRC3S
 caso=CASO
+if [[ $caso =~ "ext" ]]; then
+   export end_term=_slicetime4446to11808.nc
+   firstm=$nmonfore 
+   lastm=$(($nmonforext + $nmonfore - 1))
+else
+   export end_term=.nc
+   firstm=0
+   lastm=$(($nmonfore - 1))
+fi
 logdir=$1  #to manage offline and online submission (remote vs local cases) 
 
-set -exuv
 func_error_dims () {
 local dir2examine=$1
 # initialize associative arrays for storing conf interval values
@@ -138,15 +148,6 @@ fi
 
 prefix=${GCM_name}-v${versionSPS}
 ini_term="cmcc_${prefix}_${typeofrun}_S${yyyy}${st}0100"
-if [[ $caso =~ "ext" ]]; then
-   export end_term=_slicetime4446to11808.nc
-   firstm=$nmonfore 
-   lastm=$(($nmonforext + $nmonfore - 1))
-else
-   export end_term=.nc
-   firstm=0
-   lastm=$(($nmonforext - 1))
-fi
 level="ocean2d"
 frq="mon"
 

@@ -4,8 +4,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_nco                # to get command $compress
-. ${DIR_UTIL}/descr_ensemble.sh $1  #THIS SCRIPT SHOULD RUN
-                                      #ONLY FOR HINDCASTS
+. ${DIR_UTIL}/descr_ensemble.sh $1 
 
 set -evxu
 
@@ -31,8 +30,12 @@ chmod -R u+w $DIR_ARCHIVE/$caso
 ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
 nsimdays=$fixsimdays
-
 outdirC3S=${WORK_C3S}/$yyyy$st/
+if [[ $caso =~ "ext" ]]; then
+   nsimdays=$fixsimextdays
+   outdirC3S=${WORK_C3SEXT}/$yyyy$st/
+fi
+
 
 set +euvx
 . $dictionary
