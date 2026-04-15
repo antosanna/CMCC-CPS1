@@ -163,6 +163,13 @@ then
 fi
 
 
+rclone_tag=${yyyy}${st}
+if [[ $typeofrun == "forecast" ]] && [[ $is_backup -eq 1 ]]
+then
+    rclone_tag=${typeofrun}/${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}
+
 #now the script runs from crontab with submitcommand.sh
 echo "SPANNING $listofcases"
 
@@ -462,7 +469,8 @@ if [[ $dbg -ne 2 ]] ; then
          condafunction activate $envcondarclone
          set -eux
          python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-         rclone copy ${filexls} my_drive:$typeofrun/$yyyy$st/REPORTS
+         rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
+         rclone copy ${filexls} my_drive:${DIR_RCLONE}/REPORTS
       fi
    fi
 set +euv

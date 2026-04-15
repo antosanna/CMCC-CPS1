@@ -17,11 +17,11 @@ st=$2
 
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 # per CINECA
-if [[ $machine == "leonardo" ]]
-then
-   echo "This script must be run on Juno!!! Exit now!!"
-   exit 1
-fi
+#if [[ $machine == "leonardo" ]]
+#then
+#   echo "This script must be run on Juno!!! Exit now!!"
+#   exit 1
+#fi
 
 #-- RANDOMIZATION --------------------------------
 

@@ -75,7 +75,7 @@ do
    then
          body="CLM: EDA${ilnd} time-series was complete. You do not have to rerun"
          title="[CLMIC] ${CPSSYS} forecast notification"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
          
    else   #operationally or for incomplete eda recover
      
@@ -85,14 +85,14 @@ do
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
           body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
           title="[CLMIC] ${CPSSYS} forecast notification"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
       elif [[ -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
       then
           inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
           ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
           body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
           title="[CLMIC] ${CPSSYS} forecast notification"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
          
       fi
    fi
@@ -137,7 +137,7 @@ then
              rsync -auv $bkup_ic_hydros $actual_ic_hydros
              body="Using $bkup_ic_clm and $bkup_ic_hydros for CAM ICs computation. Operational CLM IC procedures do not complete correctly"
              title="[CLMIC] ${CPSSYS} forecast warning"
-             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+             $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -g yes
              break
          fi
             
@@ -172,7 +172,7 @@ then
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $nemoic_ctr not produced."
 
    title="[NEMOIC] ${CPSSYS} forecast warning"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -g yes
 # we replace both operational ICs with backup (backup ICs will be removed if not used)
 # here we evaluate the case where CICE IC was produced but Nemo was not 
 # and for consistency we replace both
@@ -182,7 +182,7 @@ elif [[ ! -f $ciceic_ctr ]]
 then
    body="Using $bkup_nemoic_ctr and $bkup_ciceic_ctr as ocean/seaice ICs for atm IC production. $ciceic_ctr not present."
    title="[NEMOIC] ${CPSSYS} forecast warning"
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
+   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -g yes
 # we replace both operational ICs with backup (backup ICs will be removed if not used)
 # here we evaluate the case where Nemo IC was produced but CICE was not 
 # and for consistency we replace both
@@ -212,7 +212,7 @@ do
        body="$IC_CPS/run_IC_production.sh: ${inputECEDA} missing!"
        echo $body
        title="[CAMIC] ${CPSSYS} ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -g yes
        continue
     fi
 

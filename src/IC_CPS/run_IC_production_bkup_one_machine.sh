@@ -81,7 +81,7 @@ do
      ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA_bkup.sh -j launchFREDA${ilnd}_${yyyy}${st}_bkup -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
      body="CLM: submitted script launch_forced_run_EDA_bkup.sh to produce backup CLM ICs from EDA perturbation $ilnd"
      title="[CLMIC-backup] ${CPSSYS} forecast notification"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
    else
       echo "${icclm} ${ichydros} already computed"
    fi
@@ -150,7 +150,7 @@ do
   then
      body="$DIR_ATM_IC/launch_make_atm_ic_op.sh: ${inputECEDA} missing!"
      title="[CAMIC] ${CPSSYS} ERROR"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -g yes
      exit
   fi
 

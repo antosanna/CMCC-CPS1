@@ -13,6 +13,7 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 
 leo_dir=/leonardo_work/$account_SLURM/scratch/IC/
 leo_trip_dir=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/triplette_done
+leo_temp_dir=/leonardo_work/$account_SLURM/scratch/CMCC-CPS1/temporary
 jun_dir=/data/cmcc/cp1/archive/IC/
 
 realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
@@ -44,5 +45,6 @@ done
 # now copy triplette file; this must be the very last operation since it is the go-ahead for the forecast to start on Leonardo
 if [[ $bkup -eq 0 ]]
 then
-   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${TRIP_DIR}/triplette.random.$yyyy$st.txt a07cmc00@dmover1.leonardo.cineca.it:${leo_trip_dir}
+   touch ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE
+   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE a07cmc00@dmover1.leonardo.cineca.it:${leo_temp_dir}
 fi

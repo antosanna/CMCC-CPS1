@@ -20,6 +20,12 @@ if [[ -f $check_completed ]]
 then
    exit
 fi
+rclone_tag=$stdate
+if [[ $is_backup -eq 1 ]] #currently juno and cassandra - April 2026 
+then
+    rclone_tag=${stdate}_backup
+fi
+DIR_RCLONE=forecast/${rclone_tag}
 
 fmt="%-15s %-15s %-15s %-15s\n"
 cd $DIR_ARCHIVE
@@ -36,8 +42,11 @@ do
    fmt="%-15s %-15s %-15s %-15s\n"
    caso=sps4_${stdate}_${i}
 set +e
-   st_pen=`bj |grep run.$caso|grep PEN` 
-   st_run=`bj |grep run.$caso|grep RUN` 
+   # Use findjobs to find job status for portability
+   st_pen=`${DIR_UTIL}/findjobs.sh -N run.${caso} -a PEN`
+   st_run=`${DIR_UTIL}/findjobs.sh -N run.${caso} -a RUN`
+#   st_pen=`bj |grep run.$caso|grep PEN` 
+#   st_run=`bj |grep run.$caso|grep RUN` 
 set -e
    if [[ ! -z $st_pen ]]
    then
@@ -92,5 +101,5 @@ set +euvx
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
 set -eu
-rclone mkdir my_drive:forecast/$stdate/REPORTS
-rclone copy ${report} my_drive:forecast/$stdate/REPORTS
+rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
+rclone copy ${report} my_drive:${DIR_RCLONE}/REPORTS

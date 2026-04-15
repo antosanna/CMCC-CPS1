@@ -32,6 +32,13 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
 
+rclone_tag=${yyyy}${st}
+if [[ $typeofrun == "forecast" ]] && [[ $is_backup -eq 1 ]] 
+then
+     rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}
+
 if [[ $C3S -eq 1 ]]
 then
    export var2plot=tasmin
@@ -58,10 +65,10 @@ set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
 set -euvx
-   rclone mkdir my_drive:$typeofrun/$yyyy$st/SPIKES_warnings_${yyyy}${st}
+   rclone mkdir my_drive:$DIR_RCLONE/SPIKES_warnings_${yyyy}${st}
    nplots=`ls ${pltname_root}* |wc -l`
    for ((k = 1; k<= $nplots; k += 1))
    do
-      rclone copy ${pltname_root}.$k.png my_drive:$typeofrun/$yyyy$st/SPIKES_warnings_${yyyy}${st}
+      rclone copy ${pltname_root}.$k.png my_drive:$DIR_RCLONE/SPIKES_warnings_${yyyy}${st}
    done
 fi

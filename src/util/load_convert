@@ -8,6 +8,9 @@ if [[ $machine == "juno" ]]
 then
    echo "test"
    module load intel-2021.6.0/imagemagick/7.0.8-7-2475g
+elif [[ $machine == "cassandra" ]]
+then
+   module load oneapi-2025.0.4/imagemagick/7.1.1-39-rcymf
 elif [[ $machine == "leonardo" ]]
 then
      . $DIR_UTIL/condaactivation.sh

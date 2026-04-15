@@ -111,7 +111,7 @@ do
             then
                body="CLM ICs: from $DIR_LND_IC/launch_forced_run_EDA_bkup.sh. Some CLM forcings $vartype missing in dir $templdir for year $yyf. It is impossible to make the link in $forcing_dir. Job exiting now. Missing files for: $missingfiles "
                title="[CLMIC-backup] ${CPSSYS} forecast ERROR"
-               ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+               ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
                exit 1
             fi
       done
@@ -146,7 +146,7 @@ filesolar_mp1=$forcing_dir/Solar/${preffix}.Solr.${yyyy}-${st}.nc
 if [ ! -f ${filesolar_mp1} ] || [ ! -L ${filesolar_mp1} ] ; then
    body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh. Missing Solr.${yyyy}-${st}"
    title="[CLMIC-backup] ${CPSSYS} forecast error"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
    exit 1
 fi
 
@@ -154,7 +154,7 @@ fileprec_mp1=$forcing_dir/Precip/${preffix}.Prec.${yyyy}-${st}.nc
 if [ ! -f ${fileprec_mp1} ] || [ ! -L ${fileprec_mp1} ] ; then
   body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh. Missing Prec.${yyyy}-${st}"
   title="[CLMIC-backup] ${CPSSYS} forecast error"
-  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
   exit 1
 fi
 
@@ -162,7 +162,7 @@ fileTP_mp1=$forcing_dir/TPHWL/${preffix}.TPQWL.${yyyy}-${st}.nc
 if [ ! -f ${fileTP_mp1} ] || [ ! -L ${fileTP_mp1} ] ; then
   body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh. Missing TPQWL.${yyyy}-${st}"
   title="[CLMIC-backup] ${CPSSYS} forecast error"
-  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
   exit 1
 fi
 
@@ -180,7 +180,7 @@ then
       $DIR_LND_IC/create_era5FORC.sh
       "
    title="[CLMIC-backup] ${CPSSYS} $typeofrun ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
 
 fi
 

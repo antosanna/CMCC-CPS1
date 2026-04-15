@@ -28,6 +28,7 @@ yyyy=`date +%Y`
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euxv
+mkdir -p $DIR_LOG/${typeofrun}/$yyyy$st
 LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
@@ -39,6 +40,14 @@ then
    exit
 fi
 
+rclone_tag=${yyyy}${st}
+ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]] 
+then
+     ccmail=sp1@cmcc.it
+     rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}  
 
 echo "checkfiles are:"
 echo "checkfile1=$checkfile1"
@@ -173,11 +182,11 @@ set -euvx
                    . $DIR_UTIL/condaactivation.sh
                    condafunction activate $envcondarclone
                    set -euvx
-                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for first month completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
+                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:${DIR_RCLONE}/runtime_diags
+                   body="Diagnostics for first month completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
                    title="${CPSSYS} first month runtime diags completed"
-                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
@@ -230,11 +239,11 @@ set -euvx
                    . $DIR_UTIL/condaactivation.sh
                    condafunction activate $envcondarclone
                    set -euvx
-                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for lead 0 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
+                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:${DIR_RCLONE}/runtime_diags
+                   body="Diagnostics for lead 0 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
                    title="${CPSSYS} lead 0 runtime diags completed"
-                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else
@@ -288,11 +297,11 @@ set -euvx
                    . $DIR_UTIL/condaactivation.sh
                    condafunction activate $envcondarclone
                    set -euvx
-                   rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-                   body="Diagnostics for lead 1 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:$yyyy$st/runtime_diags"
+                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
+                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:${DIR_RCLONE}/runtime_diags
+                   body="Diagnostics for lead 1 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
                    title="${CPSSYS} lead 1 runtime diags completed"
-                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
                    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
                    break
                else

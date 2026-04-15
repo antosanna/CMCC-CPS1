@@ -30,7 +30,12 @@ ens=`echo $caso|cut -d '_' -f3|cut -c 2-3`
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
-
+rclone_tag=${yyyy}${st}
+if [[ $typeofrun == "forecast" ]] && [[ $is_backup -eq 1 ]]
+then
+   rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeforun}/${rclone_tag}
 export inputC3S=${WORK_C3S}/${yyyy}${st}/cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100_atmos_day_surface_tasmin_r${ens}i00p00.nc
 export pltname_root=$wkdir/$caso.tasmin_C3S
 rsync -auv $DIR_C3S/plot_timeseries_spike_c3s.ncl $wkdir
@@ -43,10 +48,10 @@ set +euvx
    . $DIR_UTIL/condaactivation.sh
    condafunction activate $envcondarclone
 set -euvx
-   rclone mkdir my_drive:SPIKES_warnings_${yyyy}${st}
+   rclone mkdir my_drive:${DIR_RCLONE}/SPIKES_warnings_${yyyy}${st}
    nplots=`ls ${pltname_root}* |wc -l`
    for ((k = 1; k<= $nplots; k += 1))
    do
-      rclone copy $wkdir/$caso.tasmin_C3S.$k.png my_drive:SPIKES_warnings_${yyyy}${st}
+      rclone copy $wkdir/$caso.tasmin_C3S.$k.png my_drive:${DIR_RCLONE}/SPIKES_warnings_${yyyy}${st}
    done
 fi

@@ -44,7 +44,7 @@ then
      title="[CAMIC] - $oceic not present"
      body="you cannot produce CAM ic for $yyyy and $st because $oceic not available"
      echo $body
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -g yes
      exit
   fi
 fi
@@ -61,7 +61,7 @@ then
       title="[CAMIC] - $clmic not present"
       body="you cannot produce CAM ic for $yyyy and $st because $clmic not available"
       echo $body
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -g yes
       exit
    fi
 fi 
@@ -78,7 +78,7 @@ then
       title="[CAMIC] - $rofic not present"
       body="you cannot produce CAM ic for $yyyy and $st because $rofic not available"
       echo $body
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -g yes
       exit
    fi
 fi
@@ -95,7 +95,7 @@ then
      title="[CAMIC] - $iceic not present"
      body="you cannot produce CAM ic for $yyyy and $st because $iceic not available"
      echo $body
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "only" -s $yyyy$st -g yes
      exit
   fi
 fi

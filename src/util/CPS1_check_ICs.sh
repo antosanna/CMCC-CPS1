@@ -11,6 +11,12 @@ echo "Starting checks on ICs "
 yyyy=$1
 st=$2
 
+rclone_tag=${yyyy}${st}
+if [[ ${is_backup_ic} -eq 1 ]] 
+then
+  rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}
 # CREATE OCEAN ICs anomalies to check state of the ocean
 #$DIR_OCE_IC/check_cice_restarts.sh $yyyy $st
 $DIR_OCE_IC/check_nemo_restarts.sh $yyyy $st      #~15 '
@@ -28,13 +34,13 @@ if [[ ${nmb_oce_plot} -eq 2 ]] ; then
   # $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a "$listafile"
    . ${DIR_UTIL}/condaactivation.sh
    condafunction activate $envcondarclone
-   rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+   rclone mkdir my_drive:${DIR_RCLONE}/IC_plots
    for fplot in $listafile 
    do
-       rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+       rclone copy ${fplot} my_drive:${DIR_RCLONE}/IC_plots
    done
    title="[NEMOIC] ${CPSSYS} forecast notification"
-   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the SST anomalies of the ${n_ic_nemo} Nemo IC perturbations together with the observed ones (start-date snapshot, last week, last month)"
+   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${rclone_tag}/IC_plots you may find the SST anomalies of the ${n_ic_nemo} Nemo IC perturbations together with the observed ones (start-date snapshot, last week, last month)"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"
 else
    body="Plots to check NEMO ICs not completed. Check log of SPS4_step1_ICs.sh in ${DIR_LOG}/forecast/${yyyy}${st}. \n\n"
@@ -50,13 +56,13 @@ if [[ ${nmb_ice_plot} -ge 1 ]] ; then
    listafile=`ls $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/*png`
    . ${DIR_UTIL}/condaactivation.sh
    condafunction activate $envcondarclone
-   rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+   rclone mkdir my_drive:${DIR_RCLONE}/IC_plots
    for fplot in $listafile 
    do  
-       rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+       rclone copy ${fplot} my_drive:${DIR_RCLONE}/IC_plots
    done
    title="[CICEIC] ${CPSSYS} forecast notification"
-   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${yyyy}${st}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
+   body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${rclone_tag}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"
 else
    body="Plots to check CICE ICs not completed. Check log of SPS4_step1_ICs.sh in ${DIR_LOG}/forecast/${yyyy}${st}. \n\n"

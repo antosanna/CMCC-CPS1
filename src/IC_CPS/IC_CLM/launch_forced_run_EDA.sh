@@ -100,7 +100,7 @@ do
             done
             body="CLM ICs: from $DIR_LND_IC/launch_forced_run_EDA.sh (member $member). Some CLM forcings $vartype missing in dir $forcing_dir for year $yyf job exiting now. Missing files for: $missingfiles "
             title="[CLMIC] ${CPSSYS} $typeofrun ERROR"
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
             exit
          else
             echo 'Forcings ok '
@@ -140,7 +140,7 @@ do
            then
               body="CLM ICs: from $DIR_LND_IC/launch_forced_run_EDA.sh (member $member). Some CLM forcings $vartype missing in dir $forcing_dir for year $yyf job exiting now. Missing files for: $missingfiles "
               title="[CLMIC] ${CPSSYS} ${typeofrun} ERROR"
-              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
               exit
            fi
            month=$(($month  +1))
@@ -194,21 +194,21 @@ fi
 if [ ! -f $forcing_dir/Solar/${preffix}.Solr.${yyyy}-${st}.nc ]; then
    body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh. Missing Solr.${yyyy}-${st}"
    title="[CLMIC] ${CPSSYS} $typeofrun error"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
    exit 1
 fi
 
 if [ ! -f $forcing_dir/Precip/${preffix}.Prec.${yyyy}-${st}.nc ]; then
    body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh. Missing Prec.${yyyy}-${st}"
    title="[CLMIC] ${CPSSYS} $typeofrun error"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
    exit 1
 fi
 
 if [ !  -f $forcing_dir/TPHWL/${preffix}.TPQWL.${yyyy}-${st}.nc ]; then
    body="CLM ICs: Problems with EDA${member} inputs for create_edaFORC.sh Missing TPQWL.${yyyy}-${st}"
    title="[CLMIC] ${CPSSYS} $typeofrun error"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
    exit 1
 fi
 
@@ -225,7 +225,7 @@ then
       $DIR_LND_IC/create_edaFORC.sh
       "
    title="[CLMIC] ${CPSSYS} $typeofrun ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
 
 fi
 

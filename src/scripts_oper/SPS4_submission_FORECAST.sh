@@ -1,7 +1,7 @@
 #!/bin/sh -l
 # load variables from descriptor
 # SUBMISSION FROM JUNO (crontab) NOT WORKING WITH LEONARDO WITH submitcommand
-#30 10 * * * . /etc/profile; . /users_home/cmcc/cp1/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j SPS4_submissione_FORECAST -l $DIR_LOG/hindcast/ -d $DIR_CPS -s SPS4_submission_FORECAST.sh
+#30 10 * * * . /etc/profile; . /users_home/cmcc/cp1/.bashrc && . ${DIR_UTIL}/descr_CPS.sh && ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -j SPS4_submission_FORECAST -l $DIR_LOG/forecast/ -d $DIR_CPS -s SPS4_submission_FORECAST.sh
 
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -12,7 +12,7 @@ yyyy=`date +%Y`
 set -evx
 
 # wait for the presence of the triplette as a signal that the IC production has been completed and the submission can go-on
-if [[ ! -f $TRIP_DIR/triplette.random.$yyyy$st.txt ]]
+if [[ ! -f ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE ]] && [[ $machine == "leonardo" ]]
 then
 #   title="[${CPSSYS} WARNING] SPS4_submission_FORECAST.sh exited"
 #   body="FORECAST not submitted since ICs are not yet ready"
@@ -74,6 +74,13 @@ else
    fi
 fi
 echo "FORECAST SUBMISSION STARTING NOW `date +%Y%m%d%H%M`"
+#BJF 20260410
+#-----------------------------------
+# triplette generation
+#-----------------------------------
+#checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
+${IC_CPS}/make_triplette.sh $yyyy $st
+#END BJF
 # this can be redundant on Juno
 $IC_CPS/set_forecast_ICs.sh $yyyy $st
 # Input **********************
@@ -277,8 +284,9 @@ set -e
   # REDUNDANT but safe (check how many jobs are on parallel queue)
   # if $maxnumbertosubmit already running exit
   # this control does not count the cases still in the create_caso phase
+  # BJF: do we still need this sleep on cmcc machine?
      np_all=`${DIR_UTIL}/findjobs.sh -m $machine -n run.${SPSSystem}_ -c yes`
-     if [[ ${cnt_sleep} -eq 10 ]] ; then
+     if [[ ${cnt_sleep} -eq 10 ]] && [[ $machine == "leonardo" ]]; then
         sleep 1800
         echo "add 30' sleep to prevent overload of workload manager"
         cnt_sleep=0

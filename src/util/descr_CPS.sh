@@ -46,6 +46,8 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
+   is_backup=1 
+   is_backup_ic=0 #cmcc machines operational for IC production !!!\
    qos=qos_lowprio   #this is used only for SLURM but it is
                      #necessary for portability being used in
                      #submitcommand
@@ -81,12 +83,12 @@ then
       cores_per_node=112
       nnodes_SC=56
       cores_per_run=336
-      mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
+      mpilib4py_nemo_rebuild=oneapi-2025.0.4/impi-2021.14.2 #impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_sps4
       envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
-      maxnumbertosubmit=5
-      maxnumbertorecover=40
+      maxnumbertosubmit=54
+      maxnumbertorecover=$maxnumbertosubmit
       maxnumberguarantee=7
       env_workflow_tag=cmcc
       DIR_REST_OIS_FORE=$WORK/OIS2/archive/  #TO BE DEFINED ONCE SET
@@ -228,6 +230,8 @@ then
 # ######## MARCONI SECTION
 elif [[ "$machine" == "leonardo" ]]
 then 
+   is_backup=0
+   is_backup_ic=1
    operational_user=a07cmc00
    env_workflow_tag=leonardo
    envcondacm3=cmcc-cm_py

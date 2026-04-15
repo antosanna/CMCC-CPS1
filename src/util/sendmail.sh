@@ -2,9 +2,10 @@
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
-usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>] [-E <member number OPTIONAL]" 1>&2; exit 1; }
 
-while getopts ":m:e:M:t:c:a:b:r:s:E:" o; do
+usage() { echo "Usage: $0 [-m <machine string >] [-e <email string >] [-M <bodymessage string>] [-t <title string>] [-a <append file OPTIONAL>] [-c <cc string OPTIONAL>] [-b <bcc string OPTIONAL>] [-r <report string OPTIONAL>] [-s <startdate string OPTIONAL>] [-E <member number OPTIONAL] [ -g <input for gdrive path>]" 1>&2; exit 1; }
+
+while getopts ":m:e:M:t:c:a:b:r:s:E:g:" o; do
     case "${o}" in
         m)
             machine=${OPTARG}
@@ -35,6 +36,9 @@ while getopts ":m:e:M:t:c:a:b:r:s:E:" o; do
             ;;
         r)
             report=${OPTARG}
+            ;;
+        g)  #to handle backup tag in gdrive send of report of IC production
+            gdrive=${OPTARG}
             ;;
         *)
             usage
@@ -84,8 +88,18 @@ then
           . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
           . $DIR_UTIL/condaactivation.sh
           condafunction activate $envcondarclone
-          rclone mkdir my_drive:$typeofrun/$startdate/REPORTS
-          rclone copy $logfile my_drive:$typeofrun/$startdate/REPORTS
+          rclone_tag=${startdate}
+          if [[ $typeofrun == "forecast" ]] && [[ ${is_backup} -eq 1 ]]
+          then
+              rclone_tag=${startdate}_backup
+          fi
+          if [[ ! -z $gdrive ]]
+          then
+            rclone_tag=${startdate}
+          fi
+          DIR_RCLONE=${typeofrun}/${rclone_tag}
+          rclone mkdir my_drive:$DIR_RCLONE/REPORTS
+          rclone copy $logfile my_drive:$DIR_RCLONE/REPORTS
       fi
       if [ "$report" = "only" ]
       then

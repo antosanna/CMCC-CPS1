@@ -87,5 +87,5 @@ fi
 checktime0=`date`
 body="CLM ICs: CLM run forced with EDA${member} data submitted at $checktime0 " 
 title="[CLMIC] ${CPSSYS} forecast notification"
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
 

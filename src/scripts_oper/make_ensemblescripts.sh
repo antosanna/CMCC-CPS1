@@ -43,7 +43,7 @@ set -evx
 
    caso=${SPSSystem}_${yyyy}${st}_${nrun3}
      
-   if [[ $machine == "juno" ]]   #this will be used only in backup conditions because the forecast is to be run on Leonardo
+   if [[ $machine == "juno" ]] || [[ $machine == "cassandra" ]]   #this will be used only in backup conditions because the forecast is to be run on Leonardo
    then
       echo "#!/bin/sh -l "                               > $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh
       echo ". ~/.bashrc"                                 >> $DIR_SUBM_SCRIPTS/$st/$yyyy${st}_scripts/${header}_$yyyy${st}_${nrun3}.sh

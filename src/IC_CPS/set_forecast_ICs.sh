@@ -26,14 +26,14 @@ do
         then
            body="CAM: CAM IC $ic was not correctly produced and  the back-up is missing too"
            title="[CAMIC] ${CPSSYS} forecast ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
            exit 1
         else
         
            mv $bkupf $IC_CAM_CPS_DIR/$st/${CPSSYS}.cam.i.$yyyy-$st-01-00000.$ic.nc
            body="CAM: CAM IC $ic was not correctly produced. You are going to use the back-up"
            title="[CAMIC] ${CPSSYS} forecast notification"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
         fi
      else
         if [[ -f $bkupf ]]
@@ -41,7 +41,7 @@ do
            rm $bkupf
         fi
         body="CAM IC $ic correctly produced and back-up removed"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st -g yes
     fi
 done
 #
@@ -56,14 +56,14 @@ do
         then
            body="CLM: CLM IC $ic was not correctly produced and  the back-up is missing too"
            title="[CLMIC] ${CPSSYS} forecast ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
            exit 1
         else
            mv $bkupf_clm $IC_CLM_CPS_DIR/$st/${CPSSYS}.clm2.r.$yyyy-$st-01-00000.$ic.nc
            mv $bkupf_rof $IC_CLM_CPS_DIR/$st/${CPSSYS}.hydros.r.$yyyy-$st-01-00000.$ic.nc
            body="CLM: CLM IC $ic was not correctly produced. You are going to use the back-up"
            title="[CLMIC] ${CPSSYS} forecast notification"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
         fi
      else
         if [[ -f $bkupf_clm ]]
@@ -75,7 +75,7 @@ do
            rm $bkupf_rof
         fi
         body="CLM and HYDROS ICs $ic correctly produced and back-up removed"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st -g yes
     fi
 done
 # replace missing NEMO ICs with backup
@@ -90,14 +90,14 @@ do
         then
            body="NEMO/CICE: NEMO/CICE IC $ic was not correctly produced and  the back-up is missing too"
            title="[NEMO/CICEIC] ${CPSSYS} forecast ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
            exit 1
         else
            mv $bkupf_nemo $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
            mv $bkupf_cice $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc
            body="NEMO: NEMO IC $ic was not correctly produced. You are going to use the back-up both for NEMO and CICE"
            title="[NEMOIC] ${CPSSYS} forecast notification"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
         fi
     elif [[ ! -f $IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-$st-01-00000.$ic.nc ]]
     then
@@ -105,7 +105,7 @@ do
         then
            body="NEMO/CICE: NEMO/CICE IC $ic was not correctly produced and  the back-up is missing too"
            title="[NEMO/CICEIC] ${CPSSYS} forecast ERROR"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
            exit 1
         else
            mv $bkupf_nemo $IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-$st-01-00000.$ic.nc
@@ -123,7 +123,7 @@ do
            rm $bkupf_nemo
         fi
         body="NEMO and CICE ICs $ic correctly produced and back-up removed"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st -g yes
     fi
 done
 mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/ICs

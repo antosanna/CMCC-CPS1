@@ -95,7 +95,9 @@ do
     
 
     #$c3s_checker_cmd -p $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
+    set +e #BJF 30/03/26
     $c3s_checker_cmd $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log
+    set -e #BJF
 #    set +e
 #    if [[ $? -eq 1 ]] ; then
 #      echo "error for $var"

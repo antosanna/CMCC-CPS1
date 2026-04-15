@@ -1,0 +1,10 @@
+C NCLFORTSTART
+       subroutine vertinterp (nlevp,pnew,ni,nj,nk,nt,Tout,doT,Zout,doZ,PS,ts,oro)
+       real pnew(nlevp)
+       real oro(ni,nj)
+       real PS(ni,nj,nt)
+       real ts(ni,nj,nt)
+       integer doT,doZ
+C input-output variables
+       real Tout(ni,nj,nk,nt),Zout(ni,nj,nk,nt)
+C NCLEND

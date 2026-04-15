@@ -11,12 +11,19 @@ logfile=${outlog}.txt
 . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
 # load conda env for rclone
 conda activate $envcondarclone
+rclone_tag=${startdate}
+if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]] 
+then
+     rclone_tag=${startdate}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}
+
 # create directory on drive (works also if already existing)
-rclone mkdir my_drive:$typeofrun/$startdate/REPORTS
+rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
 if [[ -f $logfile ]]
 then
    #copy general log
-   rclone copy $logfile my_drive:$typeofrun/$startdate/REPORTS
+   rclone copy $logfile my_drive:${DIR_RCLONE}/REPORTS
 fi
 for ens in {001..054}
 do
@@ -24,6 +31,6 @@ do
     if [[ -f $logfile ]]
     then
        #copy general specific ensemble log
-       rclone copy $logfile my_drive:$typeofrun/$startdate/REPORTS
+       rclone copy $logfile my_drive:${DIR_RCLONE}/REPORTS
     fi
 done

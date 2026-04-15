@@ -17,7 +17,7 @@ then
    message="this script is meant to be run on Juno!!!"
    body=$message
    title="[$CPSSYS] ERROR: SPS4_step1_ICs.sh exited"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -g yes
    echo "exit now"
    exit 1
 fi
@@ -29,7 +29,7 @@ if [[ ! -f /work/cmcc/cp1/CPS/CMCC-OIS2/logs/WEEKLY_SUBMISSION/weekly_ois2_submi
 then
    body="OIS2 forecast not submitted: $SPSSystem IC production cannot start"
    title="[$CPSSYS] ERROR: SPS4_step1_ICs.sh exited"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -g yes
    exit 1
 fi
    
@@ -54,7 +54,7 @@ message="${CPSSYS} forecast starting `date` "
 dirrep=$yyyy$st
 mkdir -p ${DIR_REP}/$dirrep
 body=`echo "${message}"` 
-${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s ${yyyy}${st}
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s ${yyyy}${st} -g yes
 mkdir -p ${DIR_LOG}/forecast/$yyyy$st/ICs
 checkfile=${DIR_LOG}/forecast/$yyyy$st/ICs/${SPSSystem}_step1_ICs_${yyyy}${st}_started
 if [[ -f $checkfile ]]
@@ -63,7 +63,7 @@ then
    If you need to resubmit previously remove $checkfile"
    echo $body
    title="${CPSSYS} forecast ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st}
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s ${yyyy}${st} -g yes
    exit 2
 fi
 touch $checkfile
@@ -89,7 +89,9 @@ $DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 # triplette generation
 #-----------------------------------
 #checkfile_trip=$DIR_LOG/$typeofrun/$yyyy$st/triplette$yyyy${st}_ready
-${IC_CPS}/make_triplette.sh $yyyy $st
+#now moved in submission forecast
+#${IC_CPS}/make_triplette.sh $yyyy $st
+
 ${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st
 body="Cari tutti, \n
 vi confermiamo il completamento della procedura di creazione ICs per il seasonal Forecast. Potete ripristinare la configurazione standard dei nodi paralleli. \n
@@ -98,4 +100,4 @@ Grazie
 \n
 SPS-staff\n"
 title="FINE RICHIESTA SPECIALE PER SC_sps35"
-${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail
+${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail -g yes

@@ -88,7 +88,7 @@ then
   body="create_edaFORC.sh: backup input not well defined. Exiting now"
   title="[CLMIC] ${CPSSYS} forecast error"
   echo $body
-  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
   exit 1
 fi
 
@@ -154,7 +154,7 @@ if [ ! -f $DIRDATA/eda_forcings_an_${yr}${mo}_n${member}.grib ] ; then
          body="create_edaFORC.sh: EDA INST FIELDS (file eda_forcings_an_${yr}${mo}_n${member}.grib ) MISSING "
          title="${title_tag} ${CPSSYS} forecast warning"
          echo $body
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
          jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
          ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
          exit 1
@@ -181,14 +181,14 @@ then
    then
       body="create_edaFORC.sh: EDA AN FIELDS (file eda_forcings_an_${yr}${mo}_n${member}.nc ) has problems in the time axis "
       title="${title_tag} ${CPSSYS} forecast error"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
       jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
       ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
       exit 1
    else
       body="create_edaFORC.sh: something went wrong with check_timestep_raw_eda.ncl for EDA AN FIELDS"
       title="${title_tag} ${CPSSYS} forecast error"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
       jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
       ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
       exit 1
@@ -230,7 +230,7 @@ if [ ! -f $DIRDATA/eda_forcings_acc_fc_${yr}${mo}_n${member}.grib ] ; then
          body="create_edaFORC.sh: EDA ACC FIELDS (file $DIRDATA/eda_forcings_acc_fc_${yr}${mo}_n${member}.grib ) MISSING "
          title="${title_tag} ${CPSSYS} forecast warning"
          echo $body
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
          jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
          ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
          exit 1
@@ -255,14 +255,14 @@ then
    then
       body="create_edaFORC.sh: EDA ACC FIELDS (file eda_forcings_acc_fc_${yr}${mo}_n${member}.nc ) HAS PROBLEMS IN THE TIME AXIS "
       title="${title_tag} ${CPSSYS} forecast error"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
       jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
       ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
       exit 1
    else
       body="create_edaFORC.sh: something went wrong with check_timestep_raw_eda.ncl for EDA ACC FIELDS"
       title="${title_tag} ${CPSSYS} forecast error"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
       jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
       ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
       exit 1
@@ -439,7 +439,7 @@ do
         body="create_edaFORC.sh: $var.${yr}-${mo}_final.nc file has problems in the time axis"
         title="${title_tag} ${CPSSYS} forecast ERROR"
         echo $body
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
         jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
         ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
         exit 1
@@ -447,7 +447,7 @@ do
         body="create_edaFORC.sh: something went wrong with check_timestep.ncl for EDA variable $var"
         echo $body
         title="${title_tag} ${CPSSYS} forecast error"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
         jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
         ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
         exit 1
@@ -498,7 +498,7 @@ then
      body="create_edaFORC.sh: Something went wrong with EDA change_values_TPQWL.ncl in $WORKDIR_LAND " 
      echo $body
      title="${title_tag} ${CPSSYS} forecast warning"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
      ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
      exit 1
@@ -532,14 +532,14 @@ then
   then
      body="create_edaFORC.sh: $var.${yr}-${mo}_n${member}_final.nc has problems in the time axis"
      title="${title_tag} ${CPSSYS} forecast ERROR"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
      ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
      exit 1
   else
      body="create_edaFORC.sh: something went wrong with check_timestep.ncl for EDA variable $var"
      title="${title_tag} ${CPSSYS} forecast error"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
      ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
      exit 1
@@ -561,7 +561,7 @@ if [ ! -f $checkfile_PR ]
 then
      body="create_edaFORC.sh: Something went wrong with EDA change_values_PREC.ncl in $WORKDIR_LAND"
      title="${title_tag} ${CPSSYS} forecast warning"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      exit 1
 fi
 # move to final dir and clean temporary files
@@ -590,14 +590,14 @@ then
   then
      body="create_edaFORC.sh: $var.${yr}-${mo}_n${member}_final.nc has problems in the time axis"
      title="${title_tag} ${CPSSYS} forecast ERROR"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
      ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
      exit 1
   else
      body="create_edaFORC.sh: something went wrong with check_timestep.ncl for EDA variable $var"
      title="${title_tag} ${CPSSYS} forecast error"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      jobID=`${DIR_UTIL}/findjobs.sh -m $machine -n $jobname -i yes`
      ${DIR_UTIL}/killjobs.sh -m $machine -i "$jobID"
      exit 1
@@ -619,7 +619,7 @@ if [ ! -f $checkfile_SR ]
 then
      body="create_edaFORC.sh: Something went wrong with ERA5 change_values_SOLR.ncl in $WORKDIR_LAND "
      title="${title_tag} ${CPSSYS} forecast warning"
-     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st -g yes
      exit 1
 fi
 # move to final dir and clean temporary files

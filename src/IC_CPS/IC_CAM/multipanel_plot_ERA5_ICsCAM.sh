@@ -31,6 +31,12 @@ set -euvx
 if [[ $typeofrun == "forecast" ]] ; then
    export obs="IFS"
 fi
+rclone_tag=${yyyy}${st}
+if [[ ${is_backup_ic} -eq 1 ]]
+then
+   rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag}
 stm1=`date -d ' '$yyyy${st}01' - 1 month' +%m`
 yyyym1=`date -d ' '$yyyy${st}01' - 1 month' +%Y`
 dd=`$DIR_UTIL/days_in_month.sh $stm1 $yyyym1`
@@ -120,10 +126,10 @@ fi
 listafile="$dirplots/Uprofile_${yyyy}${st}.png $dirplots/500hPa_IC_vs_${obs}_$yyyy$st.pdf"
 . $DIR_UTIL/condaactivation.sh
 condafunction activate $envcondarclone
-rclone mkdir my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+rclone mkdir my_drive:${DIR_RCLONE}/IC_plots
 for fplot in $listafile 
 do
-   rclone copy ${fplot} my_drive:${typeofrun}/${yyyy}${st}/IC_plots
+   rclone copy ${fplot} my_drive:${DIR_RCLONE}/IC_plots
 done
 
 title="[CAMIC] ${CPSSYS} forecast notification"

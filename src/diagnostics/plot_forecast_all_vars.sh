@@ -193,6 +193,13 @@ then
    exit 1
 fi
 touch ${checkfile}
+if [[ $is_backup -eq 1 ]]
+then
+   rclone_tag=${yyyy}${st}_backup
+else
+
+   rclone_tag=${yyyy}${st}
+fi
 if [[ $machine == "leonardo" ]]
 then
    #rclone not working from nodes! copy on rclone moved to the launcher (running on prompt)
@@ -202,8 +209,11 @@ else
   . $DIR_UTIL/condaactivation.sh
   condafunction activate $envcondarclone
   set -euvx
-  rclone mkdir my_drive:$typeofrun/${yyyy}${st}/runtime_diags
-  rclone copy ${pldir}/${yyyy}${st}_${pdfflag}.pdf my_drive:$typeofrun/${yyyy}${st}/runtime_diags
+  rclone mkdir my_drive:$typeofrun/${rclone_tag}/runtime_diags
+  rclone copy ${pldir}/${yyyy}${st}_${pdfflag}.pdf my_drive:$typeofrun/${rclone_tag}/runtime_diags
+   body="Diagnostics for ${textflag} completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
+   title="${CPSSYS} ${textflag} runtime diags completed"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st  
 fi
 exit 0
 #title="${CPSSYS} FORECAST $yyyy$st Diagnostics "${textflag}
