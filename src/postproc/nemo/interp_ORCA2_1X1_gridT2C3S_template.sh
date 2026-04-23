@@ -4,13 +4,23 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
-. $DIR_UTIL/load_ncl
+#. $DIR_UTIL/load_ncl
+
+set -exuv
 
 export outdirC3S=OUTDIRC3S
 caso=CASO
+if [[ $caso =~ "ext" ]]; then
+   export end_term=_slicetime4446to11808.nc
+   firstm=$nmonfore 
+   lastm=$(($nmonforext + $nmonfore - 1))
+else
+   export end_term=.nc
+   firstm=0
+   lastm=$(($nmonfore - 1))
+fi
 logdir=$1  #to manage offline and online submission (remote vs local cases) 
 
-set -exuv
 func_error_dims () {
 local dir2examine=$1
 # initialize associative arrays for storing conf interval values
@@ -114,7 +124,7 @@ C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
 C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
 
 inputlist=" "
-for mon in `seq 0 $(($nmonfore - 1))`
+for mon in `seq $firstm $lastm`
 do
    curryear=`date -d "$yyyy${st}15 + $mon month" +%Y`
    currmon=`date -d "$yyyy${st}15 + $mon month" +%m`
@@ -249,7 +259,7 @@ do
 done } < $C3Stable_oce6
 for v in ${varout[@]}
 do 
-   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00.nc
+   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00${end_term}
    if [[ ! -f $C3Sfile ]]
    then
       title="${CPSSYS} forecast ERROR"

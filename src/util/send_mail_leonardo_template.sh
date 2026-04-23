@@ -16,9 +16,9 @@ ARG_EMAIL_SUBJECT="TITLE"
   #echo "Content-Type: text/html; charset='utf-8'"
   # echo -e "$message" is the key to keep new line
 
-cc="CC"
+cc="CCmail"
 message="MESSAGE"
-if [[ $cc != "CC" ]]
+if [[ $cc == "CCmail" ]]
 then
     ARG_EMAIL_CC="$cc"
     (

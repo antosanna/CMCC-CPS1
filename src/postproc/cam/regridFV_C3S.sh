@@ -44,6 +44,11 @@ export C3Stable="$DIR_POST/cam/C3S_table.txt"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
 export GCM_and_version=${GCM_name}-v${version}
 export ini_term=cmcc_${GCM_and_version}_${typeofrun}_S${yyyy}${st}0100
+if [[ $caso =~ "ext" ]]; then
+   export end_term=_slicetime4446to11808.nc
+else
+   export end_term=.nc
+fi
 
 set +euvx
 . $dictionary
