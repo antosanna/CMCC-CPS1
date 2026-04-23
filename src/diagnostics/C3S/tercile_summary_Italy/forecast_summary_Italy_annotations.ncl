@@ -347,8 +347,8 @@ begin
    lat0="90"
    lbx=0.16
    lby=0.06
-   plname="pino"
-   wks  = gsn_open_wks(wks_type,plname)
+   pltname=getenv("pltname")
+   wks  = gsn_open_wks(wks_type,pltname)
    gsn_merge_colormaps(wks,"prob_t2m_new","prob_prec")
 ;****************here probability data ********************
 ;   
@@ -466,15 +466,15 @@ end do
      res2@mpProjection = proj
      res2@mpDataBaseVersion = "MediumRes"
      res2@mpGridAndLimbOn        = True
-     res2@mpGridAndLimbDrawOrder = "PostDraw"
+;     res2@mpGridAndLimbDrawOrder = "PostDraw"
      res2@mpOutlineBoundarySets = "National"
      res2@mpGridLineDashPattern  = 2
-     res2@mpFillOn             = False
+;     res2@mpFillOn             = False
      res2@mpLimitMode           = "Corners"
-     res2@mpLeftCornerLatF      = 34 ;22.5 
-     res2@mpLeftCornerLonF      = 6  ;-15
-     res2@mpRightCornerLatF     = 50 ;57.5
-     res2@mpRightCornerLonF     = 22 ;80
+     res2@mpLeftCornerLatF      = 28 ;25  
+     res2@mpLeftCornerLonF      = -3 ;-5 
+     res2@mpRightCornerLatF     = 55 
+     res2@mpRightCornerLonF     = 40 
 
      res2@mpLambertMeridianF   = 15
      res2@mpLambertParallel1F    = 30
@@ -555,7 +555,7 @@ end do
   res2@cnFillOpacityF          = 0.4
   res2@cnLevelSelectionMode    = "ExplicitLevels"                        ; set explicit contour levels
   res2@cnLevels                = (/1,10,100,1000/)
-  res2@cnFillColors            = (/-1,3,9,17,22/)
+  res2@cnFillColors            = (/-1,3,9,17,22,-1/)
   res2@cnLineLabelsOn          = False
   res2@lbLabelBarOn            = False
   res2@cnFillOn                = True                                            ; turn on color fill
@@ -565,12 +565,12 @@ end do
 ;************************************************
 
    res2@cnMissingValFillColor   = -1
-   ;if ( region.eq."Italy") then
-      res2@tiMainFontHeightF = .01
-      ;res2@tiDeltaF = 1.45
-      res2@tiMainOffsetYF = .035
-      res2@lbBottomMarginF =-.7
-   ;end if
+  ; ;if ( region.eq."Italy") then
+  ;    res2@tiMainFontHeightF = .01
+    ;  ;res2@tiDeltaF = 1.45
+  ;   res2@tiMainOffsetYF = .035
+  ;    res2@lbBottomMarginF =-.7
+   ;;end if
 
    res2@cnFillOpacityF          = 0.4
    tsuu_plot=where(tsuu_summary.eq.0. ,-9999.,tsuu_summary)
@@ -607,10 +607,10 @@ end do
 ;************************************************
 ; add the shapefile
 ;************************************************
-  resp                  = True                      ; polyline mods desired
-  resp@gsLineColor      = "red"                     ; color of lines
-  resp@gsLineThicknessF = 2.0                       ; thickness of lines
-  resp@gsLineLabelString= ""                    ; adds a line label string
+;  resp                  = True                      ; polyline mods desired
+;  resp@gsLineColor      = "red"                     ; color of lines
+;  resp@gsLineThicknessF = 2.0                       ; thickness of lines
+;  resp@gsLineLabelString= ""                    ; adds a line label string
 
 ; create array of dummy graphic variables. This is required, b/c each line
 ; must be associated with a unique dummy variable.
@@ -782,7 +782,7 @@ end do
   lbres@lbTitleFontHeightF      = 0.012               ; label font height
   lbres@lbTitleString           = "Colder-than-average"
 
-  lbres@lbFillPatterns        = (/1/)
+;  lbres@lbFillPatterns        = (/1/)
   lbres@lbFillColors          =  (/3/)
   labels = " "
 
@@ -917,5 +917,5 @@ else
 end if
 end if
 end if
-system( "composite -geometry "+geom_value+logo+ plname+".png "+plname+".png")
+;system( "composite -geometry "+geom_value+logo+ plname+".png "+plname+".png")
 end
