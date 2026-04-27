@@ -16,7 +16,8 @@ if [[ "${machine}" == "zeus" ]] ; then
 # to decompress/uncompress ncks -O -6
 elif [[ "${machine}" == "cassandra" ]] ; then 
   . $DIR_UTIL/condaactivation.sh
-  condafunction activate env_tools  
+  #condafunction activate env_tools_leo
+  condafunction activate env_tools
   
 elif [[ "${machine}" == "juno" ]] ; then 
   module load intel-2021.6.0/nco/5.0.6-jp6y4

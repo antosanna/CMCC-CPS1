@@ -73,7 +73,8 @@ set -euvx
 # 
 listaens=`ls all_checkers_ok_0*|cut -d '_' -f4|cut -c 2,3`
 $DIR_UTIL/check_production_time.sh -m $machine -s $st -y $yyyy -e $listaens
-# 
+#
+mkdir -p $pushdir
 input="$yyyy $st"
 $DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -S $qos -M 5000 -j ${script}_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s $script.sh -i "$input"
 sleep 60

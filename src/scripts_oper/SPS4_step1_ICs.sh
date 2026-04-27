@@ -92,7 +92,7 @@ $DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 #now moved in submission forecast
 #${IC_CPS}/make_triplette.sh $yyyy $st
 
-${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st
+${IC_CPS}/copy_ICs_to_operational_machine.sh $yyyy $st
 body="Cari tutti, \n
 vi confermiamo il completamento della procedura di creazione ICs per il seasonal Forecast. Potete ripristinare la configurazione standard dei nodi paralleli. \n
 \n

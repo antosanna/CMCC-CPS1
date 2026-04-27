@@ -40,6 +40,7 @@ listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0?? |head -n $nrunmax`
 dir_cases=$DIR_CASES
 for caso in $listofcases
 do
+      CASEROOT=${DIR_CASES}/$caso  #needed for dictionary
       set +euvx
       . $dictionary
       set -euvx
@@ -63,9 +64,12 @@ do
            mkdir -p ${dir_cases}
        else
 # on producing machine
-           :
+          if [[ ! -f ${check_run_moredays} ]] 
+          then
+               echo "$caso is still running, skipping the C3S postproc"
+               continue
+          fi 
        fi
-   
        casedir=${dir_cases}/$caso
        logdir=${dir_cases}/$caso/logs
        mkdir -p $casedir

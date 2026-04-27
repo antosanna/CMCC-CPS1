@@ -1,4 +1,7 @@
 #!/bin/sh -l
+# THIS MUST BE UPDATED REMOVING srun AND FOLLOWING make_ensemblescripts.sh 
+#!!!!!!
+exit
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/descr_ensemble.sh 1993

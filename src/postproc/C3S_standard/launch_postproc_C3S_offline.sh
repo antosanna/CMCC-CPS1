@@ -102,7 +102,11 @@ do
            body="$caso transferred from more than one remote machines! Check it before proceeding with C3S postproc"
            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
            continue
-       else
+       else #producing machine
+           if [[ ! -f ${DIR_CASES}/$caso/logs/run_moredays_${caso}_DONE ]]
+              echo "$caso not correctly completed on $machine, skipping postprocessing" 
+              continue
+           fi
            dir_cases=${DIR_CASES}
        fi
    

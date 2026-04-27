@@ -209,4 +209,4 @@ do
     fi
     sleep 60
 done
-${IC_CPS}/copy_ICs_and_triplette_to_Leonardo.sh $yyyy $st 1
+${IC_CPS}/copy_ICs_to_operational_machine.sh $yyyy $st 1

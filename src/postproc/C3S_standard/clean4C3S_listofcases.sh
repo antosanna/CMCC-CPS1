@@ -14,7 +14,6 @@ else
    listacasi=$1
    dbg=0
 fi
-cnt=0
 for dd in $listacasi ; do
    caso=`basename $dd` 
    echo $caso
@@ -141,12 +140,10 @@ set -euvx
               rm $SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
             fi
          fi
-
-         cnt=$(($cnt + 1 ))
+         echo "Cleaning before offline C3S postprocessing completed for case ${caso} "
    else
          echo "some problem with case $caso: neither completed on Juno (missing check_run_moredays flag)  nor transferred from remote (missing flag)"
    fi   
 done
 
 
-echo "Cleaning before offline C3S postprocessing completed for $cnt cases"

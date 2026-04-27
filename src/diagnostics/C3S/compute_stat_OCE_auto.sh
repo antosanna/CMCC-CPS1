@@ -29,6 +29,13 @@ refperiod=$iniy_hind-$endy_hind
 workdir=$SCRATCHDIR/diag_oce/$varm/${yyyy}${st}/
 mkdir -p $workdir
 
+rclone_tag=${yyyy}${st}
+if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]]  
+then
+     rclone_tag=${yyyy}${st}_backup
+fi
+DIR_RCLONE=${typeofrun}/${rclone_tag} 
+
 set +e
 ncapsuleyyyystDONE=`ls -1 $dirlog/capsule_${yyyy}${st}_oce_${varm}_DONE* | wc -l`
 set -e
@@ -115,8 +122,8 @@ if [ $make_plot -eq 1 ] ; then
       set +euvx
       . $DIR_UTIL/condaactivation.sh
       condafunction activate $envcondarclone
-      rclone mkdir my_drive:forecast/$yyyy$st/C3S_diags
-      rclone copy ${plname}.gif my_drive:forecast/$yyyy$st/C3S_diags
+      rclone mkdir my_drive:${DIR_RCLONE}/C3S_diags
+      rclone copy ${plname}.gif my_drive:${DIR_RCLONE}/C3S_diags
 
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc

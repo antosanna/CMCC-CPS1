@@ -50,5 +50,6 @@ elif [[ "${machine}" == "marconi" ]] ; then
   fi
 elif [[ "${machine}" == "leonardo" ]] || [[ "${machine}" == "cassandra" ]] ; then 
     . $DIR_UTIL/condaactivation.sh
+    #condafunction activate env_tools_leo
     condafunction activate env_tools
 fi
