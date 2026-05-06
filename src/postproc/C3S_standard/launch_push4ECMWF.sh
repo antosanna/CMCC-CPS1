@@ -131,18 +131,7 @@ set -euvx
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
    mkdir -p ${DIR_LOG}/${typeofrun}/${yyyy}${st}
-   #if [[ $debug_push -eq 0 ]]
-   #then
-      if [[ "$machine" == "juno" ]]
-      then
-         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-      else
-         ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-      fi
-   #else
-      
-  #    ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
-   #fi
+   ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
    ic=0
    while `true`; do
       # each 15' look for $filedone

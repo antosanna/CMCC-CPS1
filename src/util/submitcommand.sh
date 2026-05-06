@@ -354,7 +354,7 @@ then
       command+=' --time=$localtime:00:00 '
 
     else
-      command+=' --time=06:00:00 '
+      command+=' --time=12:00:00 '
     fi
 
    # if [[ "$account_name" == "CMCC_reforeca" ]]

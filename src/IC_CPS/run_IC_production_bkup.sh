@@ -228,5 +228,6 @@ if [[ $machine == "juno" ]] ; then
     body="$IC_CPS/run_IC_production_bkup.sh: production of 10 backup CAM ICs completed, now sending to Leonardo."
     title="[CAMIC-bkup] ${CPSSYS} notification"
     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -g yes
-    ${IC_CPS}/copy_ICs_to_operational_machine.sh $yyyy $st 1
+    input="$yyyy $st 1"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -d ${IC_CPS} -q ${serialq_push} -j copy_bkupICs_to_operational_machine_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/BKUP_ICs -s copy_ICs_to_operational_machine.sh -i "$input"
 fi

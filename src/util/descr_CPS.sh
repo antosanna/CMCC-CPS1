@@ -175,6 +175,7 @@ then
    OUTDIR_DIAG=$WORK/diagnostics/
    #DIR_WEB=$WORK/CPS/C3Swebpage/validation_dev
    DIR_WEB=$WORK/CPS/C3Swebpage
+#   DIR_WEB=/data/cmcc/cp1/CPS/C3Swebpage
 #   DIR_CLIM=/work/csp/${operational_user}/CESMDATAROOT/C3S_clim_1993_2016/${CPSSYS}
    WORK_CPS=${WORK}/CMCC-CM/
    WORK_CPS1=${WORK1}/CMCC-CM/
