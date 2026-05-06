@@ -6,6 +6,9 @@ mymail=sp1@cmcc.it
 flag_dev=0    # if 1 won't use the SC on cmcc
 cmd_IC_pull_from_remote="sftp -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
 cmd_IC_pull_from_remote_resume="sftp -a -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
+repo_machine="juno"
+bk_machine="cassandra"
+op_machine="leonardo"
 if [[ -n `echo $PS1|grep leonardo` ]]
 then
    machine="leonardo"
@@ -55,6 +58,7 @@ then
 #   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]] 
    then
+      modulepass=intel-2021.6.0/sshpass/.1.06-zarp3
       HEAD=cmcc
       operational_user=cp1
       pID=0784 #Juno
@@ -74,6 +78,7 @@ then
       DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "cassandra" ]]
    then
+      modulepass=oneapi-2025.0.4/sshpass/1.06-qkqpz
       refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
       refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
       HEAD=cmcc

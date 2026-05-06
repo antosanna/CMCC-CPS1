@@ -29,8 +29,11 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euxv
 mkdir -p $DIR_LOG/${typeofrun}/$yyyy$st
-LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
-exec 3>&1 1>>${LOG_FILE} 2>&1
+if [[ $machine != "cassandra" ]]
+then
+   LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
+   exec 3>&1 1>>${LOG_FILE} 2>&1
+fi
 
 checkfile1=$DIR_LOG/forecast/$start_date/first_month_diagnostics_${start_date}_DONE
 checkfile2=$DIR_LOG/forecast/$start_date/lead0_diagnostics_${start_date}_DONE

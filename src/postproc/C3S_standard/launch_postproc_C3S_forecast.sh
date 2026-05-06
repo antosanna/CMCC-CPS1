@@ -10,8 +10,11 @@
 set -euvx
 
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
-LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
+if [[ $machine != "cassandra" ]]
+then
+   LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
+   exec 3>&1 1>>${LOG_FILE} 2>&1
+fi
 
 st=`date +%m`   #$2  #stdate as input
 yyyy=`date +%Y`  #$1

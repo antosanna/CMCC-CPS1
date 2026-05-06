@@ -6,8 +6,11 @@ set -eux
 stdate=`date +%Y%m`
 st=`date +%m`
 mkdir -p $DIR_LOG/forecast/$stdate/
-LOG_FILE=$DIR_LOG/forecast/$stdate/check_status_forecasts.`date +%Y%m%d%H%M`.log
-exec 3>&1 1>>${LOG_FILE} 2>&1
+if [[ $machine != "cassandra" ]]
+then
+  LOG_FILE=$DIR_LOG/forecast/$stdate/check_status_forecasts.`date +%Y%m%d%H%M`.log
+  exec 3>&1 1>>${LOG_FILE} 2>&1
+fi
 
 cnt_this_script_running=$(ps -u ${operational_user} -f |grep check_status_forecasts | grep -v $$|wc -l)
 if [[ $cnt_this_script_running -gt 2 ]]

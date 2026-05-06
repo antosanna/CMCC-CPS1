@@ -10,7 +10,10 @@ logfile=${outlog}.txt
 # load typeofrun
 . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
 # load conda env for rclone
+set +euvx
+. ~/.load_miniconda
 conda activate $envcondarclone
+set -euvx
 rclone_tag=${startdate}
 if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]] 
 then
