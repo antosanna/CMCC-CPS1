@@ -33,6 +33,7 @@ then
    mkdir -p $outdirC3S
    DIR_LOG=/users_home/csp/mb16318/SPS/SPS4/postproc/CLM/logs
    ic="`cat $DIR_CASES/$caso/logs/ic_${caso}.txt`"
+   dir_cases=$DIR_CASES
 else
 
 #"$ens $startdate $outdirC3S $ic $DIR_ARCHIVE/$caso/lnd/hist $caso 0"
@@ -45,6 +46,7 @@ else
    wkdir=$7
    ic=${8}  
    ftype=${9} #h1 or h3 currently
+   dir_cases=${10}
 fi
 
 mkdir -p $SCRATCHDIR/regrid_C3S/$caso/CLM
@@ -160,7 +162,7 @@ then
     condafunction activate $envcondaclm
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $DIR_LOG $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix
+   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $dir_cases/$caso/logs $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix
    if [[ $? -ne 0 ]]
    then
 # intermidiate product

@@ -212,7 +212,8 @@ for ns in ${namespace}; do
     input="$ns ${startdate} ${ens} ${json} ${reduced} $wdir"
 
 #
-    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens} -i "$input"
+    mkdir -p ${dir_cases}/$caso/logs/qa_checker 
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l ${dir_cases}/$caso/logs/qa_checker -i "$input"
 
 
 
@@ -339,7 +340,7 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
        fi
        if [[ -f ${spike_list} ]] ; then
 
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens} -i "$caso 1 ${spike_list}"            
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l ${dir_cases}/$caso/logs -i "$caso 1 ${spike_list}"            
            #counting repetition by looking at number of DMO list produced, if more than 5 interrupt automatic resubmission
            nlist_dmo=`ls ${spike_list_dmo}* |wc -l` 
            title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S  MANUAL INTERVENTION REQUIRED!!"          
@@ -363,7 +364,7 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
                 fi
                 sleep 300
              done
-             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_resume_${caso} -s postproc_C3S_offline_resume.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$caso ${dir_cases} 2" 
+             ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_resume_${caso} -s postproc_C3S_offline_resume.sh -l $dir_cases/$caso/logs -i "$caso ${dir_cases} 2" 
 # in this case we do not want the checkfile with error $check_c3s_qa_err
              exit
           fi
@@ -430,7 +431,7 @@ fi
 # ***************************************************************************
 # save results
 mv $ACTDIR/NSDONE_* $wdir/output/
-rsync -auv $wdir/output ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}/output_${startdate}_${endtime}
+rsync -auv $wdir/output ${dir_cases}/$caso/logs/qa_checker/output_${startdate}_${endtime}
 
 # ***************************************************************************
 # Now clean all

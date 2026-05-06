@@ -73,7 +73,8 @@ cd  $ncep_dir
 # TEMPORARILY COMMENTED (NOT WORKING ON LEONARD)
 [ -f sstoi.indices ] && rm sstoi.indices
 url="https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices"
-${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_nino -l $DIR_LOG/$typeofrun/$yyyy$st/diagnostics -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_nino -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
 while `true`
 do
     njob=`$DIR_UTIL/findjobs.sh -m $machine -n wget_wrapper_nino -c yes`

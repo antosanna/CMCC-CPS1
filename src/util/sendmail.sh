@@ -96,7 +96,8 @@ then
       DIR_RCLONE=${typeofrun}/${rclone_tag}
   
       listaf=$logfile
-      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_report -l $DIR_LOG/$typeofrun/$startdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/REPORTS '${listaf}'"
+      mkdir -p $DIR_LOG/wrapper
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_report -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/REPORTS '${listaf}'"
       if [ "$report" = "only" ]
       then
          exit

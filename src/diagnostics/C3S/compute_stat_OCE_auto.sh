@@ -129,7 +129,8 @@ if [ $make_plot -eq 1 ] ; then
       rm ${plname}*png
       touch ${flag_done}_OCE
       listafig=${plname}.gif
-      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
+      mkdir -p $DIR_LOG/wrapper
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
 
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc

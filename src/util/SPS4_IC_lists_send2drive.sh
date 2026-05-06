@@ -51,7 +51,8 @@ do
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    else
       listaf=${DIR_CHECK}/$hindcastlist_excel
-      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_IC_CAM -l $DIR_LOG/$typeofrun/ -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/IC_CAM '${listaf}'"
+      mkdir -p $DIR_LOG/wrapper
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_IC_CAM -l $DIR_LOG/wrapper/ -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/IC_CAM '${listaf}'"
    fi
 done
 exit 0

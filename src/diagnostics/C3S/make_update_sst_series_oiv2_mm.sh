@@ -27,7 +27,8 @@ if [ -f sst.mnmean.nc ] ; then
    rm sst.mnmean.nc
 fi
 url="https://downloads.psl.noaa.gov/Datasets/noaa.oisst.v2/sst.mnmean.nc"
-${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_iod -l $DIR_LOG/$typeofrun/$yyyy$st/diagnostics -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_iod -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
 
 while `true`
 do

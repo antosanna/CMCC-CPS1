@@ -45,5 +45,6 @@ ncl $wkdir/plot_timeseries_spike_c3s.ncl
 if [[ `ls ${pltname_root}* |wc -l` -ne 0 ]]
 then
    listafig=`ls ${pltname_root}*`
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_plot_timeseries_spike_c3s -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/SPIKES_warnings_${yyyy}${st} '${listafig}'"
+   mkdir -p $DIR_LOG/wrapper
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_plot_timeseries_spike_c3s -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/SPIKES_warnings_${yyyy}${st} '${listafig}'"
 fi

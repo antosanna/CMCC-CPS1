@@ -33,7 +33,8 @@ if [[ ${nmb_oce_plot} -eq 2 ]] ; then
   # title="[NEMOIC] ${CPSSYS} forecast notification"
   # $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a "$listafile"
    listaf="$listafile"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_IC_plots -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/IC_plots '${listaf}'"
+   mkdir -p $DIR_LOG/wrapper
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_IC_plots -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/IC_plots '${listaf}'"
    title="[NEMOIC] ${CPSSYS} forecast notification"
    body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${rclone_tag}/IC_plots you may find the SST anomalies of the ${n_ic_nemo} Nemo IC perturbations together with the observed ones (start-date snapshot, last week, last month)"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"
@@ -50,7 +51,8 @@ nmb_ice_plot=`ls $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/*png |wc -l`
 if [[ ${nmb_ice_plot} -ge 1 ]] ; then
    listafile=`ls $SCRATCHDIR/${typeofrun}/${yyyy}${st}/IC_CICE/*png`
    listaf="$listafile"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_IC_plots -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/IC_plots '${listaf}'"
+   mkdir -p $DIR_LOG/wrapper
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_IC_plots -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/IC_plots '${listaf}'"
    title="[CICEIC] ${CPSSYS} forecast notification"
    body="On google drive https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing in the folder ${rclone_tag}/IC_plots you may find the SIC anomalies of the ${n_ic_nemo} CICE IC perturbations with respect to the observed OSISAF estimate (full observed value on top; difference model vs obs on bottom)"
    $DIR_UTIL/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title"

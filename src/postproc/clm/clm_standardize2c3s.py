@@ -416,7 +416,7 @@ if __name__ == '__main__':
     input_file  = str(sys.argv[5])
     modelname  = str(sys.argv[6])
     outputdir  = str(sys.argv[7])
-    logdir     = str(sys.argv[8])
+    full_logdir= str(sys.argv[8])
     repo_dir   = str(sys.argv[9])
     ic         = str(sys.argv[10])        
     templfile  = str(sys.argv[11])
@@ -476,7 +476,6 @@ if __name__ == '__main__':
     # log file
     if not dbmode:
         orig_stdout = sys.stdout
-        full_logdir=logdir +'/'+forecast_t+'/'+ startdate
         createdir(full_logdir)
  
         f = open( full_logdir+ '/clm_postpc_C3S_' + ensemble + '_'+ h_type +'.log', 'w')

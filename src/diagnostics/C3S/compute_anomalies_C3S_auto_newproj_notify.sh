@@ -264,7 +264,8 @@ then
   rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
 fi
 listafig=`ls ${dirplots}/*${yyyy}_${st}*pdf`
-${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
 
 title="[diags] ${CPSSYS} ${typeofrun} notifications C3S $varm plots"
 #body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags/$varm"

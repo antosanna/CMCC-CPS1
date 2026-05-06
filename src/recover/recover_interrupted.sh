@@ -444,7 +444,8 @@ echo "starting conversion to xls and copy with rclone to google drive "`date`
    set -eux
    python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
    listaf=${filexls}
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/$typeofrun -d ${DIR_UTIL} -s rclone_wrapper.sh -i "recover '${listaf}'"
+   mkdir -p $DIR_LOG/wrapper
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "recover '${listaf}'"
    echo "end of conversion to xls and copy with rclone to google drive "`date`
 fi
 
@@ -475,7 +476,8 @@ if [[ $dbg -ne 2 ]] ; then
          set -eux
          python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
          listaf=${filexls}
-         ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"
+         mkdir -p $DIR_LOG/wrapper
+         ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"
       fi
    fi
 set +euv

@@ -102,4 +102,5 @@ do
 done
 ${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "[SPS4 notification] $stdate status update" -r yes -s $stdate
 listaf=${report}
-${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${stdate}_status -l $DIR_LOG/$typeofrun/$stdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${stdate}_status -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"

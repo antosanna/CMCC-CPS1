@@ -81,7 +81,8 @@ do
          rm $dirwk/$obsfile
       fi
       url="ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/$directory/daily/data/$obsfile"
-      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_sie -l $DIR_LOG/$typeofrun/$yyyy$st/diagnostics -d ${DIR_UTIL} -s wget_wrapper.sh -i "$dirwk $url"
+      mkdir -p $DIR_LOG/wrapper
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_sie -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s wget_wrapper.sh -i "$dirwk $url"
       while `true`
       do
           njob=`$DIR_UTIL/findjobs.sh -m $machine -n wget_wrapper_sie -c yes`

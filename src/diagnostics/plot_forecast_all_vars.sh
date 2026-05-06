@@ -202,7 +202,8 @@ else
    rclone_tag=${yyyy}${st}
 fi
 listafig=${pldir}/${yyyy}${st}_${pdfflag}.pdf
-${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_${pdfflag} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/${rclone_tag}/runtime_diags '${listafig}'"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_${pdfflag} -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/${rclone_tag}/runtime_diags '${listafig}'"
 body="Diagnostics for ${textflag} completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
 title="${CPSSYS} ${textflag} runtime diags completed"
 ${DIR_UTIL}/sendmail.sh -m $machine -c $ccmail -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st  

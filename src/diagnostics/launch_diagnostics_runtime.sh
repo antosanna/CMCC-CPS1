@@ -1,4 +1,4 @@
-#!/bin/sh -l
+#!bin/sh -l
 #WARNING!!! now the script can work only for leads because the pctl for monthly var new (t850, z500 and u-v200) have not been computed yet
 #-------------------------------------------------------------------------------
 # Script to submit (through crontab) run-time diagnostics on monthly fields:
@@ -29,7 +29,7 @@ set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euxv
 mkdir -p $DIR_LOG/${typeofrun}/$yyyy$st
-LOG_FILE=$DIR_LOG/forecast/$yyyy$st/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
+LOG_FILE=$DIR_LOG/forecast/$yyyy$st/diagnostics_runtime/launch_diagnostics_runtime_`date +%Y%m%d%H%M`.out
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 checkfile1=$DIR_LOG/forecast/$start_date/first_month_diagnostics_${start_date}_DONE
