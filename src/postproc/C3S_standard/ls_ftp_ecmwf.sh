@@ -14,7 +14,7 @@ log_script=$6
 machine=$7
 #cmd_ftp_cmccbo="open -u c3s,cDx52!lst ftp://downloads.cmcc.bo.it"
 cmd_ftp_cmccbo="open -u c3s,YhjDf733 ftp://ftp4.cmcc.it"
-cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
+cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 sftp://acq.ecmwf.int"
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 
@@ -28,22 +28,19 @@ fi
 
 if [[ $debug_ls -eq 1 ]]
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.cmcc
-      log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.cmcc
-      log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
-   fi
+   lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.cmcc
+   log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
    cat > $lftp_cmd << EOF
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 cd $REMOTE_DIR
-ls  *S${yyyy}${st}*
+ls | grep S${yyyy}${st}
 quit
 EOF
+   if [[ $machine == "leonardo" ]]
+   then
+      conda activate env_lftp
+   fi
    lftp -f $lftp_cmd |tee $log_lftp
    stat=$?
    if [[ $stat -eq 1 ]]; then
@@ -54,22 +51,19 @@ EOF
 
 elif [[ $debug_ls -eq 2 ]] || [[ $debug_ls -eq 0 ]]
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
-      log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
-      log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
-   fi
+   lftp_cmd=$DIR_LOG/${type_fore}/$yyyy$st/ls.lftp.ecmwf
+   log_lftp=$DIR_LOG/${type_fore}/$yyyy$st/$log_script
    cat > $lftp_cmd << EOF
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls  *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
+   if [[ $machine == "leonardo" ]]
+   then
+      conda activate env_lftp
+   fi
    lftp -f $lftp_cmd |tee $log_lftp
    stat=$?
    if [[ $stat -eq 1 ]]; then

@@ -42,7 +42,7 @@ logfile="push_${type_fore}_S${yyyy}${st}.$datestr.log"
 #cmd_ftp_cmccbo="open -u cp1,dpw937045+B ftp://downloads.cmcc.bo.it"
 cmd_ftp_cmccbo="open -u c3s,YhjDf733 sftp://ftp4.cmcc.it"
 # ftp does not work properly!!! USE ONLY SFTP
-cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
+cmd_ftp_ecmwf="open -u cmcc_c3s,cmcc_c3s_2018 sftp://acq.ecmwf.int"
 
 
 if [[ ! -f $first ]]
@@ -78,6 +78,10 @@ EOF
    chmod 744 $script_send
 
 fi  #if dbg
+if [[ $machine == "leonardo" ]]
+then
+   conda activate env_lftp
+fi
 lftp -f $script_send
 stat=$?
 if [[ $stat -eq 1 ]]; then
@@ -106,7 +110,7 @@ EOF
 set ftp:list-options -a
 $cmd_ftp_cmccbo
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    fi
@@ -132,7 +136,7 @@ EOF
 set ftp:list-options -a
 $cmd_ftp_ecmwf
 cd $REMOTE_DIR
-ls *S${yyyy}${st}*
+ls |grep S${yyyy}${st}
 quit
 EOF
    fi  

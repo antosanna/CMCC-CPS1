@@ -29,13 +29,7 @@ cmd_ftp_dataecmwf="open -u cmcc_c3s,cmcc_c3s_2018 ftp://acq.ecmwf.int"
 datestr=`date +%Y%m%d%H%M%S`
 if [[ $debug_rm -eq 1 ]]
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.cmcc
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.cmcc
-   fi
+   script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.cmcc
    cat > $script << EOF
 set ftp:list-options -a
 $cmd_ftp_cmccbo
@@ -45,13 +39,7 @@ quit
 EOF
 elif [[ $debug_rm -eq 0 ]] || [[ $debug_rm -eq 2 ]]
 then
-   if [[ "$machine" == "juno" ]]
-   then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.ecmwf
-   elif [[ "$machine" == "leonardo" ]]
-   then
-      script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.ecmwf
-   fi
+   script=$DIR_LOG/${type_fore}/$yyyy$st/rm.lftp.ecmwf
    cat > $script << EOF
 set ftp:list-options -a
 $cmd_ftp_dataecmwf
@@ -60,6 +48,10 @@ glob -a rm -r -f ${list2rm}
 quit
 EOF
 fi         
+if [[ $machine == "leonardo" ]]
+then
+   conda activate env_lftp
+fi
 lftp -f $script
 stat=$?
 if [[ $stat -eq 1 ]]; then
