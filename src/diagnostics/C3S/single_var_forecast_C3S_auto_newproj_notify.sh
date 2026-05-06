@@ -226,6 +226,7 @@ do
                      esac ;;
          esac             
          export diagtype=$diag
+         export rm_gblmean=0
          if [[ $flgmnth -eq 0 ]]
          then
              ncl forecast_deterministic_season_lead_newproj.ncl

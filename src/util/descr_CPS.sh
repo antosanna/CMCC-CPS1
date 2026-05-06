@@ -6,6 +6,9 @@ mymail=sp1@cmcc.it
 flag_dev=0    # if 1 won't use the SC on cmcc
 cmd_IC_pull_from_remote="sftp -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
 cmd_IC_pull_from_remote_resume="sftp -a -P 20022  -i $HOME/.ssh/id_ed25519 cineca_cps@dtn01.cmcc.it"
+repo_machine="juno"
+bk_machine="cassandra"
+op_machine="leonardo"
 if [[ -n `echo $PS1|grep leonardo` ]]
 then
    machine="leonardo"
@@ -55,6 +58,7 @@ then
 #   envcondarclone=rclone_gdrive
    if [[ $machine == "juno" ]] 
    then
+      modulepass=intel-2021.6.0/sshpass/.1.06-zarp3
       HEAD=cmcc
       operational_user=cp1
       pID=0784 #Juno
@@ -74,6 +78,7 @@ then
       DATA_ECACCESS=/data/delivery/csp/cp1/in/
    elif [[ $machine == "cassandra" ]]
    then
+      modulepass=oneapi-2025.0.4/sshpass/1.06-qkqpz
       refcaseHIST=${CPSSYS}_HIST_reference_esmf8.4
       refcaseSCEN=${CPSSYS}_SSP585_reference_esmf8.4
       HEAD=cmcc
@@ -147,6 +152,7 @@ then
    time_limit_parallelq_l_min=`bqueues -l $parallelq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
    time_limit_parallelq_l=$((time_limit_parallelq_l_min / 60 )) ##RUNLIMIT TIME IN hours
    serialq_push=s_long
+   serialq_rclone=s_long
    serialq_l=s_long
    serialq_push=s_download
    time_limit_serialq_l_min=`bqueues -l $serialq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
@@ -286,6 +292,7 @@ then
    sla_serialID=s_met_cmcc_s
    nmb_nemo_domains=336
    serialq_push=lrd_all_serial
+   serialq_rclone=lrd_all_serial
    serial_test=lrd_all_serial
    WORK1=/leonardo_work/$account_name/  #is environment var in leonardo
    if [[ $USER == "$operational_user" ]]

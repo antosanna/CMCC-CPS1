@@ -223,9 +223,9 @@ else
    do
       localdim=`ls -l $file|awk '{print $5}'`
 # if protocol is ftp argument is 5
-#      remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
+      remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
 # if protocol is sftp argument is 2
-      remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $2}'`
+#      remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $2}'`
       if [[ $localdim -ne $remotedim ]]
       then
          title=${title_debug}"[C3S] ${SPSSystem} ERROR"

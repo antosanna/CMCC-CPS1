@@ -72,7 +72,18 @@ esac
 cd  $ncep_dir
 # TEMPORARILY COMMENTED (NOT WORKING ON LEONARD)
 [ -f sstoi.indices ] && rm sstoi.indices
-wget -4 --no-check-certificate https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices 
+url="https://www.cpc.ncep.noaa.gov/data/indices/sstoi.indices"
+mkdir -p $DIR_LOG/wrapper
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_nino -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
+while `true`
+do
+    njob=`$DIR_UTIL/findjobs.sh -m $machine -n wget_wrapper_nino -c yes`
+    if [[ $njob -eq 0 ]]
+    then
+       break
+    fi
+    sleep 60
+done
 cat sstoi.indices | uniq > sstoi.indices.tmp
 mv sstoi.indices.tmp sstoi.indices
 # END OF TEMPORARY COMMENT

@@ -12,6 +12,7 @@
 
 set -euvx
 
+echo "SPS4_step1_ICs.sh starting `date`"
 if [[ $machine != "juno" ]]
 then
    message="this script is meant to be run on Juno!!!"
@@ -103,3 +104,4 @@ Grazie
 SPS-staff\n"
 title="FINE RICHIESTA SPECIALE PER SC_sps35"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail -g yes
+echo "SPS4_step1_ICs.sh completed `date`"

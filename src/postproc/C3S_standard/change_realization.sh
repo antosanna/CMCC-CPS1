@@ -6,6 +6,7 @@
 . ${DIR_UTIL}/load_nco
 
 set -evxu
+echo "change_realization starting `date`"
 # get input from previous script
 yyyy=$1         #year start-date
 st=$2         #month start-date (2 figures)
@@ -234,7 +235,4 @@ then
    fi
 fi
 
-#----------------------------------------------------
-###EXTRA MEMBERS DMO - removing section!
-# will be done by crontab the 15th of the month
-#----------------------------------------------------
+echo "change_realization completed `date`"

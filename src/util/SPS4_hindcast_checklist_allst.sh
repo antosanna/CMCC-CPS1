@@ -168,7 +168,9 @@ then
    body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py or in $DIR_UTIL/add_sheet_to_excel.py"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
 else
-   rclone copy ${DIR_CHECK}/SPS4_hindcast_production_list.xlsx my_drive:
+   listaf="${DIR_CHECK}/SPS4_hindcast_production_list.xlsx"
+   mkdir -p $DIR_LOG/wrapper
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_SPS4_hindcast_production_list -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun '${listaf}'"
 fi
 #condafunction deactivate $envcondarclone
 exit 0

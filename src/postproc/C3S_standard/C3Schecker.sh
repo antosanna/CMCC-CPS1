@@ -75,6 +75,10 @@ checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
       ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
    fi
    touch $check_allchecksC3S$real
+   allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
+   caso=${SPSSystem}_${yyyy}${st}_0${member}
+   body="$caso:  forecast standardisation and quality checks completed. Total number of cases completed: $allcheckersok out of $nrunC3Sfore"
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
 if [[ $typeofrun == "forecast" ]] 

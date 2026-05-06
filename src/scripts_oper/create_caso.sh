@@ -33,6 +33,7 @@ fi
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${SPSSystem}_${yyyy}${st}_${nrun}
+echo "create_caso.sh $caso starting `date`"
 if [[ `whoami` == "$operational_user" ]]
 then
    flag_test=0
@@ -219,5 +220,4 @@ set +euvx
 set -euvx
     $DIR_CASES/$caso/case.submit
 fi
-checktime=`date`
-echo 'run submitted ' $checktime
+echo "$caso run submitted and creat_caso.sh completed `date`"
