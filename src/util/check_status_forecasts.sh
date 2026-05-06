@@ -30,6 +30,7 @@ DIR_RCLONE=forecast/${rclone_tag}
 fmt="%-15s %-15s %-15s %-15s\n"
 cd $DIR_ARCHIVE
 restlist=""
+list_run_mon=""
 mkdir -p $DIR_REP/$stdate
 report=$DIR_REP/$stdate/advancement_status_${stdate}.`date +%Y%m%d%H`.txt
 if [[ -f $report ]]
@@ -75,6 +76,7 @@ set -e
       restlist+=" `ls |cut -d '-' -f2`"
       lastday3=`ls |tail -1|cut -d '-' -f2`
       run_mon=$((10#$lastday3 - 10#$st + 1))
+      list_run_mon+=" $run_mon"
       if [[ `echo $lastday3|wc -w` -eq 2 ]]
       then
          fmt="%-15s %-15s %-15s %-15s %-15s\n"
@@ -88,18 +90,16 @@ done
 echo "file with status advancement here $report "
 #uniq_rest=(`echo $restlist|tr ' ' '\n' |sort|uniq -c`)
 message=""
-uniq_rest=(`echo $restlist|tr ' ' '\n' |sort|uniq`)
+#uniq_rest=(`echo $restlist|tr ' ' '\n' |sort|uniq`)
+uniq_rest=(`echo $list_run_mon|tr ' ' '\n' |sort|uniq`)
 dim=${#uniq_rest[@]}
 for i in `seq 0 $(($dim - 1))`
 do
-   n=`echo $restlist|grep -o ${uniq_rest[$i]}|wc -l`
-   message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
-#   message+=" number of member with restart month ${uniq_rest[$i]} is $n \n"
+#   n=`echo $restlist|grep -o ${uniq_rest[$i]}|wc -l`
+   n=`echo $list_run_mon|grep -o ${uniq_rest[$i]}|wc -l`
+#   message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
+   message+=" number of member with completed month ${uniq_rest[$i]} is $n ---"
 done
 ${DIR_UTIL}/sendmail.sh -a $report -m $machine -e $mymail -M "$message" -t "[SPS4 notification] $stdate status update" -r yes -s $stdate
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-set -eu
-rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
-rclone copy ${report} my_drive:${DIR_RCLONE}/REPORTS
+listaf=${report}
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${stdate}_status -l $DIR_LOG/$typeofrun/$stdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"

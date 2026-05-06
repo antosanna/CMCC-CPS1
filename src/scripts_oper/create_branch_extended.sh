@@ -21,6 +21,7 @@ flag_test=${7:-0}  # if set this flag disables the "true" run and activates
 
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 caso=${SPSSystem}ext_${yyyy}${st}_${nrun}
+echo "create_branch_extended.sh $caso starting `date`"
 casoREST=${SPSSystem}_${yyyy}${st}_${nrun}
 if [[ `whoami` == "$operational_user" ]]
 then
@@ -106,8 +107,13 @@ then
 fi
 if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
 then
-#      rsync -auv $SCRATCHDIR1/restarts4extended/$casoREST/rest/$restyyyy-$restmon-01-00000.tar.gz $SCRATCHDIR/$casoREST/rest/
-      gunzip $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
+      gunzip -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
+fi
+if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar ]]
+then
+      tar -xvf $refdirREST/$restyyyy-$restmon-01-00000.tar
+      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+else   
       mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
 fi   
 $DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
@@ -203,5 +209,4 @@ set +euvx
 set -euvx
     $DIR_CASES/$caso/case.submit
 fi
-checktime=`date`
-echo 'run submitted ' $checktime
+echo "$caso run submitted and creat_caso.sh completed `date`"

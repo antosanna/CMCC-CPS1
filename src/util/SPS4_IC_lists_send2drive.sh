@@ -17,10 +17,6 @@ exec 3>&1 1>>${LOG_FILE} 2>&1
 
 typeofrun="hindcast"
 models="CAM NEMO"
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
-set -euvx
 for module in $models
 do
    hindcastlist=${SPSSystem}_${typeofrun}_IC_${module}_list.csv
@@ -54,7 +50,8 @@ do
       body="error in conversion from csv to xlsx $DIR_UTIL/convert_csv2xls.py "
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
    else
-      rclone copy ${DIR_CHECK}/$hindcastlist_excel my_drive:
+      listaf=${DIR_CHECK}/$hindcastlist_excel
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_IC_CAM -l $DIR_LOG/$typeofrun/ -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/IC_CAM '${listaf}'"
    fi
 done
 exit 0

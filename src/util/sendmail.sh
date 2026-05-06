@@ -83,24 +83,20 @@ then
       logfile=${outlog}.txt
       echo "`date` $message" >> ${logfile}
       echo " " >> $logfile
-      if [[ "$machine" != "leonardo" ]]
+      . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
+      rclone_tag=${startdate}
+      if [[ $typeofrun == "forecast" ]] && [[ ${is_backup} -eq 1 ]]
       then
-          . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
-          . $DIR_UTIL/condaactivation.sh
-          condafunction activate $envcondarclone
-          rclone_tag=${startdate}
-          if [[ $typeofrun == "forecast" ]] && [[ ${is_backup} -eq 1 ]]
-          then
               rclone_tag=${startdate}_backup
-          fi
-          if [[ ! -z $gdrive ]]
-          then
-            rclone_tag=${startdate}
-          fi
-          DIR_RCLONE=${typeofrun}/${rclone_tag}
-          rclone mkdir my_drive:$DIR_RCLONE/REPORTS
-          rclone copy $logfile my_drive:$DIR_RCLONE/REPORTS
       fi
+      if [[ ! -z $gdrive ]]
+      then
+            rclone_tag=${startdate}
+      fi
+      DIR_RCLONE=${typeofrun}/${rclone_tag}
+  
+      listaf=$logfile
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_report -l $DIR_LOG/$typeofrun/$startdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/REPORTS '${listaf}'"
       if [ "$report" = "only" ]
       then
          exit

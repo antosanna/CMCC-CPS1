@@ -5,6 +5,7 @@
 
 set -evxu
 
+echo "submit_tar_C3S starting `date`"
 yyyy=$1
 st=$2
 ext=${3:-0}
@@ -76,7 +77,8 @@ $DIR_UTIL/check_production_time.sh -m $machine -s $st -y $yyyy -e $listaens
 #
 mkdir -p $pushdir
 input="$yyyy $st"
-$DIR_UTIL/submitcommand.sh -m $machine -q $serialq_l -S $qos -M 5000 -j ${script}_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s $script.sh -i "$input"
+$DIR_UTIL/submitcommand.sh -t 12 -m $machine -q $serialq_l -S $qos -M 5000 -j ${script}_${startdate} -l $DIR_LOG/$typeofrun/$startdate/ -d ${DIR_C3S} -s $script.sh -i "$input"
 sleep 60
+echo "submit_tar_C3S completed `date`"
 
 exit 0

@@ -11,6 +11,7 @@
 
 set -evxu
 
+echo "plot_forecast_all_vars.sh starting `date`"
 #****************************** 
 #WARNING!!!
 #****************************** 
@@ -200,21 +201,14 @@ else
 
    rclone_tag=${yyyy}${st}
 fi
-if [[ $machine == "leonardo" ]]
-then
-   #rclone not working from nodes! copy on rclone moved to the launcher (running on prompt)
-   exit 0
-else
-  set +euvx
-  . $DIR_UTIL/condaactivation.sh
-  condafunction activate $envcondarclone
-  set -euvx
-  rclone mkdir my_drive:$typeofrun/${rclone_tag}/runtime_diags
-  rclone copy ${pldir}/${yyyy}${st}_${pdfflag}.pdf my_drive:$typeofrun/${rclone_tag}/runtime_diags
-   body="Diagnostics for ${textflag} completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
-   title="${CPSSYS} ${textflag} runtime diags completed"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st  
-fi
+listafig=${pldir}/${yyyy}${st}_${pdfflag}.pdf
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${yyyy}${st}_${pdfflag} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$typeofrun/${rclone_tag}/runtime_diags '${listafig}'"
+body="Diagnostics for ${textflag} completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
+title="${CPSSYS} ${textflag} runtime diags completed"
+${DIR_UTIL}/sendmail.sh -m $machine -c $ccmail -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st  
+
+echo "plot_forecast_all_vars.sh completed `date`"
+
 exit 0
 #title="${CPSSYS} FORECAST $yyyy$st Diagnostics "${textflag}
 #body="Dear Silvio e Stefano, \n you will find attached the diagnostics for $nrun members relative to "${textflag}".\n Thank you \n"

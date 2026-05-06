@@ -170,34 +170,6 @@ set -euvx
       body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for first month."
       title="${CPSSYS} forecast first month runtime diags submitted"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      if [[ $machine == "leonardo" ]]
-      then
-        while `true`
-        do
-           sleep 300
-           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_first_month_${yyyy}${st} -c yes`
-           if [[ $nproc -eq 0 ]] ; then
-               if [[ -f $checkfile1 ]] ; then
-                   set +euvx
-                   . $DIR_UTIL/condaactivation.sh
-                   condafunction activate $envcondarclone
-                   set -euvx
-                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/month/${yyyy}${st}_month1.pdf my_drive:${DIR_RCLONE}/runtime_diags
-                   body="Diagnostics for first month completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
-                   title="${CPSSYS} first month runtime diags completed"
-#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                   break
-               else
-                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for month1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
-                  title="${CPSSYS} forecast warning month1 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                  exit 1 
-               fi
-           fi
-        done
-      fi
       exit
    else
       echo "plot_forecast_first_month_${yyyy}${st} already running"
@@ -227,34 +199,6 @@ set -euvx
       body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for lead 0."
       title="${CPSSYS} forecast lead 0 runtime diags submitted"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      if [[ $machine == "leonardo" ]]
-      then
-        while `true`
-        do
-           sleep 300
-           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead0_${yyyy}${st} -c yes`
-           if [[ $nproc -eq 0 ]] ; then
-               if [[ -f $checkfile2 ]] ; then
-                   set +euvx
-                   . $DIR_UTIL/condaactivation.sh
-                   condafunction activate $envcondarclone
-                   set -euvx
-                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0.pdf my_drive:${DIR_RCLONE}/runtime_diags
-                   body="Diagnostics for lead 0 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
-                   title="${CPSSYS} lead 0 runtime diags completed"
-#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                   break
-               else
-                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 0. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
-                  title="${CPSSYS} forecast warning lead 0 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                  exit 1
-               fi
-           fi
-        done
-      fi
       exit
    else
       echo "plot_forecast_lead0_${yyyy}${st} already running"
@@ -285,34 +229,6 @@ set -euvx
       body="$DIR_DIAG/plot_forecast_diag.sh submitted by $DIR_UTIL/launch_forecast_diag.sh for lead 1."
       title="${CPSSYS} forecast lead 1 runtime diags submitted"
       ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-      if [[ $machine == "leonardo" ]]
-      then
-        while `true`
-        do
-           sleep 300
-           nproc=`${DIR_UTIL}/findjobs.sh -m $machine -n plot_forecast_lead1_${yyyy}${st} -c yes`
-           if [[ $nproc -eq 0 ]] ; then
-               if [[ -f $checkfile2 ]] ; then
-                   set +euvx
-                   . $DIR_UTIL/condaactivation.sh
-                   condafunction activate $envcondarclone
-                   set -euvx
-                   rclone mkdir my_drive:${DIR_RCLONE}/runtime_diags
-                   rclone copy $SCRATCHDIR/runtimediag/$yyyy$st/lead/${yyyy}${st}_Lead0_1.pdf my_drive:${DIR_RCLONE}/runtime_diags
-                   body="Diagnostics for lead 1 completed and transferred on https://drive.google.com/drive/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4-?usp=sharing directory:${rclone_tag}/runtime_diags"
-                   title="${CPSSYS} lead 1 runtime diags completed"
-#                   ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
-                   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                   break
-               else
-                  body="$DIR_DIAG/plot_forecast_diag.sh completed but no plot file found for lead 1. Check the log in $DIR_LOG/${typeofrun}/${yyyy}${st}"
-                  title="${CPSSYS} forecast warning lead 1 runtime diags"
-                  ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
-                  exit 1
-               fi
-           fi
-        done
-      fi     
       exit
    else
       echo "plot_forecast_lead1_${yyyy}${st} already running"

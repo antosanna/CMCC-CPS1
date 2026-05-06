@@ -44,15 +44,14 @@ ens=$(printf "%.3d" $((10#$memberlist))) #member with 3 digits
 caso=${SPSSystem}_${startdate}_${ens}
 
 ACTDIR=$SCRATCHDIR/qa_checker/$startdate/CHECKER_${ens}
-wdir=$ACTDIR/CHECK/
-#DL=$DIR_CASES/${SPSSystem}_${startdate}_${ens}/logs # case dir 
 
-DL=${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}
-mkdir -p $DL
+mkdir -p ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}
 if [[ -d $ACTDIR ]]
 then
    rm -rf $ACTDIR
 fi
+
+wdir=$ACTDIR/CHECK/
 mkdir -p $wdir
 
 # the following filetobechecked number number is given by 53 netcdf files = number of variables by member
@@ -206,109 +205,14 @@ for ns in ${namespace}; do
     fi
     memlimit=${memory[$mem_idx]}
 
-cat > launch_c3s_qa_checker.${ns}.sh << EOF
-#!/bin/sh -l
-#-------------------------------------------------------------------------------
-# Script to check produced forecast
-#-------------------------------------------------------------------------------
-#--------------------------------
-. \$HOME/.bashrc
-
-set -evx
-
-namespace=\$1
-startdate=\$2
-member=\$3
-jsonf=\$4
-reduced=\$5
-
-echo "activate env *********************"
-
-set +euvx
-  . $DIR_UTIL/condaactivation.sh 
-  condafunction activate qachecker 
-set -euvx
-
-
-echo "retrieve fields ******************"
-output=$wdir/output
-
-cd $wdir
-if [[ -d tempdir_\$namespace ]] ; then
-    rm -rf tempdir_\$namespace 
-fi 
-
-mkdir -p tempdir_\$namespace
-
-netcdf2check=\`ls -1 *\$namespace*.nc\`
-
-for ncfile in \$netcdf2check ; do
-
-    # get variable name
-    logname=\`echo \$ncfile  | cut -d _ -f5-15 | cut -d . -f1\`
-    varname=\`echo \$logname  | cut -d _ -f4\`
-
-    if [[  -f \$output/\$logname.txt ]] ; then 
-        rm \$output/\$logname.txt
-    fi
-
-    # copy to tempdir
-    cp \$ncfile tempdir_\$namespace
-    if [[  \$varname == "tasmin" ]] ; then 
-       netcdfaux_sic=\`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member}*.nc\`
-       rsync -auv \$netcdfaux_sic tempdir_\$namespace 
-
-       netcdfaux_mask=\`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member}*.nc\`
-       rsync -auv \$netcdfaux_mask tempdir_\$namespace 
-    fi
-    
-
-    scratch4outl=$SCRATCHDIR/checker_\$startdate/\$member/\$namespace/
-    if [[ -d \$scratch4outl ]] ; then
-        rm -r \$scratch4outl
-    fi
-    mkdir -p \$scratch4outl
-    if [[ \$reduced -eq 1 ]] ; then
-      # launch python (checking files in tempdir_\$namespace)
-      # adding -pclim input activates the climatological check on monthly min/max, while -pqval activates the interquantile one 
-         python c3s_qa_checker.py \$ncfile -sld ${spike_list_dmo} -dmo \$REPOSITORY/lsm_sps4.nc -sl $spike_list -p tempdir_\$namespace -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-    else
-       # WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
-       python c3s_qa_checker.py \$ncfile -p tempdir_\$namespace -pclim \$OUTDIR_DIAG/C3S_statistics -u -scd \$scratch4outl -j \$jsonf -exp \$startdate -real \$member --logdir \$output/ --verbose >> \$output/\$logname.txt
-    fi
-    # remove files
-    if [[ \$? -eq 0 ]] ; then
-        echo Once finished, clean file...
-        rm $wdir/\$ncfile   
-    else
-        exit 1
-    fi
-
-done
-
-cd $ACTDIR
-
-# remove and touch done file
-if [[ -f NSDONE_\$namespace ]] ; then
-    rm -r NSDONE_\$namespace
-fi 
-touch NSDONE_\$namespace
-
-# remove temporary dir
-if [[ -f NSDONE_\$namespace ]] ; then
-    rm -rf $wdir/tempdir_\$namespace
-fi
-
-exit 0
-
-EOF
+    rsync -auv $DIR_TEMPL/launch_c3s_qa_checker.template.sh  $wdir/launch_c3s_qa_checker.${ns}.sh
 
     chmod u+x launch_c3s_qa_checker.${ns}.sh
 # modified 20201021 from serialq_s to serialq_l for priority reasons
-    input="$ns ${startdate} ${ens} ${json} ${reduced}"
+    input="$ns ${startdate} ${ens} ${json} ${reduced} $wdir"
 
 #
-${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l $DL -i "$input"
+    ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_s -S $qos -t "2" -M $memlimit -s launch_c3s_qa_checker.${ns}.sh -j chk_err_${startdate}_${ens}_${ns} -d $ACTDIR -l ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens} -i "$input"
 
 
 
@@ -348,8 +252,8 @@ while `true` ; do
 done
 # ***************************************************************************
 # Now send mail
-cd $wdir
-cd output
+cd $wdir/output
+
 cnt_files=`ls -1 *.txt | wc -l`
 endtime=`date +%Y%m%d%H%M`
 
@@ -380,20 +284,6 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
         if [[ "${warninmsg}" =~ "Air Temperature" ]] ; then
             touch $spike_from_cmor
         fi         
-# NEW VERSION TESTED ONLY OFFLINE 20251209 ANTO
-#        for w in ${warninmsg}; do
-#            if [[ "$w" == "[FIELDWARNING]" ]];then
-#                body+=" \n ${w}"
-#            else
-#                body+=" ${w}"
-#            fi
-#        done
-#  
-#        body+="\n\n Please check in ${DL}/output_${startdate}_${endtime} the output log \n"
-#
-#        for w in $warninlist;do 
-#            body+="${w}\n";
-#        done
         for f in ${warninlist}; do
             w=`grep -Rh FIELDWARNING $f`
             w_pos=`grep -Rhn FIELDWARNING $f|cut -d ":" -f1`
@@ -407,7 +297,6 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
                 body+=" \n ${w_pos} "
             fi
         done
-# NEW VERSION TESTED ONLY OFFLINE 20251209 ANTO -
         
         # save to report
         printf "\n ${body}">> $warningreport
@@ -450,7 +339,7 @@ if [[ $cnt_files -ge $filetobechecked ]]; then
        fi
        if [[ -f ${spike_list} ]] ; then
 
-            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l $DL -i "$caso 1 ${spike_list}"            
+            ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 4000 -d ${DIR_POST}/cam -j plot_timeseries_spike_C3S_${caso} -s plot_timeseries_spike.sh -l ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens} -i "$caso 1 ${spike_list}"            
            #counting repetition by looking at number of DMO list produced, if more than 5 interrupt automatic resubmission
            nlist_dmo=`ls ${spike_list_dmo}* |wc -l` 
            title="${CPSSYS} FORECAST ERROR - QA CHECKER SPIKES on C3S  MANUAL INTERVENTION REQUIRED!!"          
@@ -540,9 +429,8 @@ fi
 
 # ***************************************************************************
 # save results
-cd $wdir
-mv $ACTDIR/NSDONE_* output/
-cp -r output ${DL}/output_${startdate}_${endtime}
+mv $ACTDIR/NSDONE_* $wdir/output/
+rsync -auv $wdir/output ${DIR_LOG}/$typeofrun/$yyyy$st/qa_checker/${ens}/output_${startdate}_${endtime}
 
 # ***************************************************************************
 # Now clean all

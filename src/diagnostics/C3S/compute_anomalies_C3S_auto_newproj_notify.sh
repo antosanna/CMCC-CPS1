@@ -111,7 +111,7 @@ if [[ "$varm" == "sst" ]] ; then
       list1_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}.png)     
       list2_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}.png)
    fi
-   # if [[ $machine == "zeus" ]] ; then
+   if [[ $machine != "leonardo" ]] ; then
    #### Now IOD 
      regIOD="IOD"
      dir=$anomdir
@@ -142,7 +142,7 @@ if [[ "$varm" == "sst" ]] ; then
          list1_IOD=$(ls -1 ${dirplots}/${varm}_*IOD*_mem_${yyyy}_${st}.png)
          list2_IOD=$(ls -1 ${dirplots}/${varm}_*IOD*_prob_${yyyy}_${st}.png)
      fi
-  # fi #machine == zeus
+   fi #machine != leo
 fi
 #if [ $varm = "mslp" ] ; then
 #	./NAO_forecast.sh $yy $st $refperiod $datamm $workdir $mymail
@@ -222,8 +222,8 @@ done # end of flgmnth loop
 if [[ $varm == "sst" ]]
 then
   convert_opt="-trim +repage"
-#  if [[ $machine == "zeus" ]]
-#  then
+  if [[ $machine != "leonardo" ]]
+  then
      geom_value=" 80x80+930+700"
      for IOD_plot1 in $list1_IOD
      do
@@ -242,7 +242,7 @@ then
      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -a $app -r $typeofrun -s $yyyy$st
      rm ${dirplots}/sst_IOD_mem_${yyyy}_${st}_DONE
      rm ${dirplots}/sst_IOD_prob_${yyyy}_${st}_DONE
-#  fi #close if on machine zeus
+  fi #close if on machine leo
 # sst Nino
   geom_value=" 80x80+930+670"
   for nino_plot1 in $list1_nino
@@ -263,17 +263,9 @@ then
   rm ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE
   rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
 fi
-set +euvx
-. $DIR_UTIL/condaactivation.sh
-condafunction activate $envcondarclone
 listafig=`ls ${dirplots}/*${yyyy}_${st}*pdf`
-rclone mkdir my_drive:$DIR_RCLONE/C3S_diags #/$varm
-for fig in $listafig
-do
-   rclone copy $fig my_drive:$DIR_RCLONE/C3S_diags #/$varm
-   rm $fig
-done
-set -euvx
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
+
 title="[diags] ${CPSSYS} ${typeofrun} notifications C3S $varm plots"
 #body="All figures for ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:forecast/$yyyy$st/C3S_diags/$varm"
 body="All figures for $varm ${typeofrun} ${yyyy}${st} produced and available on google drive, directory my_drive:${DIR_RCLONE}/C3S_diags"

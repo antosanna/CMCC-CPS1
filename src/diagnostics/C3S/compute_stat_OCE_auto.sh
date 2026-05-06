@@ -113,17 +113,23 @@ if [ $make_plot -eq 1 ] ; then
    export dirlogo="$DIR_DIAG_C3S/ncl/"
    export plname="$workdir/temperature_pac_trop_ensmean_${yyyyfore}_${mmfore}"
 
+   ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    set +euvx
    . $DIR_UTIL/load_convert
    set -euvx
-   ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
+   figlist=`ls ${plname}*png`
+   for fig in $figlist 
+   do
+      geom_value="80x80+930+830"
+      composite -geometry ${geom_value} ${dirlogo}/cmcc_logo_bw.jpg ${fig} ${fig}
+   done
+   magick convert -delay 25 ${plname}*png ${plname}.gif
+   #ncl $DIR_DIAG_C3S/ncl/T_prof_forecast_movie.ncl
    if [ -f ${plname}.gif ] ; then
+      rm ${plname}*png
       touch ${flag_done}_OCE
-      set +euvx
-      . $DIR_UTIL/condaactivation.sh
-      condafunction activate $envcondarclone
-      rclone mkdir my_drive:${DIR_RCLONE}/C3S_diags
-      rclone copy ${plname}.gif my_drive:${DIR_RCLONE}/C3S_diags
+      listafig=${plname}.gif
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${varm} -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/C3S_diags '${listafig}'"
 
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_spread_ano.$refperiod.nc
    #   rm $diroce/${varm}_${CPSSYS}_sps_${yyyyfore}${mmfore}_ens_ano.$refperiod.nc

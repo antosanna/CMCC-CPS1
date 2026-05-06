@@ -9,8 +9,6 @@ outlog=${DIR_REP}/$startdate/REPORT_${machine}.${SPSSystem}_${startdate}
 logfile=${outlog}.txt
 # load typeofrun
 . $DIR_UTIL/descr_ensemble.sh `echo ${startdate:0:4}`
-# load conda env for rclone
-conda activate $envcondarclone
 rclone_tag=${startdate}
 if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]] 
 then
@@ -19,11 +17,11 @@ fi
 DIR_RCLONE=${typeofrun}/${rclone_tag}
 
 # create directory on drive (works also if already existing)
-rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
 if [[ -f $logfile ]]
 then
    #copy general log
-   rclone copy $logfile my_drive:${DIR_RCLONE}/REPORTS
+   listaf=$logfile
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${startdate} -l $DIR_LOG/$typeofrun/$startdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/REPORTS '${listaf}'"
 fi
 for ens in {001..054}
 do
@@ -31,6 +29,7 @@ do
     if [[ -f $logfile ]]
     then
        #copy general specific ensemble log
-       rclone copy $logfile my_drive:${DIR_RCLONE}/REPORTS
+       listaf=$logfile
+       ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_${startdate} -l $DIR_LOG/$typeofrun/$startdate -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/REPORTS '${listaf}'"
     fi
 done

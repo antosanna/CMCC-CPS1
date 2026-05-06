@@ -110,6 +110,8 @@ then
    header=${SPSSystem}ext
 fi 
 
+echo "recover_interrupted.sh starting `date`"
+
 cd $DIR_CASES/
 listofcases="sps4ext_199511_001"
 if [[ $st != "None" ]]
@@ -166,7 +168,9 @@ fi
 rclone_tag=${yyyy}${st}
 if [[ $typeofrun == "forecast" ]] && [[ $is_backup -eq 1 ]]
 then
-    rclone_tag=${typeofrun}/${yyyy}${st}_backup
+#bug fixed ANTO 20260502
+#    rclone_tag=${typeofrun}/${yyyy}${st}_backup
+    rclone_tag=${yyyy}${st}_backup
 fi
 DIR_RCLONE=${typeofrun}/${rclone_tag}
 
@@ -439,13 +443,14 @@ echo "starting conversion to xls and copy with rclone to google drive "`date`
    condafunction activate $envcondarclone
    set -eux
    python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-   rclone copy ${filexls} my_drive:recover
+   listaf=${filexls}
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/$typeofrun -d ${DIR_UTIL} -s rclone_wrapper.sh -i "recover '${listaf}'"
    echo "end of conversion to xls and copy with rclone to google drive "`date`
 fi
 
 if [[ $dbg -eq 2 ]]
 then
-   echo "DEBUG=2: NO ACTION REQUIRED, JUST SENDING THE LIST OF INTERRUPTED JOBS TO GOOGLE DRIVE/recover "
+   echo "DEBUG=2: NO ACTION REQUIRED, JUST SENDING THE LIST OF INTERRUPTED JOBS TO GOOGLE DRIVE/recover `date`"
 fi
 
 ### REMEMBER: if dbg=1 only 1 case for category will be processed and you could check that everything was ok.
@@ -469,8 +474,8 @@ if [[ $dbg -ne 2 ]] ; then
          condafunction activate $envcondarclone
          set -eux
          python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
-         rclone mkdir my_drive:${DIR_RCLONE}/REPORTS
-         rclone copy ${filexls} my_drive:${DIR_RCLONE}/REPORTS
+         listaf=${filexls}
+         ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"
       fi
    fi
 set +euv
@@ -844,5 +849,6 @@ set -eux
    
    
 fi   
+echo "recover_interrupted.sh completed `date`"
 
 exit 0

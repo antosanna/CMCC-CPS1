@@ -26,7 +26,18 @@ mm=$mmbini
 if [ -f sst.mnmean.nc ] ; then
    rm sst.mnmean.nc
 fi
-wget -4 --no-check-certificate https://downloads.psl.noaa.gov/Datasets/noaa.oisst.v2/sst.mnmean.nc
+url="https://downloads.psl.noaa.gov/Datasets/noaa.oisst.v2/sst.mnmean.nc"
+${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j wget_wrapper_iod -l $DIR_LOG/$typeofrun/$yyyy$st/diagnostics -d ${DIR_UTIL} -s wget_wrapper.sh -i "$ncep_dir $url"
+
+while `true`
+do
+    njob=`$DIR_UTIL/findjobs.sh -m $machine -n wget_wrapper_iod -c yes`
+    if [[ $njob -eq 0 ]]
+    then
+       break
+    fi  
+    sleep 60
+done
 
 for time in `seq 1 5` ; do
 

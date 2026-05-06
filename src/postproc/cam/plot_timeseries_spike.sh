@@ -54,21 +54,13 @@ fi
 cp $DIR_POST/cam/plot_timeseries_spike.ncl $HEALED_DIR
 
 if [[ $machine == "leonardo" ]] ; then
-   $DIR_UTIL/load_ncl
+   . $DIR_UTIL/load_ncl
 fi
 
 ncl $HEALED_DIR/plot_timeseries_spike.ncl
 
 if [[ `ls ${pltname_root}* |wc -l` -ne 0 ]]
 then
-set +euvx
-   . $DIR_UTIL/condaactivation.sh
-   condafunction activate $envcondarclone
-set -euvx
-   rclone mkdir my_drive:$DIR_RCLONE/SPIKES_warnings_${yyyy}${st}
-   nplots=`ls ${pltname_root}* |wc -l`
-   for ((k = 1; k<= $nplots; k += 1))
-   do
-      rclone copy ${pltname_root}.$k.png my_drive:$DIR_RCLONE/SPIKES_warnings_${yyyy}${st}
-   done
+   listafig=`ls ${pltname_root}*`
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_plot_timeseries_spike -l $DIR_LOG/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s rclone_wrapper.sh -i "$DIR_RCLONE/SPIKES_warnings_${yyyy}${st} '${listafig}'"
 fi
