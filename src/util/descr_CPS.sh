@@ -152,6 +152,7 @@ then
    time_limit_parallelq_l_min=`bqueues -l $parallelq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
    time_limit_parallelq_l=$((time_limit_parallelq_l_min / 60 )) ##RUNLIMIT TIME IN hours
    serialq_push=s_long
+   serialq_rclone=s_long
    serialq_l=s_long
    serialq_push=s_download
    time_limit_serialq_l_min=`bqueues -l $serialq_l|grep min|awk '{print $1}'|cut -d '.' -f1`   #RUNLIMIT TIME IN min
@@ -290,6 +291,7 @@ then
    sla_serialID=s_met_cmcc_s
    nmb_nemo_domains=336
    serialq_push=lrd_all_serial
+   serialq_rclone=lrd_all_serial
    serial_test=lrd_all_serial
    WORK1=/leonardo_work/$account_name/  #is environment var in leonardo
    if [[ $USER == "$operational_user" ]]

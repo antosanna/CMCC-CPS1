@@ -7,6 +7,7 @@
 
 set -evxu
 
+echo "tar_C3S starting `date`"
 #----------------------------
 #  INPUT SECTION
 #----------------------------
@@ -428,10 +429,4 @@ then
    fi
 fi
 
-#--------------------------------------------
-# NOW COMPRESS ICs RELATIVE TO CURRENT START-DATE
-#--------------------------------------------
-#if [[ `whoami` == $operational_user ]]
-#then
-#   $IC_SPS35/compress_ICs_current_startdate.sh $st $yyyy
-#fi
+echo "tar_C3S completed `date`"

@@ -23,6 +23,11 @@ set -euvx
 
 mkdir -p $workdir
 
+anom_stdate=${dirlog}/anom_${SPSSystem}_${yyyy}${st}_${var}_DONE
+if [[ -f $anom_stdate ]]
+then
+   exit 0
+fi
 
 ensalllist=""
 [ -f $anomdir/${var}_${SPSSystem}_${yyyy}${st}_ens_ano.$refperiod.nc ] && rm $anomdir/${var}_${SPSSystem}_${yyyy}${st}_ens_ano.$refperiod.nc
@@ -66,7 +71,7 @@ if [ $nanomDONE -eq $nrunC3Sfore ] ; then
    rm tmp${var}_${SPSSystem}_${yyyy}${st}_ens_ano.$refperiod.nc
 
    #rsync to $DIR_CLIM!
-   touch ${dirlog}/anom_${SPSSystem}_${yyyy}${st}_${var}_DONE
+   touch ${anom_stdate}
    rm ${dirlog}/anom_${SPSSystem}_${yyyy}${st}_0??_${var}_DONE*
 
 else

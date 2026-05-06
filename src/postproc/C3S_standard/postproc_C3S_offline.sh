@@ -100,7 +100,7 @@ then
        fi
        echo "start of postpc_clm "`date`
        finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
-       input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft"
+       input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft $dir_cases"
        # ADD the reservation for serial !!!
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S $qos -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
    done
@@ -207,7 +207,7 @@ then
    checkfileextrap=$HEALED_DIR/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap"
    req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $HEALED_DIR/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso :extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
    while `true`
@@ -257,7 +257,7 @@ allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
 if [[ $allC3S -eq $nfieldsC3S ]]
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${DIR_LOG}/$typeofrun/${startdate} -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${dir_cases}/$caso/logs -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then

@@ -148,21 +148,21 @@ plot4 = new ( 1 , graphic)
 end do
 
 
-geom_value="80x80+930+830" 
+;geom_value="80x80+930+830" 
 delete(wks)   ; Make sure PS file is closed
 
-dirlogo=getenv("dirlogo") 
-do n=0,ntime-1
-    nn=n+1
-    nnstr=sprinti("%0.6i", nn)
-    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
- 
-end do
+;dirlogo=getenv("dirlogo") 
+;do n=0,ntime-1
+;    nn=n+1
+;    nnstr=sprinti("%0.6i", nn)
+;    system( "composite -geometry "+geom_value+" "+dirlogo+"cmcc_logo_bw.jpg "+plname+"."+nnstr+".png "+plname+"."+nnstr+".png")
+; 
+;end do
 
-cmd = "magick convert -delay 25 "+plname+"*png "+plname+".gif"
-system(cmd)
-cmd = "rm "+plname+"*png"
-system(cmd)
+;cmd = "magick convert -delay 25 "+plname+"*png "+plname+".gif"
+;system(cmd)
+;cmd = "rm "+plname+"*png"
+;system(cmd)
 
 
 ;frame(wks)

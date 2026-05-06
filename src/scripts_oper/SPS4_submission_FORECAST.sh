@@ -10,6 +10,7 @@ st=`date +%m`
 yyyy=`date +%Y`
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -evx
+echo "SPS4_submission_FORECAST.sh starting `date`"
 
 # wait for the presence of the triplette as a signal that the IC production has been completed and the submission can go-on
 if [[ ! -f ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE ]] && [[ $machine == "leonardo" ]]
@@ -343,4 +344,5 @@ title="NEW FORECAST SUBMISSION COMPLETED on $machine"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 
 
+echo "SPS4_submission_FORECAST.sh completed `date`"
 exit 0

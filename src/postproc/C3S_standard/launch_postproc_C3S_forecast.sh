@@ -9,12 +9,12 @@
 
 set -euvx
 
+st=`date +%m`   #$2  #stdate as input
+yyyy=`date +%Y`  #$1
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
-if [[ $machine != "cassandra" ]]
-then
-   LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
-   exec 3>&1 1>>${LOG_FILE} 2>&1
-fi
+#   LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
+#   exec 3>&1 1>>${LOG_FILE} 2>&1
+mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/C3S_postproc
 
 st=`date +%m`   #$2  #stdate as input
 yyyy=`date +%Y`  #$1
@@ -82,9 +82,7 @@ do
        #touch flag to avoid double resubmission
        touch ${flag_postproc_offline_on}
    
-       mkdir -p $DIR_LOG/$typeofrun/C3S_postproc
-#       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/$typeofrun/C3S_postproc -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $logdir -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
    
    
        if [[ $dbg -eq 1 ]]

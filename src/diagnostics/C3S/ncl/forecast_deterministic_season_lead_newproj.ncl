@@ -367,6 +367,20 @@ else
    vardiag=sstspread
 end if
 
+rm_gblmean=getenv("rm_gblmean")
+if(rm_gblmean.eq.1) then
+; substract the global mean in order to emphasize the patterns
+   if(varobs.eq."z500") then
+      rad    = 4.0*atan(1.0)/180.0
+      clat   = cos(lat*rad)
+      gblmean=wgt_areaave_Wrap(vardiag, clat, 1.0, 1)
+      tmp=vardiag-gblmean
+      copy_VarMeta(vardiag,tmp)
+      vardiag=tmp
+      delete(tmp)
+   end if
+end if
+
 plname=dirplots+"/"+varobs+"_"+region+"_"+pltype+"_"+yyyyfore+"_"+mmfore+"_seasonal_l"+lead
 wks  = gsn_open_wks(wks_type,plname)
 
