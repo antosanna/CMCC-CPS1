@@ -13,8 +13,8 @@ export NCARG_COLORMAPS=$HOME/ncl/colormaps
 set -euvx
 lead=1
 refperiod=1995-2024
-export yyyyfore=2026
-export mmfore=04
+export yyyyfore=`date +%Y`
+export mmfore=`date +%m`
 export SS
 case $mmfore in
    04)SS=MJJ;;

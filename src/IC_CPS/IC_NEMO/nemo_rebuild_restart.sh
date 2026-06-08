@@ -52,7 +52,9 @@ else
    OUTDIR=$SCRATCHDIR/IC/restart_from_ois2_fore/OPSLAMB$poce1/
    if [[ ! -d $OUTDIR ]] 
    then
-      last_analysis=`ls -dtr /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/????????00/run|tail -1`
+      #last_analysis=`ls -dtr /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB$poce1/????????00/run|tail -1`
+      most_recent_restart=`ls -tr /work/cmcc/cp1/CPS/CMCC-OIS2/run_oce_assim/OPSLAMB${poce1}/????????00/run/OPSLAMB${poce1}_*_restart_0000.nc|tail -1`
+      last_analysis=`dirname $most_recent_restart`
       OUTDIR=$last_analysis
       nemoic=$IC_NEMO_CPS_DIR/$st/${CPSSYS}.nemo.r.$yyyy-${st}-01-00000.$poce.bkup.nc 
       ciceic=$IC_CICE_CPS_DIR/$st/${CPSSYS}.cice.r.$yyyy-${st}-01-00000.$poce.bkup.nc 

@@ -30,7 +30,7 @@ ymds=$(date -d "${yyyy}${st}01 -1 day" +%Y%m%d)
 odir=${SCRATCHDIR}/${typeofrun}/${yyyy}${st}/IC_OCE/
 mkdir -p $odir 
 # input dir
-idir=$WOIS/inputdata/SST/ESACCI/ARCHIVE
+idir=$DOIS/inputdata/SST/ESACCI/ARCHIVE
 #dirdataESA=/work/cmcc/cp1//scratch/MARI/test_esa/
 #dirdataESA defined in descr_CPS.sh on /data (for portability on Cassandra)
 climdir=${dirdataESA}/clim_${iniy_hind}-${endy_hind}
