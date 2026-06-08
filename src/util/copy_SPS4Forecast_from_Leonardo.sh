@@ -32,7 +32,9 @@ then
     cmd="rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00""
 elif [[ "$machine" == "$bk_machine" ]]
 then
-    cmd='rsync -auv -e="sshpass -p a(nU05wgJk ssh"'
+   export SSHPASS="a(nU05wgJk"
+   cmd="sshpass -e rsync -auv -e ssh"
+#    cmd="rsync -auv '-e=sshpass -p a(nU05wgJk ssh'"
 fi
 
 leo_dir=/leonardo_work/$account_SLURM/CMCC-CM/archive 
@@ -47,7 +49,7 @@ if [[ -f $checkfile ]]
 then
    exit 0
 fi
-$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir_CASES}/$caso/logs/run_moredays_${caso}_DONE ${outdir}
+rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir_CASES}/$caso/logs/run_moredays_${caso}_DONE ${outdir}
 #-----------------------------------------------------
 if [[ "$machine" == "$bk_machine" ]]
 then
@@ -68,11 +70,12 @@ then
 #-----------------------------------------------------
 # define in bk_machine a specific $DIR_ARCHIVE in order not to overwrite the local one which could be in use in case of double forecast (one in the op_machine and the other in the bk_machine)
    DIR_ARCHIVE=$DIR_ARCHIVE/Leonardo_${yyyy}${st}
+   mkdir -p $DIR_ARCHIVE
 #-----------------------------------------------------
 fi
 #-----------------------------------------------------
 
-$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
+rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
 
 dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
 if [[ $dim =~ "G" ]]
@@ -84,7 +87,7 @@ mindim=80
 
 if [[ $dim -lt $mindim ]]
 then
-      $cmd a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
+      rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
       if [[ $dim -lt $mindim ]]
       then
          title="[$CPSSYS] WARNING: issue in trasferring $caso from Leonardo to Juno"
@@ -100,7 +103,7 @@ touch $checkfile
 if [[ "$machine" == "$repo_machine" ]]
 then
 #-----------------------------------------------------
-   $cmd $checkfile a07cmc00@data.leonardo.cineca.it:${leo_dir}/
+   $cmd $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
 #-----------------------------------------------------
 fi
 #-----------------------------------------------------

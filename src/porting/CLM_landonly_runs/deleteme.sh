@@ -5,8 +5,16 @@
 
 set -euvx
 
-member=$1
-refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_scen"
+member=1
+if [[ $machine == "juno" ]]
+then
+   refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_scen"
+elif [[ $machine == "cassandra"  ]]
+then
+   #fake refname from juno run, in order to keep on both juno and cassandra the same name of the operational case
+   refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op"
+fi
+
 caze="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op"
 if [[ -d $DIR_CASES/$caze ]] ; then
   rm -rf $DIR_CASES/$caze
@@ -35,7 +43,6 @@ cp -p ${DIR_TEMPL}/user_nl_hydros_clmIC $DIR_CASES/$caze/user_nl_hydros
 cd ${DIR_CASES}/$caze
 
 ./xmlchange RUN_TYPE=hybrid #from scenario to scenario
-./xmlchange NTASKS=216
 ./xmlchange STOP_OPTION=nmonths
 ./xmlchange STOP_N=1
 ./xmlchange RESUBMIT=0
@@ -51,11 +58,23 @@ cd ${DIR_CASES}/$caze
 ./xmlchange RUN_REFCASE=${refcase}
 ./xmlchange GET_REFCASE=TRUE
 #to-be-revised
-./xmlchange RUN_REFDIR="/work/$HEAD/cp1/CMCC-CM/archive/${refcase}/rest/2023-01-01-00000" 
-./xmlchange RUN_REFDATE=2023-01-01
-./xmlchange RUN_STARTDATE=2023-01-01
+if [[ $machine == "juno" ]] 
+then
+   ./xmlchange NTASKS=216
+   ./xmlchange PIO_STRIDE=18
+   ./xmlchange RUN_REFDIR="/work/$HEAD/cp1/CMCC-CM/archive/${refcase}/rest/2023-01-01-00000" 
+   ./xmlchange RUN_REFDATE=2023-01-01
+   ./xmlchange RUN_STARTDATE=2023-01-01
+elif [[ $machine == "cassandra" ]]
+then
+   ./xmlchange NTASKS=224
+   ./xmlchange PIO_STRIDE=16
+   ./xmlchange RUN_REFDIR="/work/$HEAD/cp1/scratch/${refcase}/rest/2026-04-01-00000" 
+   ./xmlchange RUN_REFDATE=2026-04-01
+   ./xmlchange RUN_STARTDATE=2026-04-01
+fi
 
-./xmlchange PIO_STRIDE=18
+
 ./xmlchange --subgroup case.run JOB_QUEUE=p_medium
 ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=04:00
 

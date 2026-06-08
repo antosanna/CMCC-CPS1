@@ -17,6 +17,10 @@ set -uvx
 #then
 #   exit
 #fi
+yyyy=`date +%Y`
+st=`date +%m`
+mkdir -p ${DIR_LOG}/leonardo_transfer/$yyyy$st
+
 job_run=`$DIR_UTIL/findjobs.sh -m $machine -n launch_copy_SPS4Forecast_from_Leonardo -c yes`
 if [[ $job_run -gt 1 ]]
 then
@@ -24,11 +28,18 @@ then
 fi
 
 
-for ens in {001..054} ; do
+for ens in {001..054} 
+do
    caso=sps4_${yyyy}${st}_${ens}
-
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
+
    if [[ -f $checkfile ]]
+   then
+      continue
+   fi
+
+   isrunning=`$DIR_UTIL/findjobs.sh -m $machine -n copy_SPS4Forecast_from_Leonardo_${caso} -c yes`
+   if [[ $isrunning -ge 1 ]]  
    then
       continue
    fi
