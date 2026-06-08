@@ -48,6 +48,10 @@ do
   fi    
   sleep 600 
 done
+#flag needed for copy from leo to juno (website update)
+touchfile=${DIR_LOG}/forecast/${yyyy}${st}/diagnostics_C3S_DONE
+touch $touchfile
+
 refperiod="${iniy_hind}-${endy_hind}"
 
 if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
@@ -120,9 +124,13 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
    ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -B $data2notify -j sendreminder4endForecast${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s sendreminder.sh -i "$input"
    
 else
+   
+   dirplots=$SCRATCHDIR/diag_C3S/forecast_plots/$yyyy$st
+   tar -cvf $SCRATCHDIR/diag_C3S/forecast_plots/$yyyy$st.tar $dirplots 
    title="${SPSSystem} forecast notification - C3S diagnostic complete"
    body="Final diagnostic complete. \n Check the notification mails and plots by compute_anomalies_C3S_auto_newproj_notify.sh before sending data to ECMWF.\n
-WARNING: PLOTS NOT UPLOADED TO WEBSITE!!!"
+   Plots will be transferred on juno for dev-website update"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
+
 fi 
 exit 0

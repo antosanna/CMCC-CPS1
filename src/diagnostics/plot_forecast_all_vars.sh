@@ -102,14 +102,14 @@ for var in $varlist
 do
    case $var
    in
-       t2m) pctlvar="TREFHT";colormap="prob_t2m";units="[~S~o~N~C]";unitsl="[~S~o~N~C]";fact=1;;
-       sst) pctlvar="SST";colormap="prob_t2m";units="[K]";unitsl="[K]";fact=1     ;;
-       precip) pctlvar="PREC";colormap="prob_prec";units="[mm/month]" ;unitsl="[mm/season]";fact=30  ;;
-       mslp) pctlvar="MSLP";colormap="prob_t2m";units="[hPa]" ;unitsl="[hPa]"  ;fact=1  ;;
-       z500) pctlvar="z500";colormap="prob_t2m";units="[m]";unitsl="[m]"    ;fact=1 ;;
-       t850) pctlvar="t850";colormap="prob_t2m";units="[K]";unitsl="[K]"    ;fact=1 ;;
-       u200) pctlvar="u200";colormap="prob_t2m";units="[m/s]";unitsl="[m/s]"    ;fact=1 ;;
-       v200) pctlvar="v200";colormap="prob_t2m";units="[m/s]";unitsl="[m/s]"    ;fact=1 ;;
+       t2m) c3svar="tas";pctlvar="TREFHT";colormap="prob_t2m";units="[~S~o~N~C]";unitsl="[~S~o~N~C]";fact=1;;
+       sst) c3svar="tso";pctlvar="SST";colormap="prob_t2m";units="[K]";unitsl="[K]";fact=1     ;;
+       precip) c3svar="lwepr";pctlvar="PREC";colormap="prob_prec";units="[mm/month]" ;unitsl="[mm/season]";fact=30  ;;
+       mslp) c3svar="psl";pctlvar="MSLP";colormap="prob_t2m";units="[hPa]" ;unitsl="[hPa]"  ;fact=1  ;;
+       z500) c3svar="zg";pctlvar="z500";colormap="prob_t2m";units="[m]";unitsl="[m]"    ;fact=1 ;;
+       t850) c3svar="ta";pctlvar="t850";colormap="prob_t2m";units="[K]";unitsl="[K]"    ;fact=1 ;;
+       u200) c3svar="ua";pctlvar="u200";colormap="prob_t2m";units="[m/s]";unitsl="[m/s]"    ;fact=1 ;;
+       v200) c3svar="va";pctlvar="v200";colormap="prob_t2m";units="[m/s]";unitsl="[m/s]"    ;fact=1 ;;
    esac
    if [ $flgmnth -eq 1 ] ; then
       count=`ls $pctldir/monthly/$st/${var}_${st}_l?_??.${iniy_hind}-${endy_hind}.nc|wc -l`
@@ -128,7 +128,7 @@ do
    fi
    set +e
 #   rm -rf $WKDIR/*_${yyyy}${st}_*
-   input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $dbg"
+   input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $c3svar $dbg"
    ${DIR_UTIL}/submitcommand.sh -m $machine -M 40000 -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
 done
 
@@ -172,7 +172,7 @@ then
    fi
 else
    nfiles=`ls $logdir/*_lead?*_DONE|wc -l`
-   if [ $nfiles -lt $(($n_var * $l )) ] 
+   if [ $nfiles -lt $(($n_var * $((${l} +1)))) ] 
    then
       title="${CPSSYS} forecast ERROR"
       body="not all diagnostics ok for lead ${l} $yyyy$st. Exiting $DIR_DIAG/plot_forecast_all_vars.sh"

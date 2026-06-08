@@ -26,7 +26,8 @@ units=${14}
 unitsl=${15}
 fact=${16}
 pldir=${17}
-dbg=${18}
+c3svar=${18}
+dbg=${19}
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -56,7 +57,10 @@ do
    then
       rm $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
    fi
-   cdo sub -selname,${var} -seltimestep,1/$nmf $datamm/${filein} -seltimestep,1/$nmf $climdir/${var}_${SPSSystem}_clim_$refperiod.${st}.nc $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
+   cdo sub -selname,${var} -seltimestep,1/$nmf $datamm/${filein} -selname,${c3svar} -seltimestep,1/$nmf $climdir/${var}_${SPSSystem}_clim_$refperiod.${st}.nc $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
+##MB 20260603 - added to avoid problems with the following ncecat
+   ncks -O -C -x -v hcrs  $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc_tmp
+   mv $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc_tmp $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc
    ic=`expr $ic + 1`
    ensalllist="$ensalllist $datamm/anom/${var}_${SPSSystem}_${yyyy}${st}_${ens}_ano.$refperiod.nc"
    if [ $ic -gt $nrun ]
@@ -71,8 +75,8 @@ then
 fi
 cdo -O ensmean $ensalllist $ensanomfile
 tmpfile=$datamm/anom/tmp.${var}_${SPSSystem}_${yyyy}${st}.nc
-cdo settaxis,$yyyy-$st-15,12:00,1mon $ensanomfile $tmpfile
-cdo setreftime,$yyyy-$st-15,12:00 $tmpfile $ensanomfile
+cdo -O settaxis,$yyyy-$st-15,12:00,1mon $ensanomfile $tmpfile
+cdo -O setreftime,$yyyy-$st-15,12:00 $tmpfile $ensanomfile
 rm $tmpfile
 ncecat -O  $ensalllist $allanomfile
   

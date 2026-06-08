@@ -33,7 +33,8 @@ DIR_RCLONE=forecast/${rclone_tag}
 fmt="%-15s %-15s %-15s %-15s\n"
 cd $DIR_ARCHIVE
 restlist=""
-list_run_mon=""
+#list_run_mon=""
+list_compl_mon=""
 mkdir -p $DIR_REP/$stdate
 report=$DIR_REP/$stdate/advancement_status_${stdate}.`date +%Y%m%d%H`.txt
 if [[ -f $report ]]
@@ -78,8 +79,19 @@ set -e
       cd $DIR_ARCHIVE/$caso/rest
       restlist+=" `ls |cut -d '-' -f2`"
       lastday3=`ls |tail -1|cut -d '-' -f2`
-      run_mon=$((10#$lastday3 - 10#$st + 1))
-      list_run_mon+=" $run_mon"
+      #MB 20260602
+      #run_mon=$((10#$lastday3 - 10#$st + 1))
+      #if needed to tackle forecast crossing the new year
+      if [[ 10#$lastday3 -gt 10#$st ]] ; then
+          compl_mon=$((10#$lastday3 - 10#$st))
+          run_mon=$(($compl_mon + 1 ))
+      else
+          lastday3=$((10#$lastday3 + 12))
+          compl_mon=$((10#$lastday3 - 10#$st))
+          run_mon=$(($compl_mon + 1 ))
+      fi
+      #list_run_mon+=" $run_mon"
+      list_compl_mon+=" $compl_mon"
       if [[ `echo $lastday3|wc -w` -eq 2 ]]
       then
          fmt="%-15s %-15s %-15s %-15s %-15s\n"
@@ -94,12 +106,12 @@ echo "file with status advancement here $report "
 #uniq_rest=(`echo $restlist|tr ' ' '\n' |sort|uniq -c`)
 message=""
 #uniq_rest=(`echo $restlist|tr ' ' '\n' |sort|uniq`)
-uniq_rest=(`echo $list_run_mon|tr ' ' '\n' |sort|uniq`)
+uniq_rest=(`echo $list_compl_mon|tr ' ' '\n' |sort|uniq`)
 dim=${#uniq_rest[@]}
 for i in `seq 0 $(($dim - 1))`
 do
 #   n=`echo $restlist|grep -o ${uniq_rest[$i]}|wc -l`
-   n=`echo $list_run_mon|grep -o ${uniq_rest[$i]}|wc -l`
+   n=`echo $list_compl_mon|grep -o ${uniq_rest[$i]}|wc -l`
 #   message+=" number of member with restart month ${uniq_rest[$i]} is $n ---"
    message+=" number of member with completed month ${uniq_rest[$i]} is $n ---"
 done

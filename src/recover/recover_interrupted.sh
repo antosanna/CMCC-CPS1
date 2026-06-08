@@ -205,7 +205,8 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 lista_arch_moredays=" "
-lista_caso_ignored="${header}_199811_018 ${header}_200011_016"
+#lista_caso_ignored="${header}_199811_018 ${header}_200011_016"
+lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004"
 #"sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
@@ -517,13 +518,15 @@ set -eux
       fi 
       eval ${cmd_ltarc_nodep}
       sleep 60
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      #body="RECOVER submitted"
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 # lt_archive
@@ -553,14 +556,16 @@ set -eux
          $DIR_RECOVER/recover_lt_archive.sh $caso
       #fi
       sleep 60
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
 
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      #body="RECOVER submitted"
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -686,14 +691,16 @@ set -eux
        #   fi
           echo "$command done"
           sleep 60
+          body="RECOVER submitted"
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
           now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
           if [[ $now_running -ge $maxnumbertorecover ]]
           then
              exit
           fi
       fi
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      #body="RECOVER submitted"
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -742,30 +749,38 @@ set -eux
              fi
           fi
       fi
-      if [[ $domodify -eq 1 ]] 
+      if [[ $domodify -eq 1 ]]
       then      
+         if [[ $extended -eq 1 ]]
+         then
+            title="[$CPSSYS] $caso UNRECOVERABLE"
+            body="$caso recover not possible for first month extended forecast"
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover not possible for first month extended forecast" -s $yyyy$st
+         elif [[ $extended -eq 0 ]]
+         then
          #numerical failure of the model (instability, conservation check failure etc)
          #we change ICs with modify_triplette
-         st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
-         yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-         log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
-         mkdir -p $log_dir_modify  #probably redundant
-         while `true`
-         do
+            st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
+            yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+            log_dir_modify=$DIR_LOG/${typeofrun}/${yyyy}${st}
+            mkdir -p $log_dir_modify  #probably redundant
+            while `true`
+            do
             #check to avoid simultaneous submission of modify_triplette - potentially overwriting triplette files
-            np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${header} -c yes`
-            if [[ $np -eq 0 ]]
-            then
-               if [[ $machine == "leonardo" ]]
+               np=`${DIR_UTIL}/findjobs.sh -m $machine -n modify_triplette_${header} -c yes`
+               if [[ $np -eq 0 ]]
                then
-                  $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
-               else
-                  ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                  if [[ $machine == "leonardo" ]]
+                  then
+                     $DIR_UTIL/modify_triplette.sh $caso > $log_dir_modify/modify_triplette_${caso}.log &
+                  else
+                     ${DIR_UTIL}/submitcommand.sh -m $machine -l $log_dir_modify -q $serialq_s -j modify_triplette_${caso} -d $DIR_UTIL -s modify_triplette.sh -i "$caso"
+                  fi
+                  break
                fi
-               break
-            fi
-            sleep 60
-         done
+               sleep 60
+            done
+         fi
       else
          $DIR_RECOVER/refresh_all_scripts.sh $caso
          st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
@@ -792,14 +807,16 @@ set -eux
          #fi
          echo "$command done"
          sleep 60
+         body="RECOVER submitted"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
          if [[ $now_running -ge $maxnumbertorecover ]]
          then
             exit
          fi
       fi
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      #body="RECOVER submitted"
+      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
   

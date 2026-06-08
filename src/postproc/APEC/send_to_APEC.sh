@@ -1,5 +1,11 @@
 #!/bin/sh -l
 
+########
+# Credential to access APEC server
+# ID: ftp_cmcc
+# Password: dlxofl&5
+########
+
 . $HOME/.bashrc
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_POST/APEC/descr_SPS4_APEC.sh
@@ -36,6 +42,7 @@ if [ $dbg_push -eq 1 ] ; then
 else
    user="ftp_cmcc"
    hostname="210.98.49.15"
+   password="dlxofl&5"
    REMOTE_DIR="/apccdata01/CMCC/${yyseas}${sss}"
    option_connect='~/.ssh/apcc_14_ftp_cmcc.key -oKexAlgorithms=+diffie-hellman-group1-sha1 -oHostKeyAlgorithms=+ssh-dss -oport=21322'
 fi

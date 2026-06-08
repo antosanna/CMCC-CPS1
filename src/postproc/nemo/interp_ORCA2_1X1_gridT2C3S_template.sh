@@ -185,14 +185,20 @@ do
              exit 1
           else
              touch ${check_oceregrid}
-             rm $inputfile
+             if [[ -f $inputfile ]]
+             then 
+                rm $inputfile
+             fi
           fi
       else
          sleep 300
       fi
    else
       touch ${check_oceregrid}
-      rm $inputfile
+      if [[ -f $inputfile ]]
+      then
+         rm $inputfile
+      fi
       break
    fi
 done

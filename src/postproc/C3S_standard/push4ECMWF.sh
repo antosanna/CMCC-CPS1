@@ -144,8 +144,7 @@ then
          remotedim=`grep $file $DIR_LOG/$typeofrun/$yyyy$st/${log_script}|awk '{print $5}'`
          if [[ $localdim -ne $remotedim ]]
          then
-            echo "ACHTUNG!!! this file $file was not correctly transferred!!
-original dimension $localdim, transferred dimension $remotedim. check it"
+            echo "ACHTUNG!!! this file $file was not correctly transferred!! original dimension $localdim, transferred dimension $remotedim. check it"
             list2rm+=" $file"
          fi
       fi

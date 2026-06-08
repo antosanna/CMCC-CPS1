@@ -33,7 +33,7 @@ then
    module use -p $modpath
 fi
 
-if [[ $yyyy$st -ge ${yyyySCEN}07 ]]; then
+if [[ $yyyy -ge 2013 ]]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
@@ -105,18 +105,24 @@ elif [[ $restmon -lt 10 ]]
 then
    restmon=0$restmon
 fi
-if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
+if [[ `ls $refdirREST/${casoREST}_????????_restart.nc |wc -l` -eq 0 ]]
 then
-      gunzip -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
+   if [[ `ls $refdirREST/${casoREST}.* |wc -l` -eq 0 ]]
+   then
+      if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
+      then
+         gunzip -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
+      fi
+      if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar ]]
+      then
+         tar -xvf $refdirREST/$restyyyy-$restmon-01-00000.tar
+         mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+      else   
+         mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+      fi   
+   fi   
+   $DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 fi
-if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar ]]
-then
-      tar -xvf $refdirREST/$restyyyy-$restmon-01-00000.tar
-      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
-else   
-      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
-fi   
-$DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 
 cd $DIR_CASES/$caso
 #-----------
@@ -175,24 +181,20 @@ mkdir -p $DIR_CASES/$caso/logs
 #echo "IC CAM $ncdatanow"
 #sed -i '/ncdata/d' $DIR_CASES/$caso/user_nl_cam
 #echo "ncdata='$ncdatanow'">>$DIR_CASES/$caso/user_nl_cam
-if [[ $yyyy$st -ge ${yyyySCEN}07 ]] && [[ $yyyy$st -le ${yyyySCEN}12 ]]
+if [[ $yyyy$st -eq 201311 ]]
 then
    echo "prescribed_ozone_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
    echo "prescribed_strataero_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
-   echo "use_init_interp = .true.">>$DIR_CASES/$caso/user_nl_clm
+   echo "flbc_file  = '/leonardo_work/CMCC_2026/CESMDATAROOT/inputdata/atm/waccm/lb/LBC_2014-2500_CMIP6_SSP585_0p5degLat_GlobAnnAvg_c190301.nc'" >>$DIR_CASES/$caso/user_nl_cam
 fi
 
-#for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
-if [[ $yyyy$st -eq 201501 ]] 
-then   
-   echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
-fi
-#in forecast mode CLM ICs comes from an interrupted run covering the previous month
-#so, for january the CLM IC report a date from december of the previous year.
 #this happens as we produce the IC on the 1st of the month - due to the latency of the EDA data
 if [[ ${st} -eq 01 ]] && [[ $typeofrun == "forecast" ]]
 then
     echo "check_finidat_year_consistency = .false. " >> $DIR_CASES/$caso/user_nl_clm
+elif [[ ${yyyy} -eq 2013 ]] 
+then
+    echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
 fi
 #----------------------------------------------------------
 cp $DIR_TEMPL/user_nl_hydros $DIR_CASES/$caso/
