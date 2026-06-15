@@ -107,7 +107,7 @@ elif [[ $restmon -lt 10 ]]
 then
    restmon=0$restmon
 fi
-if [[ `ls $refdirREST/sps4_${yyyy}${st}_${nrun}_????????_restart.nc|wc -l` -eq 0 ]]
+if [[ `ls $refdirREST/${casoREST}_????????_restart.nc|wc -l` -eq 0 ]]
 then
    if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
    then

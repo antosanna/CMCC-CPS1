@@ -59,7 +59,7 @@ EOF
       lftp -f $DIR_LOG/${type_fore}/$yyyy$st/send.lftp.wmo.bologna
       stat=$?
       if [[ $stat -eq 1 ]]; then
-         echo "error on  attempt send.lftp.wmo.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymai]l
+         echo "error on  attempt send.lftp.wmo.bologna ${yyyy}$st"|mail -s "${title_debug}[WMO] ${SPSSYS} ${type_fore} notification" $mymail
          exit 1
       fi        
 else

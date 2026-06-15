@@ -26,7 +26,7 @@ then
    exit
 fi
 
-nmaxsubmit=30
+nmaxsubmit=15 #30
 nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_C3S -c yes`
 if [[ $nsubmit -ge $nmaxsubmit ]]
 then
@@ -82,7 +82,7 @@ do
        #touch flag to avoid double resubmission
        touch ${flag_postproc_offline_on}
    
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $logdir -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $logdir -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
    
    
        if [[ $dbg -eq 1 ]]

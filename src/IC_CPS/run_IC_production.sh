@@ -76,15 +76,39 @@ then
      if [[ -f $clm_err_file ]] ; then
 	       rm ${clm_err_file}
      fi
+
      eda_incomplete_check=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/EDA${ilnd}_incomplete_${yyyy}$st
-     if [[ ! -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
-     then
-        body="CLM: EDA${ilnd} time-series was complete. You do not have to rerun"
-        title="[CLMIC] ${CPSSYS} forecast notification"
-        ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
-         
-     else   #operationally or for incomplete eda recover
+     mvic_backup_check=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/mv_IC_EDA$((10#$ilnd))_bkup_done
+     mvic_operational_check=$DIR_LOG/$typeofrun/$yyyy$st/IC_CLM/mv_IC_EDA$((10#$ilnd))_done
      
+     if [[ $idcomplete -eq 1 ]] #RECOVER MODE
+     then
+     #if checkfile for incomplete run is missing: case A): operationally the complete month has run (if running on the 1st - impossible); case B): backup ICs have been used
+        if [[ ! -f $eda_incomplete_check ]] 
+        then 
+            if [[ -f ${mvic_operational_check} ]] #case A)
+            then
+                body="CLM: EDA${ilnd} time-series was complete. You do not have to rerun"
+                title="[CLMIC] ${CPSSYS} forecast notification"
+                ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
+            elif  [[ -f ${mvic_backup_check} ]]  #case B)
+            then
+                inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file} ${idcomplete}"
+                ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+                body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
+                title="[CLMIC] ${CPSSYS} forecast notification"
+                ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes 
+            fi      
+        #### if [[ -f $eda_incomplete_check ]]   #this should be the standard situation in recover mode (incomplete_check touched on the 1st of the month)  
+        else
+            inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file} ${idcomplete}"
+            ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
+            body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
+            title="[CLMIC] ${CPSSYS} forecast notification"
+           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
+
+        fi
+     else   #OPERATIONAL MODE (idcomplete=0)
         if [[ ! -f  $icclm ]] || [[ ! -f $ichydros ]]  #operationally
         then
             inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
@@ -92,14 +116,6 @@ then
             body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM ICs from EDA perturbation $ilnd"
             title="[CLMIC] ${CPSSYS} forecast notification"
             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
-        elif [[ -f $eda_incomplete_check ]] && [[ $idcomplete -eq 1 ]]
-        then
-            inputlnd="$yyyym1 $mmm1 $ilnd $icclm $ichydros $eda_incomplete_check ${clm_err_file}"
-            ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -S $qos -t "24" -q $serialq_l -s launch_forced_run_EDA.sh -j launchFREDA${ilnd}_${yyyy}${st} -d ${DIR_LND_IC} -l ${DIR_LOG}/$typeofrun/$yyyy$st/IC_CLM -i "$inputlnd"
-            body="CLM: submitted script launch_forced_run_EDA.sh to produce CLM analysis restart from EDA perturbation $ilnd"
-            title="[CLMIC] ${CPSSYS} forecast notification"
-           ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"  -r $typeofrun -s $yyyy$st -g yes
-         
         fi
      fi
   done

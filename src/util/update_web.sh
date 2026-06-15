@@ -14,7 +14,7 @@ set -uvx
 
 
 #DIR_WEB=/data/cmcc/cp1/WEB_PLOTS
-dirplots_final_index="$DIR_WEB/forecast-indexes_dev"
+dirplots_final_index=$DIR_WEB/forecast-indexes_dev
 dirplots_final_map=$DIR_WEB/forecast_dev
 mkdir -p $dirplots_final_map $dirplots_final_index
 

@@ -13,7 +13,10 @@ member=$3
 jsonf=$4
 reduced=$5
 wdir=$6
-
+spike_list_dmo=$7
+spike_list=$8
+outdirC3S=$9
+ACTDIR=${10}
 echo "activate env *********************"
 
 set +euvx
@@ -48,10 +51,11 @@ for ncfile in $netcdf2check ; do
     # copy to tempdir
     rsync -auv $ncfile $wdir/tempdir_${namespace}
     if [[  $varname == "tasmin" ]] ; then 
-       netcdfaux_sic=`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member}*.nc`
+       member2d=`echo ${member} |cut -c 2,3`
+       netcdfaux_sic=`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member2d}*.nc`
        rsync -auv $netcdfaux_sic $wdir/tempdir_${namespace}
 
-       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member}*.nc`
+       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member2d}*.nc`
        rsync -auv $netcdfaux_mask $wdir/tempdir_${namespace} 
     fi
     

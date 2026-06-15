@@ -26,6 +26,7 @@ icclm=$4
 ichydros=$5
 check_incomplete=$6
 errorflag=$7
+idcomplete=${8:-0} #default is operational (idcomplete=0)
 
 backup=0
 mm=$((10#$mm2d))
@@ -237,7 +238,7 @@ refcase=cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op
 if [[ $lastday -eq 999 ]]
 then
 #  FORCING SERIES COVERS ALL THE MONTH: run complete 
-   ${DIR_LND_IC}/clm_forced.sh $yy $mm2d ${refcase} $icclm $ichydros $member ${check_mv} $lastday $errorflag
+   ${DIR_LND_IC}/clm_forced.sh $yy $mm2d ${refcase} $icclm $ichydros $member ${check_mv} $lastday $errorflag $idcomplete
    #the submission of the complete case and the following mvIC2CLMdir is managed by clm_forced script through env_workflow
 
 else
@@ -246,7 +247,7 @@ else
    mkdir -p $finaldir #REDUNDANT BUT SAFER
  
    casoincomplete=incomplete_EDA${member}_SSP5-8.5_${yy}${mm2d}`printf '%.2d' ${lastday}`
-   ${DIR_LND_IC}/clone_case_forced_analysis_incomplete.sh $yy $mm2d $lastday $casoincomplete $refcase ${check_mv} $icclm $ichydros $member ${errorflag} $backup
+   ${DIR_LND_IC}/clone_case_forced_analysis_incomplete.sh $yy $mm2d $lastday $casoincomplete $refcase ${check_mv} $icclm $ichydros $member ${errorflag} $backup 
   
    #the submission of the incomplete case and the following mvIC2CLMdir is managed by clone_case script through env_workflow
    touch ${check_incomplete}

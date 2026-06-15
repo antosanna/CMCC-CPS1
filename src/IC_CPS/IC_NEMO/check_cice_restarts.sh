@@ -34,11 +34,11 @@ if [[ $yyyy -lt 2021 ]] ; then
 else
   tag=ice2
 fi
-if [[ `ls $WOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc.gz |wc -l` -ne 0 ]] ; then
-     fileobs=`ls $WOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc.gz |tail -1`
+if [[ `ls $DOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc.gz |wc -l` -ne 0 ]] ; then
+     fileobs=`ls $DOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc.gz |tail -1`
      filename=`basename $fileobs |rev|cut -d '.' -f2-|rev`
-elif [[ `ls $WOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc |wc -l` -ne 0 ]] ; then
-     fileobs=`ls $WOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc |tail -1`
+elif [[ `ls $DOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc |wc -l` -ne 0 ]] ; then
+     fileobs=`ls $DOIS/inputdata/SIC/OSISAF/${yym1}/${tag}_nh_${yym1}${stm1}??.nc |tail -1`
      filename=`basename $fileobs`
 fi
 

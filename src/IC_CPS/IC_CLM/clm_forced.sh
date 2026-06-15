@@ -12,6 +12,7 @@ member=$6
 check_mv=$7
 lastday=$8
 errorflag=$9
+idcomplete=${10}
 caso=$refcase
 
 st=`date -d ' '$yy${mm2d}01' + 1 month' +%m`
@@ -75,7 +76,7 @@ rsync -av ${DIR_TEMPL}/env_workflow_land_only.xml $DIR_CASES/$caso/env_workflow.
 ./xmlchange BUILD_COMPLETE=TRUE
 
 # if the IC have already been produced and you are running the script just to complete the CLM analysis run you MUST NOT overwrite the IC
-if [[ -f ${check_mv} ]]
+if [[ -f ${check_mv} ]] || [[ $idcomplete -eq 1 ]]
 then
     ./xmlchange --subgroup case.launch_mvIC prereq=0
     #change prereq to switch off the mv_ic in env_workflow

@@ -196,6 +196,7 @@ then
       IC_CLM_CPS_DIR=$IC_CLM_CPS_DIR1
    fi
    WOIS=/work/cmcc/${operational_user}/CPS/CMCC-OIS2/
+   DOIS=/data/cmcc/${operational_user}/CPS/CMCC-OIS2/
 ######## ICs_NEMO Juno
 # TEMPORARY FOR TESTS
    IC_NEMO_CPS_DIR=$SCRATCHDIR/IC/NEMO_${CPSSYS}/
@@ -355,6 +356,11 @@ then
    	ecmwfmail=$mymail
     ccmail=$mymail
     hsmmail=$mymail
+    ccmail=${mymail}
+    if [[ $(whoami) == ${operational_user} ]]; then
+      ecmwfmail=volkan.firat@ecmwf.int
+      ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+    fi  
     CLIM_DIR_DIAG=$WORK_SCORES/monthly/
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
 fi

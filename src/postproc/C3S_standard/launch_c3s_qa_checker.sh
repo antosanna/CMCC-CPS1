@@ -93,15 +93,15 @@ if [[ ${reduced} -eq 1 ]]
 then
 # Define memory needs for each namespace (attention:keep order)
 # atmos
-   memory[0]="700M"  #"atmos_6hr_surface_psl "
-   memory[1]="700M" #"atmos_6hr_surface_prw "
-   memory[2]="700M" #"atmos_6hr_surface_clt "
-   memory[3]="700M" #"atmos_6hr_surface_tas "
-   memory[4]="700M" #"atmos_6hr_surface_tdps "
-   memory[5]="700M" #"atmos_6hr_surface_uas "
-   memory[6]="700M" #"atmos_6hr_surface_vas "
-   memory[7]="700M" #"atmos_6hr_surface_ua100m "
-   memory[8]="700M" #"atmos_6hr_surface_va100m "
+   memory[0]="1000M"  #"atmos_6hr_surface_psl "
+   memory[1]="1000M" #"atmos_6hr_surface_prw "
+   memory[2]="1000M" #"atmos_6hr_surface_clt "
+   memory[3]="1000M" #"atmos_6hr_surface_tas "
+   memory[4]="1000M" #"atmos_6hr_surface_tdps "
+   memory[5]="1000M" #"atmos_6hr_surface_uas "
+   memory[6]="1000M" #"atmos_6hr_surface_vas "
+   memory[7]="1000M" #"atmos_6hr_surface_ua100m "
+   memory[8]="1000M" #"atmos_6hr_surface_va100m "
    memory[9]="4000M" #"atmos_12hr_pressure_zg "
    memory[10]="4000M" #"atmos_12hr_pressure_ta "
    memory[11]="4000M" #"atmos_12hr_pressure_hus "
@@ -205,11 +205,11 @@ for ns in ${namespace}; do
     fi
     memlimit=${memory[$mem_idx]}
 
-    rsync -auv $DIR_TEMPL/launch_c3s_qa_checker.template.sh  $wdir/launch_c3s_qa_checker.${ns}.sh
+    rsync -auv $DIR_TEMPL/launch_c3s_qa_checker.template.sh  $ACTDIR/launch_c3s_qa_checker.${ns}.sh
 
-    chmod u+x launch_c3s_qa_checker.${ns}.sh
+    chmod u+x $ACTDIR/launch_c3s_qa_checker.${ns}.sh
 # modified 20201021 from serialq_s to serialq_l for priority reasons
-    input="$ns ${startdate} ${ens} ${json} ${reduced} $wdir"
+    input="$ns ${startdate} ${ens} ${json} ${reduced} $wdir $spike_list_dmo $spike_list $outdirC3S $ACTDIR"
 
 #
     mkdir -p ${dir_cases}/$caso/logs/qa_checker 

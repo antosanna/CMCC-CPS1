@@ -205,8 +205,6 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 lista_arch_moredays=" "
-#lista_caso_ignored="${header}_199811_018 ${header}_200011_016"
-lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004"
 #"sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
@@ -216,6 +214,7 @@ lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017
 #sps4_201010_013 (zeus) - h2osoi_ice sign negative
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
 
+lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004 sps4ext_200411_002 sps4_200011_016"
 cd $DIR_CASES/
 for caso in $listofcases ; do
   report="$caso "
@@ -224,6 +223,10 @@ for caso in $listofcases ; do
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+  if [[ $yyyy -eq 1995 ]] || [[ $yyyy -eq 1996 ]] || [[ $yyyy -eq 1997 ]] ||[[ $yyyy -eq 1999 ]] || [[ $yyyy -eq 2006 ]] || [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2013 ]]
+  then
+     continue
+  fi
   member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
@@ -458,7 +461,21 @@ fi
 ### REMEMBER: if dbg=1 only 1 case for category will be processed and you could check that everything was ok.
 
 if [[ $dbg -ne 2 ]] ; then
-    
+   body="RECOVER STARTING: see attached $filexls"
+   echo $body
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
+   if [[ ! -f $DIR_LOG/recover/recover_`date +%Y%m%d` ]]
+   then
+      set +euvx
+      . $DIR_UTIL/condaactivation.sh
+      condafunction activate $envcondarclone
+      set -eux
+      python $DIR_UTIL/convert_csv2xls.py ${filecsv} ${filexls}
+      listaf=${filexls}
+      mkdir -p $DIR_LOG/wrapper
+      ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/recover '${listaf}'"
+      touch $DIR_LOG/recover/recover_`date +%Y%m%d`
+   fi 
    echo "NOW PROCESSING THE INTERRUPTED CASES"
    now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
    if [[ $now_running -ge $maxnumbertorecover ]]
@@ -479,7 +496,7 @@ if [[ $dbg -ne 2 ]] ; then
          listaf=${filexls}
          mkdir -p $DIR_LOG/wrapper
          ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -t 4 -q $serialq_rclone -j rclone_wrapper_recover_interrupted -l $DIR_LOG/wrapper -d ${DIR_UTIL} -s rclone_wrapper.sh -i "${DIR_RCLONE}/REPORTS '${listaf}'"
-      fi
+     fi
    fi
 set +euv
    . $DIR_UTIL/condaactivation.sh
@@ -518,15 +535,13 @@ set -eux
       fi 
       eval ${cmd_ltarc_nodep}
       sleep 60
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 # lt_archive
@@ -556,16 +571,14 @@ set -eux
          $DIR_RECOVER/recover_lt_archive.sh $caso
       #fi
       sleep 60
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
 
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -691,16 +704,14 @@ set -eux
        #   fi
           echo "$command done"
           sleep 60
-          body="RECOVER submitted"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
           now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
           if [[ $now_running -ge $maxnumbertorecover ]]
           then
              exit
           fi
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -807,16 +818,14 @@ set -eux
          #fi
          echo "$command done"
          sleep 60
-         body="RECOVER submitted"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
          if [[ $now_running -ge $maxnumbertorecover ]]
          then
             exit
          fi
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
   
@@ -834,7 +843,7 @@ set -eux
       $DIR_RECOVER/recover_st_archive.sh $caso
 
       body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
  
@@ -862,7 +871,7 @@ set -eux
 #      bsub -W 06:00 -q s_medium -P 0784 -M 25000 -e logs/lt_archive_moredays_%J.err -o logs/lt_archive_moredays_%J.out   < .case.lt_archive_moredays 
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -S $qos -t "6" -M 25000 -j -W 06:00 -P ${pID} -l logs -s .case.lt_archive_moredays 
       body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
    

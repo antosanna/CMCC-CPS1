@@ -20,10 +20,10 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 st=11
 strest=05
 #for yyyy in `seq 1995 2024`
-for yyyy in `seq 2023 2024`
+for yyyy in 2010
 do
    yyyyrest=$((yyyy + 1))
-   for ens in {01..20}
+   for ens in 11
    do
 
       jun_dir=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000/

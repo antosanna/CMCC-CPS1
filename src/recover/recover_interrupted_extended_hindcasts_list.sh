@@ -205,8 +205,6 @@ lista_moredays=" "
 lista_first_month=" "
 lista_st_archive=" "
 lista_arch_moredays=" "
-#lista_caso_ignored="${header}_199811_018 ${header}_200011_016"
-lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004"
 #"sps4_199805_008 sps4_200005_005 sps4_200005_011 sps4_200005_013 sps4_200005_015 sps4_200005_018 sps4_200105_005 sps4_200207_020 sps4_199910_025 sps4_200610_012 sps4_200910_025 sps4_201010_013 sps4_201010_004"  
 #sps4_199711_011 (zeus) - unstability in NEMO - to be checked 
 #sps4_200207_020 (juno) - NaN in field Sl_t
@@ -216,6 +214,8 @@ lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017
 #sps4_201010_013 (zeus) - h2osoi_ice sign negative
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
 
+lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004"
+listofcases="sps4ext_199811_018 sps4ext_200011_016 sps4ext_200111_009 sps4ext_200211_001 sps4ext_200311_004 sps4ext_200311_005 sps4ext_200411_002 sps4ext_200411_004 sps4ext_200411_016 sps4ext_200411_017 sps4ext_200511_011 sps4ext_200511_014 sps4ext_200811_007 sps4ext_200811_012 sps4ext_200811_015 sps4ext_200811_018 sps4ext_200811_019 sps4ext_200911_009 sps4ext_201011_001 sps4ext_201011_002 sps4ext_201011_004 sps4ext_201011_006 sps4ext_201011_007 sps4ext_201011_008 sps4ext_201011_009 sps4ext_201011_010 sps4ext_201011_011 sps4ext_201111_006 sps4ext_201211_005 sps4ext_201211_011 sps4ext_201311_001 sps4ext_201311_002 sps4ext_201311_003 sps4ext_201311_004 sps4ext_201311_005 sps4ext_201311_006 sps4ext_201311_007 sps4ext_201311_008 sps4ext_201311_009 sps4ext_201311_010 sps4ext_201311_011 sps4ext_201311_012 sps4ext_201311_013 sps4ext_201311_014 sps4ext_201311_015 sps4ext_201311_016 sps4ext_201311_017 sps4ext_201311_018 sps4ext_201311_019 sps4ext_201311_020 sps4ext_201411_011 sps4ext_201511_018 sps4ext_201611_006 sps4ext_201611_010 sps4ext_201711_003 sps4ext_201711_005 sps4ext_201711_009 sps4ext_201711_013 sps4ext_201811_006 sps4ext_201811_009 sps4ext_201811_011 sps4ext_201811_013 sps4ext_201811_019 sps4ext_201811_020 sps4ext_201911_003 sps4ext_201911_004 sps4ext_201911_005 sps4ext_201911_006 sps4ext_201911_007 sps4ext_201911_008 sps4ext_201911_009 sps4ext_201911_010 sps4ext_201911_011 sps4ext_201911_012 sps4ext_201911_013 sps4ext_201911_014 sps4ext_201911_015 sps4ext_201911_016 sps4ext_201911_017 sps4ext_201911_018 sps4ext_201911_019 sps4ext_201911_020"
 cd $DIR_CASES/
 for caso in $listofcases ; do
   report="$caso "
@@ -224,6 +224,10 @@ for caso in $listofcases ; do
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
+  if [[ $yyyy -eq 1995 ]] || [[ $yyyy -eq 1996 ]] || [[ $yyyy -eq 1997 ]] ||[[ $yyyy -eq 1999 ]] || [[ $yyyy -eq 2006 ]] || [[ $yyyy -eq 2007 ]]
+  then
+     continue
+  fi
   member=`echo $caso|cut -d '_' -f 3|cut -c 2-3`  
  
   CASEROOT=$DIR_CASES/$caso/
@@ -518,15 +522,13 @@ set -eux
       fi 
       eval ${cmd_ltarc_nodep}
       sleep 60
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 # lt_archive
@@ -556,16 +558,14 @@ set -eux
          $DIR_RECOVER/recover_lt_archive.sh $caso
       #fi
       sleep 60
-      body="RECOVER submitted"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
       if [[ $now_running -ge $maxnumbertorecover ]]
       then
          exit
       fi
 
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -691,16 +691,14 @@ set -eux
        #   fi
           echo "$command done"
           sleep 60
-          body="RECOVER submitted"
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
           now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
           if [[ $now_running -ge $maxnumbertorecover ]]
           then
              exit
           fi
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
 
@@ -807,16 +805,14 @@ set -eux
          #fi
          echo "$command done"
          sleep 60
-         body="RECOVER submitted"
-         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
          now_running=`${DIR_UTIL}/findjobs.sh -m $machine -n st_archive -c yes`
          if [[ $now_running -ge $maxnumbertorecover ]]
          then
             exit
          fi
       fi
-      #body="RECOVER submitted"
-      #${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
+      body="RECOVER submitted"
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "[$CPSSYS] $caso recover submitted" -s $yyyy$st
       if [[ $dbg -eq 1 ]] ; then break ; fi
    done
   

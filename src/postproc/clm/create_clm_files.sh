@@ -97,3 +97,6 @@ then
       fi
    fi
 fi
+#MB/BJF 20260604 - sleep added to avoid conclusion of job (when it is launched more than once) before the submission of postpc_clm 
+#in order to avoid problems with the dependency
+sleep 60

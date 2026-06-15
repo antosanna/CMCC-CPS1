@@ -10,75 +10,19 @@
 . $DIR_UTIL/load_nco
 set -euvx
 st=$1
+var=$2
 echo $st
 dbg=0 #just one cycle to check
 fileroot=cmcc_CMCC-CM3-v20231101_hindcast
-C3Stable_cam=$DIR_POST/cam/C3S_table.txt
-C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
-C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
-C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
-C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
-C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
-C3Stable_oce5=$DIR_POST/nemo/C3S_table_ocean2d_t26d.txt
-C3Stable_oce6=$DIR_POST/nemo/C3S_table_ocean2d_t28d.txt
-{
-read 
-while IFS=, read -r flname C3S dim lname sname units freq type realm addfact coord cell varflg
-do
-      var_arrayC3S+=("$C3S")
-done } < $C3Stable_cam
-{
-while IFS=, read -r flname C3S realm prec coord lname sname units freq level addfact coord2 cell
-do
-   var_arrayC3S+=("$C3S")
-done } < $C3Stable_clm
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce1
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce2
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce3
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce4
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce5
-#{
-#read 
-#while IFS=, read -r flname C3S lname sname units realm level addfact coord cell varflg reflev model fillval
-#do
-#   var_arrayC3S+=("$C3S")
-#done } < $C3Stable_oce6
-
          
-echo ${var_arrayC3S[@]}
 for st in $st
 do
-   for var in ${var_arrayC3S[@]}
+   for var in ${var}
    do
       echo " postprocessing $var"
       case $var in
-         tso | sitemptop | tsl | tdps | psl | tas | uas | vas | prw | ua100m | va100m)freq=6hour;;
-         tauu | tauv | tasmax | tasmin | wsgmax | lwepr | lweprc | lweprsn | lwesnw | rss | rsds | rlds | sic | rls | rlt | lwee | mrroab | mrroas | rhosn | hfls | hfss) freq=1day;;
+         tso | clt | sitemptop | tsl | tdps | psl | tas | uas | vas | prw | ua100m | va100m)freq=6hour;;
+         tauu | tauv | tasmax | tasmin | wsgmax | lwepr | lweprc | lweprsn | lwesnw | rss | rst| rsds | rlds | sic | rls | rlt | lwee | mrlsl | mrroab | mrroas | rhosn | hfls | hfss | snc) freq=1day;;
          zg | ta | ua | va | hus) freq=12hour;;
          mlotstheta001 | mlotstheta003 | sithick | sos | sot300 | thetaot300 | zos | t14d | t17d | t20d | t26d | t28d )freq=1month;;
       esac
@@ -92,11 +36,6 @@ do
              counter=$((counter + 1))
          fi
       done
-      if [[ $counter -ne 30 ]]
-      then
-         $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -M "single year statistics missing for ${var} $st. First run $DIR_DIAG_C3S/statistics/launch_maxmin_single_year.sh" -t "missing maxminDONE_${var}_????$st"
-         continue
-      fi
       for flag in min max
       do
          if [[ -f $OUTDIR_DIAG/C3S_statistics/$st/$var/${fileroot}_${st}.${iniy_hind}-${endy_hind}_${var}_${flag}.monthly.C3S.nc ]]
@@ -173,11 +112,3 @@ do
       fi
    done
 done
-if [[ `ls $OUTDIR_DIAG/C3S_statistics/$st/*/${fileroot}_${st}.${iniy_hind}-${endy_hind}_*.C3S.nc|wc -l` -eq 82 ]]
-then
-   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics done for $st" -M "completed"
-   touch ${OUTDIR_DIAG}/C3S_statistics/$st/C3S_statistics_${st}_DONE
-else
-   $DIR_UTIL/sendmail.sh -m $machine -e antonella.sanna@cmcc.it -t "C3S statistics not complete for $st" -M "Message from compute_maxmin_monthly_refperiod.sh: WARNING $st C3S_statistics not complete"
-fi
-

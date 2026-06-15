@@ -13,6 +13,7 @@
 . $DIR_UTIL/descr_ensemble.sh $iniy_hind
 
 set -uexv
+ny=$((endy_hind - iniy_hind + 1))
 script=launch_maxmin_single_year
 np=`${DIR_UTIL}/findjobs.sh -m $machine -n ${script} -c yes`
 if [[ $np -gt 1 ]]
@@ -124,14 +125,17 @@ for var in ${var_arrayC3S[@]}; do
         
     for st in {01..12}
     do
-       if [[ -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
+       filechek_var_st=$DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done
+       if [[ -f $filechek_var_st ]]
        then
-          echo "$var already computed! "
+          echo "$var $st already computed! "
           continue
        fi
+       cnt_fileok=0
        for yyyy in `seq $iniy_hind $endy_hind`
        do
           fileok=$outdir/$st/$yyyy/${var}/maxminDONE_${var}_${yyyy}$st
+          cnt_fileok=$((cnt_fileok + 1))
           if [[ -f $fileok ]]
           then
              continue
@@ -140,32 +144,37 @@ for var in ${var_arrayC3S[@]}; do
           mkdir -p $odir
           input="$var $yyyy $st $odir $fileok"
           memory=1000
-          if [[ $var == "zg" ]] || [[ $var == "ua" ]] || [[ $var == "va" ]] || [[ $var == "hus" ]] || [[ $var == "ta" ]]
+          if [[ $var == "zg" ]] || [[ $var == "ua" ]] || [[ $var == "va" ]] || [[ $var == "hus" ]] || [[ $var == "ta" ]] || [[ $var == "mrlsl" ]]
           then
              memory=3000
           fi
-          ${DIR_UTIL}/submitcommand.sh -m $machine -M $memory -t 1 -q $serialq_m -j ${namescript}_${var}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript}.sh -i "$input"
+          ${DIR_UTIL}/submitcommand.sh -m $machine -M $memory -t 1 -q $serialq_l -j ${namescript}_${var}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript}.sh -i "$input"
           npint=`${DIR_UTIL}/findjobs.sh -m $machine -n ${namescript} -c yes`
-#          if [[ $npint -ge 10 ]]
           if [[ $npint -ge $maxjob ]]
           then
              exit 0
           fi
        done    #loop on $yyyy
-       if [[ ! -f $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done ]] 
+       if [[ $cnt_fileok -eq $ny ]]
        then
-          body="all year from $iniy_hind $endy_hind and start-date $st done"
-          title="C3S_statistics maxmin start-date $st all years $var completed"
-          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-          touch     $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_${var}_done    
+#          body="all year from $iniy_hind $endy_hind and start-date $st done"
+#          title="C3S_statistics maxmin start-date $st all years $var completed"
+#          $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+          touch  $filechek_var_st
        fi
    done    #loop on $st
 done    #loop on $var
-if [[ `ls $DIR_LOG/DIAGS/C3S_statistics/compute_maxmin_allyears_st${st}_*_done |wc -l` -eq $((${#var_arrayC3S[@]} - 3)) ]]
-then
-   $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
-   input=$st
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -t 1 -q $serialq_m -j ${namescript2}_${yyyy}${st} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
-fi
+
+for st in  {01..12}
+do
+   for var in ${var_arrayC3S[@]}; do
+      if [[ -f $filechek_var_st ]]
+      then
+#         $DIR_UTIL/sendmail.sh -m $machine -e $mymail -M "$st completed" -t "C3S statistics"
+         input="$st $var"
+         ${DIR_UTIL}/submitcommand.sh -m $machine -M 3000 -t 1 -q $serialq_l -j ${namescript2}_${yyyy}${st}_${var} -l $DIR_LOG/DIAGS/C3S_statistics/ -d ${launchdir} -s ${namescript2}.sh -i "$input"
+      fi
+   done    #loop on $var
+done    #loop on $st
 
 exit 0

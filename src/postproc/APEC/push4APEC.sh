@@ -19,7 +19,7 @@ isforecast=$5
 
 usermail=andrea.borrelli@cmcc.it
 if [ $dbg_push -eq 0 ] ;then
-   apecmail=yrjung@apcc21.org
+   apecmail=gmpark@apcc21.org
 else
    apecmail=$usermail
    mymail=$usermail
@@ -35,7 +35,7 @@ if [ $npushdone -eq 1 ] ; then
 
 #AT LAST SEND notification both to sp1 and to APEC
    title="CMCC-SPS4 data-transfer to APCC completed"
-   body="Dear Yoorim, \n \n this is to notify the completion of CMCC-SPS4 ${type_fore} start-date ${yyyy}${st}01 transfer to your ftp server. \n \n Many thanks for your cooperation,\n CMCC-SPS staff \n"
+   body="Dear Gyeongmin Park, \n \n this is to notify the completion of CMCC-SPS4 ${type_fore} start-date ${yyyy}${st}01 transfer to your ftp server. \n \n Many thanks for your cooperation,\n CMCC-SPS staff \n"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $apecmail -M "$body" -t "$title" -s $yyyy$st -r yes -c $mymail -b $usermail
 
 else
