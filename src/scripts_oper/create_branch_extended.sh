@@ -19,7 +19,9 @@ flag_test=${7:-0}  # if set this flag disables the "true" run and activates
                    # ${SPSSystem}_202110_054)
                    # 1=tests from lt_archive_C3S.sh
 
+set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+set -euvx
 caso=${SPSSystem}ext_${yyyy}${st}_${nrun}
 echo "create_branch_extended.sh $caso starting `date`"
 casoREST=${SPSSystem}_${yyyy}${st}_${nrun}
@@ -33,12 +35,12 @@ then
    module use -p $modpath
 fi
 
-if [[ $yyyy$st -ge ${yyyySCEN}07 ]]; then
+if [[ $yyyy -ge 2013 ]]; then
    refcase=$refcaseSCEN
 else  #for hindcast period
    refcase=$refcaseHIST
 fi
-cesmexe=$DIR_EXE/cesm.exe.CPS1_${machine}
+cesmexe=$DIR_EXE1/cesm.exe.CPS1_${machine}
 mkdir -p $DIR_CASES
 
 ic='atm='$pp',lnd='$ppland',ocn='$poce''
@@ -53,7 +55,7 @@ $DIR_UTIL/clean_caso.sh $caso
 #----------------------------------------------------------
 # refcase changes with scenario but the executable must not
 set +euvx
-$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES/$refcase --cime-output-root $WORK_CPS
+$DIR_CESM/cime/scripts/create_clone --case $DIR_CASES/$caso --clone $DIR_CASES1/$refcase --cime-output-root $WORK_CPS
 
 set -euvx
 #----------------------------------------------------------
@@ -92,7 +94,7 @@ rsync -av $DIR_TEMPL/field_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 
-refdirREST=$SCRATCHDIR1/restarts4extended/$casoREST/rest
+refdirREST=$SCRATCHDIR/restarts4extended/$casoREST/rest
 #if [[ "$USER" == "${operational_user}" ]]
 #then
 restyyyy=$yyyy
@@ -105,18 +107,21 @@ elif [[ $restmon -lt 10 ]]
 then
    restmon=0$restmon
 fi
-if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
+if [[ `ls $refdirREST/sps4_${yyyy}${st}_${nrun}_????????_restart.nc|wc -l` -eq 0 ]]
 then
+   if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz ]]
+   then
       gunzip -f $refdirREST/$restyyyy-$restmon-01-00000.tar.gz
-fi
-if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar ]]
-then
+   fi
+   if [[ -f $refdirREST/$restyyyy-$restmon-01-00000.tar ]]
+   then
       tar -xvf $refdirREST/$restyyyy-$restmon-01-00000.tar
       mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
-else   
+   else   
       mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+   fi   
+   $DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 fi   
-$DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 
 cd $DIR_CASES/$caso
 #-----------
@@ -175,18 +180,23 @@ mkdir -p $DIR_CASES/$caso/logs
 #echo "IC CAM $ncdatanow"
 #sed -i '/ncdata/d' $DIR_CASES/$caso/user_nl_cam
 #echo "ncdata='$ncdatanow'">>$DIR_CASES/$caso/user_nl_cam
-if [[ $yyyy$st -ge ${yyyySCEN}07 ]] && [[ $yyyy$st -le ${yyyySCEN}12 ]]
+if [[ $yyyy -ge 2013 ]] 
 then
    echo "prescribed_ozone_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
    echo "prescribed_strataero_file='ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP585_c240528.nc'">>$DIR_CASES/$caso/user_nl_cam
+fi
+if [[ $yyyy -ge 2015 ]] 
+then
    echo "use_init_interp = .true.">>$DIR_CASES/$caso/user_nl_clm
 fi
-
-#for January 2015 the scenario compset is used here but for CLM ICs comes from historical one (last restart) 
-if [[ $yyyy$st -eq 201501 ]] 
-then   
-   echo "use_init_interp = .true." >> $DIR_CASES/$caso/user_nl_clm
+if [[ $yyyy -eq 2013 ]] 
+then
+   echo "flanduse_timeseries = '/data/inputs/CESM/inputdata/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_hist_16pfts_Irrig_CMIP6_simyr1850-2015_c171025.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "stream_fldfilename_popdens = '/data/inputs/CESM/inputdata/lnd/clm2/firedata/clmforc.Li_2017_HYDEv3.2_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2016_c180202.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "stream_fldfilename_ndep = '/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_b.e21.BWHIST.f09_g17.CMIP6-historical-WACCM.ensmean_1849-2015_monthly_0.9x1.25_c180926.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "fsurdat = '/data/inputs/CESM/inputdata/lnd/clm2/surfdata_map/surfdata_0.47x0.63_16pfts_Irrig_CMIP6_simyr1850_c170919.nc'">>$DIR_CASES/$caso/user_nl_clm
 fi
+
 #in forecast mode CLM ICs comes from an interrupted run covering the previous month
 #so, for january the CLM IC report a date from december of the previous year.
 #this happens as we produce the IC on the 1st of the month - due to the latency of the EDA data

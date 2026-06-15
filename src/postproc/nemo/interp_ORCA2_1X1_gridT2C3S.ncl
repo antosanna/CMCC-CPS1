@@ -544,9 +544,10 @@ begin
    ;  Write to a new file 
    ;----------------------------------------------------------------------
           ini_term=getenv("ini_term")
+          end_term=getenv("end_term")
    ;QUESTO VA MODIFICATO SEGUENDO CAM
    
-          filename3=outdir+"/"+ini_term+"_"+realm(i)+"_mon_"+level(i)+"_"+varnameout(i)+"_"+real+".nc"
+          filename3=outdir+"/"+ini_term+"_"+realm(i)+"_mon_"+level(i)+"_"+varnameout(i)+"_"+real+end_term
           print(filename3)
           system("/bin/rm -f "+filename3)   ; remove any pre-existing file
           setfileoption("nc","DefineMode",True)

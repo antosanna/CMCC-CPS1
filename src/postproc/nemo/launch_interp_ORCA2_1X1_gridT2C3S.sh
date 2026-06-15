@@ -8,6 +8,7 @@ set -euvx
 caso=$1
 var=$2
 wkdir=$3
+export end_term=$4
 
 member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx

@@ -116,7 +116,12 @@ export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
-C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+if [[ $caso =~ "ext" ]]; then
+   othersuff=others_ext
+else
+   othersuff=others
+fi
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_${othersuff}.txt
 C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
 C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
 C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
@@ -154,7 +159,7 @@ frq="mon"
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-for var in t14d t17d t20d t26d t28d others
+for var in t14d t17d t20d t26d t28d $othersuff
 do
     echo "---------------------------------------------"
     echo "launching $scriptname "`date`
@@ -169,18 +174,18 @@ do
 done
 while `true`
 do
-   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_others ]]
+   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
    then
       np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
       if [[ $np -eq 0 ]]
       then
 
          #in the time of the findjobs the flag may have appeared check again before exiting
-          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_others ]]
+          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
           then
              title="[C3S] ${CPSSYS} forecast ERROR"
              body="ERROR in standardization of ocean files for case ${caso}. 
-             Script is ${wkdir}/var/$scriptname"
+             Script is ${wkdir}/$var/$scriptname"
              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
              exit 1
           else

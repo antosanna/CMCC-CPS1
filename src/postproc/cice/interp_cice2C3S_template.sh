@@ -27,7 +27,7 @@ set -evxu
 if [[ $caso =~ "ext" ]]; then
    export end_term=_slicetime4446to11808.nc
    firstm=$nmonfore
-   lastm=$(($nmonfore + $nmonforeext - 1))
+   lastm=$(($nmonfore + $nmonforext - 1))
 else
    firstm=0
    lastm=$(($nmonfore - 1))

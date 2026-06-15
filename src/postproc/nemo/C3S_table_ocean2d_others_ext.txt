@@ -1,0 +1,7 @@
+Model Name,C3S Name,long_name,standard_name,units,modeling_realm,level,Arithmetic expr,coordinates,cell_method,ref lev,model,fillval
+zos,zos,Sea Surface Height Above Geoid,sea_surface_height_above_geoid,m,ocean,ocean2d,0,reftime realization time leadtime lat lon,leadtime: mean (interval: 1 day),0.,nemo,1.e+20
+sos,sos,Sea Surface Salinity,sea_water_practical_salinity,1,ocean,ocean2d,0,reftime realization time leadtime lat lon,leadtime: mean (interval: 1 day),0.,nemo,1.e+20
+somss300,sot300,Depth Average Salinity of Upper 300m,sea_water_practical_salinity,1,ocean,ocean2d,0,reftime realization time leadtime depth lat lon,depth: mean leadtime: mean (interval: 1 day),300.,nemo,1.e+20
+somtt300,thetaot300,Depth Average Potential Temperature of Upper 300m,sea_water_potential_temperature,K,ocean,ocean2d,273.16,reftime realization time leadtime depth lat lon,depth: mean leadtime: mean (interval: 1 day),300.,nemo,1.e+20
+mldr10_1,mlotstheta001,Ocean Mixed Layer Thickness Defined by Sigma Theta 0.01 kg/m3,ocean_mixed_layer_thickness_defined_by_sigma_theta,m,ocean,ocean2d,0,reftime realization time leadtime sigma_theta lat lon,leadtime: mean (interval: 1 day),0.01,nemo,1.e+20
+hi,sithick,Sea Ice Thickness,sea_ice_thickness,m,ocean,ocean2d,0,reftime realization time leadtime lat lon,leadtime: mean (interval: 1 day),0.,cice,1.e+20
