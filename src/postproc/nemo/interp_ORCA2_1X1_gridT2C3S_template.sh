@@ -113,8 +113,8 @@ member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary
 set -euvx
-st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
-yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
+export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
+export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
 set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
@@ -162,7 +162,7 @@ frq="mon"
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-for var in t14d t17d t20d t26d t28d $otherstuff
+for var in t14d t17d t20d t26d t28d $othersuff
 do
     echo "---------------------------------------------"
     echo "launching $scriptname "`date`
@@ -177,14 +177,14 @@ do
 done
 while `true`
 do
-   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${otherstuff} ]]
+   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
    then
       np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
       if [[ $np -eq 0 ]]
       then
 
          #in the time of the findjobs the flag may have appeared check again before exiting
-          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${otherstuff} ]]
+          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
           then
              title="[C3S] ${CPSSYS} forecast ERROR"
              body="ERROR in standardization of ocean files for case ${caso}. 

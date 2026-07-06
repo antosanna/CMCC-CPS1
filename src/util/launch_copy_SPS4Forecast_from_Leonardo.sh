@@ -1,6 +1,6 @@
 #!/bin/sh -l
 #BSUB -J launch_copy_SPS4Forecast_from_Leonardo
-#BSUB -q s_short
+#BSUB -q s_long
 #BSUB -o /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/launch_copy_SPS4Forecast_from_Leonardo.out.%J  
 #BSUB -e /work/cmcc/cp1/CPS/CMCC-CPS1/logs/leonardo_transfer/launch_copy_SPS4Forecast_from_Leonardo.err.%J  
 #BSUB -P 0784

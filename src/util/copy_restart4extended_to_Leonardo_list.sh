@@ -20,25 +20,23 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 st=11
 strest=05
 #for yyyy in `seq 1995 2024`
-for yyyy in 2010
+for caso in sps4_200011_021 sps4_200211_021 sps4_200311_021 sps4_200411_021 sps4_201311_021 sps4_199411_021
 do
+   yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
    yyyyrest=$((yyyy + 1))
-   for ens in 11
-   do
 
-      jun_dir=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000/
-      jun_file=$DIR_ARCHIVE1/${SPSSystem}_${yyyy}${st}_0${ens}/rest/$yyyyrest-$strest-01-00000.tar.gz
-      leo_dir=/leonardo_work/$account_SLURM/scratch/restarts4extended/${SPSSystem}_${yyyy}${st}_0${ens}/rest
-      if [[ -d $jun_dir ]]
-      then
+   jun_dir=$DIR_ARCHIVE1/${caso}/rest/$yyyyrest-$strest-01-00000/
+   jun_file=$DIR_ARCHIVE1/${caso}/rest/$yyyyrest-$strest-01-00000.tar.gz
+   leo_dir=/leonardo_work/$account_SLURM/scratch/restarts4extended/${caso}/rest
+   if [[ -d $jun_dir ]]
+   then
          rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/* a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
-      elif [[ -f $jun_file ]]
-      then
+   elif [[ -f $jun_file ]]
+   then
          rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_file} a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
-      else
+   else
          body="$DIR_UTIL/copy_restart4extended_to_Leonardo.sh No restart present for caso ${SPSSystem}_${yyyy}${st}_0${ens}"
          title="EXTENDED FORECAST ISSUE: restart not found"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
-      fi
-   done
+   fi
 done

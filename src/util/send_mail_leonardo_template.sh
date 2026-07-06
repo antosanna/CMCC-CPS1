@@ -9,7 +9,7 @@ set -euvx
 
 message+="<br> `date`"
 ARG_EMAIL_TO="$mymail"
-ARG_EMAIL_FROM="sp1 <sp1@cmcc.it>"
+ARG_EMAIL_FROM="CMCC-SPS <scc-noreply@cmcc.it>"
 ARG_EMAIL_SUBJECT="TITLE"
 
   #echo "Mime-Version: 1.0"

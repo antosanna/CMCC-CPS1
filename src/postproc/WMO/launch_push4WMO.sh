@@ -36,7 +36,7 @@ then
    iyy=`date +%Y`
    fyy=$iyy
 else
-   iyy=1993
+   iyy=2008
    if [[ $dbg_push -ge 1 ]]
    then
       iyy=1993
