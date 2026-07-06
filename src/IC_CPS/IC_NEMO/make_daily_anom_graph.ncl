@@ -194,7 +194,7 @@ begin
 ;************************************************
 ; create panel
 ;************************************************
-  maititle                      = "ESACCI sst anomalies ("+iniy+"-"+endy+") for "+refdate
+  maititle                      = "ESACCI/OSTIA sst anomalies ("+iniy+"-"+endy+") for "+refdate
   subtitle                      = "sst data from Copernicus Marine Data Store"
   resP                          = True                 ; modify the panel plot
   resP@gsnFrame                 = False                ; Turn off so we can add titles

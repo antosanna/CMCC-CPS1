@@ -10,7 +10,6 @@
 . ${DIR_UTIL}/load_nco
 set -euvx
 
-dbg=${8:-0}
 
 #------------------------------------------------
 #-------------------------------------------------------------
@@ -27,6 +26,7 @@ ichydros=$5
 check_incomplete=$6
 errorflag=$7
 idcomplete=${8:-0} #default is operational (idcomplete=0)
+dbg=${9:-0}
 
 backup=0
 mm=$((10#$mm2d))

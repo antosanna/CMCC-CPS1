@@ -25,6 +25,7 @@ dir=getenv("anomdir")
 v1    = addfile (dir+"/sst_"+SPSSystem+"_"+yyyyfore+st+"_all_ano."+refperiod+".nc","r")
 tstmp    = v1->tso(:,0:5,:,:)
 timetmp  = v1->time(0:5)
+lat    = v1->lat
 ts=new((/nens,15,180,360/),typeof(tstmp),tstmp@_FillValue)
 ts(:,7:12,:,:)=tstmp
 time=new((/15/),typeof(timetmp))
@@ -81,7 +82,12 @@ print(lt1)
 print(lt2)
 print(lg1)
 print(lg2)
-nino3=wgt_areaave_Wrap(ts(:,:,{lt1:lt2},{lg1:lg2}),1,1,0)
+
+rad    = 4.0*atan(1.0)/180.0
+clat   = cos(lat*rad)
+copy_VarMeta(lat,clat)
+
+nino3=wgt_areaave_Wrap(ts(:,:,{lt1:lt2},{lg1:lg2}),clat({lt1:lt2}),1,0)
 
 nino3!0    = "ensemble"
 nino3!1    = "time"

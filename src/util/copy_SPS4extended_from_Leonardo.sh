@@ -47,6 +47,11 @@ then
    exit 0
 fi
 rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@data.leonardo.cineca.it:${leo_dir_CASES}/$caso/logs/run_moredays_${caso}_DONE ${outdir}
+if [[ ! -f ${outdir}/run_moredays_${caso}_DONE ]]
+then
+# case not yet completed
+   exit 0
+fi
 rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
 #$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
 

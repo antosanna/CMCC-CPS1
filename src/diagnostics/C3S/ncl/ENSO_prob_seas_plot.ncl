@@ -37,6 +37,7 @@ figtype=getenv("figtype")
 inputmall=getenv("inputmall")
 v1=addfile(inputmall,"r")
 tstmp    = v1->tso(:,0:5,:,:)
+lat=v1->lat
 inputmclimall=getenv("inputmclimall")
 vclim  = addfile (inputmclimall,"r")
 tstmp_clim  = vclim->tso(:,:,0:5,:,:)
@@ -97,7 +98,12 @@ print(lt1)
 print(lt2)
 print(lg1)
 print(lg2)
-nino3=wgt_areaave_Wrap(ts(:,:,{lt1:lt2},{lg1:lg2}),1,1,0)
+
+rad    = 4.0*atan(1.0)/180.0
+clat   = cos(lat*rad)
+copy_VarMeta(lat,clat)
+
+nino3=wgt_areaave_Wrap(ts(:,:,{lt1:lt2},{lg1:lg2}),clat({lt1:lt2}),1,0)
 nino3_occ_blw=where(nino3.lt.-0.5,1,0)
 nino3_occ_nrm=where(nino3.ge.-0.5 .and. nino3.le.0.5,1,0)
 nino3_occ_abv=where(nino3.gt.0.5,1,0)
@@ -105,7 +111,7 @@ nina_prob=dim_avg_n_Wrap(nino3_occ_blw,0)*100
 nino_prob=dim_avg_n_Wrap(nino3_occ_abv,0)*100
 neutr_prob=dim_avg_n_Wrap(nino3_occ_nrm,0)*100
 
-nino3_clim=wgt_areaave_Wrap(ts_clim(:,:,:,{lt1:lt2},{lg1:lg2}),1,1,0)
+nino3_clim=wgt_areaave_Wrap(ts_clim(:,:,:,{lt1:lt2},{lg1:lg2}),clat({lt1:lt2}),1,0)
 nino3_clim_occ_blw=where(nino3_clim.lt.-0.5,1,0)
 nino3_clim_occ_nrm=where(nino3_clim.ge.-0.5 .and. nino3_clim.le.0.5,1,0)
 nino3_clim_occ_abv=where(nino3_clim.gt.0.5,1,0)

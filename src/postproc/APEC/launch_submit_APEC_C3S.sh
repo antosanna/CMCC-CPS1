@@ -27,8 +27,8 @@ then
    yyyyi=`date +%Y`
    yyyyf=$yyyyi
 else
-  yyyyi=${iniy_hind} #`date +%Y`
-  yyyyf=${endy_hind} #`date +%Y`
+   yyyyi=${iniy_hind} #`date +%Y`
+   yyyyf=${endy_hind} #`date +%Y`
 fi
 
 for yyyy in `seq $yyyyi $yyyyf`

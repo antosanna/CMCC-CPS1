@@ -113,6 +113,7 @@ set +euvx
 set -euvx
 export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
 export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
+set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
