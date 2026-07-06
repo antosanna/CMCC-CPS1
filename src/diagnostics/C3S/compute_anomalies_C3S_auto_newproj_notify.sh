@@ -82,6 +82,8 @@ fi
  	
 if [[ "$varm" == "sst" ]] ; then
    #define dir for ncep obs needed for plot
+   dirlog=${DIR_LOG}/${typeofrun}/${yyyy}${st}/diagnostics
+   mkdir -p $dirlog
    ncep_dir=$SCRATCHDIR/ENSO/NCEP
    mkdir -p $ncep_dir
 
@@ -89,7 +91,20 @@ if [[ "$varm" == "sst" ]] ; then
 	  for ensoreg in $ensorgl ; do
 	      $DIR_DIAG_C3S/ENSO_plot_notify.sh $yyyy $st $ensoreg $dirplots $workdir $anomdir $ncep_dir
        $DIR_DIAG_C3S/ENSO_prob_seas_plot.sh $yyyy $st $ensoreg $dirplots $workdir $anomdir
-   done
+       ####### New probabilistic ENSO diagnostics #######
+       input="$yyyy $st $ensoreg $dirplots $workdir $anomdir"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j ENSO_strength_prob_seas_plot_${varm}_${yyyy}${st} -l ${dirlog} -s ENSO_strength_prob_seas_plot.sh -i "$input"
+       ##############
+       ####### RONI plume #######
+        if [[ $ensoreg == "Nino3.4" ]]
+        then
+          #relative nino index still to be implemented over the other nino regions
+          #reading of obs to be adapted
+          input="$yyyy $st $dirplots $workdir $anomdir $ncep_dir $ensoreg"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j RONI_plot_notify_${varm}_${yyyy}${st} -l ${dirlog} -s RONI_plot_notify.sh -i "$input"  
+       fi
+   done 
+   ##############
 	  nENSOplotDONE=`ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE | wc -l`
 	  if [[ $nENSOplotDONE -ne 4 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun ENSO plot ERROR"

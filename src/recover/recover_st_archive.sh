@@ -33,7 +33,32 @@ do
   set +uevx
   . $dictionary
   set -euvx
-  if [[ ! -f  $check_6months_done ]] ; then
+  if { [[ $caso =~ "ext" ]] && [[ -f  $check_10ext_months_done ]]; } || [[ -f  $check_6months_done ]] ; then
+    #is st_archive after moredays.. launch with dependency lt_arch_moredays
+       cmd=`./preview_run |grep case.st_archive|tail -1`
+       if [[ $machine == "cassandra" ]] || [[ $machine == "juno" ]]
+       then
+          cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
+          eval ${cmd_nodep}
+          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "6" -M 25000 -p st_archive.$caso -j lt_archive_moredays.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive_moredays 
+       elif [[ $machine == "leonardo" ]]  
+       then
+          cmd_nodep="$(echo "${cmd/"--dependency=afterok:0"/}")"
+          eval ${cmd_nodep}  
+          st_arch_jobid=`$DIR_UTIL/findjobs.sh -m $machine -n st_archive.${caso} -i yes` 
+          cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1`
+          if [[ ${cmd_ltarc} == "" ]] ; then
+              ./xmlchange NEMO_REBUILD=FALSE
+              ./xmlchange --subgroup case.lt_archive_moredays prereq=1
+              cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1` 
+          fi
+          cmd_ltarc_dep="$(echo "${cmd_ltarc/"--dependency=afterok:1"/"--dependency=${st_arch_jobid}"}")"   
+          eval ${cmd_ltarc_dep} 
+       fi  
+
+
+   else
+
        #is st_archive during monthly run. launch with dependency nemo_rebuild and lt_archive
 
        #in order to relaunch st_archive with the right syntax, we keep the command as appear in preview_run (for portability)
@@ -60,28 +85,6 @@ do
           eval ${cmd_ltarc_dep}
 
        fi
-  else
-    #is st_archive after moredays.. launch with dependency lt_arch_moredays
-       cmd=`./preview_run |grep case.st_archive|tail -1`
-       if [[ $machine == "cassandra" ]] || [[ $machine == "juno" ]]
-       then
-          cmd_nodep="$(echo "${cmd/"-ti -w 'done(0)'"/}")"
-          eval ${cmd_nodep}
-          ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -t "6" -M 25000 -p st_archive.$caso -j lt_archive_moredays.$caso -l $DIR_CASES/$caso/logs/ -d ${DIR_CASES}/$caso -s .case.lt_archive_moredays 
-       elif [[ $machine == "leonardo" ]]  
-       then
-          cmd_nodep="$(echo "${cmd/"--dependency=afterok:0"/}")"
-          eval ${cmd_nodep}  
-          st_arch_jobid=`$DIR_UTIL/findjobs.sh -m $machine -n st_archive.${caso} -i yes` 
-          cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1`
-          if [[ ${cmd_ltarc} == "" ]] ; then
-              ./xmlchange NEMO_REBUILD=FALSE
-              ./xmlchange --subgroup case.lt_archive_moredays prereq=1
-              cmd_ltarc=`./preview_run |grep .case.lt_archive_moredays |tail -1` 
-          fi
-          cmd_ltarc_dep="$(echo "${cmd_ltarc/"--dependency=afterok:1"/"--dependency=${st_arch_jobid}"}")"   
-          eval ${cmd_ltarc_dep} 
-       fi  
  
   fi     
 done

@@ -33,6 +33,14 @@ then
    body="Case $caso presents more than one restart directory. lt_archive_moredays exited"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M $body -t $title -r "yes" -s $stdate
    exit 1
+else
+   if [[ `ls  $DIR_ARCHIVE/$caso/rest/*.tar.gz |wc -l` -eq 1 ]] ; then
+      echo "tar for caso $caso already done and compressed, but restdir not removed. Do it now"
+      targz=`ls  $DIR_ARCHIVE/$caso/rest/*.tar.gz`
+      dirrest=`echo $targz|cut -d . -f 1`
+      rm -rf $dirrest
+      exit 0
+   fi
 fi
 dirrest=`ls |grep 00000`
 cd $DIR_ARCHIVE/$caso/rest/$dirrest

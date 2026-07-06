@@ -113,20 +113,21 @@ fi
 echo "recover_interrupted.sh starting `date`"
 
 cd $DIR_CASES/
-listofcases="sps4ext_199511_001"
+#listofcases=""
+listofcases="sps4ext_199311_001 sps4ext_199311_003  sps4ext_199311_006 sps4ext_199311_007 sps4ext_199311_018 sps4ext_199411_001 sps4ext_199411_002 sps4ext_199411_005 sps4ext_199411_006 sps4ext_199411_007 sps4ext_199411_008 sps4ext_199411_010 sps4ext_199411_015 sps4ext_199411_020 sps4ext_201311_001 sps4ext_201311_002 sps4ext_201311_003 sps4ext_201311_004 sps4ext_201311_005 sps4ext_201311_006 sps4ext_201311_007 sps4ext_201311_008 sps4ext_201311_009 sps4ext_201311_010 sps4ext_201311_011 sps4ext_201311_012 sps4ext_201311_013 sps4ext_201311_014 sps4ext_201311_015 sps4ext_201311_016 sps4ext_201311_017 sps4ext_201311_018 sps4ext_201311_019 sps4ext_201311_020"
 if [[ $st != "None" ]]
 then
-if [[ $yyyy -ne 1993 ]]
-then
+   if [[ $yyyy -ne 1993 ]]
+   then
 set +euvx
-   . ${DIR_UTIL}/descr_ensemble.sh $yyyy
+      . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 #set -euvx
 set -eux
-   echo $typeofrun
-   listofcases=`ls -d ${header}_${yyyy}${st}_0??`
-else
-   listofcases=`ls -d ${header}_????${st}_0??`
-fi
+      echo $typeofrun
+      listofcases=`ls -d ${header}_${yyyy}${st}_0??`
+   else
+      listofcases=`ls -d ${header}_????${st}_0??`
+   fi
 fi
 
 if [[ $machine == "leonardo" ]]
@@ -214,7 +215,7 @@ lista_arch_moredays=" "
 #sps4_201010_013 (zeus) - h2osoi_ice sign negative
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
 
-lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004 sps4ext_200411_002 sps4_200011_016"
+lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004 sps4_200011_016 ${header}_201311_010 ${header}_199411_007"
 cd $DIR_CASES/
 for caso in $listofcases ; do
   report="$caso "
@@ -223,7 +224,8 @@ for caso in $listofcases ; do
   fi
   st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
   yyyy=`echo $caso|cut -d '_' -f 2|cut -c 1-4`
-  if [[ $yyyy -eq 1995 ]] || [[ $yyyy -eq 1996 ]] || [[ $yyyy -eq 1997 ]] ||[[ $yyyy -eq 1999 ]] || [[ $yyyy -eq 2006 ]] || [[ $yyyy -eq 2007 ]] || [[ $yyyy -eq 2013 ]]
+  reportfile=$DIR_REP/REPORT.recover.`date +%s`
+  if [[ $yyyy -eq 1995 ]] || [[ $yyyy -eq 1996 ]] || [[ $yyyy -eq 1997 ]] ||[[ $yyyy -eq 1999 ]] || [[ $yyyy -eq 2006 ]] || [[ $yyyy -eq 2007 ]] 
   then
      continue
   fi
@@ -289,15 +291,15 @@ set -eux
         if [[ ${last_cesm} -nt ${last_star} ]] && [[ $errstring -ne 0 ]] ; then
           cnt_st_archive=$(($cnt_st_archive + 1)) 
           lista_st_archive+=" $caso"
-          report+=" must be resubmitted from st_archive"
+          reportf=$report" must be resubmitted from st_archive"
         elif [[ ${is_starch} -eq 1 ]] ; then
            cnt_st_archive=$(($cnt_st_archive + 1))
            lista_st_archive+=" $caso"
-          report+=" must be resubmitted from st_archive"
+          reportf=$report" must be resubmitted from st_archive"
         else
            cnt_lt_archive=$(($cnt_lt_archive + 1))
            lista_lt_archive+=" $caso"
-          report+=" must be resubmitted from lt_archive"
+          reportf=$report" must be resubmitted from lt_archive"
 #get last restart directory month
            cmm=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 2`
            cyy=`ls -tr $DIR_ARCHIVE/$caso/rest| tail -1|cut -d '-' -f 1`
@@ -313,16 +315,16 @@ set -eux
            then
               cnt_resubmit=$(($cnt_resubmit + 1))
               lista_resubmit+=" $caso"
-              report+=" must be resubmitted"
+              reportf=$report" must be resubmitted"
            else
               if [[ `ls ${DIR_CASES}/$caso/logs/lt_archive_moredays_*err |wc -l` -eq 0 ]]
               then
                  lista_moredays+=" $caso"
                  cnt_moredays=$(($cnt_moredays + 1))
-                 report+=" lacks moredays"
+                 reportf=$report" lacks moredays"
               else
                  lista_arch_moredays+=" $caso"
-                 report+=" has done moredays"
+                 reportf=$report" has done moredays"
                  cnt_arch_moredays=$(($cnt_arch_moredays + 1))
               fi 
            fi
@@ -357,18 +359,18 @@ set -eux
      fi #juno
      fi #forecast
   fi #if moredays
-  echo $report >>$DIR_REP/REPORT_recover.$yyyy$st
+  echo $reportf >>$reportfile
 
 done  
 
 if [[ "$lista_lt_archive"  != " " ]]
 then
-   echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted" >>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "$lista_lt_archive" >>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing ">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "$lista_moredays">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "RECOVER_LIST: list of cases with lt_archive to be resubmitted" >>$reportfile
+   echo "$lista_lt_archive" >>$reportfile
+   echo "">>$reportfile
+   echo "---- From the above RECOVER_LIST, $cnt_moredays cases with run more days missing ">>$reportfile
+   echo "">>$reportfile
+   echo "$lista_moredays">>$reportfile
    for caso in $lista_moredays
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -376,8 +378,8 @@ then
    done
 
    echo "---- From the above RECOVER_LIST, $cnt_arch_moredays cases with lt_archive_moredays missing"
-   echo ">>$DIR_REP/REPORT_recover.$yyyy$st"
-   echo "$lista_arch_moredays>>$DIR_REP/REPORT_recover.$yyyy$st"
+   echo ">>$reportfile
+   echo "$lista_arch_moredays>>$reportfile
    for caso in $lista_arch_moredays
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -388,20 +390,20 @@ then
 fi
 if [[ "$lista_resubmit" != " " ]]
 then
-   echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted >>$DIR_REP/REPORT_recover.$yyyy$st"
-   echo "$lista_resubmit>>$DIR_REP/REPORT_recover.$yyyy$st"
-   echo ">>$DIR_REP/REPORT_recover.$yyyy$st"
+   echo "---- From the above RECOVER_LIST, $cnt_resubmit cases to be resubmitted ">>$reportfile
+   echo "$lista_resubmit">>$reportfile
+   echo "">>$reportfile
    for caso in $lista_resubmit
    do
-#echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
+      echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
       echo "-,$caso,-,-,-,- " >> $filecsv
    done
 fi
 if [[ "$lista_first_month" != " " ]]
 then
-   echo "Cases interrupted during first month">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "$lista_first_month">>$DIR_REP/REPORT_recover.$yyyy$st 
-   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "Cases interrupted during first month">>$reportfile
+   echo "$lista_first_month">>$reportfile
+   echo "">>$reportfile
    for caso in $lista_first_month
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -410,9 +412,9 @@ then
 fi
 if [[ "$lista_st_archive" != " " ]]
 then
-   echo "Cases interrupted during st_archive">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "$lista_st_archive" >>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "Cases interrupted during st_erchive">>$reportfile
+   echo "$lista_st_archive" >>$reportfile
+   echo "">>$reportfile
    for caso in $lista_st_archive
    do  
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 
@@ -423,9 +425,9 @@ fi
 if [[ "$lista_pp_C3S" != " " ]]
 then
    lista_pp_C3S=$(echo $lista_pp_C3S | tr ' ' '\n' | sort -u)
-   echo "Cases with interrupted postproc_C3S.sh">>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "$lista_pp_C3S" >>$DIR_REP/REPORT_recover.$yyyy$st
-   echo "">>$DIR_REP/REPORT_recover.$yyyy$st
+   echo "Cases with interrupted postproc_C3S.sh">>$reportfile
+   echo "$lista_pp_C3S" >>$reportfile
+   echo "">>$reportfile
    for caso in $lista_pp_C3S
    do
 #echo "first month,resubmit,st_archive,lt_archive (miss moredays),lt_archive_moredays,postproc C3S (forecast)" 

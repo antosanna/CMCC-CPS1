@@ -10,7 +10,8 @@
 set -evxu
 ntot=$nrunmax
 mkdir -p $TRIP_DIR
-for yyyy in `seq $iniy_hindext $endy_hind`
+#for yyyy in `seq $iniy_hindext $endy_hind`
+for yyyy in `seq 1993 1994`
 do
    for st in 11
    do

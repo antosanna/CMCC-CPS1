@@ -117,8 +117,8 @@ then
    then
       tar -xvf $refdirREST/$restyyyy-$restmon-01-00000.tar
       mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
-   else   
-      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
+#   else   
+#      mv $refdirREST/$restyyyy-$restmon-01-00000/* $refdirREST
    fi   
    $DIR_POST/nemo/nemo_rebuild_restart4extended.sh $casoREST $refdirREST
 fi   
@@ -191,10 +191,10 @@ then
 fi
 if [[ $yyyy -eq 2013 ]] 
 then
-   echo "flanduse_timeseries = '/data/inputs/CESM/inputdata/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_hist_16pfts_Irrig_CMIP6_simyr1850-2015_c171025.nc'">>$DIR_CASES/$caso/user_nl_clm
-   echo "stream_fldfilename_popdens = '/data/inputs/CESM/inputdata/lnd/clm2/firedata/clmforc.Li_2017_HYDEv3.2_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2016_c180202.nc'">>$DIR_CASES/$caso/user_nl_clm
-   echo "stream_fldfilename_ndep = '/data/inputs/CESM/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_b.e21.BWHIST.f09_g17.CMIP6-historical-WACCM.ensmean_1849-2015_monthly_0.9x1.25_c180926.nc'">>$DIR_CASES/$caso/user_nl_clm
-   echo "fsurdat = '/data/inputs/CESM/inputdata/lnd/clm2/surfdata_map/surfdata_0.47x0.63_16pfts_Irrig_CMIP6_simyr1850_c170919.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "flanduse_timeseries = '$CESMDATAROOT/inputdata/lnd/clm2/surfdata_map/landuse.timeseries_0.47x0.63_hist_16pfts_Irrig_CMIP6_simyr1850-2015_c171025.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "stream_fldfilename_popdens = '$CESMDATAROOT/inputdata/lnd/clm2/firedata/clmforc.Li_2017_HYDEv3.2_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2016_c180202.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "stream_fldfilename_ndep = '$CESMDATAROOT/inputdata/lnd/clm2/ndepdata/fndep_clm_hist_b.e21.BWHIST.f09_g17.CMIP6-historical-WACCM.ensmean_1849-2015_monthly_0.9x1.25_c180926.nc'">>$DIR_CASES/$caso/user_nl_clm
+   echo "fsurdat = '$CESMDATAROOT/inputdata/lnd/clm2/surfdata_map/surfdata_0.47x0.63_16pfts_Irrig_CMIP6_simyr1850_c170919.nc'">>$DIR_CASES/$caso/user_nl_clm
 fi
 
 #in forecast mode CLM ICs comes from an interrupted run covering the previous month
