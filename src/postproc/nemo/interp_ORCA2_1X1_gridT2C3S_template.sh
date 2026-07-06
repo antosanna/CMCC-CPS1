@@ -4,22 +4,24 @@
 . $DIR_UTIL/descr_CPS.sh
 . $DIR_UTIL/load_cdo
 . $DIR_UTIL/load_nco
-#. $DIR_UTIL/load_ncl
 
 set -exuv
 
-export outdirC3S=OUTDIRC3S
+outdirC3S=OUTDIRC3S
+mkdir -p $outdirC3S
 caso=CASO
 if [[ $caso =~ "ext" ]]; then
-   export end_term=_slicetime4446to11808.nc
+   end_term=_slicetime4716to11304.nc
+   export init=182
    firstm=$nmonfore 
    lastm=$(($nmonforext + $nmonfore - 1))
 else
-   export end_term=.nc
+   end_term=.nc
+   export init=0
    firstm=0
    lastm=$(($nmonfore - 1))
 fi
-logdir=$1  #to manage offline and online submission (remote vs local cases) 
+logdir=$1
 
 func_error_dims () {
 local dir2examine=$1
@@ -111,8 +113,9 @@ member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
 . $dictionary
 set -euvx
-export st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
-export yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
+st=`echo ${caso}|cut -d '_' -f 2|cut -c 5-6`
+yyyy=`echo ${caso}|cut -d '_' -f 2|cut -c 1-4`
+set +euvx
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -euvx
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
@@ -144,7 +147,7 @@ done
 
 wkdir=$SCRATCHDIR/CPS/CMCC-CPS1/rebuild_nemo/$caso
 mkdir -p $wkdir
-export inputfile=$wkdir/${caso}_1m_grid_T.nc
+inputfile=$wkdir/${caso}_1m_grid_T.nc
 #echo 'inizio ncrcat ' `date`
 if [[ ! -f $inputfile ]]
 then
@@ -159,7 +162,7 @@ frq="mon"
 #echo 'fine ncrcat ' `date`
 scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
-for var in t14d t17d t20d t26d t28d $othersuff
+for var in t14d t17d t20d t26d t28d $otherstuff
 do
     echo "---------------------------------------------"
     echo "launching $scriptname "`date`
@@ -169,19 +172,19 @@ do
    if [[ ! -f ${check_oceregrid}_${var} ]] 
    then
        cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -M 15000 -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var "
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -n 10 -M 15000 -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var $end_term $init $outdirC3S $scriptname $inputfile"
    fi
 done
 while `true`
 do
-   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
+   if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${otherstuff} ]]
    then
       np=`${DIR_UTIL}/findjobs.sh -m $machine -n launch_interp_ORCA2_1X1_gridT2C3S_${caso} -c yes`
       if [[ $np -eq 0 ]]
       then
 
          #in the time of the findjobs the flag may have appeared check again before exiting
-          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${othersuff} ]]
+          if [[ ! -f ${check_oceregrid}_t14d ]] || [[ ! -f ${check_oceregrid}_t20d ]] || [[ ! -f ${check_oceregrid}_t26d ]] || [[ ! -f ${check_oceregrid}_t28d ]] || [[ ! -f ${check_oceregrid}_t17d ]] || [[ ! -f ${check_oceregrid}_${otherstuff} ]]
           then
              title="[C3S] ${CPSSYS} forecast ERROR"
              body="ERROR in standardization of ocean files for case ${caso}. 
@@ -201,7 +204,7 @@ do
    else
       touch ${check_oceregrid}
       if [[ -f $inputfile ]]
-      then
+      then 
          rm $inputfile
       fi
       break

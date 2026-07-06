@@ -9,6 +9,10 @@ caso=$1
 var=$2
 wkdir=$3
 export end_term=$4
+export init=$5
+export outdirC3S=$6
+export scriptname=$7
+export inputfile=$8
 
 member=`echo ${caso}|cut -d '_' -f3|cut -c 2,3`
 set +euvx
@@ -31,7 +35,6 @@ export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"
 OUTDIR_NEMO=$DIR_ARCHIVE/${caso}/ocn/hist/
 #echo 'fine ncrcat ' `date`
 export C3S_table_ocean2d="$DIR_POST/nemo/C3S_table_ocean2d_${var}.txt"
-scriptname=interp_ORCA2_1X1_gridT2C3S.ncl
 
 prefix=${GCM_name}-v${versionSPS}
 export fore_type=$typeofrun

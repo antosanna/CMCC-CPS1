@@ -49,6 +49,11 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
+   c3s_checker_cmd=/work/cmcc/cp1/miniconda/envs/c3s-checker
+   envcondac3schecker=/work/cmcc/cp1/miniconda/envs/c3schecker
+   envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
+   envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
+   envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
    is_backup=1 
    is_backup_ic=0 #cmcc machines operational for IC production !!!\
    qos=qos_lowprio   #this is used only for SLURM but it is
@@ -69,6 +74,7 @@ then
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_py39
+      miniconda_ncl=/work/cmcc/cp1/miniconda/envs/miniconda_ncl
       maxnumbertosubmit=18
       maxnumbertorecover=40
       maxnumberguarantee=7
@@ -90,7 +96,7 @@ then
       cores_per_run=336
       mpilib4py_nemo_rebuild=oneapi-2025.0.4/impi-2021.14.2 #impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondacm3=cmcc-cm_sps4
+      envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
       envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
       maxnumbertosubmit=54
       maxnumbertorecover=$maxnumbertosubmit

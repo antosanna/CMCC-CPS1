@@ -306,7 +306,8 @@ begin
     mm=tointeger(st)
     yy=tointeger(yyyy)
 
-    totdays=0.d
+;    totdays=0.d
+    totdays=todouble(getenv("init"))
     do i=0,nt-1
        if (mm.gt.12) then
             yy=yy+1

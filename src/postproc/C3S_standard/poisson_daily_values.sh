@@ -18,6 +18,7 @@ export outputFV=$6
 export checkfile=$7
 
 export HEALED_DIR=$HEALED_DIR_ROOT/$caso
+mkdir -p $HEALED_DIR
 
 yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
 st=`echo $caso|cut -d '_' -f2|cut -c 5-6`
@@ -27,14 +28,16 @@ export lastday=$(( $fixsimdays - 1 ))
 if [[ $caso =~ "ext" ]]; then
    export lastday=$(( $fixsimextdays - 1 ))
 fi
-export templateFileName=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
+#export templateFileName=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
+export templateFileName=$HEALED_DIR/$caso.cam.h3.TREFMNAV.nc
 if [[  -f $checkfile ]]
 then
    rm $checkfile
 fi
 if [[ ! -f $templateFileName ]]
 then
-   cdo shifttime,-12hours -selvar,TREFMNAV $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.${yyyy}-${st}.zip.nc $templateFileName
+   out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc`
+   cdo shifttime,-12hours -selvar,TREFMNAV $out3 $templateFileName
 fi
 if [[ $model == "cam" ]]
 then

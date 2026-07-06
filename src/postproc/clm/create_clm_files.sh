@@ -28,13 +28,17 @@ cd ${wkdir_clm}
 
 if [[ $caso =~ "ext" ]]; then
    nsimdays=$fixsimextdays
+   yyyyp1=$((yyyy + 1))
+   time_tag=$yyyyp1-05
    case $ft in
      h2 ) suffix=01-21600;; # 6h
      h1 ) suffix=02-00000;; # daily
      h3 ) suffix=02-00000;; # daily
    esac
+   init=$((4*$mult))
 else
    nsimdays=$fixsimdays
+   time_tag=$yyyy-$st
    suffix=01-00000
 fi
 
@@ -47,42 +51,48 @@ then
      # clm (I) compress clm output and append ic attribute
      #--------------------------------------------
           
-      if [[ ! -f pre.$caso.clm2.$ft.$yyyy-$st.zip.nc ]] 
+      if [[ ! -f pre.$caso.clm2.$ft.${time_tag}.zip.nc ]] 
       then 
-         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st-$suffix.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         $DIR_UTIL/compress.sh $DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.${time_tag}-$suffix.nc pre.$caso.clm2.$ft.${time_tag}.zip.nc
       fi
-      ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.$yyyy-$st.zip.nc
+      ncatted -O -a ic,global,a,c,"$ic" pre.$caso.clm2.$ft.${time_tag}.zip.nc
 
      #--------------------------------------------
      # clm (II) check that number of timesteps is the expected one and remove extra timestep
      #--------------------------------------------
 
-      expected_ts=$(( $nsimdays * $mult + 1 ))
-      nt=`cdo -ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc`
-      if [[ $nt -lt $expected_ts  ]]
-      then
-          body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.$yyyy-$st.zip.nc , ne to $expected_ts but is $nt. Exit "
-          title="${CPSSYS} forecast notification - ERROR "
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
-          exit 1
-      elif [[ $nt -gt $expected_ts  ]]
-      then
-          ncks -O -F -d time,1,$expected_ts pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc  
-          mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc pre.$caso.clm2.$ft.$yyyy-$st.zip.nc  
-      fi
+      if [[ $caso =~ "ext" ]]; then
+         ncks -O -F -d time,$init, $wkdir_clm/pre.$caso.clm2.$ft.${time_tag}.zip.nc $finalfile
+      else
+         expected_ts=$(( $nsimdays * $mult + 1 ))
+         nt=`cdo -ntime pre.$caso.clm2.$ft.${time_tag}.zip.nc`
+      
+         if [[ $nt -lt $expected_ts  ]]
+         then
+            body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.${time_tag}.zip.nc , ne to $expected_ts but is $nt. Exit "
+            title="${CPSSYS} forecast notification - ERROR "
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+            exit 1
+         elif [[ $nt -gt $expected_ts  ]]
+         then
+            ncks -O -F -d time,1,$expected_ts pre.$caso.clm2.$ft.${time_tag}.zip.nc tmp.$caso.clm2.$ft.${time_tag}.zip.nc  
+            mv tmp.$caso.clm2.$ft.${time_tag}.zip.nc pre.$caso.clm2.$ft.${time_tag}.zip.nc  
+         fi
      # remove nr.1 timestep according to filetyp $ft
      # take from 2nd timestep
-      echo "start of ncks for clm one file "`date`
-      if [[ $ft != "h2" ]]
-      then
-         ncks -O -F -d time,2, pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
-         echo "end of ncks for clm one file "`date`
-      else
-         ntime=$(($expected_ts - 1))
-         ncks -O -F -d time,1,$ntime pre.$caso.clm2.$ft.$yyyy-$st.zip.nc tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
+         echo "start of ncks for clm one file "`date`
+         if [[ $ft != "h2" ]]
+         then
+            ncks -O -F -d time,2, pre.$caso.clm2.$ft.${time_tag}.zip.nc tmp.$caso.clm2.$ft.${time_tag}.zip.nc
+            echo "end of ncks for clm one file "`date`
+         else
+            ntime=$(($expected_ts - 1))
+            ncks -O -F -d time,1,$ntime pre.$caso.clm2.$ft.${time_tag}.zip.nc tmp.$caso.clm2.$ft.${time_tag}.zip.nc
          
+         fi
+         mv tmp.$caso.clm2.$ft.${time_tag}.zip.nc $finalfile #$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.${time_tag}.zip.nc
       fi
-      mv tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc $finalfile #$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+
    else
 # this exception holds since CERISE files (h2) had already been zipped for a few start-dates but not postprocessed for spikes
       if [[ $ft == "h2" ]]
@@ -91,12 +101,13 @@ then
          nt=`cdo -ntime $finalfile`
          if [ $nt -gt $expected_h2  ]
          then
-            rsync -auv $finalfile tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc
-            ncks -O -F -d time,1,$expected_h2 tmp.$caso.clm2.$ft.$yyyy-$st.zip.nc $finalfile
+            rsync -auv $finalfile tmp.$caso.clm2.$ft.${time_tag}.zip.nc
+            ncks -O -F -d time,1,$expected_h2 tmp.$caso.clm2.$ft.${time_tag}.zip.nc $finalfile
          fi
       fi
    fi
 fi
+
 #MB/BJF 20260604 - sleep added to avoid conclusion of job (when it is launched more than once) before the submission of postpc_clm 
 #in order to avoid problems with the dependency
 sleep 60

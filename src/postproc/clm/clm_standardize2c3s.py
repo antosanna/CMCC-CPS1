@@ -300,6 +300,11 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
     realization = 'r' + pp + 'i00p00'
        
     # create the new NetCDF file
+    if 'leadtime: point' not in c3s_el[13]:
+        suffix=suffix_acc 
+    else:
+        suffix=suffix_in
+
     file_name = output_dir + '/' + prefix + '_' + c3s_el[10] + '_' + \
                 c3s_el[8] + '_' + c3s_el[9] + '_' + c3s_el[1] + '_' + \
                 realization + suffix
@@ -331,13 +336,13 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
 
     ncf.variables['realization'][:] = list('{0: <31}'.format('r' + pp + 'i00p00'))  # to have exactly 31 chars
     ncf.variables['reftime'][:] = 0
-    ncf.variables['time'][:] = np.arange(0, time_dim_tot)
-    ncf.variables['leadtime'][:] = np.arange(0, time_dim_tot)
+    ncf.variables['time'][:] = np.arange(init, init+time_dim_tot)
+    ncf.variables['leadtime'][:] = np.arange(init, init+time_dim_tot)
 
     # in land we expect day
     if c3s_el[8] == 'day':
-        ncf.variables['time'][:] = np.arange(0, time_dim_tot)
-        ncf.variables['leadtime'][:] = np.arange(0, time_dim_tot)
+        ncf.variables['time'][:] = np.arange(init, init+time_dim_tot)
+        ncf.variables['leadtime'][:] = np.arange(init, init+time_dim_tot)
     else:
         print("In land we expect only day, fix it.")
         sys.exit(1)
@@ -424,7 +429,9 @@ if __name__ == '__main__':
     case       = str(sys.argv[13])
     lsmfile    = str(sys.argv[14])   
     prefix     = str(sys.argv[15]) 
-    suffix     = str(sys.argv[16]) 
+    suffix_in     = str(sys.argv[16]) 
+    suffix_acc     = str(sys.argv[17]) 
+    init     = int(sys.argv[18]) 
  
     year = startdate[0:4]
     month = startdate[4:6]
