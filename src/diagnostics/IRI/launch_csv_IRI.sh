@@ -68,9 +68,10 @@ export anomdir=${DIR_FORE_ANOM}/$yyyy$st
 ncl RONI_csv_sea.ncl
 
 #load the rclone environment
+set +euvx
 . ~/load_miniconda
 conda activate rclone_gdrive
-
+set -euvx
 # create the specific dir
 rclone mkdir my_drive:IRI/$yyyy$st
 

@@ -13,9 +13,14 @@
 set -euvx
 
 echo "SPS4_step1_ICs.sh starting `date`"
-if [[ $machine != "juno" ]]
+
+st=`date +%m`
+m=$(( 10#$st )) #this must NOT be 2 figures
+yyyy=`date +%Y`
+#if [[ $machine != "juno" ]]  #20260701 - before ONLY on juno
+if [[ $machine == "leonardo" ]]  #-from now possibly on both cmcc machine but NOT on Leonardo
 then
-   message="this script is meant to be run on Juno!!!"
+   message="this script is meant to be run on CMCC machines!!!"
    body=$message
    title="[$CPSSYS] ERROR: SPS4_step1_ICs.sh exited"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -g yes
@@ -23,9 +28,7 @@ then
    exit 1
 fi
 
-st=`date +%m`
-m=$(( 10#$st )) #this must NOT be 2 figures
-yyyy=`date +%Y`
+
 if [[ ! -f /work/cmcc/cp1/CPS/CMCC-OIS2/logs/WEEKLY_SUBMISSION/weekly_ois2_submit_${yyyy}${st}01.submitted ]]
 then
    body="OIS2 forecast not submitted: $SPSSystem IC production cannot start"
@@ -93,7 +96,7 @@ $DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 #now moved in submission forecast
 #${IC_CPS}/make_triplette.sh $yyyy $st
 
-#${IC_CPS}/copy_ICs_to_operational_machine.sh $yyyy $st
+exit
 input="$yyyy $st"
 ${DIR_UTIL}/submitcommand.sh -m $machine -d ${IC_CPS} -q ${serialq_push} -j copy_ICs_to_operational_machine_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/$yyyy$st -s copy_ICs_to_operational_machine.sh -i "$input"
 body="Cari tutti, \n
