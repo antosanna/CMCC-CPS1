@@ -150,19 +150,24 @@ then
 # C3S vars    prefix
    prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    if [[ $caso =~ "ext" ]]; then
-      export suffix=_slicetime4446to11808.nc
+      export suffix_in=_slicetime4440to11712.nc
+      export suffix_acc=_slicetime4452to11796.nc
+      init=185
    else
-      export suffix=.nc
+      export suffix_in=.nc
+      export suffix_acc=.nc
+      init=0
    fi
    
 # (I) FIRST FORMAT IN C3S STANDARD
    set +euvx
    
     . $DIR_UTIL/condaactivation.sh
-    condafunction activate $envcondaclm
+#    condafunction activate $envcondaclm
+    condafunction activate /work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $dir_cases/$caso/logs $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix
+   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $dir_cases/$caso/logs $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix_in $suffix_ac $init
    if [[ $? -ne 0 ]]
    then
 # intermidiate product

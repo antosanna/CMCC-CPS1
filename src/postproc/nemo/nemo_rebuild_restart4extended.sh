@@ -55,6 +55,6 @@ then
    body="restart not correctly rebuilt in $outdir"
    title="[CPSSYS] EXTENDED FORECAST ISSUE $caso"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r no
-else
-    rm $wkdir/${caso}_${data_now}_restart_0???.nc
+#else
+#    rm $wkdir/${caso}_${data_now}_restart_0???.nc
 fi

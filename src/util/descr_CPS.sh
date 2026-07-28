@@ -49,6 +49,11 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
+   c3s_checker_cmd=/work/cmcc/cp1/miniconda/envs/c3s-checker
+   envcondac3schecker=/work/cmcc/cp1/miniconda/envs/c3schecker
+   envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
+   envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
+   envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
    is_backup=1 
    is_backup_ic=0 #cmcc machines operational for IC production !!!\
    qos=qos_lowprio   #this is used only for SLURM but it is
@@ -69,6 +74,7 @@ then
       mpilib4py_nemo_rebuild=impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
       envcondacm3=cmcc-cm_py39
+      miniconda_ncl=/work/cmcc/cp1/miniconda/envs/miniconda_ncl
       maxnumbertosubmit=18
       maxnumbertorecover=40
       maxnumberguarantee=7
@@ -90,7 +96,7 @@ then
       cores_per_run=336
       mpilib4py_nemo_rebuild=oneapi-2025.0.4/impi-2021.14.2 #impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondacm3=cmcc-cm_sps4
+      envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
       envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
       maxnumbertosubmit=54
       maxnumbertorecover=$maxnumbertosubmit
@@ -255,27 +261,27 @@ then
       qos=qos_cmcc
    fi
 # only for July we must set it to ""
-   if [[ $qos == "qos_lowprio" ]]
+   optSLURM="--qos=$qos"
+#     #for running with CMCC_reforeca
+   serialq_s=dcgp_usr_prod
+   serialq_m=dcgp_usr_prod
+   serialq_l=dcgp_usr_prod
+   parallelq_s=dcgp_usr_prod
+   parallelq_m=dcgp_usr_prod
+   parallelq_l=dcgp_usr_prod
+   if [[ $qos == "qos_cmcc" ]]
    then
-     #for running with CMCC_reforeca
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_usr_prod
-     serialq_m=dcgp_usr_prod
-     serialq_l=dcgp_usr_prod
-     parallelq_s=dcgp_usr_prod
-     parallelq_m=dcgp_usr_prod
-     parallelq_l=dcgp_usr_prod
-   else   
-      #for running with account $account_SLURM
-      #optSLURM="--reservation=s_met_cmcc"
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_cmcc_prod
-      serialq_m=dcgp_cmcc_prod
-      serialq_l=dcgp_cmcc_prod
-      parallelq_s=dcgp_cmcc_prod
-      parallelq_m=dcgp_cmcc_prod
-      parallelq_l=dcgp_cmcc_prod
-
+      today=$((10#`date +%d`))
+# RESERVATION ACTIVE ONLY FROM 1 TO 6
+      if [[ $today -ge 1 ]] && [[ $today -le 6 ]]
+      then
+         serialq_s=dcgp_cmcc_prod
+         serialq_m=dcgp_cmcc_prod
+         serialq_l=dcgp_cmcc_prod
+         parallelq_s=dcgp_cmcc_prod
+         parallelq_m=dcgp_cmcc_prod
+         parallelq_l=dcgp_cmcc_prod
+      fi
    fi     
    #maxnumbertosubmit=62 #modifyied 20240729
    maxnumbertosubmit=54 #20250801 new partition with 3 nodes free for postproc
@@ -461,6 +467,7 @@ IC_CPS_guess=$WORK/CPS/CMCC-${CPSSYS}/IC_CPS_guess
 WORK_IC4CAM=$WORK/CPS/CMCC-${CPSSYS}/WORK_IC4CAM
 # ######## ECOPER_RCP85_CLM45
 #forcDIRera5=$MYCESMDATAROOT/inputdata/atm/datm7/${CPSSYStem}_atm_forcing.datm7.ERA5.0.5d
+DIR_RONI=$WORK/CPS/CMCC-${CPSSYS}/RONI_operational
 DIR_ROOT_SCORES=$HOME/CPS/CMCC-SPS_SKILL_SCORES
 DIR_PCTL=$HOME/CPS/CMCC-SPS_PCTL
 WORK_SCORES=$WORK/CPS/CMCC-SPS_SKILL_SCORES/CMCC-SPS4

@@ -21,7 +21,8 @@ then
 fi
 
 st=11
-for yyyy in {1996..2006}
+#for yyyy in {1995..2024}
+for yyyy in {1993..1994}
 do
 for ens in {001..020} ; do
    caso=sps4ext_${yyyy}${st}_${ens}
