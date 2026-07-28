@@ -261,27 +261,27 @@ then
       qos=qos_cmcc
    fi
 # only for July we must set it to ""
-   if [[ $qos == "qos_lowprio" ]]
+   optSLURM="--qos=$qos"
+#     #for running with CMCC_reforeca
+   serialq_s=dcgp_usr_prod
+   serialq_m=dcgp_usr_prod
+   serialq_l=dcgp_usr_prod
+   parallelq_s=dcgp_usr_prod
+   parallelq_m=dcgp_usr_prod
+   parallelq_l=dcgp_usr_prod
+   if [[ $qos == "qos_cmcc" ]]
    then
-     #for running with CMCC_reforeca
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_usr_prod
-     serialq_m=dcgp_usr_prod
-     serialq_l=dcgp_usr_prod
-     parallelq_s=dcgp_usr_prod
-     parallelq_m=dcgp_usr_prod
-     parallelq_l=dcgp_usr_prod
-   else   
-      #for running with account $account_SLURM
-      #optSLURM="--reservation=s_met_cmcc"
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_cmcc_prod
-      serialq_m=dcgp_cmcc_prod
-      serialq_l=dcgp_cmcc_prod
-      parallelq_s=dcgp_cmcc_prod
-      parallelq_m=dcgp_cmcc_prod
-      parallelq_l=dcgp_cmcc_prod
-
+      today=$((10#`date +%d`))
+# RESERVATION ACTIVE ONLY FROM 1 TO 6
+      if [[ $today -ge 1 ]] && [[ $today -le 6 ]]
+      then
+         serialq_s=dcgp_cmcc_prod
+         serialq_m=dcgp_cmcc_prod
+         serialq_l=dcgp_cmcc_prod
+         parallelq_s=dcgp_cmcc_prod
+         parallelq_m=dcgp_cmcc_prod
+         parallelq_l=dcgp_cmcc_prod
+      fi
    fi     
    #maxnumbertosubmit=62 #modifyied 20240729
    maxnumbertosubmit=54 #20250801 new partition with 3 nodes free for postproc
