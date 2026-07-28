@@ -12,7 +12,7 @@ then
 elif [[ $machine == "cassandra"  ]]
 then
    #fake refname from juno run, in order to keep on both juno and cassandra the same name of the operational case
-   refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op_juno"
+   refcase="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op"
 fi
 
 caze="cm3_lndSSP5-8.5_bgc_NoSnAg_eda${member}_op"
@@ -58,18 +58,20 @@ cd ${DIR_CASES}/$caze
 ./xmlchange RUN_REFCASE=${refcase}
 ./xmlchange GET_REFCASE=TRUE
 #to-be-revised
-if [[ $machine == "juno" ]] ; then
+if [[ $machine == "juno" ]] 
+then
    ./xmlchange NTASKS=216
    ./xmlchange PIO_STRIDE=18
    ./xmlchange RUN_REFDIR="/work/$HEAD/cp1/CMCC-CM/archive/${refcase}/rest/2023-01-01-00000" 
    ./xmlchange RUN_REFDATE=2023-01-01
    ./xmlchange RUN_STARTDATE=2023-01-01
 elif [[ $machine == "cassandra" ]]
+then
    ./xmlchange NTASKS=224
    ./xmlchange PIO_STRIDE=16
-   ./xmlchange RUN_REFDIR="/work/$HEAD/cp1/CMCC-CM/archive/${refcase}/rest/2026-05-01-00000" 
-   ./xmlchange RUN_REFDATE=2026-05-01
-   ./xmlchange RUN_STARTDATE=2026-05-01
+   ./xmlchange RUN_REFDIR="$SCRATCHDIR/REST4CLM/${refcase}/2026-06-01-00000" 
+   ./xmlchange RUN_REFDATE=2026-06-01
+   ./xmlchange RUN_STARTDATE=2026-06-01
 fi
 
 
@@ -79,5 +81,15 @@ fi
 
 ./case.setup
 ./case.build
+#for Cassandra, we cheat by continuing the operational juno run
+
+if [[ $machine == "cassandra" ]]
+then
+
+   ./xmlchange CONTINUE_RUN=TRUE
+   restdir=$DIR_ARCHIVE/${refcase}/rest
+   mkdir -p ${restdir}
+   rsync -auv $SCRATCHDIR/REST4CLM/${refcase}/2026-06-01-00000 ${restdir}/.
+fi
 #./case.submit
 

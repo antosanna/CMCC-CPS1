@@ -27,10 +27,22 @@ pltype=getenv("pltype")
 pltname=getenv("pltname")
 
 fsicobs=addfile(fnameobs,"r")
-;multiply for scale_factor 0.01
-tmp=fsicobs->ice_conc*0.01
-nn=dimsizes(tmp)
-sicobs=tmp(nn(0)-1,0:nn(1)-2,1:nn(2)-2)
+
+;tmp=fsicobs->ice_conc*0.01
+tmp=fsicobs->ice_conc
+
+;multiply for scale_factor 0.01 if needed (depending on machine)
+if (isatt(tmp, "scale_factor")) then
+    tmp_doub= todouble(tmp) * todouble(tmp@scale_factor)
+    if (isatt(tmp, "add_offset")) then
+       tmp_doub = tmp_doub + todouble(tmp@add_offset)
+    end if
+else
+   tmp_doub=todouble(tmp)
+end if
+nn=dimsizes(tmp_doub)
+sicobs=tmp_doub(nn(0)-1,0:nn(1)-2,1:nn(2)-2)
+delete(tmp_doub)
 delete(tmp)
 ;printVarSummary(sicobs)
 printMinMax(sicobs,1)
