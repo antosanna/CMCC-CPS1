@@ -44,6 +44,9 @@ CMCC-SPS-staff"
 elif [[ $reminder_type -eq 8 ]] ; then 
     title="TIME TO LAUNCH launch_end_forecast_${SPSSystem}.sh"
     body="You should submit the script $DIR_CPS/launch_end_forecast_${SPSSystem}.sh either from crontab or from prompt"
+elif [[ $reminder_type -eq 9 ]] ; then 
+    title="RESET THE STANDARD CRONTAB ON CASSANDRA"
+    body="From $HOME: crontab standard_crontab_cassandra_cp1.txt"
 fi
 
 # send mail

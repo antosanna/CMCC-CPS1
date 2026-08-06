@@ -36,7 +36,13 @@ then
 fi
 if [[ ! -f $templateFileName ]]
 then
-   out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc`
+   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   #05/08/2026
+   #Temporary fixed for the forecast 202608. 
+   #It was out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc
+   #During forecast doesn't work because there is still zip and unzipped files
+   #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.${yyyy}-${st}.zip.nc`
    cdo shifttime,-12hours -selvar,TREFMNAV $out3 $templateFileName
 fi
 if [[ $model == "cam" ]]

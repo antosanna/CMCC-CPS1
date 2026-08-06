@@ -115,14 +115,14 @@ if [[ "$varm" == "sst" ]] ; then
 	  fi
 
    nENSOplotDONE_prob=`ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE | wc -l`
-   if [[ $nENSOplotDONE_prob -ne 4 ]] ; then 
+   if [[ $nENSOplotDONE_prob -ne 8 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun ENSO plot ERROR"
          body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_prob_seas_plot.ncl went wrong"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
          rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
          exit 1
    fi
-   if [[ $nENSOplotDONE -eq 4 ]] && [[ $nENSOplotDONE_prob -eq 4 ]] ; then
+   if [[ $nENSOplotDONE -eq 4 ]] && [[ $nENSOplotDONE_prob -eq 8 ]] ; then
       list1_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}.png)     
       list2_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}.png)
    fi

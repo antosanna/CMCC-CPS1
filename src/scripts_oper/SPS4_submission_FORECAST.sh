@@ -39,6 +39,15 @@ then
 fi
 
 touch $DIR_LOG/forecast/SPS4_submission_FORECAST.$yyyy$st.submitted
+title="[${CPSSYS}] SPS4 FORECAST started"
+dir_drive=$yyyy$st
+if [[ $machine == "cassandra" ]]
+then
+   dir_drive=$yyyy${st}_backup
+fi
+
+body="Dear all, this is to inform you that the forecast has started and updates will be regularly shared at the following link: https://drive.google.com/drive/u/1/folders/18q9gTUlV5_OY5dlYOvBkzxWMWmLrdW4- and select $dir_drive"
+${DIR_UTIL}/sendmail.sh -m $machine -e $ccmail -M "$body" -t "$title" -r "yes" -s $yyyy$st
 # check if there is another job submitted by crontab with the same name
 starting_time=`date +%Y%m%d%H%M`
 if [[ $machine == "leonardo" ]]

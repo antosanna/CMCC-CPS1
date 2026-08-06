@@ -96,7 +96,8 @@ then
       cores_per_run=336
       mpilib4py_nemo_rebuild=oneapi-2025.0.4/impi-2021.14.2 #impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
+      #envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
+      envcondacm3=$HOME/.conda/envs/cmcc-cm_sps4
       envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
       maxnumbertosubmit=54
       maxnumbertorecover=$maxnumbertosubmit

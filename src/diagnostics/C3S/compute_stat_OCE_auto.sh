@@ -58,7 +58,7 @@ if [ $ncapsuleyyyystDONE -eq 0 ] ; then
        if [[ ! -f $dirlog/capsule_${yyyy}${st}_${ppp}_oce_${varm}_DONE ]]
        then
 		        input="$yyyy $st $ppp $workdir_ens $workdir $varm $dirlog $filetype"
-          $DIR_UTIL/submitcommand.sh -S $qos -M 20000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
+          $DIR_UTIL/submitcommand.sh -S $qos -M 50000 -m $machine -q $serialq_m -j C3S_lead2Mmonth_capsule_oce_${yyyy}${st}_${ppp} -l $dirlog -d ${DIR_DIAG_C3S} -s C3S_lead2Mmonth_capsule_oce.sh -i "$input"
        fi
 		     while `true` ; do
            ncapsjob=`$DIR_UTIL/findjobs.sh -m $machine -n capsule_oce -c yes`

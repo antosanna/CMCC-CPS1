@@ -29,7 +29,9 @@ inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
 # this will be the very last after the iterative poisson correction
 export inputascii=$inputascii_all
-export input_daily_time=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
+###FORECAST 202608 - inconsistent definition between fixed_DMO and check_minima
+#export input_daily_time=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
+export input_daily_time=$HEALED_DIR/$caso.cam.h3.TREFMNAV.nc
 export inputh3=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.zip.nc
 export inputh1=$HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.pre_check_tmin.nc
 export checkfile_tmin_t2m=$HEALED_DIR/check_consistency_tminVSt2m_${caso}.DONE
