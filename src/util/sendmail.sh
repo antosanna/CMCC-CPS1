@@ -124,7 +124,7 @@ then
    fi
    if [[ ! -z $cc ]]
    then
-      c=" -c $cc"
+      c=" $cc"
    else
       c=""
    fi
