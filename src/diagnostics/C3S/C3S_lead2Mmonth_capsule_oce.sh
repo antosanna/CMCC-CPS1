@@ -3,6 +3,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . $DIR_UTIL/load_cdo
+. $DIR_UTIL/load_nco
 
 set -euvx
 
@@ -63,6 +64,10 @@ if [ ! -f $workdir/$finaloutput.nc ] ; then
    ncl $DIR_DIAG_C3S/ncl/C3S_lead2Mmonth_capsule_oce.ncl
        
  	 if [ $var = "toce" -o $var = "sohtc040" ] ; then
+#this section does not work
+#      ncatted -O -a coordinates,toce,o,c,"lat lon" $filo 
+#      ncatted -O -a bounds,deptht,d,, ${filo}
+#      ncatted -O -a bounds,depth,d,, ${filo}
 	     cdo settaxis,$yyyy-$st-01,12:00:00,1day $filo ${filo}_tmp
   	   cdo setreftime,$yyyy-$st-01,12:00:00 ${filo}_tmp $filo
 	     rm ${filo}_tmp

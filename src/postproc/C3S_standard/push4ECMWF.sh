@@ -50,16 +50,8 @@ if [[ $dbg_push -ge 1 ]]
 then
    log_script=ls_S${yyyy}${st}_cmcc.log
    mymail="sp1@cmcc.it"
-   ecmwfmail=$mymail
-   ccecmwfmail=$mymail
    title_debug="TEST"
 else
-   if [[ $typeofrun == "hindcast" ]]
-   then
-       ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it"
-   else
-       ccecmwfmail="volkan.firat@ecmwf.int,eduardo.penabad@ecmwf.int,Simona.Briceag@ecmwf.int,anca.brookshaw@ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
-   fi
    title_debug=""
 fi
 

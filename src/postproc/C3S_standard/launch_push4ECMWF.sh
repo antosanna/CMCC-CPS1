@@ -48,7 +48,7 @@ set -euvx
 #--------------------------------------------------------------------
 # Check if it is possible to send another  year
 #--------------------------------------------------------------------
-   if [[ "$machine" == "juno" ]]
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
    then
       filedone=$check_push_done
       if [[ $debug_push -ge 1 ]]
@@ -125,7 +125,7 @@ set -euvx
 # Submit push over ECMWF ftp
    input="${yyyy} ${st} $debug_push $filedone $firstdtn03"
    mkdir -p ${DIR_LOG}/${typeofrun}/${yyyy}${st}
-   if [[ "$machine" == "juno" ]] ; then
+   if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]; then
        ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
    elif [[ "$machine" == "leonardo" ]] ; then
       ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -t 4 -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
@@ -156,7 +156,7 @@ set -euvx
             	${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun -c $ccmail
      #        if [[ $debug_push -eq 0 ]]
      #        then
-             if [[ "$machine" == "juno" ]]
+             if [[ "$machine" == "juno" ]] || [[ "$machine" == "cassandra" ]]
              then
                 ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_C3S} -q ${serialq_push} -j push4ECMWF_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/${yyyy}${st}/ -s push4ECMWF.sh -i "$input"
              else

@@ -97,7 +97,8 @@ then
       cores_per_run=336
       mpilib4py_nemo_rebuild=oneapi-2025.0.4/impi-2021.14.2 #impi-2021.6.0/2021.6.0
       mpirun4py_nemo_rebuild=mpiexec.hydra
-      envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
+      #envcondacm3=/work/cmcc/cp1/miniconda/envs/cmcc-cm_sps4
+      envcondacm3=$HOME/.conda/envs/cmcc-cm_sps4
       envcondarclone=/users_home/cmcc/cp2/miniconda/envs/rclone_CPS1
       maxnumbertosubmit=54
       maxnumbertorecover=$maxnumbertosubmit
@@ -228,10 +229,12 @@ then
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
+   ccecmwfmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=volkan.firat@ecmwf.int
-      ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+      ccmail="-b leone.cavicchia@cmcc.it -b stefanotib@gmail.com"
 	     hsmmail=hsm@cmcc.it
+      ccecmwfmail="-b c3s_seasonal_production@groups.ecmwf.int -b stefanotib@gmail.com -b antonella.sanna@cmcc.it -b silvio.gualdi@cmcc.it -b leone.cavicchia@cmcc.it"
    fi
    VALIDATION=$WORK/CPS/VALIDATION
    EVALUATION=$WORK/CPS/EVALUATION
@@ -262,27 +265,27 @@ then
       qos=qos_cmcc
    fi
 # only for July we must set it to ""
-   if [[ $qos == "qos_lowprio" ]]
+   optSLURM="--qos=$qos"
+#     #for running with CMCC_reforeca
+   serialq_s=dcgp_usr_prod
+   serialq_m=dcgp_usr_prod
+   serialq_l=dcgp_usr_prod
+   parallelq_s=dcgp_usr_prod
+   parallelq_m=dcgp_usr_prod
+   parallelq_l=dcgp_usr_prod
+   if [[ $qos == "qos_cmcc" ]]
    then
-     #for running with CMCC_reforeca
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_usr_prod
-     serialq_m=dcgp_usr_prod
-     serialq_l=dcgp_usr_prod
-     parallelq_s=dcgp_usr_prod
-     parallelq_m=dcgp_usr_prod
-     parallelq_l=dcgp_usr_prod
-   else   
-      #for running with account $account_SLURM
-      #optSLURM="--reservation=s_met_cmcc"
-      optSLURM="--qos=$qos"
-      serialq_s=dcgp_cmcc_prod
-      serialq_m=dcgp_cmcc_prod
-      serialq_l=dcgp_cmcc_prod
-      parallelq_s=dcgp_cmcc_prod
-      parallelq_m=dcgp_cmcc_prod
-      parallelq_l=dcgp_cmcc_prod
-
+      today=$((10#`date +%d`))
+# RESERVATION ACTIVE ONLY FROM 1 TO 6
+      if [[ $today -ge 1 ]] && [[ $today -le 6 ]]
+      then
+         serialq_s=dcgp_cmcc_prod
+         serialq_m=dcgp_cmcc_prod
+         serialq_l=dcgp_cmcc_prod
+         parallelq_s=dcgp_cmcc_prod
+         parallelq_m=dcgp_cmcc_prod
+         parallelq_l=dcgp_cmcc_prod
+      fi
    fi     
    #maxnumbertosubmit=62 #modifyied 20240729
    maxnumbertosubmit=54 #20250801 new partition with 3 nodes free for postproc
@@ -363,10 +366,11 @@ then
    	ecmwfmail=$mymail
     ccmail=$mymail
     hsmmail=$mymail
-    ccmail=${mymail}
+    ccecmwfmail=${mymail}
     if [[ $(whoami) == ${operational_user} ]]; then
       ecmwfmail=volkan.firat@ecmwf.int
       ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+      ccecmwfmail="c3s_seasonal_production@groups.ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
     fi  
     CLIM_DIR_DIAG=$WORK_SCORES/monthly/
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//

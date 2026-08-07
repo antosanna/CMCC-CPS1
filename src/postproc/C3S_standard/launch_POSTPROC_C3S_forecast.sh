@@ -41,6 +41,7 @@ cd $DIR_ARCHIVE/
 listofcases=`ls -d ${SPSSystem}_${yyyy}${st}_0?? |head -n $nrunmax`
 
 dir_cases=$DIR_CASES
+list_submitted=""
 for caso in $listofcases
 do
       CASEROOT=${DIR_CASES}/$caso  #needed for dictionary
@@ -83,6 +84,7 @@ do
        touch ${flag_postproc_offline_on}
    
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 6000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $logdir -i "$yyyy $caso ${dir_cases} ${flagpostproc_done}"
+       list_submitted+=" $caso"
    
    
        if [[ $dbg -eq 1 ]]
@@ -94,7 +96,10 @@ do
        if [[ $nsubmit -ge $nmaxsubmit ]]
        then
              rm ${flag_running}
-             exit
+             title="[$CPSSYS C3S postprocessing] new cases submitted to C3S postproc"
+             body="list of cases sumbitted $list_submitted"
+             ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
+             exit 0
        fi
    
 done

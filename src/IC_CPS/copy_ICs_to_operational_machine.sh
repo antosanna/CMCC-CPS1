@@ -9,12 +9,27 @@
 #set -euvx
 . ~/.bashrc
 . $DIR_UTIL/descr_CPS.sh
-module load intel-2021.6.0/sshpass/.1.06-zarp3
+# First check that no other this script is running
+#load module for sshpass
+module load $modulepass
+set -uvx
+
+
+
+if [[ "$machine" == "juno" ]]
+then
+    cmd="rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00""
+elif [[ "$machine" == "cassandra" ]]
+then
+   export SSHPASS="a(nU05wgJk"
+   cmd="sshpass -e rsync -auv -e ssh"
+#    cmd="rsync -auv '-e=sshpass -p a(nU05wgJk ssh'"
+fi
+
 
 leo_dir=/leonardo_work/$account_SLURM/scratch/IC/
-leo_trip_dir=/leonardo/home/usera07cmc/a07cmc00/CPS/CMCC-CPS1/triplette_done
 leo_temp_dir=/leonardo_work/$account_SLURM/scratch/CMCC-CPS1/temporary
-jun_dir=/data/cmcc/cp1/archive/IC/
+cmcc_dir=/data/cmcc/cp1/archive/IC/
 
 realm="CAM_CPS1 CICE_CPS1 CLM_CPS1 NEMO_CPS1"
 
@@ -35,16 +50,16 @@ for rea in $realm ; do
    fi
    if [[ $bkup -eq 0 ]]
    then
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/
+      $cmd ${cmcc_dir}/$rea/$st/*${yyyy}-${st}*.nc a07cmc00@data.leonardo.cineca.it:${leo_dir}/$rea/$st/
    else
-      rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${jun_dir}/$rea/$st/*${yyyy}-${st}*.bkup.nc a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/$rea/$st/
+      $cmd ${cmcc_dir}/$rea/$st/*${yyyy}-${st}*.bkup.nc a07cmc00@data.leonardo.cineca.it:${leo_dir}/$rea/$st/
    fi
    touch $checkf
 
 done
-# now copy triplette file; this must be the very last operation since it is the go-ahead for the forecast to start on Leonardo
+# now copy flag file; this must be the very last operation since it is the go-ahead for the forecast to start on Leonardo
 if [[ $bkup -eq 0 ]]
 then
    touch ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE
-   rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00" ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE a07cmc00@dmover1.leonardo.cineca.it:${leo_temp_dir}
+   $cmd ${DIR_TEMP}/copy_IC_${yyyy}${st}_to_leonardo_DONE a07cmc00@data.leonardo.cineca.it:${leo_temp_dir}
 fi

@@ -12,7 +12,7 @@ mm=$2
 
 archdir=/data/cmcc/cp1/archive/OIS/data_oce/esa_sst  # repository dati daily --> trasformare in monthly
 #actualdir=/work/cmcc/cp1/SPS/CMCC-OIS/input/oper_daily/noaa_sst
-actualdir=/work/cmcc/cp1/CPS/CMCC-OIS2/inputdata/SST/ESACCI/ARCHIVE
+actualdir=/data/cmcc/cp1/CPS/CMCC-OIS2/inputdata/SST/ESACCI/ARCHIVE
 #${inputdata_sp1}/noaa_sst/clim_1993-2016 # climatologie daily --> trasformare in monthly
 esa_dir=$3
 climdir=/work/cmcc/cp1/CPS/VALIDATION/OBS/ESA_sst/monthly/clim_${iniy_hind}-${endy_hind}
