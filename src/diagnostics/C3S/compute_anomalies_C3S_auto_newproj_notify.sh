@@ -122,9 +122,31 @@ if [[ "$varm" == "sst" ]] ; then
          rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
          exit 1
    fi
-   if [[ $nENSOplotDONE -eq 4 ]] && [[ $nENSOplotDONE_prob -eq 8 ]] ; then
+
+	  nRONIplotDONE=`ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE | wc -l`
+	  if [[ $nRONIplotDONE -ne 1 ]] ; then 
+         title="[diags] ${CPSSYS} $typeofrun RONI plot ERROR"
+	        body="Something in ${DIR_DIAG_C3S}/ncl/RONI_plot.ncl went wrong"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+	        rm ${dirplots}/${varm}_RONI_Nino3.4_${yyyy}_${st}_DONE
+	        exit 1
+	  fi
+   
+   nRONIplotDONE_prob=`ls -1 ${dirplots}/${varm}_*Nino*_relative*_prob_${yyyy}_${st}_DONE | wc -l`
+   if [[ $nRONIplotDONE_prob -ne 4 ]] ; then 
+         title="[diags] ${CPSSYS} $typeofrun RONI plot ERROR"
+         body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_relative_strength_prob_seas_plot.ncl went wrong"
+         ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
+         rm ${dirplots}/${varm}_*Nino*_relative*_prob_${yyyy}_${st}_DONE
+         exit 1
+   fi
+   
+
+   if [[ $nENSOplotDONE -eq 4 ]] && [[ $nENSOplotDONE_prob -eq 8 ]] && [[ $nRONIplotDONE -eq 1 ]] && [[ $nRONIplotDONE_prob -eq 4 ]] ; then
       list1_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}.png)     
       list2_nino=$(ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}.png)
+      list1_roni=$(ls -1 ${dirplots}/${varm}_RONI_Nino3.4_${yyyy}_${st}.png)
+      list2_roni=$(ls -1 ${dirplots}/${varm}_Nino*relative_*prob_${yyyy}_${st}.png)
    fi
    if [[ $machine != "leonardo" ]] ; then
    #### Now IOD 
@@ -270,7 +292,19 @@ then
       composite -geometry ${geom_value} ${DIR_DIAG_C3S}/ncl/cmcc_logo_bw.jpg $nino_plot2 $nino_plot2
       magick convert ${convert_opt} $nino_plot2 $nino_plot2
   done
-  magick convert $list1_nino $list2_nino ${dirplots}/ElNino_${yyyy}_${st}.pdf
+  
+  for roni_plot1 in $list1_roni
+  do
+      composite -geometry ${geom_value} ${DIR_DIAG_C3S}/ncl/cmcc_logo_bw.jpg $roni_plot1 $roni_plot1
+      magick convert ${convert_opt} $roni_plot1 $roni_plot1
+  done
+
+  for roni_plot2 in $list2_roni
+  do
+      composite -geometry ${geom_value} ${DIR_DIAG_C3S}/ncl/cmcc_logo_bw.jpg $roni_plot2 $roni_plot2
+      magick convert ${convert_opt} $roni_plot2 $roni_plot2
+  done
+  magick convert $list1_nino $list2_nino $list1_roni $list2_roni ${dirplots}/ElNino_${yyyy}_${st}.pdf
   title="[diags] ${CPSSYS} ${typeofrun} notifications ENSO plot"
   body="El Nino indices figures for ${typeofrun} ${yyyy}${st} produced and available here ${dirplots}/ElNino_${yyyy}_${st}.pdf"
   app="${dirplots}/ElNino_${yyyy}_${st}.pdf"

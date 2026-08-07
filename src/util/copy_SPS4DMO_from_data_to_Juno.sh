@@ -16,9 +16,8 @@ st=`date +%m`
 ncopy_run=`$DIR_UTIL/findjobs.sh -m $machine -n copy_SPS4DMO_from_data_to_Juno -c yes`
 if [[ $ncopy_run -gt 1 ]]
 then
-   exit 0 ]]
+   exit 0 
 fi
-touch $check_running
 DATA_DMO_DIR=/data/cmcc/cp1/temporary/DMO/$yyyy$st
 DATA_C3S_DIR=/data/cmcc/cp1/temporary/C3S/$yyyy$st
 # get the list of completed cases (produced daily in cron on Leonardo)
@@ -35,7 +34,7 @@ do
    if [[ -f $checkfile_caso ]]
    then
       checkfile_caso_copied=$DIR_ARCHIVE/$caso.copied_from_data
-      rsync -auv $DATA_DMO_DIR/sps4_${yyyy}${st}* $DIR_ARCHIVE
+      rsync -auv $DATA_DMO_DIR/sps4_${yyyy}${st}_0?? $DIR_ARCHIVE
       touch $checkfile_caso_copied
    fi
 done
