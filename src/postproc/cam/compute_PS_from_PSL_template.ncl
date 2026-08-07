@@ -19,6 +19,7 @@ oro = tofloat(fccm->orog)                  ; orography
 lon=fccm->lon
 lat=fccm->lat
 fccm = addfile (inputpsl,"r")
+time=fccm->time
 psl    = tofloat(fccm->PSL) 
 dimpsl=dimsizes(psl)
 fccm = addfile (inputts,"r")
@@ -60,6 +61,7 @@ PS!2="lon"
 ncdf->PS=PS
 ncdf->lon=lon
 ncdf->lat=lat
+ncdf->time=time
 
 
 end

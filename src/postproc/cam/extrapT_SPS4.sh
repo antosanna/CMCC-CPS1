@@ -8,7 +8,7 @@
 #module load gcc-12.2.0/12.2.0
 if [[ $machine == "juno" ]] ; then
   . $HOME/load_miniconda
-  conda activate miniconda_ncl
+  conda activate $miniconda_ncl
 fi
 #---------------------------------
 # first part computes PS from PSL
@@ -37,16 +37,26 @@ export member=`echo $ens|cut -c2,3`
 export typeofrun
 
 export inputpsl=$HEALED_DIR/PSL.$caso.C3S.12hr.nc
+time_tag1=$yyyy-$st #.zip
+yyyyp1=$((yyyy + 1))
+export inittime=0
+if [[ $caso =~ "ext" ]]
+then
+   mm=`date -d "$yyyy${st}15 + 6 month" +%m`
+   suffix1=-01-21600
+   time_tag1=$yyyyp1-$mm$suffix1
+   export inittime=185
+fi
 if [[ ! -f $inputpsl ]]
 then
-   cdo selvar,PSL $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/PSL.$caso.nc
+   cdo selvar,PSL $HEALED_DIR/$caso.cam.h1.$time_tag1.zip.nc $HEALED_DIR/PSL.$caso.nc
    cdo selhour,0,12 $HEALED_DIR/PSL.$caso.nc $HEALED_DIR/PSL.$caso.12hr.nc
    cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/PSL.$caso.12hr.nc $inputpsl
 fi
 # create TS on C3S grid
 if [[ ! -f $HEALED_DIR/TS.$caso.C3S.nc ]]
 then
-   cdo selvar,TS $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/TS.$caso.nc
+   cdo selvar,TS $HEALED_DIR/$caso.cam.h1.$time_tag1.zip.nc $HEALED_DIR/TS.$caso.nc
    cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/TS.$caso.nc $HEALED_DIR/TS.$caso.C3S.nc
 fi
 # make it conform to the required output in time axis
@@ -88,7 +98,7 @@ fi
 # create TREFHT on C3S grid
 if [[ ! -f $HEALED_DIR/TREFHT.$caso.C3S.nc ]]
 then
-   cdo selvar,TREFHT $HEALED_DIR/$caso.cam.h1.$yyyy-$st.zip.nc $HEALED_DIR/TREFHT.$caso.nc
+   cdo selvar,TREFHT $HEALED_DIR/$caso.cam.h1.$time_tag1.zip.nc $HEALED_DIR/TREFHT.$caso.nc
    cdo remapbil,$REPOGRID1/griddes_C3S.txt $HEALED_DIR/TREFHT.$caso.nc $HEALED_DIR/TREFHT.$caso.C3S.nc
 fi
 # make it conform to the required output in time axis
@@ -101,10 +111,18 @@ fi
 
 #define inputs
 export inputta=$WORK_C3S/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_12hr_pressure_ta_r"$member"i00p00.nc
+if [[ $caso =~ "ext" ]]
+then
+   export inputta=$WORK_C3SEXT/${yyyy}${st}/cmcc_${GCM_name}-v${versionSPS}_"$typeofrun"_S"$yyyy$st"0100_atmos_12hr_pressure_ta_r"$member"i00p00_slicetime4440to11712.nc
+fi
 export inputPS=$outputPS
 
 #define outputs
 export outputta=$OUTDIR/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00.nc
+if [[ $caso =~ "ext" ]]
+then
+   export outputta=$OUTDIR/cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00_slicetime4440to11712.nc
+fi
 
 echo 'post processing starts ' `date`
 

@@ -36,7 +36,7 @@ ens=`echo $caso|cut -d '_' -f3`
 #----------------------------------
 set +euvx
 . $DIR_UTIL/condaactivation.sh
-condafunction activate qachecker
+condafunction activate $envcondaqachecker
 set -euvx
 
 # where the spike indices are stored each time the checker is passed through
@@ -44,14 +44,20 @@ export inputascii=$HEALED_DIR/list_spikes.txt
 # where all the spike indices are stored
 export inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
-
+stdate=$yyyy$st
 if [[ $caso =~ "ext" ]]; then
-   time_tag3=$yyyyp1-05-02-00000
+   mm=`date -d "$yyyy${st}15 + 6 month" +%m`  
+   stdate=$yyyyp1$mm
+   suffix1=-01-21600
+   suffix2=-01-43200
+   suffix3=-02-00000
+   suffix4=-01-10800
+   time_tag3=$stdate$suffix3
 else
-   time_tag3=${yyyy}-${st}.zip
+   time_tag3=${yyyy}-${st}
 fi
 #first file to check
-file2check=${caso}.cam.h3.${time_tag3}.nc
+file2check=${caso}.cam.h3.${time_tag}.zip.nc
 # copied for safety reasons to working directory
 rsync -auv $DIR_ARCHIVE/$caso/atm/hist/${file2check} $HEALED_DIR
 var="TREFMNAV"
@@ -72,7 +78,7 @@ fi
 message="$caso First check for spikes performed"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
-time_tag=${yyyy}-${st}.zip
+time_tag=${stdate}
 if [[ ! -f $inputascii ]]
 then
    touch $HEALED_DIR/${caso}.cam.h3.DONE
@@ -86,12 +92,12 @@ then
       do
          if [[ $caso =~ "ext" ]]; then
             case $ftype in
-              h1)time_tag=$yyyyp1-05-01-21600;;
-              h2)time_tag=$yyyyp1-05-01-43200;;
-              h4)time_tag=$yyyyp1-05-01-10800;;
+              h1)time_tag=$stdate$suffix1;;
+              h2)time_tag=$stdate$suffix2;;
+              h4)time_tag=$stdate$suffix4;;
             esac
          fi
-         file2check=${caso}.$model.$ftype.${time_tag}.nc
+         file2check=${caso}.$model.$ftype.${time_tag}.zip.nc
          rsync -auv $DIR_ARCHIVE/$caso/$dir/hist/${file2check} $HEALED_DIR
          touch $HEALED_DIR/${caso}.$model.$ftype.DONE
       done
@@ -107,7 +113,7 @@ fi
 rsync -auv $inputascii $inputascii_all
 
 #  first attempt of treatment
-file2check=$caso.cam.h3.${time_tag3}.nc
+file2check=$caso.cam.h3.${time_tag3}.zip.nc
 fixedfile=$caso.cam.h3.${yyyy}-${st}.fix1.nc
 it=1
 
@@ -168,7 +174,7 @@ done
 # the output dir is created only at this stage for in principle the file could not be affected by spikes at all
 mkdir -p $HEALED_DIR
 rm $HEALED_DIR/${caso}.cam.h3.DONE
-time_tag=$yyyy-$st.zip
+time_tag=$stdate
 for model in cam 
 do
    case $model in
@@ -178,13 +184,13 @@ do
    do
       if [[ $caso =~ "ext" ]]; then
          case $ftype in
-           h1)time_tag=$yyyyp1-05-01-21600;;
-           h2)time_tag=$yyyyp1-05-01-43200;;
-           h3)time_tag=$yyyyp1-05-02-00000;;
-           h4)time_tag=$yyyyp1-05-01-10800;;
+           h1)time_tag=$stdate$suffix1;;
+           h2)time_tag=$stdate$suffix2;;
+           h3)time_tag=$stdate$suffix3;;
+           h4)time_tag=$stdate$suffix4;;
          esac
       fi
-      file2check=${caso}.$model.$ftype.${time_tag}.nc
+      file2check=${caso}.$model.$ftype.${time_tag}.zip.nc
       inputFV=$DIR_ARCHIVE/$caso/$dir/hist/$file2check
       fixedfinal=$file2check
       checkfile=$HEALED_DIR/${caso}.$model.$ftype.DONE
@@ -205,7 +211,7 @@ do
     fi
 done
 
-file2check=${caso}.cam.h3.${time_tag3}.nc
+file2check=${caso}.cam.h3.${time_tag3}.zip.nc
 var="TREFMNAV"
 python ${DIR_C3S}/c3s_qa_checker.py ${file2check} -p $HEALED_DIR -v ${var} -spike True -l ${HEALED_DIR} -j ${DIR_C3S}/qa_checker_table.json --verbose >> ${logfile}
 cnterror=`grep -Ril ERROR\] ${logfile} | wc -l`

@@ -36,7 +36,16 @@ then
 fi
 if [[ ! -f $templateFileName ]]
 then
-   out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc`
+   n_out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc|wc -l`
+   if [[ $n_out3 -gt 1 ]]
+   then
+      if [[ `ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*zip.nc|wc -l` -eq 1 ]]
+      then
+         out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*zip.nc`
+      fi
+   else
+      out3=`ls $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h3.*.nc`
+   fi
    cdo shifttime,-12hours -selvar,TREFMNAV $out3 $templateFileName
 fi
 if [[ $model == "cam" ]]
