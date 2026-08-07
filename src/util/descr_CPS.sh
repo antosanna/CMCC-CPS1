@@ -228,10 +228,12 @@ then
    hsmmail=${mymail}
    ecmwfmail=${mymail}
    ccmail=${mymail}
+   ccecmwfmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=volkan.firat@ecmwf.int
-      ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+      ccmail="-b leone.cavicchia@cmcc.it -b stefanotib@gmail.com"
 	     hsmmail=hsm@cmcc.it
+      ccecmwfmail="-b c3s_seasonal_production@groups.ecmwf.int -b stefanotib@gmail.com -b antonella.sanna@cmcc.it -b silvio.gualdi@cmcc.it -b leone.cavicchia@cmcc.it"
    fi
    VALIDATION=$WORK/CPS/VALIDATION
    EVALUATION=$WORK/CPS/EVALUATION
@@ -363,10 +365,11 @@ then
    	ecmwfmail=$mymail
     ccmail=$mymail
     hsmmail=$mymail
-    ccmail=${mymail}
+    ccecmwfmail=${mymail}
     if [[ $(whoami) == ${operational_user} ]]; then
       ecmwfmail=volkan.firat@ecmwf.int
       ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
+      ccecmwfmail="c3s_seasonal_production@groups.ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
     fi  
     CLIM_DIR_DIAG=$WORK_SCORES/monthly/
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
