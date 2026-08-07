@@ -13,6 +13,12 @@ set -euvx
 yyyy=`date +%Y`
 st=`date +%m`
 
+ncopy_run=`$DIR_UTIL/findjobs.sh -m $machine -n copy_SPS4DMO_from_data_to_Juno -c yes`
+if [[ $ncopy_run -gt 1 ]]
+then
+   exit 0 ]]
+fi
+touch $check_running
 DATA_DMO_DIR=/data/cmcc/cp1/temporary/DMO/$yyyy$st
 DATA_C3S_DIR=/data/cmcc/cp1/temporary/C3S/$yyyy$st
 # get the list of completed cases (produced daily in cron on Leonardo)
@@ -22,7 +28,7 @@ then
    exit 0
 fi
 cd $DATA_DMO_DIR
-listacasi=`ls sps4_${yyyy}${st}*`
+listacasi=`ls | grep sps4_${yyyy}${st}`
 for caso in $listacasi
 do
    checkfile_caso=$DATA_DMO_DIR/$caso.copied_to_data

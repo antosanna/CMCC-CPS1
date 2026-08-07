@@ -12,12 +12,27 @@
 set -euvx
 yyyy=`date +%Y`
 st=`date +%m`
+set +uvex
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+. $dictionary
+set -euvx
+
+if [[ ! -f $check_tar_done  ]]
+then
+   "tranfer not yet possible"
+    exit 0
+fi
+ncopy_run=`$DIR_UTIL/findjobs.sh -m $machine -n copy_SPS4DMO_from_Cassandra  -c yes`
+if [[ $ncopy_run -gt 1 ]]
+then
+   exit 0
+fi
 DATA_DMO_DIR=/data/cmcc/cp1/temporary/DMO/$yyyy$st
 DATA_C3S_DIR=/data/cmcc/cp1/temporary/C3S/$yyyy$st
 mkdir -p $DATA_DMO_DIR $DATA_C3S_DIR
 # get the list of completed cases (produced daily in cron on Leonardo)
 cd $DIR_ARCHIVE
-listacasi=`ls sps4_${yyyy}${st}*`
+listacasi=`ls |grep sps4_${yyyy}${st}`
 for caso in $listacasi
 do
    checkfile_caso=$DATA_DMO_DIR/$caso.copied_to_data
