@@ -19,6 +19,7 @@ wkdir=$4
 ftype=$5 
 ic="$6"
 nsimdays=$7
+dir_cases=$8
 
 
 st=`echo $caso|cut -d '_' -f 2|cut -c 5-6`
@@ -142,6 +143,8 @@ then
        mkdir -p $wkdir/$var
        cp $DIR_POST/cam/regridFV_C3S_single_template.ncl $script
        sed -i "s/TYPEIN/$ftype/g;s/MEMBER/$real/g;s/FRQIN/$frq/g" $script
+       script=$wkdir/$var/regridFV_C3S.$ftype.$var.sh
+       cp $DIR_POST/cam/regridFV_C3S_single_template.sh $script
        sed -i "s:INPUT:$inputFV:g;s:OUTDIR:$outdirC3S:g;s:WKDIR:$wkdir/$var:g;s:TYPE:$ftype:g;s:IC:\"$ic\":g;s:NDAYS:$nsimdays:g;s:VAR:$var:g;s:INIT:$init:g;s:END_TERM:$end_term:g;s:CASO:$caso:g;s:CHECKF:$checkfilevar:g;s:EXT:$ext:g;s:TABLE:$C3Stable:g" $script
        chmod u+x $wkdir/$var/regridFV_C3S.$ftype.$var.sh
        req_mem=10000
@@ -149,7 +152,7 @@ then
        then 
           req_mem=15000
        fi
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ftype}_${var}_${caso} -l $here/$caso/logs/ -d $wkdir/$var -s regridFV_C3S.$ftype.$var.sh 
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ftype}_${var}_${caso} -l $dir_cases/$caso/logs/ -d $wkdir/$var -s regridFV_C3S.$ftype.$var.sh 
     done
 fi
 for var in $listofvars

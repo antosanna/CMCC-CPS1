@@ -44,10 +44,10 @@ export inputascii=$HEALED_DIR/list_spikes.txt
 # where all the spike indices are stored
 export inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
-stdate=$yyyy$st
+stdate=$yyyy-$st
 if [[ $caso =~ "ext" ]]; then
    mm=`date -d "$yyyy${st}15 + 6 month" +%m`  
-   stdate=$yyyyp1$mm
+   stdate=$yyyyp1-$mm
    suffix1=-01-21600
    suffix2=-01-43200
    suffix3=-02-00000
@@ -57,7 +57,7 @@ else
    time_tag3=${yyyy}-${st}
 fi
 #first file to check
-file2check=${caso}.cam.h3.${time_tag}.zip.nc
+file2check=${caso}.cam.h3.${time_tag3}.zip.nc
 # copied for safety reasons to working directory
 rsync -auv $DIR_ARCHIVE/$caso/atm/hist/${file2check} $HEALED_DIR
 var="TREFMNAV"

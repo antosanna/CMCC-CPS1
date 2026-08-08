@@ -54,9 +54,6 @@ begin
 
         if (cell_method.eq."leadtime: sum".or.cell_method.eq."leadtime: maximum (interval: 0.5 hour)".or.cell_method.eq."leadtime: minimum (interval: 0.5 hour)".or.cell_method.eq."leadtime: mean (interval: 0.5 hour)") then
            time=timein-0.5
-           print("Check dims time in definitions")
-           printVarSummary(time)
-           print(time)
            time@bounds = "time_bnds" ;
            time_bnds=new((/nt,2/),C3S_type)
            time_bnds(:,0)=time(:)-0.5
@@ -398,9 +395,6 @@ begin
   it       = ind(dNames.eq."time")
   timein=src_file->time(initindex:)
   nt     = dimsizes(timein)
-  print("Check dims time in definitions")
-  printVarSummary(timein)
-  print(timein)
 
 ;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;                    PREDEFINE MODE
