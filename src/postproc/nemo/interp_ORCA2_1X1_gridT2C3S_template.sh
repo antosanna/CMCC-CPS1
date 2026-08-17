@@ -168,11 +168,15 @@ do
     echo "launching $scriptname "`date`
     echo "---------------------------------------------"
     mkdir -p $wkdir/$var
+    maxmem=15000
+    case $var in
+      $othersuff)maxmem=8000;;
+     esac
     
    if [[ ! -f ${check_oceregrid}_${var} ]] 
    then
        cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -n 10 -M 15000 -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var $end_term $init $outdirC3S $scriptname $inputfile"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -n 10 -M $maxmem -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var $end_term $init $outdirC3S $scriptname $inputfile"
    fi
 done
 while `true`

@@ -42,6 +42,7 @@ if [[ $caso =~ "ext" ]]; then
    fi
 else
    ext=0
+   init=0
    end_term=.nc
 fi
 C3Stable="$DIR_POST/cam/C3S_table.txt"

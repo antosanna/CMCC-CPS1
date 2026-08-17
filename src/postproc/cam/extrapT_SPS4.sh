@@ -37,7 +37,7 @@ export member=`echo $ens|cut -c2,3`
 export typeofrun
 
 export inputpsl=$HEALED_DIR/PSL.$caso.C3S.12hr.nc
-time_tag1=$yyyy-$st #.zip
+time_tag1=$yyyy-$st-01-00000 #.zip
 yyyyp1=$((yyyy + 1))
 export inittime=0
 if [[ $caso =~ "ext" ]]

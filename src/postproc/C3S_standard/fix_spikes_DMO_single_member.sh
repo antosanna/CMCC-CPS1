@@ -54,7 +54,7 @@ if [[ $caso =~ "ext" ]]; then
    suffix4=-01-10800
    time_tag3=$stdate$suffix3
 else
-   time_tag3=${yyyy}-${st}
+   time_tag3=${yyyy}-${st}-01-00000
 fi
 #first file to check
 file2check=${caso}.cam.h3.${time_tag3}.zip.nc
@@ -78,7 +78,7 @@ fi
 message="$caso First check for spikes performed"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$message" -t "$message" -r "only" -s $yyyy$st -E $ens
 
-time_tag=${stdate}
+time_tag=${stdate}-01-00000
 if [[ ! -f $inputascii ]]
 then
    touch $HEALED_DIR/${caso}.cam.h3.DONE
@@ -174,7 +174,7 @@ done
 # the output dir is created only at this stage for in principle the file could not be affected by spikes at all
 mkdir -p $HEALED_DIR
 rm $HEALED_DIR/${caso}.cam.h3.DONE
-time_tag=$stdate
+time_tag=$stdate-01-00000
 for model in cam 
 do
    case $model in
