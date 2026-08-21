@@ -124,7 +124,11 @@ then
    fi
    if [[ ! -z $cc ]]
    then
-      c=" $cc"
+     c=""
+     for ccm in $(echo "$cc" | tr ',' ' ') 
+     do
+        c+=" -c $ccm"
+     done
    else
       c=""
    fi

@@ -231,9 +231,10 @@ then
    ccecmwfmail=${mymail}
    if [[ $(whoami) == ${operational_user} ]]; then
      	ecmwfmail=volkan.firat@ecmwf.int
-      ccmail="-b leone.cavicchia@cmcc.it -b stefanotib@gmail.com"
+      ccmail="leone.cavicchia@cmcc.it,stefanotib@gmail.com"
 	     hsmmail=hsm@cmcc.it
-      ccecmwfmail="-b c3s_seasonal_production@groups.ecmwf.int -b stefanotib@gmail.com -b antonella.sanna@cmcc.it -b silvio.gualdi@cmcc.it -b leone.cavicchia@cmcc.it"
+      ccecmwfmail="c3s_seasonal_production@groups.ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
+      IRImail="mae2171@columbia.edu,jturmelle@climate.columbia.edu,awr2001@columbia.edu,stefanotib@gmail.com,antonella.sanna@cmcc.it,marianna.benassi@cmcc.it,andrea.borrelli@cmcc.it,brandon.fisel@cmcc.it,leone.cavicchia@cmcc.it"
    fi
    VALIDATION=$WORK/CPS/VALIDATION
    EVALUATION=$WORK/CPS/EVALUATION
@@ -370,6 +371,7 @@ then
       ecmwfmail=volkan.firat@ecmwf.int
       ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
       ccecmwfmail="c3s_seasonal_production@groups.ecmwf.int,stefanotib@gmail.com,antonella.sanna@cmcc.it,silvio.gualdi@cmcc.it,leone.cavicchia@cmcc.it"
+      IRImail="mae2171@columbia.edu,jturmelle@climate.columbia.edu,awr2001@columbia.edu,stefanotib@gmail.com,antonella.sanna@cmcc.it,marianna.benassi@cmcc.it,andrea.borrelli@cmcc.it,brandon.fisel@cmcc.it,leone.cavicchia@cmcc.it"
     fi  
     CLIM_DIR_DIAG=$WORK_SCORES/monthly/
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
