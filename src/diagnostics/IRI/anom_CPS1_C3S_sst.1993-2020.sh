@@ -14,7 +14,7 @@ var=$6
 dbg=$7
 dirlog=$8
 
-refperiod=$iniy_hind-$endy_hind
+refperiod=1993-2020
 vardir=$var
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
@@ -23,7 +23,7 @@ set -euvx
 
 mkdir -p $workdir
 
-anom_stdate=${dirlog}/anom_${SPSSystem}_${yyyy}${st}_${var}_DONE
+anom_stdate=${dirlog}/anom_${SPSSystem}_${yyyy}${st}_${var}_${refperiod}_DONE
 if [[ -f $anom_stdate ]]
 then
    exit 0
@@ -37,12 +37,8 @@ plist=`ls |grep ${SPSSystem}_${yyyy}$st|cut -d '.' -f1|cut -d '_' -f2-5`
 
 for caso in $plist ; do
 	  cdo sub $workdir/${var}_${caso}.nc $climdir/${var}_${SPSSystem}_clim_$refperiod.${st}.nc $anomdir/${var}_${caso}_ano.$refperiod.nc
-	  touch ${dirlog}/anom_${caso}_${var}_DONE
-   if [[ $var != "sst" ]]
-   then
-# do not remove since still needed for IRI where anomalies are computed wrt a different ref period
-      rm $workdir/${var}_${caso}.nc
-   fi
+	  touch ${dirlog}/anom_${caso}_${var}_${refperiod}_DONE
+#   rm $workdir/${var}_${caso}.nc
 	  ic=`expr $ic + 1`
   	ensalllist="$ensalllist $anomdir/${var}_${caso}_ano.$refperiod.nc"
 	  if [ $ic -eq $nrunC3Sfore ]
@@ -52,7 +48,7 @@ for caso in $plist ; do
 done #while on $plist
 
 set +e
-nanomDONE=`ls -1 ${dirlog}/anom_*${yyyy}${st}_0??_${var}_DONE | wc -l`
+nanomDONE=`ls -1 ${dirlog}/anom_*${yyyy}${st}_0??_${var}_${refperiod}_DONE | wc -l`
 set -e
 
 if [ $nanomDONE -eq $nrunC3Sfore ] ; then
@@ -76,7 +72,7 @@ if [ $nanomDONE -eq $nrunC3Sfore ] ; then
 
    #rsync to $DIR_CLIM!
    touch ${anom_stdate}
-   rm ${dirlog}/anom_${SPSSystem}_${yyyy}${st}_0??_${var}_DONE*
+   rm ${dirlog}/anom_${SPSSystem}_${yyyy}${st}_0??_${var}_${refperiod}_DONE*
 
 else
    body="Something wrong with $typeofrun anomalies ${yyyy}${st} for ${var}. $nanomDONE anomalies computed instead of ${nrunC3Sfore}. \n Check in $DIR_DIAG_C3S/anom_${CPSSYS}_C3S_notify.sh"   

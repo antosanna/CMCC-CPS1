@@ -105,7 +105,7 @@ do
 
             exit
          fi
-      done
+      done  # loop on flags max min
       if [[ $dbg -eq 1 ]]
       then
          exit 0
