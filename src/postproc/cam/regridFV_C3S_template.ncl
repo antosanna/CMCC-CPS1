@@ -482,6 +482,11 @@ begin
                 tref=src_file->TREFHT
                 rhref=src_file->RHREFHT
    ;__________________________________________________________
+   ; fix rhref for unphysical-spike-related values
+   ;__________________________________________________________
+                rhrefmax=200.
+                rhref=where(rhref.gt.rhrefmax,rhrefmax,rhref)
+   ;__________________________________________________________
    ; compute dewpoint temp from t2m and rh2m
    ;__________________________________________________________
                 var2regrid=dewtemp_trh(tref,rhref)
