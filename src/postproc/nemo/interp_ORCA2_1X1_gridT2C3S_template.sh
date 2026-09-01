@@ -170,7 +170,7 @@ do
     mkdir -p $wkdir/$var
     maxmem=15000
     case $var in
-      $othersuff)maxmem=8000;;
+      $othersuff)maxmem=20000;;
      esac
     
    if [[ ! -f ${check_oceregrid}_${var} ]] 
