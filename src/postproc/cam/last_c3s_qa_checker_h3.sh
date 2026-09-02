@@ -3,7 +3,7 @@
 . $DIR_UTIL/descr_CPS.sh
 
 . $DIR_UTIL/condaactivation.sh
-condafunction activate qachecker
+condafunction activate $envcondaqachecker
 
 set -euvx
 caso=$1

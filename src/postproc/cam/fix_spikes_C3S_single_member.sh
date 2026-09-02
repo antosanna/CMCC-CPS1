@@ -35,7 +35,7 @@ ens=`echo $caso|cut -d '_' -f3`
 #----------------------------------
 set +euvx
 . $DIR_UTIL/condaactivation.sh
-condafunction activate qachecker
+condafunction activate $envcondaqachecker
 set -euvx
 
 # where the spike indices are stored each time the checker is passed through

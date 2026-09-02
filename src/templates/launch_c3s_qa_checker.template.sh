@@ -21,7 +21,7 @@ echo "activate env *********************"
 
 set +euvx
   . $DIR_UTIL/condaactivation.sh 
-  condafunction activate qachecker 
+  condafunction activate $envcondaqachecker 
 set -euvx
 
 
@@ -55,7 +55,9 @@ for ncfile in $netcdf2check ; do
        netcdfaux_sic=`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member2d}*.nc`
        rsync -auv $netcdfaux_sic $wdir/tempdir_${namespace}
 
-       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member2d}*.nc`
+#       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member2d}*.nc`
+# could we use the $REPO one?
+       netcdfaux_mask=$REPOSITORY/sps4_LANDFRAC_C3S_sftlf.nc
        rsync -auv $netcdfaux_mask $wdir/tempdir_${namespace} 
     fi
     
@@ -68,10 +70,10 @@ for ncfile in $netcdf2check ; do
     if [[ $reduced -eq 1 ]] ; then
       # launch python (checking files in tempdir_\$namespace)
       # adding -pclim input activates the climatological check on monthly min/max, while -pqval activates the interquantile one 
-         python c3s_qa_checker.py $ncfile -sld ${spike_list_dmo} -dmo $REPOSITORY/lsm_sps4.nc -sl $spike_list -p $wdir/tempdir_${namespace} -j $jsonf -exp $startdate -real $member --logdir $output/ --verbose >> $output/$logname.txt
+         python c3s_qa_checker_opt.py $ncfile -sld ${spike_list_dmo} -dmo $REPOSITORY/lsm_sps4.nc -sl $spike_list -p $wdir/tempdir_${namespace} -j $jsonf -exp $startdate -real $member --logdir $output/ --verbose >> $output/$logname.txt
     else
        # WILL BE THE ABOVE ONCE THE HINDCAST CLIMATOLOGIES WILL BE COMPUTED
-       python c3s_qa_checker.py $ncfile -p $wdir/tempdir_${namespace} -pclim $OUTDIR_DIAG/C3S_statistics -u -scd $scratch4outl -j $jsonf -exp $startdate -real $member --logdir $output/ --verbose >> $output/$logname.txt
+       python c3s_qa_checker_opt.py $ncfile -p $wdir/tempdir_${namespace} -pclim $OUTDIR_DIAG/C3S_statistics -u -scd $scratch4outl -j $jsonf -exp $startdate -real $member --logdir $output/ --verbose >> $output/$logname.txt
     fi
     # remove files
     if [[ $? -eq 0 ]] ; then

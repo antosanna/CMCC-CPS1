@@ -14,6 +14,7 @@ inputoro=getenv("inputoro")
 print("---orography from "+inputoro)
 filePS=getenv("inputPS")
 print("----PS from "+filePS)  ; a CCM file
+init=tofloat(getenv("inittime"))
 ;
 mon=toint(st)
 fccm = addfile (inputoro,"r")
@@ -25,7 +26,9 @@ T3    = tofloat(fccm->ta(:,:,:,:)) ;read all levels
 time = fccm->time
 uc_date=cd_calendar(time,0)
 fccm = addfile (inputt2m,"r")
-TS    = tofloat(fccm->TREFHT(:,:,:)) 
+timet2m = fccm->time
+initindex=get1Dindex(timet2m,init)
+TS    = tofloat(fccm->TREFHT(initindex:,:,:)) 
 dimTS=dimsizes(TS)
 
 mm=dimsizes(T3)
@@ -40,7 +43,7 @@ nlev2fix=dimsizes(pnew)
 ; actual value (1000, 925) are set to mask and there the algorithm is 
 ; not applied 
 fccm = addfile (filePS , "r")  ; a CCM file
-PS = fccm->PS(:,:,:)
+PS = fccm->PS(initindex:,:,:)
 Tout=T3
 
 doT=1

@@ -102,7 +102,8 @@ then
         # NCO phase - Create new variables - 4 steps
         # (I) H2OSOI
         # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
-        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+#        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+        ncap2 -O --cnk_plc=uck -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
         mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
    
         # (II) SNOW
@@ -151,7 +152,7 @@ then
    prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    if [[ $caso =~ "ext" ]]; then
       export suffix_in=_slicetime4440to11712.nc
-      export suffix_acc=_slicetime4452to11796.nc
+      export suffix_acc=_slicetime4452to11724.nc
       init=185
    else
       export suffix_in=.nc

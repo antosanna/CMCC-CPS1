@@ -26,8 +26,8 @@ member=`echo $ens|cut -c2,3`
 HEALED_DIR=$HEALED_DIR_ROOT/$caso
 #HEALED_DIR_ROOT=/work/cmcc/cp1/CPS/CMCC-CPS1/fixed_from_spikes/
 # THIS MUST BE KEPT FOR CERISE
-chmod -R u+w $DIR_ARCHIVE/$caso
-ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
+chmod -R u+w $DIR_ARCHIVE1/$caso
+ic=`ncdump -h $DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
 nsimdays=$fixsimdays
 outdirC3S=${WORK_C3S}/$yyyy$st/
@@ -89,7 +89,7 @@ then
            h3) mult=1 ; req_mem=600;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
        flag_for_type=${check_postclm_type}_${ft}_DONE
-       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+       finalfile_clm=$DIR_ARCHIVE1/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
        jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
@@ -99,7 +99,7 @@ then
           continue
        fi
        echo "start of postpc_clm "`date`
-       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+       finalfile_clm=$DIR_ARCHIVE1/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
        input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft $dir_cases"
        # ADD the reservation for serial !!!
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S $qos -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
@@ -122,8 +122,8 @@ then
    for ft in $filetyp
    do
   
-      finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
-      inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
+      finalfile=$DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+      inputfile=$DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
       input="$caso $ft ${wkdir_cam} $finalfile $ic" 
       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       jobIDall_cam+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_cam_files_${ft}_${caso} -i yes`"
@@ -195,7 +195,7 @@ then
       finalfile=$HEALED_DIR/$caso.cam.$ft.$yyyy-$st.zip.nc
       if [[ $ft == "h0" ]]
       then
-          finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+          finalfile=$DIR_ARCHIVE1/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
       fi
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
       input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic $nsimdays"
@@ -306,10 +306,10 @@ do
       else
          suff="-01-00000.nc"
       fi
-      n_zip=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc|wc -l`
+      n_zip=`ls $DIR_ARCHIVE1/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc|wc -l`
       if [[ $n_zip -ne 0 ]]
       then
-         listzip=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc`
+         listzip=`ls $DIR_ARCHIVE1/$caso/$dirname/hist/$caso.$realm.$ft.*zip.nc`
          for ff in $listzip
          do
             rootf=`echo $ff|rev|cut -d '.' -f3-|rev`
@@ -320,10 +320,10 @@ do
             fi
          done
       else
-         n=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc|wc -l`
+         n=`ls $DIR_ARCHIVE1/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc|wc -l`
          if [[ $n -ne 0 ]]
          then
-            list=`ls $DIR_ARCHIVE/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc`
+            list=`ls $DIR_ARCHIVE1/$caso/$dirname/hist/$caso.$realm.$ft.*[0-9].nc`
             for ff in $list
             do
                finalf=`echo "${ff/$suff/.zip.nc}"`
@@ -336,6 +336,7 @@ do
       fi
    done   #type
 done  #realm
+exit
 if [[ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc |wc -l` -ge 1 ]] ; then
   rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
 fi
