@@ -125,6 +125,7 @@ then
     esac
     listofvars=`cat $C3Stable |grep $frq|cut -d ',' -f2`
     n_listofvars=`cat $C3Stable |grep $frq|wc -l`
+    n_counter=0
     for var in $listofvars
     do
        if  [[ $caso =~ "ext" ]] && { [[ "$var" == "orog" ]] || [[ $var == "sftlf" ]]; }
@@ -154,6 +155,12 @@ then
           req_mem=15000
        fi
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ftype}_${var}_${caso} -l $dir_cases/$caso/logs/ -d $wkdir/$var -s regridFV_C3S.$ftype.$var.sh 
+       n_counter=$((n_counter + 1))
+# CHECK MAX NUMBER OF SUBMITTED JOBS
+       if [[ $n_counter -eq 999999 ]]
+       then
+          :
+       fi
     done
 fi
 for var in $listofvars
