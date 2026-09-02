@@ -23,7 +23,7 @@ import traceback
 import sys
 #import argparse
 #import re
-import numpy as np
+#import numpy as np
 import xarray as xr
 import json
 import warnings
@@ -213,6 +213,7 @@ def main():
                     # Initialize error list variables for each variable in file
                     error_in_var=False
                     ice_spike_list=[]; spike_error_list=[]
+                    ice_spike_list_notsorted=[]
                     spikemin_list=[]
                     spikeright_list=[]
                     spikeleft_list=[]
@@ -300,9 +301,12 @@ def main():
                         if args.verbose:
                             print('[INFO] Performing spike diagnostic with threshold d1='+str(args.delta1)+' and d2='+str(args.delta2))
                         if shortname=='TREFMNAV' or shortname=='tasmin':
-                           ice_spike_list,spikemin_list, spikeright_list,spikeleft_list,dropT_list, spike_error_list = check_temp_spike_new(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=min4spike, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
+#modified ANTO 20260817 +
+                           ice_spike_list_notsorted,spikemin_list, spikeright_list,spikeleft_list,dropT_list, spike_error_list = check_temp_spike_new(varname,shortname,timename, files[f], spike_error_list, field1=DS[v], min_limit1=min4spike, delta_limit1=float(args.delta1),delta_limit2=float(args.delta2), verbose=args.verbose, very_verbose=args.very_verbose)
+                           ice_spike_list = sorted(ice_spike_list_notsorted, key=lambda x: (int(x.split(";")[0]), int(x.split(";")[1])))
+#modified ANTO 20260817 -
                         else:
-                            raise InputError('Spike check in this variable has not been implemented')
+                           raise InputError('Spike check in this variable has not been implemented')
 
 
                     # Climatology range check
