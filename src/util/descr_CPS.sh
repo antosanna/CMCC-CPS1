@@ -377,7 +377,7 @@ then
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
-WORK_C3S=$WORK_C3S1
+WORK_C3S=$DIR_ARCHIVE/C3S
 if [[ $USER == "$operational_user" ]]
 then
       WORK_C3S=${WORK_C3S1}
