@@ -3,6 +3,7 @@
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
 . ${DIR_UTIL}/load_cdo
+. ${DIR_UTIL}/load_nco
 set -euvx
 
 # Inputs

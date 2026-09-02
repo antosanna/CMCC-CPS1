@@ -126,11 +126,18 @@ if [[ "$machine" == "juno" ]] && [[ `whoami` == "$operational_user" ]] ; then
 else
    
    dirplots=$SCRATCHDIR/diag_C3S/forecast_plots/$yyyy$st
-   tar -cvf $SCRATCHDIR/diag_C3S/forecast_plots/$yyyy$st.tar $dirplots 
-   title="${SPSSystem} forecast notification - C3S diagnostic complete"
-   body="Final diagnostic complete. \n Check the notification mails and plots by compute_anomalies_C3S_auto_newproj_notify.sh before sending data to ECMWF.\n
+   if [[ $machine == "leonardo" ]]
+   then
+      title="${SPSSystem} forecast notification - C3S diagnostic complete"
+      body="Final diagnostic complete. \n Check the notification mails and plots by compute_anomalies_C3S_auto_newproj_notify.sh before sending data to ECMWF.\n
    Plots will be transferred on juno for dev-website update"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
+      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r yes -s $yyyy$st
+   elif [[ $machine == "cassandra" ]]
+   then
+# copy plots and forecast anomalies to data to be available for copy from Juno
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_s -r $sla_serialID -S $qos -j copy_webplots_and_fore_anom_from_work_to_data_Cassandra.${yyyy}${st} -l ${DIR_LOG}/$typeofrun/$yyyy$st -d ${DIR_UTIL} -s copy_webplots_and_fore_anom_from_work_to_data_Cassandra.sh 
+   fi
+    
 
 fi 
 exit 0

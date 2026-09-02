@@ -32,6 +32,7 @@ fsicobs=addfile(fnameobs,"r")
 tmp=fsicobs->ice_conc
 ;multiply for scale_factor 0.01 if needed (depending on machine)
 if (isatt(tmp, "scale_factor")) then
+    
     tmp_doub= todouble(tmp) * todouble(tmp@scale_factor)
     if (isatt(tmp, "add_offset")) then
        tmp_doub = tmp_doub + todouble(tmp@add_offset)
@@ -40,16 +41,16 @@ else
    tmp_doub=todouble(tmp)
 end if
 nn=dimsizes(tmp_doub)
-sicobs=tmp_doub(nn(0)-1,0:nn(1)-2,1:nn(2)-2)
+sicobs=tmp_doub(0:nn(0)-2,1:nn(1)-2)
 delete(tmp_doub)
 delete(tmp)
 
 ;printVarSummary(sicobs)
 printMinMax(sicobs,1)
-lat2d=lat_or(0:nn(1)-2,1:nn(2)-2)
-lon2d=lon_or(0:nn(1)-2,1:nn(2)-2)
+lat2d=lat_or(0:nn(0)-2,1:nn(1)-2)
+lon2d=lon_or(0:nn(0)-2,1:nn(1)-2)
 
-msk2d=msk(0:nn(1)-2,1:nn(2)-2)
+msk2d=msk(0:nn(0)-2,1:nn(1)-2)
 
 wks=gsn_open_wks(pltype,pltname)  
 noce=toint(getenv("nic"))
@@ -105,7 +106,7 @@ nfils=dimsizes(fili)
 ipoce=1
 do nf=0,nfils-1
    fsic_ic = addfile (dirciceic+"/"+fili(nf), "r")
-   sic=fsic_ic->aicen(:,0:nn(1)-2,1:nn(2)-2)
+   sic=fsic_ic->aicen(:,0:nn(0)-2,1:nn(1)-2)
 
    sizes=dimsizes(sic)
    nlat=sizes(1)

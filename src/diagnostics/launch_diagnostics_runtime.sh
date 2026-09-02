@@ -39,10 +39,8 @@ then
 fi
 
 rclone_tag=${yyyy}${st}
-ccmail=leone.cavicchia@cmcc.it,stefanotib@gmail.com
 if [[ ${typeofrun} == "forecast" ]] && [[ ${is_backup} -eq 1 ]] 
 then
-     ccmail=sp1@cmcc.it
      rclone_tag=${yyyy}${st}_backup
 fi
 DIR_RCLONE=${typeofrun}/${rclone_tag}  

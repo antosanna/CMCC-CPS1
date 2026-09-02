@@ -19,8 +19,7 @@ module load intel-2021.6.0/sshpass/.1.06-zarp3
 
 st=11
 strest=05
-#for yyyy in `seq 1995 2024`
-for caso in sps4_200011_021 sps4_200211_021 sps4_200311_021 sps4_200411_021 sps4_201311_021 sps4_199411_021
+for caso in sps4_202011_021 
 do
    yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
    yyyyrest=$((yyyy + 1))

@@ -52,11 +52,23 @@ fi
 export typerun=$typeofrun
 dateobs=`echo $filename |rev |cut -d '.' -f2|cut -d '_' -f1 |rev`
 export ddobs=`echo ${dateobs} | cut -c7-8`
+export filename_filled=${wkdir}/filled_${filename}
+export filename_raw=${wkdir}/${filename}
+export touch_fill=${wkdir}/filled_osisaf_OK
+if [[ -f $touch_fill ]] ; then
+   rm $touch_fill
+fi
+ncl ${DIR_OCE_IC}/filling_osisaf.ncl
+if [[ ! -f $touch_fill ]]
+then
+    echo "problem with land-filling osisaf obs"
+    exit 
+fi 
 export obsregfile=${wkdir}/sic_osisaf_nh_${dateobs}_regrid.nc
 if [[ ! -f $obsregfile ]] ; then
    targetgridfile=${REPOGRID}/grid_cice.txt
    obsgridfile=${REPOGRID}/osisaf_grid.txt
-   cdo -O  remapcon,${targetgridfile} -setgrid,${obsgridfile} -selname,ice_conc ${wkdir}/$filename ${obsregfile}
+   cdo -O  remapcon,${targetgridfile} -setgrid,${obsgridfile} -selname,ice_conc ${filename_filled} ${obsregfile}
 fi
 #rsync -auv ${IC_CICE_CPS_DIR}/${st}/*${yyyy}-${st}*nc $wkdir
 export nic=`ls ${IC_CICE_CPS_DIR}/${st}/*${yyyy}-${st}*nc |wc -l`
