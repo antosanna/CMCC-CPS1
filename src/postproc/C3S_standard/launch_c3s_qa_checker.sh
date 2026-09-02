@@ -136,9 +136,9 @@ mkdir -p $wdir/output
 json=${DIR_C3S}/qa_checker_table.json
 
 if [[ -f $wdir/c3s_qa_checker.py ]]; then
-   rm -f $wdir/c3s_qa_checker_opt.py
+   rm -f $wdir/c3s_qa_checker.py
 fi
-cp $DIR_C3S/c3s_qa_checker_opt.py $wdir/
+cp $DIR_C3S/c3s_qa_checker.py $wdir/
 cp -r $DIR_C3S/qa_checker_lib $wdir/ 
 
 submit_cnt=0
@@ -173,6 +173,7 @@ for ns in ${namespace}; do
           esac
        fi
     else
+# reduced extended???
        case $ns in
           seaIce_6hr|seaIce_day|ocean_6hr|land_6hr|atmos_6hr_surface_psl|atmos_6hr_surface_prw|atmos_6hr_surface_clt|atmos_6hr_surface_tas|atmos_6hr_surface_tdps|atmos_6hr_surface_uas|atmos_6hr_surface_vas|atmos_6hr_surface_ua100m|atmos_6hr_surface_va100m|atmos_day)memlimit="7500M";;
           atmos_12hr_pressure_zg|atmos_12hr_pressure_ta|atmos_12hr_pressure_hus|atmos_12hr_pressure_ua|atmos_12hr_pressure_va)memlimit="20000M";;
