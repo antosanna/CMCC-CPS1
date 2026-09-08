@@ -37,7 +37,7 @@ mkdir -p $DIR_FORE_ANOM_DATA
 rsync -auv $DIR_FORE_ANOM/$yyyy$st $DIR_FORE_ANOM_DATA
 
 touch $touchfile
-title="[$SPSSYS] notification: data and plots copied to Cassandra /data"
-body="forecast anom and plots copied to Cassandra $dirplot_data/$yyyy$st. Ready to be copied to Juno /wowrk with $DIR_UTIL/copy_webdiags_fore_anom_from_dataCassandra.sh"
+title="[$CPSSYS] notification: data and plots copied to Cassandra /data"
+body="forecast anom and plots copied to Cassandra $dirplot_data/$yyyy$st. Ready to be copied to Juno /work with $DIR_UTIL/copy_webdiags_fore_anom_from_dataCassandra.sh"
 ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title"
 exit 0

@@ -19,6 +19,14 @@ mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/C3S_postproc
 st=`date +%m`   #$2  #stdate as input
 yyyy=`date +%Y`  #$1
 
+# This to avoid any postproc submit during execution of tar_C3S.sh
+flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3S_${yyyy}${st}_started"
+if [[ -f $flag_tarC3S ]]
+then
+   echo "tar_C3S.sh already started!"
+   exit 0
+fi
+
 dbg=0 # dbg=1 -> just one member for test
 flag_running=$DIR_TEMP/launch_postproc_C3S_${typeofrun}_${yyyy}${st}_${machine}_on #to avoid multiple submission from crontab
 if [[ -f ${flag_running} ]]

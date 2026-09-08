@@ -92,16 +92,18 @@ if [[ "$varm" == "sst" ]] ; then
 	      $DIR_DIAG_C3S/ENSO_plot_notify.sh $yyyy $st $ensoreg $dirplots $workdir $anomdir $ncep_dir
        $DIR_DIAG_C3S/ENSO_prob_seas_plot.sh $yyyy $st $ensoreg $dirplots $workdir $anomdir
        ####### New probabilistic ENSO diagnostics #######
-       input="$yyyy $st $ensoreg $dirplots $workdir $anomdir"
-       ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j ENSO_strength_prob_seas_plot_${varm}_${yyyy}${st} -l ${dirlog} -s ENSO_strength_prob_seas_plot.sh -i "$input"
+       #input="$yyyy $st $ensoreg $dirplots $workdir $anomdir"
+       #${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j ENSO_strength_prob_seas_plot_${varm}_${yyyy}${st} -l ${dirlog} -s ENSO_strength_prob_seas_plot.sh -i "$input"
+       $DIR_DIAG_C3S/ENSO_strength_prob_seas_plot.sh $yyyy $st $ensoreg $dirplots $workdir $anomdir
        ##############
        ####### RONI plume #######
         if [[ $ensoreg == "Nino3.4" ]]
         then
           #relative nino index still to be implemented over the other nino regions
           #reading of obs to be adapted
-          input="$yyyy $st $dirplots $workdir $anomdir $ncep_dir $ensoreg"
-       ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j RONI_plot_notify_${varm}_${yyyy}${st} -l ${dirlog} -s RONI_plot_notify.sh -i "$input"  
+          #input="$yyyy $st $dirplots $workdir $anomdir $ncep_dir $ensoreg"
+          #${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 3000 -j RONI_plot_notify_${varm}_${yyyy}${st} -l ${dirlog} -s RONI_plot_notify.sh -i "$input"  
+          ${DIR_DIAG_C3S}/RONI_plot_notify.sh $yyyy $st $dirplots $workdir $anomdir $ncep_dir $ensoreg
        fi
    done 
    ##############
@@ -114,16 +116,16 @@ if [[ "$varm" == "sst" ]] ; then
 	        exit 1
 	  fi
 
-   nENSOplotDONE_prob=`ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE | wc -l`
+   nENSOplotDONE_prob=`ls -1 ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE | grep -v relative| wc -l`
    if [[ $nENSOplotDONE_prob -ne 8 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun ENSO plot ERROR"
-         body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_prob_seas_plot.ncl went wrong"
+         body="Something in ${DIR_DIAG_C3S}/ncl/ENSO_prob_seas_plot.ncl or ${DIR_DIAG_C3S}/ncl/ENSO_strenght_prob_seas.ncl went wrong"
          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $yyyy$st
          rm ${dirplots}/${varm}_*Nino*_prob_${yyyy}_${st}_DONE
          exit 1
    fi
 
-	  nRONIplotDONE=`ls -1 ${dirplots}/${varm}_*Nino*_mem_${yyyy}_${st}_DONE | wc -l`
+	  nRONIplotDONE=`ls -1 ${dirplots}/${varm}_RONI_Nino3.4_${yyyy}_${st}_DONE | wc -l`
 	  if [[ $nRONIplotDONE -ne 1 ]] ; then 
          title="[diags] ${CPSSYS} $typeofrun RONI plot ERROR"
 	        body="Something in ${DIR_DIAG_C3S}/ncl/RONI_plot.ncl went wrong"

@@ -90,7 +90,7 @@ then
          	tar -tvf $tarf >> ${attachtxt}
       done
       title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-      body="Dear Volkan, \n
+      body="Dear Ilgar, \n
       \n
       this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
    \n
@@ -245,7 +245,7 @@ checkpushdone=`ls ${filedone} | wc -l`
 if [[ $checkpushdone -eq 1 ]]; then
 # AT LAST SEND notification both to sp1 and to ECMWF
    title=${title_debug}"CMCC-${SPSSystem} ${typeofrun} ${yyyy}${st} data-transfer completed"
-   body="Dear Volkan, \n
+   body="Dear Ilgar, \n
    \n
    this is to notify the completion of CMCC-${SPSSystem} ${typeofrun} data (start-date ${yyyy}${st}01) transfer to acq.ecmwf.int. \n
    \n

@@ -162,7 +162,7 @@ then
    fi
    input="$caso $dir_cases"
 # now moved to $DIR_C3S from $DIR_POST/cam since it heals also clm files
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 30000 -j fix_spikes_DMO_single_member_cam.h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s fix_spikes_DMO_single_member.sh -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 5000 -j fix_spikes_DMO_single_member_cam.h3_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_C3S} -s fix_spikes_DMO_single_member.sh -i "$input"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso : fix_spikes_DMO_single_member_cam.h3_${caso} submitted" -r "only" -s $yyyy$st
    while `true`
    do

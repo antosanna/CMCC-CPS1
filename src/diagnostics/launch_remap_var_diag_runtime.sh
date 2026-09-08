@@ -60,7 +60,7 @@ do
         do
             input="$yyyy $st $sps $var $ftype $datadir $WKDIR"
             mkdir -p ${DIR_LOG}/forecast/$yyyy$st/remap_var_diag_runtime
-            ${DIR_UTIL}/submitcommand.sh -M 10000 -m $machine -q $serialq_m -s remap_var_diag_runtime.sh -j remap_var_diag_runtime_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st/remap_var_diag_runtime -i "$input"
+            ${DIR_UTIL}/submitcommand.sh -M 3000 -m $machine -q $serialq_m -s remap_var_diag_runtime.sh -j remap_var_diag_runtime_${yyyy}${st} -d ${DIR_DIAG} -l ${DIR_LOG}/forecast/$yyyy$st/remap_var_diag_runtime -i "$input"
         done
      done
      ncases_proc=$(( $ncases_proc + 1 ))

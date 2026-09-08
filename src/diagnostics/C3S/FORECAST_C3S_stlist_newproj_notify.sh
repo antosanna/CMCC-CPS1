@@ -36,7 +36,7 @@ then
 else
    varlist="sst"
 fi
-
+mem_request=3000
 DATASET=ERA5
 for var in $varlist
 do
@@ -44,11 +44,15 @@ do
      then
         DATASET=MSWEP
      fi
+     if [[ $var == "sst" ]]
+     then
+          mem_request=30000
+     fi
      cd $DIR_DIAG_C3S
      echo 'postprocessing $var '$st
      input="$yyyy $st $var $all '$reglist' '$ensorgl' ${flag_done} $DATASET $dbg"
      echo $input
-     ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M 30000 -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
+     ${DIR_UTIL}/submitcommand.sh -m $machine -d ${DIR_DIAG_C3S} -S $qos -q $serialq_m -n 1 -M ${mem_request} -j compute_anomalies_C3S_auto_newproj_notify_${var}_${start_date} -l ${dirlog} -s compute_anomalies_C3S_auto_newproj_notify.sh -i "$input"
 
 
 ##NOT USED RIGHT NOW - IT MAY BECOME USEFUL FOR FUTURE DIAGNOSTIC FOR WMO
