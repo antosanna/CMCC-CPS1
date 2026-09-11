@@ -32,8 +32,9 @@ for ens in {001..054}
 do
    caso=sps4_${yyyy}${st}_${ens}
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
-
-   if [[ -f $checkfile ]]
+   checkfile_cassandra=${DIR_ARCHIVE}/${caso}.copied_from_data
+   #in case of double forecast (cassandra + leo, official one on cassandra - as 202609), to avoid overwriting
+   if [[ -f $checkfile ]] || [[ -f ${checkfile_cassandra} ]]
    then
       continue
    fi
