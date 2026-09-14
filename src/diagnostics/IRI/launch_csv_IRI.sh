@@ -11,6 +11,9 @@
 set -euvx
 
 export yyyy=`date +%Y`
+set +evx
+. $DIR_UTIL/descr_ensemble.sh $yyyy
+set -evx
 export st=`date +%m`
 export refperiod=1993-2020
 
@@ -24,11 +27,11 @@ export csvdir=$WORK/CPS/CMCC-CPS1/IRI_csv_files/${yyyy}${st}
 mkdir -p $csvdir
 
 export mm_string=`date +%B`
-export mmp1_string=`date -d "${yyyy}${mm}01 +1month" +%B`
-export mmp2_string=`date -d "${yyyy}${mm}01 +2months" +%B`
-export mmp3_string=`date -d "${yyyy}${mm}01 +3months" +%B`
-export mmp4_string=`date -d "${yyyy}${mm}01 +4months" +%B`
-export mmp5_string=`date -d "${yyyy}${mm}01 +5months" +%B`
+export mmp1_string=`date -d "${yyyy}${st}01 +1month" +%B`
+export mmp2_string=`date -d "${yyyy}${st}01 +2months" +%B`
+export mmp3_string=`date -d "${yyyy}${st}01 +3months" +%B`
+export mmp4_string=`date -d "${yyyy}${st}01 +4months" +%B`
+export mmp5_string=`date -d "${yyyy}${st}01 +5months" +%B`
 
 export H0 H1 H2 H3 
 case $st

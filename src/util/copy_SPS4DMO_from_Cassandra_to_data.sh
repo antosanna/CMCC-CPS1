@@ -49,5 +49,5 @@ if [[ -f $checkfileC3S ]]
 then
    exit 0
 fi
-rsync -auv $WORK_C3S/${yyyy}${st} $DATA_C3S_DIR
+rsync -auv $WORK_C3S/${yyyy}${st}/* $DATA_C3S_DIR
 touch $checkfileC3S

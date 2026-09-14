@@ -113,7 +113,7 @@ fi
 echo "recover_interrupted.sh starting `date`"
 
 cd $DIR_CASES/
-listofcases="sps4ext_199511_001"
+listofcases="sps4ext_199411_021 sps4ext_202011_021"
 if [[ $st != "None" ]]
 then
 if [[ $yyyy -ne 1993 ]]
@@ -215,7 +215,7 @@ lista_arch_moredays=" "
 #sps4_201010_004 (zeus) - strange behaviour due to multiple recover..to be checked!
 
 lista_caso_ignored="${header}_199811_018 ${header}_200211_001 sps4ext_200411_017 sps4ext_200311_004"
-listofcases="sps4ext_199811_021 sps4ext_200011_021 sps4ext_200211_021 sps4ext_200311_021 sps4ext_200411_021 sps4ext_201311_021 sps4ext_199411_021 sps4ext_199311_003 sps4ext_199311_001 sps4ext_199311_018 sps4ext_199411_002 sps4ext_199411_005 sps4ext_199411_007 sps4ext_199411_008 sps4ext_201111_006 sps4ext_202011_009"
+listofcases="sps4ext_199411_021"
 cd $DIR_CASES/
 for caso in $listofcases ; do
   report="$caso "

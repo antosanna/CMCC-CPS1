@@ -81,7 +81,7 @@ profile&lon=lon11(jStrt+toint((jLast-jStrt+1)/2),iStrt:iLast)
 
 ;==================================================
 wks  = gsn_open_wks ("png", plname )
-gsn_define_colormap(wks,"BlueDarkRed18")
+gsn_define_colormap(wks,"ncl_default")
 plot4 = new ( 1 , graphic)
 
 ; Set up resources.
@@ -100,13 +100,26 @@ plot4 = new ( 1 , graphic)
 
 
   res@gsnYAxisIrregular2Linear = True
+  res@tmYROn = False            ; Turn off right tickmarks.
+  res@tmXTOn = False            ; Turn off top tickmarks.
+  res@tmXBLabelFont = "Helvetica"
+  res@tmYLLabelFont = "Helvetica"
+  res@tmXBLabelFontHeightF = 0.015
+  res@tmYLLabelFontHeightF = 0.015
 
 
   res@cnLevelSelectionMode     = "ExplicitLevels" 
-  res@cnLevels                 = (/-4,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3,3.5,4/)
+  ;res@cnLevels                 = (/-4,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0,0.5,1,1.5,2,2.5,3,3.5,4/)
+  res@cnLevels                 = (/-8,-6, -4,-2,-1,-0.5,0.5,1,2,4,6,8/)
+  res@cnFillColors =(/28,38,54,70,99,127,0,139,164,190,205,234,247/)
+
+  res@lbLabelFont      = "Helvetica"
+  res@lbLabelFontHeightF =.014
   res@lbTitleString    = "[~S~o~N~C]"                ; title string
   res@lbTitlePosition  = "Right"              ; title position
   res@lbTitleDirection = "Across"
+  res@lbTitleFont      = "Helvetica"
+  res@lbTitleFontHeightF= .015
   res@tiYAxisString = "Depth (m)"
   res@cnMissingValFillPattern = "SolidFill"
   res@cnMissingValFillColor = "grey"

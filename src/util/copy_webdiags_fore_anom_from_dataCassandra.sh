@@ -28,7 +28,7 @@ fi
 
 dirplot=$SCRATCHDIR/diag_C3S/forecast_plots/
 mkdir -p $dirplot
-touchfile=${dirplot}/copy_plots4web_fore_anom_DONE
+touchfile=${dirplot}/copy_plots4web_${yyyy}${st}_fore_anom_DONE
 
 if [[ -f $touchfile ]] 
 then

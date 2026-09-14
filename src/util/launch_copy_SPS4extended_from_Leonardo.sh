@@ -22,11 +22,14 @@ fi
 
 st=11
 #for yyyy in {1995..2024}
-for yyyy in {1993..1994}
+#for yyyy in {1993..1994}
+#do
+#for ens in {001..020} ; do
+#   caso=sps4ext_${yyyy}${st}_${ens}
+for caso in sps4ext_1994${st}_021 sps4ext_2020${st}_021
 do
-for ens in {001..020} ; do
-   caso=sps4ext_${yyyy}${st}_${ens}
 
+   yyyy=`echo $caso |cut -d '_' -f2|cut -c 1-4`
    checkfile=$DIR_ARCHIVE/$caso.transfer_from_Leonardo_DONE
    if [[ -f $checkfile ]]
    then
@@ -40,4 +43,4 @@ for ens in {001..020} ; do
    fi
 
 done
-done
+#done

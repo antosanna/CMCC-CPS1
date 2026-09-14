@@ -43,6 +43,6 @@ checkfileC3S=$DATA_C3S_DIR/C3S.$yyyy$st.copied_to_data
 if [[ -f $checkfileC3S ]]
 then
    checkfileC3S_copied=$DATA_C3S_DIR/C3S.$yyyy$st.copied_from_data
-   rsync -auv $DATA_C3S_DIR/${yyyy}${st} $WORK_C3S
+   rsync -auv $DATA_C3S_DIR $WORK_C3S
    touch $checkfileC3S_copied
 fi

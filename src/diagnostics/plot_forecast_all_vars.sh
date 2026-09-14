@@ -129,7 +129,7 @@ do
    set +e
 #   rm -rf $WKDIR/*_${yyyy}${st}_*
    input="$yyyy $st $refperiod $var $nrun $WKDIR $flgmnth $monthstr $nmf $climdir $pctldir $pctlvar $colormap $units $unitsl $fact $pldir $c3svar $dbg"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -M 40000 -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -M 1000 -q $serialq_m -s anom_${CPSSYS}_runtime.sh -j anom_${CPSSYS}_runtime.$var.${yyyy}${st} -d ${DIR_DIAG} -l ${logdir} -i "$input"
 done
 
 while `true` ; do

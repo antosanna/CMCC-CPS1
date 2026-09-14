@@ -29,7 +29,7 @@ then
 fi
 if [[ "$machine" == "$repo_machine" ]]
 then
-    cmd="rsync -auv --rsh="sshpass -f $HOME/.sshpasswd ssh -l a07cmc00""
+    cmd="rsync -auv --rsh=\"sshpass -f $HOME/.sshpasswd ssh -l a07cmc00\""
 elif [[ "$machine" == "$bk_machine" ]]
 then
    export SSHPASS="a(nU05wgJk"
