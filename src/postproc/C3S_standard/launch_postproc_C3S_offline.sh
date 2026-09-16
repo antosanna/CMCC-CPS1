@@ -9,16 +9,16 @@
 
 set -euvx
 
-#BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
-LOG_FILE=$DIR_LOG/hindcast/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
-exec 3>&1 1>>${LOG_FILE} 2>&1
-
-header=$SPSSystem
 ext=$1
 if [[ $ext -eq 1 ]]
 then
    header=${header}ext
+   typeofrun=hindcast_ext
 fi
+LOG_FILE=$DIR_LOG/${typeofrun}/launch_postproc_C3S_offline.`date +%Y%m%d%H%M`
+exec 3>&1 1>>${LOG_FILE} 2>&1
+
+header=$SPSSystem
 st=$2  #stdate as input
 
 recover=${3:-0} #default recover=0 (do not relaunch cases with missing all_checkers_ok)
@@ -31,7 +31,7 @@ then
    exit 0
 fi
 
-nmaxsubmit=30
+nmaxsubmit=15
 nsubmit=`$DIR_UTIL/findjobs.sh -m $machine -n postproc_C3S -c yes`
 if [[ $nsubmit -ge $nmaxsubmit ]]
 then
@@ -87,6 +87,7 @@ do
              continue
          fi
       fi
+#BEFORE RUNNING THIS SCRIPT FOR A NEW $caso CLEAN OLD FILES WITH $DIR_C3S/clean4C3S_listofcases.sh
       $DIR_C3S/clean4C3S_listofcases.sh $caso 
       isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
       if [[ ${isremote} -eq 1 ]] 
@@ -119,8 +120,8 @@ do
        #touch flag to avoid double resubmission
        touch ${flag_postproc_offline_on}
    
-       mkdir -p $DIR_LOG/hindcast/C3S_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/hindcast/C3S_postproc -i "${yyyy} $caso ${dir_cases} $flagpostproc_done"
+       mkdir -p $DIR_LOG/${typeofrun}/C3S_postproc
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/${typeofrun}/C3S_postproc -i "${yyyy} $caso ${dir_cases} $flagpostproc_done"
    
    
        if [[ $dbg -eq 1 ]]

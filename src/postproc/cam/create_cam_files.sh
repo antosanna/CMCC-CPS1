@@ -62,7 +62,7 @@ then
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
    inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.${stdate}$suffix.nc
-   if [[ ! -f $finalfile ]] || { [[ -f $inputfile ]] && [[ "$st" == "05" ]] && [[ $typeofrun == "hindcast" ]]; }
+   if [[ ! -f $finalfile ]] 
    then
       echo "starting compression for file $ft "`date`
       if [[ ! -f $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc ]]
@@ -77,7 +77,7 @@ then
 #         ic=(from txt in casedir)
       ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc
     
-         nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc`
+      nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc`
     
    
       if [[ $caso =~ "ext" ]]; then
@@ -88,7 +88,7 @@ then
          then
             body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.${stdate}.nc , ne to $expected_ts but is $nt. Exit "
             title="${CPSSYS} forecast ERROR "
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E $ens
             exit 1
          elif [[ $nt -gt $expected_ts  ]]
          then

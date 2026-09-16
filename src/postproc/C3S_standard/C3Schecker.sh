@@ -18,6 +18,11 @@ set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
 
+if [[ $caso =~ "ext" ]]
+then
+   nrunC3Sfore=$nrunhindext
+fi
+
 dbg=0
 cd $outdirC3S   #can be redundant
 set +euvx

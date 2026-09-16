@@ -13,7 +13,7 @@ caso=$2
 dir_cases=$3
 # this modification will affect $dictionary too!!!!
 #flag postproc done
-flagpostproc_done=$4
+#flagpostproc_done=$4     #NOT USED
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
 yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
@@ -30,6 +30,7 @@ chmod -R u+w $DIR_ARCHIVE/$caso
 
 # now that you have read ic from the standard C3S possibly redefine stdate for handling extended
 if [[ $caso =~ "ext" ]]; then
+   typeofrun=${typeofrun}_ext
    yyyyp1=$((yyyy + 1))
    mm=`date -d "$yyyy${st}15 + 6 month" +%m`
    stdate=$yyyyp1-$mm
@@ -332,7 +333,7 @@ set +euvx
    fi
 set -euvx
 fi
-touch $flagpostproc_done
+#touch $flagpostproc_done
 
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it

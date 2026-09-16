@@ -8,8 +8,7 @@ n_ic_clm=3
 nrunhind=30  # 30 number of realizations required in hindcast
 nrunhindext=20  # 30 number of realizations required in hindcast
 nrunmaxext=$nrunhindext
-#if [[ $yyyy -lt 2025 ]]
-if [[ $yyyy -lt 2027 ]]
+if [[ $yyyy -lt 2025 ]]
 then
    n_ic_nemo=4
    nmax4modify_trip=40 #line from which modify_triplette acts
