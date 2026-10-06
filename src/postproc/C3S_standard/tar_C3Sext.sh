@@ -29,7 +29,7 @@ then
 fi
 C3Stable_cam=$DIR_POST/cam/C3S_table.txt
 C3Stable_clm=$DIR_POST/clm/C3S_table_clm.txt
-C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others.txt
+C3Stable_oce1=$DIR_POST/nemo/C3S_table_ocean2d_others_ext.txt
 C3Stable_oce2=$DIR_POST/nemo/C3S_table_ocean2d_t14d.txt
 C3Stable_oce3=$DIR_POST/nemo/C3S_table_ocean2d_t17d.txt
 C3Stable_oce4=$DIR_POST/nemo/C3S_table_ocean2d_t20d.txt
@@ -44,6 +44,10 @@ do
    then
       var_array3d+=("$C3S")
    else
+      if [[ $flname == "PHIS" ]] || [[ $flname == "LANDFRAC" ]]
+      then
+         continue
+      fi
       var_array2d+=("$C3S")
    fi
 done } < $C3Stable_cam
@@ -98,10 +102,10 @@ var_array=("${var_array2d[@]}" "${var_array3d[@]}")
 echo ${var_array[@]}
 
 dim=${#var_array[@]}
-if [[ $dim -ne $nfieldsC3S ]]
+if [[ $dim -ne $nfieldsC3SEXT ]]
 then
    echo "!!!!!!!!!!!!!!!!!!!!!"
-   echo "you are postprocessing only $dim variables instead of the $nfieldsC3S ones"
+   echo "you are postprocessing only $dim variables instead of the $nfieldsC3SEXT ones"
    echo "check it beforegoing on and comment these lines"
    echo "!!!!!!!!!!!!!!!!!!!!!"
    exit
@@ -146,9 +150,9 @@ fi
 #  CHEKC THAT ALL NEEDED MEMBERS ARE THERE
 #----------------------------
 
-if [[ `ls $listatocheck |wc -l` -ne $(($nrunhindext * $nfieldsC3S)) ]]
+if [[ `ls $listatocheck |wc -l` -ne $(($nrunhindext * $nfieldsC3SEXT)) ]]
 then
-    body="C3Sext: $DIR_C3S/tar_C3Sext.sh found `ls $listatocheck |wc -l`files instead of $(($nrunhindext * $nfieldsC3S)) in $WORK_C3SEXT/${start_date}"
+    body="C3Sext: $DIR_C3S/tar_C3Sext.sh found `ls $listatocheck |wc -l`files instead of $(($nrunhindext * $nfieldsC3SEXT)) in $WORK_C3SEXT/${start_date}"
     title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
     ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date 
     exit 2
@@ -156,8 +160,8 @@ fi
 #
 # change_realization if needed
 #----------------------------
-####MB 20240825 - COMMENTED for now
-${DIR_C3S}/change_realization.sh $yyyy $st
+## not allowed in extended
+#${DIR_C3S}/change_realization.sh $yyyy $st
 
 # nel caso in cui change_realization.sh e' ridondante
 listatocheck=" "
@@ -303,7 +307,7 @@ do
    fi
 done
 
-# var in levels must be packed in 25 file tar each
+# var in levels must be packed in 5 file tar each
 for var in "${var_array3d[@]}"
 do
    NUMB_FOUND=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}*_${var}_*sha256 | wc -l`
@@ -314,125 +318,38 @@ do
       f=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r* | head -1`
       mft=`echo $f | cut -d '_' -f5-7`
       numb_nc=$nrunhindext
-      if [[ $nrunhindext -lt 10 ]] ; then  #SHOULD BE THE TEST CASE
-         if [[ `whoami` == "$operational_user" ]] && [[ "$machine" == "juno" ]]
-         then
-              body="nrunhindext set to $nrunhindext instead of the required for operations. Exiting from tar_C3Sext.sh"
-              title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
-              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
-              exit 2
-         fi
-         list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0*`
-         tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar ${list_0}
-         if [[ $? -eq 0 ]] ; then
-             sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.sha256
-             rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.* $pushdir_hc
-         else
-              echo "something wrong in shasum ${yyyy}${st} $var"
-         fi
-      else 
-# BAU forecast or hindcast operational
-         #first 10
-         list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r10*`
-         tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar ${list_0}
-         if [[ $? -eq 0 ]] ; then
-            sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.sha256
-           rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n10.* $pushdir_hc
-         else
-            echo "something wrong in shasum ${yyyy}${st} $var"
-         fi
+      list_0=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0[1-5]*`
+      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n5.tar ${list_0}
+      sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n5.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n5.sha256
+      rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n1-n5.* $pushdir_hc
+      #second 5
+      list_1=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r0[6-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r10*`
+      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n6-n10.tar ${list_1}
+      sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n6-n10.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n6-n10.sha256
+      rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n6-n10.* $pushdir_hc
+      #third 5
+      list_2=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r1[1-5]*`
+      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n15.tar ${list_2}
+      sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n15.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n15.sha256
+      rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n15.* $pushdir_hc
+      # fourth 5
+      list_3=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r1[6-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r20*`
+      tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n16-n20.tar ${list_3}
+      sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n16-n20.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n16-n20.sha256
+      rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n16-n20.* $pushdir_hc
 
-         #second 10
-         list_1=`ls cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r1[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r20*`
-         tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.tar ${list_1}
-         if [[ $? -eq 0 ]] ; then
-            sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.sha256
-            rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n11-n20.* $pushdir_hc
-         else
-            echo "something wrong in shasum ${yyyy}${st} $var"
-         fi
-
-         #third  10
-         list_2=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r2[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r30*`
-         tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.tar ${list_2}
-         if [[ $? -eq 0 ]] ; then
-            sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.sha256
-            rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n21-n30.* $pushdir_hc
-         else
-            echo "something wrong in shasum ${yyyy}${st} $var"
-         fi
-         #FOR SPS4 HINDCAST WE STOP HERE - 30 members in hindcast mode       
-  
-         if [[ $nrunhindext -eq 50 ]]
-         then 
-             #fourth 10
-             list_3=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r3[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r40*`
-             tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.tar ${list_3}
-             if [[ $? -eq 0 ]] ; then
-                   sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.sha256
-                   rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n31-n40.* $pushdir_hc
-             else
-                  echo "something wrong in shasum ${yyyy}${st} $var"
-             fi
-
-             #fifth 10
-             list_4=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r4[1-9]* cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_*_${var}_r50*`
-             tar -cf cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.tar ${list_4}
-             if [[ $? -eq 0 ]] ; then
-               sha256sum cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.tar > cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.sha256
-               rsync -auv --remove-source-files cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${yyyy}${st}0100_${mft}_${var}_n41-n50.* $pushdir_hc
-             else
-                echo "something wrong in shasum ${yyyy}${st} $var"
-             fi 
-         fi
-      fi
-   else
-      body="C3Sext: standardisation error in script $DIR_C3S/tar_C3Sext.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
-      title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
-      donotsend=1
-      exit
+#      body="C3Sext: standardisation error in script $DIR_C3S/tar_C3Sext.sh: start date ${yyyy}${st} incorrect number of files to tar for variable: ${var} Expected ${NUMB_CHECK} found ${NUMB_FOUND} in $WORK_C3SEXT/${start_date}. See log $DIR_LOG/$start_date/tar_C3Sext..."
+#      title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
+#      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -s $yyyy$st -r $typeofrun
+#      donotsend=1
+#      exit
    fi #if on number of var
 done  #end loop on var_array3d
 
 #check if everything is ok inside the tarfiles
 $DIR_C3S/check_tarC3Sext.sh $yyyy $st
-stat=$?
-if [[ $stat -eq 0 ]]
-then
-   body="C3Sext: $DIR_LOG/tar_C3Sext.sh completed for ${start_date}."
-   title="[C3Sext] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
-   touch ${check_tar_done}
-else
-   body="C3Sext: $DIR_C3S/check_tarC3Sext.sh failed for ${start_date}. Exiting now. Check and fix"
-   title="[C3Sext] ${CPSSYS} $typeofrun ERROR"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
-   exit 1
-fi   
+body="C3Sext: $DIR_LOG/tar_C3Sext.sh completed for ${start_date}."
+title="[C3Sext] ${CPSSYS} $typeofrun notification"
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r $typeofrun -s $start_date
+touch ${check_tar_done}
 
-#--------------------------------------------
-# NOW SUBMIT PUSH4ECMWF (only forecast)
-#--------------------------------------------
-skip=0
-if [[ $skip -eq 0 ]]
-then
-if [[ $typeofrun == "forecast" ]]
-then
-   input="$yyyy $st"
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -r $sla_serialID -S $qos -j launch_diag_web_$yyyy$st -l $DIR_LOG/$typeofrun/$yyyy$st -d $DIR_DIAG -s launch_diagnostic_webpage.sh -i "$input"
-  
-   body="Diagnostics from C3Sext just launched. Check plots on mail and website update in 40 minute time. When you are ready, submit $DIR_CPS/launch_end_forecast_${CPSSYS}.sh manually"
-   title="[C3Sext] ${CPSSYS} $typeofrun notification"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" 
-
-fi
-fi
-
-#--------------------------------------------
-# NOW COMPRESS ICs RELATIVE TO CURRENT START-DATE
-#--------------------------------------------
-#if [[ `whoami` == $operational_user ]]
-#then
-#   $IC_SPS35/compress_ICs_current_startdate.sh $st $yyyy
-#fi

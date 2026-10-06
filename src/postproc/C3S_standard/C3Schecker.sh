@@ -11,10 +11,17 @@ outdirC3S=$2
 startdate=$3
 dir_cases=$4
 member=$real #for dictionary consistency
+caso=$5
+
 yyyy=`echo ${startdate:0:4}`
 set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
+
+if [[ $caso =~ "ext" ]]
+then
+   nrunC3Sfore=$nrunhindext
+fi
 
 dbg=0
 cd $outdirC3S   #can be redundant
@@ -40,7 +47,13 @@ mkdir -p $dir_log_checker
 #fi
 # others checkers 
 # try and do it everytime (if too slow add the exception)
-${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker
+if [[ ! $caso =~ "ext" ]]
+then
+   ${DIR_C3S}/launch_c3s-nc-checker.sh $startdate $real $outdirC3S $dir_log_checker $caso
+else
+   touch $check_c3s_meta_ok
+# must allow for different names including slicetime
+fi
 
 # BEFORE THIS AND ADD YOUR CHECKFILE INT THE IF CONDITION
 # to be rewritten
@@ -61,7 +74,7 @@ else
    exit
    
 fi
-$DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases
+$DIR_C3S/launch_c3s_qa_checker.sh $yyyy$st $real $outdirC3S $dir_cases $caso
 #if [[ -f ${check_c3s_meta_ok} ] && [ -f $outdirC3S/dmoc3s_checker_ok_0${real} ] && [ -f $outdirC3S/qa_checker_ok_0${real} ] 
 if [[ -f ${check_c3s_meta_ok} ]] && [[ -f ${check_c3s_qa_ok} ]]
 then
@@ -69,14 +82,17 @@ then
 # 20240919 ready to uncomment
 #-------------------------------------------
 # the following is defined in $dictionary
-checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
-   if [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
+   checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
+
+   if [[ ! $caso =~ "ext" ]]
    then
-      ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
-   fi
+      if [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
+      then
+         ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
+      fi
+   fi  
    touch $check_allchecksC3S$real
    allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
-   caso=${SPSSystem}_${yyyy}${st}_0${member}
    body="$caso:  forecast standardisation and quality checks completed. Total number of cases completed: $allcheckersok out of $nrunC3Sfore"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -r "only" -s $yyyy$st
 fi  
@@ -95,7 +111,7 @@ then
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 #      fi
   else
-      if [[ `ls ${check_postproc_started_header}_*|wc -l` -ge $nrunC3Sfore ]]
+      if [[ `ls ${check_postproc_started_header}_${SPSSystem}_${yyyy}${st}_*|wc -l` -ge $nrunC3Sfore ]]
       then
 # meaning that all have been submitted yet not all have passed the checkers (likely due to spikes)
          ns=`${DIR_UTIL}/findjobs.sh -m $machine -n ${startdate} -c yes`

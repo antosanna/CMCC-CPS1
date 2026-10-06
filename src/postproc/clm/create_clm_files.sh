@@ -71,7 +71,7 @@ then
          then
             body="ERROR Total number of timesteps for file pre.$caso.clm2.$ft.${time_tag}.zip.nc , ne to $expected_ts but is $nt. Exit "
             title="${CPSSYS} forecast notification - ERROR "
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E $ens
             exit 1
          elif [[ $nt -gt $expected_ts  ]]
          then

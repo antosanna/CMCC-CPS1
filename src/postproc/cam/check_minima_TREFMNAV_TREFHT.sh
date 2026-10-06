@@ -17,6 +17,8 @@ caso=$1
 #caso=sps4_199305_001
 #HEALED_DIR=/work/cmcc/cp1/scratch/fix_SPS4/fix_spikes/fixed_from_spikes/$caso
 HEALED_DIR=$2
+time_tag3=$3
+time_tag1=$4
 
 
 yyyy=`echo $caso|cut -d '_' -f2|cut -c 1-4`
@@ -29,16 +31,17 @@ inputascii_all=$HEALED_DIR/list_spikes_all.txt
 
 # this will be the very last after the iterative poisson correction
 export inputascii=$inputascii_all
-###FORECAST 202608 - inconsistent definition between fixed_DMO and check_minima
-#export input_daily_time=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.TREFMNAV.nc
 export input_daily_time=$HEALED_DIR/$caso.cam.h3.TREFMNAV.nc
-export inputh3=$HEALED_DIR/$caso.cam.h3.${yyyy}-${st}.zip.nc
-export inputh1=$HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.pre_check_tmin.nc
+export inputh3=$HEALED_DIR/$caso.cam.h3.${time_tag3}.nc
+export inputh1=$HEALED_DIR/$caso.cam.h1.${time_tag1}.pre_check_tmin.nc
 export checkfile_tmin_t2m=$HEALED_DIR/check_consistency_tminVSt2m_${caso}.DONE
-mv $HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.nc $inputh1
+if [[ ! -f $inputh1 ]] || [[ -f $HEALED_DIR/$caso.cam.h1.${time_tag1}.nc ]]
+then
+   mv $HEALED_DIR/$caso.cam.h1.${time_tag1}.nc $inputh1
+fi
 
 
-export dstFileName=$HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.nc
+export dstFileName=$HEALED_DIR/$caso.cam.h1.${time_tag1}.nc
 if [[ -f $dstFileName ]]
 then
    rm $dstFileName
@@ -55,9 +58,9 @@ then
    exit 1
 fi
 
-if [[ -f $checkfile_tmin_t2m ]] && [[ ! -f $HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.nc ]]
+if [[ -f $checkfile_tmin_t2m ]] && [[ ! -f $HEALED_DIR/$caso.cam.h1.${time_tag1}.nc ]]
 then
     touch $HEALED_DIR/no_action_needed_consistency_${caso}.DONE
 # in this case file was not written by $HEALED_DIR/check_minima_TREFMNAV_TREFHT.ncl
-    mv $inputh1 $HEALED_DIR/$caso.cam.h1.${yyyy}-${st}.zip.nc
+    mv $inputh1 $HEALED_DIR/$caso.cam.h1.${time_tag1}.nc
 fi

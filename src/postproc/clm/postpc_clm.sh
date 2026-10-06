@@ -102,7 +102,8 @@ then
         # NCO phase - Create new variables - 4 steps
         # (I) H2OSOI
         # for H2OSOI since we need according to C3S Kg/m2 - we use derived H2OSOI = SOILLIQ + SOILICE = [ kg/m2] instead of native H2OSOI  
-        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+#        ncap2 -O -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
+        ncap2 -O --cnk_plc=uck -s "H2OSOI2=SOILLIQ+SOILICE " ${CLM_OUTPUT_FV} ${rootname}.nc_tmp_H2OSOI
         mv ${rootname}.nc_tmp_H2OSOI ${rootname}.tmp_H2OSOI.nc
    
         # (II) SNOW
@@ -151,7 +152,7 @@ then
    prefix="cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100"
    if [[ $caso =~ "ext" ]]; then
       export suffix_in=_slicetime4440to11712.nc
-      export suffix_acc=_slicetime4452to11796.nc
+      export suffix_acc=_slicetime4452to11724.nc
       init=185
    else
       export suffix_in=.nc
@@ -163,11 +164,11 @@ then
    set +euvx
    
     . $DIR_UTIL/condaactivation.sh
-#    condafunction activate $envcondaclm
-    condafunction activate /work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
+    condafunction activate $envcondaclm
+#    condafunction activate /work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
    set -euvx
    cd ${DIR_POST}/clm # where python script is
-   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $SPSSystem $outdirC3S $dir_cases/$caso/logs $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix_in $suffix_acc $init
+   python clm_standardize2c3s.py $startdate $ens $ftype $typeofrun $CLM_OUTPUT_REG1x1 $outdirC3S $dir_cases/$caso/logs $REPOGRID $ic $DIR_TEMPL/C3S_globalatt.txt ${DIR_POST}/clm/C3S_table_clm.txt $caso $lsmfile $prefix $suffix_in $suffix_acc $init
    if [[ $? -ne 0 ]]
    then
 # intermidiate product
@@ -176,7 +177,7 @@ then
 # notificate error
       body="ERROR in postpc_clm.sh during CLM standardization for $caso case. "
       title="${SPSSYS} forecast ERROR "
-      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+      ${DIR_SPS35}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E $ens
       exit 1
    fi  
    
@@ -188,7 +189,7 @@ else
    body="$startdate postprocessing CLM already completed. \n
          ${check_postclm} exists. If you want to recomputed first delete it"
    title="${CPSSYS} FORECAST warning"
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E $ens
    
 fi
 

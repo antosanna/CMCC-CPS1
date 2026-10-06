@@ -43,17 +43,18 @@ refcaseSCEN=${CPSSYS}_SSP585_reference
 envcondanemo=nemo_rebuild
 envcondarclone=rclone_gdrive
 envcondaclm=postpc_CLM_C3S
+envcondaqachecker=qachecker
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
-   c3s_checker_cmd=/work/cmcc/cp1/miniconda/envs/c3s-checker
    envcondac3schecker=/work/cmcc/cp1/miniconda/envs/c3schecker
    envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
    envcondaclm=/work/cmcc/cp1/miniconda/envs/postpc_CLM_C3S
+   envcondaqachecker=/work/cmcc/cp1/miniconda/envs/qachecker
    is_backup=1 
    is_backup_ic=0 #cmcc machines operational for IC production !!!\
    qos=qos_lowprio   #this is used only for SLURM but it is
@@ -377,14 +378,14 @@ then
     PCTL_DIR_DIAG=$WORK_SCORES/pctl//
 fi
 WORK_C3S1=$DIR_ARCHIVE1/C3S
-WORK_C3S=$WORK_C3S1
+WORK_C3S=$DIR_ARCHIVE/C3S
 if [[ $USER == "$operational_user" ]]
 then
       WORK_C3S=${WORK_C3S1}
 fi
 DIR_LOG1=$WORK1/CPS/CMCC-${CPSSYS}/logs
 DIR_LOG=$WORK/CPS/CMCC-${CPSSYS}/logs
-HEALED_DIR_ROOT=$WORK1/CPS/CMCC-${CPSSYS}/fixed_from_spikes
+HEALED_DIR_ROOT=$WORK/CPS/CMCC-${CPSSYS}/fixed_from_spikes
 DIR_SUBM_SCRIPTS1=$WORK1/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_SUBM_SCRIPTS=$WORK/CPS/CMCC-${CPSSYS}/SUBM_SCRIPTS
 DIR_REST_INI=$WORK/CPS/CMCC-${CPSSYS}/restart_ini
@@ -408,6 +409,7 @@ fixsimextdays=307  # total number of simulation days
 # nmaxmem_APEC=20 # 20 max number of realization required to APEC
 natm3d=5    # number of required fields for C3S 3d atmospheric
 nfieldsC3S=56    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
+nfieldsC3SEXT=53    # number of required fields for C3S with ocean  monthly + new pwr var + two 100m widn components
 # nfieldsC3Skeep=19    # C3S fields to keep in archive
 # nfieldsC3Socekeep=12 # C3S fields to keep in archive
 header="ensemble4"

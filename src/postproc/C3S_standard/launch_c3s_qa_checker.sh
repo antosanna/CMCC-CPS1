@@ -20,6 +20,7 @@ startdate=$1 # 202001
 memberlist=$2 # define member to check explicitly
 outdirC3S=$3
 dir_cases=$4
+caso=$5
 #
 st=${startdate:4:6}
 yyyy=${startdate:0:4}
@@ -34,14 +35,16 @@ memberstocheck=1 # only 1 member DO NOT CHANGE
 
 tmembers=$nrunC3Sfore # from descriptor, change between hindcast and forecast
 expected_files=$nfieldsC3S # from descriptor, number of variables (distinct files)
+if [[ $caso =~ "ext" ]]
+then
+   expected_files=$nfieldsC3SEXT
+fi
 
 member=$(printf "%.2d" $((10#$memberlist))) #member with 2 digits
 set +euvx
 . $dictionary
 set -euvx
 ens=$(printf "%.3d" $((10#$memberlist))) #member with 3 digits
-
-caso=${SPSSystem}_${startdate}_${ens}
 
 ACTDIR=$SCRATCHDIR/qa_checker/$startdate/CHECKER_${ens}
 
@@ -89,64 +92,6 @@ namespace+="seaIce_day "
 namespace+="ocean_6hr "
 namespace+="ocean_mon " 
 
-if [[ ${reduced} -eq 1 ]] 
-then
-# Define memory needs for each namespace (attention:keep order)
-# atmos
-   memory[0]="1000M"  #"atmos_6hr_surface_psl "
-   memory[1]="1000M" #"atmos_6hr_surface_prw "
-   memory[2]="1000M" #"atmos_6hr_surface_clt "
-   memory[3]="1000M" #"atmos_6hr_surface_tas "
-   memory[4]="1000M" #"atmos_6hr_surface_tdps "
-   memory[5]="1000M" #"atmos_6hr_surface_uas "
-   memory[6]="1000M" #"atmos_6hr_surface_vas "
-   memory[7]="1000M" #"atmos_6hr_surface_ua100m "
-   memory[8]="1000M" #"atmos_6hr_surface_va100m "
-   memory[9]="4000M" #"atmos_12hr_pressure_zg "
-   memory[10]="4000M" #"atmos_12hr_pressure_ta "
-   memory[11]="4000M" #"atmos_12hr_pressure_hus "
-   memory[12]="4000M" #"atmos_12hr_pressure_ua "
-   memory[13]="4000M" #"atmos_12hr_pressure_va "
-   memory[14]="1000M"  #"atmos_day "
-   memory[15]="100M " #"atmos_fix "
-# land
-   memory[16]="700M"  #"land_6hr "
-   memory[17]="2000M" #"land_day "
-# seaIce
-   memory[18]="700M"  #"seaIce_6hr "
-   memory[19]="500M"  #"seaIce_day "
-# ocean 
-   memory[20]="1000M"  #"ocean_6hr "  # previously seto to 700 yet on Leonoardo not enough
-   memory[21]="100M " #"ocean_mon " 
-else
-# Define memory needs for each namespace (attention:keep order)
-# atmos
-   memory[0]="5000M" #"atmos_6hr_surface_psl "
-   memory[1]="5000M" #"atmos_6hr_surface_prw "
-   memory[2]="5000M" #"atmos_6hr_surface_clt "
-   memory[3]="5000M" #"atmos_6hr_surface_tas "
-   memory[4]="5000M" #"atmos_6hr_surface_tdps "
-   memory[5]="7500M" #"atmos_6hr_surface_uas "
-   memory[6]="7500M" #"atmos_6hr_surface_vas "
-   memory[7]="7500M" #"atmos_6hr_surface_ua100m "
-   memory[8]="7500M" #"atmos_6hr_surface_va100m "
-   memory[9]="20000M" #"atmos_12hr_pressure_zg "
-   memory[10]="20000M" #"atmos_12hr_pressure_ta "
-   memory[11]="20000M" #"atmos_12hr_pressure_hus "
-   memory[12]="20000M" #"atmos_12hr_pressure_ua "
-   memory[13]="20000M" #"atmos_12hr_pressure_va "
-   memory[14]="10000M"  #"atmos_day "
-   memory[15]="2000M " #"atmos_fix "
-# land
-   memory[16]="5000M" #"land_6hr "
-   memory[17]="5000M" #"land_day "
-# seaIce
-   memory[18]="5000M"  #"seaIce_6hr "
-   memory[19]="5000M"  #"seaIce_day "
-# ocean (only tso)
-   memory[20]="12000M" #"ocean_6hr "
-   memory[21]="2000M " #"ocean_mon " 
-fi
 
 # Link or copy temporarily all files to working dir
 cd $wdir
@@ -199,11 +144,43 @@ cp -r $DIR_C3S/qa_checker_lib $wdir/
 submit_cnt=0
 mem_idx=0
 for ns in ${namespace}; do
+    if [[ $caso =~ "ext" ]] && [[ ${ns} =~ "fix" ]]
+    then
+       continue
+    fi
+    
     # clean old scripts if exists
     if [[ -f launch_c3s_qa_checker.$ns.sh ]] ; then
         rm -f launch_c3s_qa_checker.$ns.sh
     fi
-    memlimit=${memory[$mem_idx]}
+    if [[ $reduced -eq 1 ]]
+    then
+       if [[ $caso =~ "ext" ]]
+       then
+          case $ns in
+             seaIce_6hr|seaIce_day|land_6hr|atmos_6hr_surface_psl|atmos_6hr_surface_prw|atmos_6hr_surface_clt|atmos_6hr_surface_tas|atmos_6hr_surface_tdps|atmos_6hr_surface_uas|atmos_6hr_surface_vas|atmos_6hr_surface_ua100m|atmos_6hr_surface_va100m|atmos_day)memlimit="7500M";;
+             atmos_12hr_pressure_zg|atmos_12hr_pressure_ta|atmos_12hr_pressure_hus|atmos_12hr_pressure_ua|atmos_12hr_pressure_va)memlimit="20000M";;
+             ocean_6hr)memlimit="50000M";;
+             ocean_mon)memlimit="2000M";;
+             land_day)memlimit="5000M";;
+          esac
+       else
+          case $ns in
+             seaIce_6hr|seaIce_day|ocean_6hr|land_6hr|atmos_6hr_surface_psl|atmos_6hr_surface_prw|atmos_6hr_surface_clt|atmos_6hr_surface_tas|atmos_6hr_surface_tdps|atmos_6hr_surface_uas|atmos_6hr_surface_vas|atmos_6hr_surface_ua100m|atmos_6hr_surface_va100m|atmos_day)memlimit="1000M";;
+             atmos_12hr_pressure_zg|atmos_12hr_pressure_ta|atmos_12hr_pressure_hus|atmos_12hr_pressure_ua|atmos_12hr_pressure_va)memlimit="4000M";;
+             atmos_fix|ocean_mon)memlimit="100M";;
+             land_day)memlimit="2000M";;
+          esac
+       fi
+    else
+# reduced extended???
+       case $ns in
+          seaIce_6hr|seaIce_day|ocean_6hr|land_6hr|atmos_6hr_surface_psl|atmos_6hr_surface_prw|atmos_6hr_surface_clt|atmos_6hr_surface_tas|atmos_6hr_surface_tdps|atmos_6hr_surface_uas|atmos_6hr_surface_vas|atmos_6hr_surface_ua100m|atmos_6hr_surface_va100m|atmos_day)memlimit="7500M";;
+          atmos_12hr_pressure_zg|atmos_12hr_pressure_ta|atmos_12hr_pressure_hus|atmos_12hr_pressure_ua|atmos_12hr_pressure_va)memlimit="20000M";;
+          atmos_fix|ocean_mon)memlimit="2000M";;
+          land_day)memlimit="5000M";;
+       esac
+    fi
 
     rsync -auv $DIR_TEMPL/launch_c3s_qa_checker.template.sh  $ACTDIR/launch_c3s_qa_checker.${ns}.sh
 

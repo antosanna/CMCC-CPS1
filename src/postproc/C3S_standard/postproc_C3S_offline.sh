@@ -1,5 +1,4 @@
 #!/bin/sh -l 
-
 # load variables from descriptor
 . $HOME/.bashrc
 . ${DIR_UTIL}/descr_CPS.sh
@@ -14,7 +13,7 @@ caso=$2
 dir_cases=$3
 # this modification will affect $dictionary too!!!!
 #flag postproc done
-flagpostproc_done=$4
+#flagpostproc_done=$4     #NOT USED
 
 st=`echo $caso|cut -d '_' -f2 |cut -c5-6`
 yyyy=`echo $caso|cut -d '_' -f2 |cut -c1-4`
@@ -24,10 +23,21 @@ ens=`echo $caso|cut -d '_' -f 3 `
 member=`echo $ens|cut -c2,3` 
 
 HEALED_DIR=$HEALED_DIR_ROOT/$caso
-#HEALED_DIR_ROOT=/work/cmcc/cp1/CPS/CMCC-CPS1/fixed_from_spikes/
+mkdir -p $HEALED_DIR
+
 # THIS MUST BE KEPT FOR CERISE
 chmod -R u+w $DIR_ARCHIVE/$caso
-ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$yyyy-$st.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
+
+# now that you have read ic from the standard C3S possibly redefine stdate for handling extended
+if [[ $caso =~ "ext" ]]; then
+   yyyyp1=$((yyyy + 1))
+   mm=`date -d "$yyyy${st}15 + 6 month" +%m`
+   stdate=$yyyyp1-$mm
+else
+   stdate=$yyyy-$st
+fi
+time_tag=$stdate
+ic=`ncdump -h $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.h0.$time_tag.zip.nc|grep "ic ="|cut -d '=' -f2-|cut -d ';' -f1 |cut -d '"' -f2`
 
 nsimdays=$fixsimdays
 outdirC3S=${WORK_C3S}/$yyyy$st/
@@ -88,8 +98,15 @@ then
            h2) mult=4 ; req_mem=20000 ;;
            h3) mult=1 ; req_mem=600;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
        esac
+       if [[ $caso =~ "ext" ]]; then
+          case $ft in
+             h1) req_mem=42000 ;; #12000 ;; #BJF 02/04/26
+             h2) req_mem=40000 ;;
+             h3) req_mem=2600;; # for land both h1 and h3 are daily (h1 averaged and h3 instantaneous), multiplier=1
+          esac
+       fi
        flag_for_type=${check_postclm_type}_${ft}_DONE
-       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$time_tag.zip.nc
        input="$caso $ft ${wkdir_clm} ${finalfile_clm} ${flag_for_type} $ic $mult"
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j create_clm_files_${ft}_${caso} -l ${dir_cases}/$caso/logs/ -d ${DIR_POST}/clm -s create_clm_files.sh -i "$input"
        jobIDall+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_clm_files_${ft}_${caso} -i yes`"
@@ -99,7 +116,8 @@ then
           continue
        fi
        echo "start of postpc_clm "`date`
-       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$yyyy-$st.zip.nc
+       finalfile_clm=$DIR_ARCHIVE/$caso/lnd/hist/$caso.clm2.$ft.$time_tag.zip.nc
+#????? non e' zippato!!!
        input="${finalfile_clm} $ens $startdate $outdirC3S $caso ${flag_for_type} ${wkdir_clm} $ic $ft $dir_cases"
        # ADD the reservation for serial !!!
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_l -M ${req_mem} -p create_clm_files_${ft}_${caso} -S $qos -j postpc_clm_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/clm -s postpc_clm.sh -i "$input"
@@ -113,19 +131,46 @@ fi
 #***********************************************************************
 # Standardization for CAM 
 #***********************************************************************
+if [[ $caso =~ "ext" ]]; then
+   suffix1=-01-21600
+   suffix2=-01-43200
+   suffix3=-02-00000
+   suffix4=-01-10800
+else
+   suffix=-01-00000
+   suffix1=$suffix;suffix2=$suffix;suffix3=$suffix;suffix4=$suffix
+   suffix0=""
+fi  
 wkdir_cam=$SCRATCHDIR/regrid_C3S/$caso/CAM
 mkdir -p ${wkdir_cam}
 if [[ ! -f $check_all_camC3S_done ]]
 then
    jobIDall_cam=""
    filetyp="h0 h1 h2 h3 h4"
+   if [[ $caso =~ "ext" ]]; then
+      filetyp="h1 h2 h3 h4"
+   fi 
    for ft in $filetyp
    do
-  
-      finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
-      inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st-01-00000.nc
+      case $ft in 
+         h0)suffix=$suffix0;;
+         h1)suffix=$suffix1;;
+         h2)suffix=$suffix2;;
+         h3)suffix=$suffix3;;
+         h4)suffix=$suffix4;;
+      esac
+      if [[ $caso =~ "ext" ]]; then
+         req_mem=9000
+         case $ft in 
+            h2)req_mem=15000;;
+         esac
+      else
+         req_mem=4000
+      fi  
+      time_tag=${stdate}$suffix
+      finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$time_tag.zip.nc
       input="$caso $ft ${wkdir_cam} $finalfile $ic" 
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M 4000 -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos -M $req_mem -j create_cam_files_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s create_cam_files.sh -i "$input"
       jobIDall_cam+=" `${DIR_UTIL}/findjobs.sh -m $machine -n create_cam_files_${ft}_${caso} -i yes`"
    done
 # before running this script it maybe happen that clean4C3S.sh has been run so those flags might have been deleted
@@ -139,7 +184,7 @@ then
    do
        if [[ `${DIR_UTIL}/findjobs.sh -j $jobid -a EXIT |wc -w` -ne 0 ]] 
        then
-          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$jobid create_cam_files exited" -t "[C3S] ERROR: ${caso} create cam exited" 
+          ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "jobID $jobid create_cam_files exited" -t "[C3S] ERROR: ${caso} create cam exited" 
           exit 1
        fi
    done
@@ -178,36 +223,61 @@ then
    fi
 
    if [[ ! -f $HEALED_DIR/${caso}.NO_SPIKE ]] ; then
-      ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR
+      ${DIR_POST}/cam/check_minima_TREFMNAV_TREFHT.sh $caso $HEALED_DIR $stdate$suffix3.zip $stdate$suffix1.zip
    fi 
 # TREATMENT COMPLETED
    touch $dir_cases/$caso/logs/spike_treatment_${caso}_DONE
 # h2 is the file requiring more time to be postprocessed
-   for ft in h0 h1 h3 h2
+   if [[ $caso =~ "ext" ]]; then
+      listaft="h1 h3 h2"
+      n_listaft=`echo $listaft|wc -w`
+   else
+      listaft="h0 h1 h3 h2"
+      n_listaft=`echo $listaft|wc -w`
+   fi
+   for ft in $listaft
    do
       
       case $ft in
-          h0)req_mem=1000;;
-          h1)req_mem=9000;;
-          h2)req_mem=4000;;
-          h3)req_mem=1500;;
+          h0)req_mem=1000;suffix=$suffix0;;
+          h1)req_mem=9000;suffix=$suffix1;;
+          h2)req_mem=4000;suffix=$suffix2;;
+          h3)req_mem=1500;suffix=$suffix3;;
       esac
-      finalfile=$HEALED_DIR/$caso.cam.$ft.$yyyy-$st.zip.nc
+      if [[ $caso =~ "ext" ]]; then
+         case $ft in
+             h1)req_mem=20000;;
+             h2)req_mem=8000;;
+             h3)req_mem=5000;;
+         esac
+      fi
+      time_tag=$stdate$suffix
+
+      finalfile=$HEALED_DIR/$caso.cam.$ft.$time_tag.zip.nc
       if [[ $ft == "h0" ]]
       then
-          finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$yyyy-$st.zip.nc
+          finalfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.$time_tag.zip.nc
       fi
 # $HEALED_DIR/${caso}.cam.$ft.DONE is defined in poisson_daily_values.sh
-      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic $nsimdays"
+      input="$finalfile $caso $outdirC3S ${wkdir_cam} $ft $ic $nsimdays $dir_cases"
              # ADD the reservation for serial !!!
-      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s regridFV_C3S.sh -i "$input"
+      ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j launch_regrid_cam_${ft}_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s launch_regridFV_C3S.sh -i "$input"
             
    done
 #  now apply fix for isobaric level T on ft=h2 
    checkfileextrap=$HEALED_DIR/logs/extrapT_${caso}_DONE
    inputextrap="$caso $checkfileextrap"
-   req_mem=8000
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -p regrid_cam_h2_${caso} -j extrapT_SPS4_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
+#   req_mem=8000
+   while `true`
+   do
+      if { [[ $caso =~ "ext" ]] && [[ -f ${WORK_C3SEXT}/$yyyy$st/cmcc_CMCC-CM3-v20231101_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00_slicetime4440to11712.nc ]]; } || [[ -f ${WORK_C3S}/$yyyy$st/cmcc_CMCC-CM3-v20231101_${typeofrun}_S${yyyy}${st}0100_atmos_12hr_pressure_ta_r${member}i00p00.nc ]]
+      then
+         break
+      fi
+      sleep 120
+   done
+   req_mem=15000
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j extrapT_SPS4_${caso} -l $dir_cases/$caso/logs/ -d ${DIR_POST}/cam -s extrapT_SPS4.sh -i "$inputextrap"
    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$caso :extrapT_SPS4_${caso} submitted" -r "only" -s $yyyy$st
    
    while `true`
@@ -220,7 +290,7 @@ then
    done
    while `true`
    do
-      if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq 4 ]]
+      if [[ `ls ${check_regridC3S_type}_h?_DONE|wc -l` -eq $n_listaft ]]
       then
          touch $check_all_camC3S_done
          break
@@ -249,15 +319,35 @@ do
 done
 #
 #check_pp_C3S=$DIR_CASES/$caso/logs/postproc_C3S_${caso}_DONE - it is $check_pp_C3S in dictionary, here explicit for remote cases
-touch $flagpostproc_done
+# now check consistency vbetween file names and content (for time slice)
+if [[ $caso =~ "ext" ]]
+then
+set +euvx
+   . $DIR_UTIL/condaactivation.sh
+   condafunction activate $envcondaqachecker
+   python $DIR_C3S/check_slicetime.py -d $WORK_C3SEXT/$yyyy$st/
+   if [[ $? -ne  0 ]]
+   then
+      echo "error detected"
+   fi
+set -euvx
+fi
+#touch $flagpostproc_done
 
 real="r"${member}"i00p00"
 #this should be redundant after $check_pp_C3S but we keep it
-allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
-if [[ $allC3S -eq $nfieldsC3S ]]
+n_fields_exptected=$nfieldsC3S
+if [[ $caso =~ "ext" ]]
+then
+   allC3S=`ls $outdirC3S/*${real}*slicetime*.nc|wc -l`
+   n_fields_exptected=$nfieldsC3SEXT
+else
+   allC3S=`ls $outdirC3S/*${real}.nc|wc -l`
+fi
+if [[ $allC3S -eq $n_fields_exptected ]]
 then
    #MUST BE ON A SERIAL to write c3s daily files on /data
-   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${dir_cases}/$caso/logs -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases"
+   ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 3000 -S $qos -j C3Schecker_${caso} -l ${dir_cases}/$caso/logs -d ${DIR_POST}/C3S_standard -s C3Schecker.sh -i "$member $outdirC3S $startdate $dir_cases $caso"
 else
    if [[ $allC3S -eq $(($nfieldsC3S - 1 )) ]] && [[ -f $check_no_SOLIN ]]
    then
@@ -336,14 +426,17 @@ do
       fi
    done   #type
 done  #realm
-if [[ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc |wc -l` -ge 1 ]] ; then
-  rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
-fi
-if [[ `ls  $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc |wc -l` -ge 1 ]] ; then
-   rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc
-fi
-if [[ `ls $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc |wc -l` -ge 1 ]] ; then
-   rm $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc
+if [[ ! $caso  =~ "ext" ]]
+then
+   if [[ `ls $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc |wc -l` -ge 1 ]] ; then
+      rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_T_0???.nc
+   fi
+   if [[ `ls  $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc |wc -l` -ge 1 ]] ; then
+      rm $DIR_ARCHIVE/$caso/ocn/hist/${caso}_1d_????????_????????_grid_EquT_T_0???.nc
+   fi
+   if [[ `ls $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc |wc -l` -ge 1 ]] ; then
+      rm $DIR_ARCHIVE/$caso/rest/????-??-01-00000/ic_for_${caso}_00000001_restart.nc
+   fi
 fi
 if [[ -d $DIR_TEMP/$caso ]]
 then

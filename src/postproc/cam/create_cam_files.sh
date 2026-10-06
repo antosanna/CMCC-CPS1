@@ -27,10 +27,12 @@ set +evxu
 . $dictionary
 set -evxu
 
+mult=1
 if [[ $caso =~ "ext" ]]; then
    nsimdays=$fixsimextdays
    yyyyp1=$((yyyy + 1))
-   time_tag=$yyyyp1-05
+   mm=`date -d "$yyyy${st}15 + 6 month" +%m`
+   stdate=$yyyyp1-$mm
    case $ft in
      h0 ) suffix="" ;;
      h1 ) mult=4 ;suffix=-01-21600;; # 6h
@@ -40,7 +42,7 @@ if [[ $caso =~ "ext" ]]; then
    esac
    init=$((4*$mult))
 else
-   time_tag=$yyyy-$st
+   stdate=$yyyy-$st
    nsimdays=$fixsimdays
    case $ft in
      h0 ) suffix="" ;;
@@ -59,13 +61,13 @@ then
    #--------------------------------------------
    #$caso.cam.$ft.nc is a temp file, input for $DIR_POST/regridSEne60_C3S.sh
    #--------------------------------------------
-   inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.${time_tag}$suffix.nc
-   if [[ ! -f $finalfile ]] || { [[ -f $inputfile ]] && [[ "$st" == "05" ]] && [[ $typeofrun == "hindcast" ]]; }
+   inputfile=$DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.${stdate}$suffix.nc
+   if [[ ! -f $finalfile ]] 
    then
       echo "starting compression for file $ft "`date`
-      if [[ ! -f $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc ]]
+      if [[ ! -f $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc ]]
       then
-         ${DIR_UTIL}/compress.sh $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.${time_tag}$suffix.nc $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc
+         ${DIR_UTIL}/compress.sh $DIR_ARCHIVE/$caso/atm/hist/$caso.cam.$ft.${stdate}$suffix.nc $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc
          if [[ ${ft} == "h0" ]]
          then
             touch ${check_merge_cam_files}_${ft}
@@ -73,44 +75,46 @@ then
          fi
       fi
 #         ic=(from txt in casedir)
-      ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc
+      ncatted -O -a ic,global,a,c,"$ic" $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc
     
-         nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc`
+      nt=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc`
     
    
       if [[ $caso =~ "ext" ]]; then
-         ncks -O -F -d time,$init, $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc $finalfile
+         ncks -O -F -d time,$init, $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc $finalfile
       else
          expected_ts=$(( $nsimdays * $mult + 1 ))
          if [[ $nt -lt $expected_ts  ]]
          then
-            body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.${time_tag}.nc , ne to $expected_ts but is $nt. Exit "
+            body="ERROR Total number of timesteps for files $wkdir/pre.$caso.cam.$ft.${stdate}.nc , ne to $expected_ts but is $nt. Exit "
             title="${CPSSYS} forecast ERROR "
-            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E $ens
+            ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E $ens
             exit 1
          elif [[ $nt -gt $expected_ts  ]]
          then
-            ncks -O -F -d time,1,$expected_ts $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc  
-            mv $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc   
+            ncks -O -F -d time,1,$expected_ts $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc  
+            mv $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc   
          fi
    # remove nr.1 timestep according to filetyp $ft
          if [[ $ft == "h3" ]]
          then
       # take from 2nd timestep
             echo "start ncks for $ft "`date`
-            ncks -O -F -d time,2, $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc  
-            rsync -auv $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc $finalfile		      
+            ncks -O -F -d time,2, $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc  
+            rsync -auv $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc $finalfile		      
             echo "end of ncks for $ft "`date`
          else
       # take all but last timestep
             echo "start ncks for $ft "`date`
-            nstep=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc` 		
+            nstep=`cdo -ntime $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc` 		
             nstepm1=$(($nstep - 1))
-            ncks -O -F -d time,1,$nstepm1 $wkdir/pre.$caso.cam.$ft.${time_tag}.zip.nc $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc  
-            rsync -auv $wkdir/tmp.$caso.cam.$ft.${time_tag}.zip.nc $finalfile
+            ncks -O -F -d time,1,$nstepm1 $wkdir/pre.$caso.cam.$ft.${stdate}.zip.nc $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc  
+            rsync -auv $wkdir/tmp.$caso.cam.$ft.${stdate}.zip.nc $finalfile
             echo "end of ncks for $ft "`date`
          fi
       fi
+   else
+      echo "$finalfile already produced"
    fi
 fi
 touch ${check_merge_cam_files}_${ft}

@@ -58,7 +58,7 @@ if [[ ! -z $arr1 ]];then
    body="Stop $DIR_UTIL/mv_case2_archive.sh for case ${caso} mandatory_dirs in $DIR_ARCHIVE/${caso} are more than csvdir defined in ${archive_size_stats_file}"
    echo $body
    title="${CPSSYS} ERROR - mv_case2archive.sh ${caso} "
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "yes" -s $yyyy$st -E 0$member
    exit 1
 fi
 size_error=0
@@ -168,11 +168,15 @@ do
     echo "launching $scriptname "`date`
     echo "---------------------------------------------"
     mkdir -p $wkdir/$var
+    maxmem=15000
+    case $var in
+      $othersuff)maxmem=20000;;
+     esac
     
    if [[ ! -f ${check_oceregrid}_${var} ]] 
    then
        cp ${DIR_POST}/nemo/$scriptname $wkdir/$var/$scriptname
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -n 10 -M 15000 -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var $end_term $init $outdirC3S $scriptname $inputfile"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -n 10 -M $maxmem -j launch_interp_ORCA2_1X1_gridT2C3S_${caso}_${var} -l ${logdir} -d ${DIR_POST}/nemo -s launch_interp_ORCA2_1X1_gridT2C3S.sh -i "$caso $var $wkdir/$var $end_term $init $outdirC3S $scriptname $inputfile"
    fi
 done
 while `true`
@@ -192,7 +196,6 @@ do
              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
              exit 1
           else
-             touch ${check_oceregrid}
              if [[ -f $inputfile ]]
              then 
                 rm $inputfile
@@ -202,7 +205,6 @@ do
          sleep 300
       fi
    else
-      touch ${check_oceregrid}
       if [[ -f $inputfile ]]
       then 
          rm $inputfile
@@ -211,89 +213,7 @@ do
    fi
 done
 # 
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce1
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce2
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce3
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce4
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce5
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce6
-for v in ${varout[@]}
-do 
-   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00${end_term}
-   if [[ ! -f $C3Sfile ]]
-   then
-      title="${CPSSYS} forecast ERROR"
-      body="C3S ocean file $C3Sfile for variable not produced for case ${caso}. 
-            Script is ${DIR_POST}/nemo/$scriptname"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
-      exit 1
-   fi
-done  
-cd $OUTDIR_NEMO
-inputlist=`ls *1*.zip.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
-inputlist=`ls *scalar*.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
+touch ${check_oceregrid}
    
 exit 0
 

@@ -39,7 +39,7 @@ def getdzgrnd(c3s_el, f, dbmode):
     
     return dzgrnd,flag_error
 
-def check_timeseries_NEW2(nc_file, c3s_line, index, dbmode,modelname):
+def check_timeseries_NEW2(nc_file, c3s_line, index, dbmode):
     ''' This function simply extract data from file taking into account eventual levels'''
     # params selections depending on input freq
     if c3s_line[8] == 'day':
@@ -255,7 +255,7 @@ def modify_C3S(ncfile, atm_elem):
     ncfile.variables[atm_elem[1]].grid_mapping = 'hcrs'
 
 
-def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl,lsmfile):
+def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,output_dir,repo_dir,templfile,nlsl,lsmfile):
 
     first_time = True
     #for idx, cmcc_f in enumerate(cmcc_files):
@@ -263,7 +263,7 @@ def create_c3s_var2(c3s_el,cmcc_file,ic,dbmode,modelname,output_dir,repo_dir,tem
     f = netCDF4.Dataset(cmcc_file, 'r')
     # check time series and get var_f = variable
     print("before check_timeseries_NEW2")
-    [time_var, var_f, flag_error] = check_timeseries_NEW2(f, c3s_el, 0, dbmode,modelname)
+    [time_var, var_f, flag_error] = check_timeseries_NEW2(f, c3s_el, 0, dbmode)
     print("flag_error after check_timeseries_NEW2", flag_error)
     # exit the function if detected an error
     if flag_error: return
@@ -419,19 +419,19 @@ if __name__ == '__main__':
     h_type     = str(sys.argv[3])
     forecast_t = str(sys.argv[4])
     input_file  = str(sys.argv[5])
-    modelname  = str(sys.argv[6])
-    outputdir  = str(sys.argv[7])
-    full_logdir= str(sys.argv[8])
-    repo_dir   = str(sys.argv[9])
-    ic         = str(sys.argv[10])        
-    templfile  = str(sys.argv[11])
-    clmC3Stable= str(sys.argv[12])
-    case       = str(sys.argv[13])
-    lsmfile    = str(sys.argv[14])   
-    prefix     = str(sys.argv[15]) 
-    suffix_in     = str(sys.argv[16]) 
-    suffix_acc     = str(sys.argv[17]) 
-    init     = int(sys.argv[18]) 
+#    modelname  = str(sys.argv[6])
+    outputdir  = str(sys.argv[6])
+    full_logdir= str(sys.argv[7])
+    repo_dir   = str(sys.argv[8])
+    ic         = str(sys.argv[9])        
+    templfile  = str(sys.argv[10])
+    clmC3Stable= str(sys.argv[11])
+    case       = str(sys.argv[12])
+    lsmfile    = str(sys.argv[13])   
+    prefix     = str(sys.argv[14]) 
+    suffix_in     = str(sys.argv[15]) 
+    suffix_acc     = str(sys.argv[16]) 
+    init     = int(sys.argv[17]) 
  
     year = startdate[0:4]
     month = startdate[4:6]
@@ -501,7 +501,7 @@ if __name__ == '__main__':
         vars_list = var_name.split()
        
         
-        create_c3s_var2(c3s_elem,files_from_model,ic,dbmode,modelname,output_dir,repo_dir,templfile,nlsl,lsmfile)
+        create_c3s_var2(c3s_elem,files_from_model,ic,dbmode,output_dir,repo_dir,templfile,nlsl,lsmfile)
 
         print('Done var',c3s_elem[0])
 

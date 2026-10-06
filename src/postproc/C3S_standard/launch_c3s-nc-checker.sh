@@ -21,6 +21,7 @@ startdate=$1
 real=$2
 outdirC3S=$3
 dir_log_checker=$4
+caso=$5
 ##############################
 filedir=$outdirC3S
 
@@ -91,7 +92,11 @@ cd ${filedir}
 for var in ${varC3S[@]};
 do
 
-    filename=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00.nc`
+    if [[ $caso =~ "ext" ]] && { [[ $var == "orog" ]] || [[ $var == "sftlf" ]] || [[ $var == "mlotstheta003" ]]; }
+    then
+       continue
+    fi
+    filename=`ls -1 cmcc_${GCM_name}-v${versionSPS}_${typeofrun}_S${startdate}0100_*_${var}_r${real}i00p00*.nc`
     
 
     #$c3s_checker_cmd -p $filename >& $dir_log_checker/${c3s_checker_cmd}_${var}_${startdate}_0${real}.log

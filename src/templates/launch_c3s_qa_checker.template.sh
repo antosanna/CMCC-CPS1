@@ -21,7 +21,7 @@ echo "activate env *********************"
 
 set +euvx
   . $DIR_UTIL/condaactivation.sh 
-  condafunction activate qachecker 
+  condafunction activate $envcondaqachecker 
 set -euvx
 
 
@@ -55,7 +55,9 @@ for ncfile in $netcdf2check ; do
        netcdfaux_sic=`ls -1 $outdirC3S/*seaIce_day_surface_sic*r${member2d}*.nc`
        rsync -auv $netcdfaux_sic $wdir/tempdir_${namespace}
 
-       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member2d}*.nc`
+#       netcdfaux_mask=`ls -1 $outdirC3S/*atmos_fix_surface_sftlf*r${member2d}*.nc`
+# could we use the $REPO one?
+       netcdfaux_mask=$REPOSITORY/sps4_LANDFRAC_C3S_sftlf.nc
        rsync -auv $netcdfaux_mask $wdir/tempdir_${namespace} 
     fi
     
