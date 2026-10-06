@@ -98,12 +98,18 @@ $DIR_UTIL/${CPSSYS}_check_ICs.sh $yyyy $st
 
 input="$yyyy $st"
 ${DIR_UTIL}/submitcommand.sh -m $machine -d ${IC_CPS} -q ${serialq_push} -j copy_ICs_to_operational_machine_${yyyy}${st} -l ${DIR_LOG}/${typeofrun}/$yyyy$st -s copy_ICs_to_operational_machine.sh -i "$input"
-body="Cari tutti, \n
-vi confermiamo il completamento della procedura di creazione ICs per il seasonal Forecast. Potete ripristinare la configurazione standard dei nodi paralleli. \n
-\n
-Grazie
-\n
-SPS-staff\n"
-title="FINE RICHIESTA SPECIALE PER SC_sps35"
-${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail -g yes
+
+#MAIL for juno SC - currently not used
+#body="Cari tutti, \n
+#vi confermiamo il completamento della procedura di creazione ICs per il seasonal Forecast. Potete ripristinare la configurazione standard dei nodi paralleli. \n
+#\n
+#Grazie
+#\n
+#SPS-staff\n"
+#title="FINE RICHIESTA SPECIALE PER SC_sps35"
+#${DIR_UTIL}/sendmail.sh -m $machine -e $hsmmail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -c $mymail -g yes
+
+body="${yyyy}${st} IC production completed, now copying operational ICs to Leonardo"
+title="[$CPSSYS] ${yyyy}${st} forecast: push ICs on Leonardo started"
+${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -t "$title" -M "$body" -r "yes" -s ${yyyy}${st} -g yes
 echo "SPS4_step1_ICs.sh completed `date`"

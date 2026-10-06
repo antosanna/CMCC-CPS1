@@ -144,7 +144,7 @@ end do
 ;***************************************
   pres1                     = True
   pres1@gsnPanelLabelBar    = True       ; common label bar
-  pres1@gsnPanelMainString = "SPS4 Arctic Sea Ice concentration [%] - Initialization "+yyyy+st+"01"
+  pres1@gsnPanelMainString = "SPS4 Arctic SIC anomaly (ICs - OBS) [%] - Initialization "+yyyy+st+"01"
   pres1@gsnFrame            = False      ; don't advance frame yet
   pres1@lbOrientation       = "horizontal" ; vertical label bar
 ; we use PanelBottom to tell the plot to only draw in the top part of the page.
