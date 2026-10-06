@@ -138,15 +138,15 @@ do
       listafile=`tar -tf ${t}|grep "\.nc"`
       wclistafile=`tar -tf ${t}|grep "\.nc"|wc -l`
       wclistasha=`tar -tf ${t}|grep sha256|wc -l`
-      if [[ $wclistafile -ne $nrunC3Sfore ]]
+      if [[ $wclistafile -ne $nrunhindext ]]
       then
-         #echo "numero di file nel tar $var non corretto $wclistafile instead of $nrunC3Sfore"
-         echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunC3Sfore"
+         #echo "numero di file nel tar $var non corretto $wclistafile instead of $nrunhindext"
+         echo "number of files inside tar $var is wrong: $wclistafile instead of $nrunhindext"
          exit 1
       fi
-      if [[ $wclistasha -ne $nrunC3Sfore ]]
+      if [[ $wclistasha -ne $nrunhindext ]]
       then
-         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunC3Sfore"
+         echo "number of shasum inside tar $var is wrong: $wclistasha instead of $nrunhindext"
          exit 1
       fi
       mm=1

@@ -111,7 +111,7 @@ then
     	    ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st
 #      fi
   else
-      if [[ `ls ${check_postproc_started_header}_*|wc -l` -ge $nrunC3Sfore ]]
+      if [[ `ls ${check_postproc_started_header}_${SPSSystem}_${yyyy}${st}_*|wc -l` -ge $nrunC3Sfore ]]
       then
 # meaning that all have been submitted yet not all have passed the checkers (likely due to spikes)
          ns=`${DIR_UTIL}/findjobs.sh -m $machine -n ${startdate} -c yes`

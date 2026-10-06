@@ -165,6 +165,7 @@ then
 fi
 for var in $listofvars
 do
+   checkfilevar=${check_regridC3S_type}_${ftype}_${var}_DONE
    while `true`
    do
       if [[ -f ${checkfilevar} ]]

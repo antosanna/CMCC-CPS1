@@ -74,6 +74,10 @@ do
    done
 done
 # check if compression needed
+set +euvx
+. $DIR_UTIL/load_nco
+set -euvx
+ic=`cat $CASEROOT/logs/ic_${CASE}.txt`
 for frq in 1m 1d
 do
    for grd in T U V W ptr scalar
@@ -83,6 +87,7 @@ do
       then
          headfile=`echo $CIME_OUTPUT_ROOT/archive/$CASE/ocn/hist/${CASE}_${frq}_${curryear}${currmon}*_grid_${grd}.nc|rev|cut -d '.' -f2-|rev`
          $DIR_UTIL/compress.sh $headfile.nc $headfile.zip.nc
+         ncatted -O -a ic,global,a,c,"$ic" $headfile.zip.nc
          if [[ -f $headfile.zip.nc ]]
          then
             rm $headfile.nc

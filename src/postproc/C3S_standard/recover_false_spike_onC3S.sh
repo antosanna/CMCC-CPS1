@@ -18,6 +18,13 @@ member=$real #for dictionary consistency
 set +uexv
 . $DIR_UTIL/descr_ensemble.sh $yyyy
 set -uexv
+if [[ $caso =~ "ext" ]]
+then
+   nrunC3Sfore=$nrunhindext
+   ext=1
+else
+   ext=0
+fi
 
 dbg=0
 cd $outdirC3S   #can be redundant
@@ -50,14 +57,17 @@ then
 #-------------------------------------------
 # the following is defined in $dictionary
 checkfile_daily=$SCRATCHDIR/wk_C3S_daily/$yyyy$st/C3S_daily_mean_2d_${member}_ok
-   if [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
+   if [[ $ext -eq 1 ]]
+   then
+      :
+   elif [[ ! -f ${checkfile_daily} ]] || [[ $dbg -eq 0 ]]
    then
       ${DIR_POST}/C3S_standard/launch_C3S_daily_mean.sh $st $yyyy $member 
    fi
    touch $check_allchecksC3S$real
 fi  
 allcheckersok=`ls ${check_allchecksC3S}??|wc -l`
-if [[ $typeofrun == "forecast" ]] 
+if [[ $typeofrun == "forecast" ]] && [[ $ext -eq 0 ]]
 then
   if [[ $allcheckersok -ge $nrunC3Sfore ]] 
   then

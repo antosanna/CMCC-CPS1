@@ -4,3 +4,4 @@ executables_cesm
 development_tmp
 checklists/sps4_hindcast_list.csv
 checklists/sps4_hindcast_list_zeus.csv
+src/postproc/C3S_standard/qa_checker_lib/__pycache__

@@ -9,21 +9,10 @@ set -euvx
 
 st=`date +%m`   #$2  #stdate as input
 yyyy=`date +%Y`  #$1
-if [[ $# -eq 1 ]]
-then
-   ext=1
-fi
 
 set +euvx
 . ${DIR_UTIL}/descr_ensemble.sh $yyyy
 set -euvx
-
-
-if [[ $ext -eq 1 ]]
-then
-   typeofrun=${typeofrun}_ext
-   SPSSystem=${SPSSystem}ext
-fi
 
 if [[ $machine == "leonardo" ]]
 then

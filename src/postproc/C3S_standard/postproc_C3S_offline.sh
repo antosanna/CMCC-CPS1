@@ -30,7 +30,6 @@ chmod -R u+w $DIR_ARCHIVE/$caso
 
 # now that you have read ic from the standard C3S possibly redefine stdate for handling extended
 if [[ $caso =~ "ext" ]]; then
-   typeofrun=${typeofrun}_ext
    yyyyp1=$((yyyy + 1))
    mm=`date -d "$yyyy${st}15 + 6 month" +%m`
    stdate=$yyyyp1-$mm
@@ -241,7 +240,7 @@ then
       
       case $ft in
           h0)req_mem=1000;suffix=$suffix0;;
-          h1)req_mem=9000;suffix=$suffix2;;
+          h1)req_mem=9000;suffix=$suffix1;;
           h2)req_mem=4000;suffix=$suffix2;;
           h3)req_mem=1500;suffix=$suffix3;;
       esac

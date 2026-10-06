@@ -129,6 +129,11 @@ print("Ho finito di caricare tutto in mnmx")
 mmax=max(mnmx)+1
 mmin=min(mnmx)-1
 
+ymin = floor(mmin)
+ymax = ceil(mmax)
+dy   = 1.0
+nticks = toint((ymax-ymin)/dy)+1
+yticks = fspan(ymin,ymax,nticks)
 ;*****************************************************
 ; -- PLOT SETTINGS
 ;*****************************************************
@@ -147,6 +152,15 @@ res@vpWidthF           = 0.7
 
 res@trYMaxF            = mmax
 res@trYMinF            = mmin
+
+res@tmYLMode   = "Explicit"
+res@tmYLValues = yticks
+res@tmYLLabels = sprintf("%3.1f",yticks)
+
+res@tmYLMajorLengthF   = 0.01
+res@tmYLMinorOn        = True
+res@tmYROn = False
+res@tmYLMinorPerMajor  = 4
 
 ;res@xyMonoLineColor    = True             ; want colored lines
 ;res@xyLineThicknesses  = (/3,3,3/)      ; line thicknesses
