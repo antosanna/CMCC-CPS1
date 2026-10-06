@@ -49,7 +49,6 @@ DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
-   c3s_checker_cmd=/work/cmcc/cp1/miniconda/envs/c3s-checker
    envcondac3schecker=/work/cmcc/cp1/miniconda/envs/c3schecker
    envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive

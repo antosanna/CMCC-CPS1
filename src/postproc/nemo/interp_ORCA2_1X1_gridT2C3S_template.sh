@@ -192,7 +192,6 @@ do
              ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
              exit 1
           else
-             touch ${check_oceregrid}
              if [[ -f $inputfile ]]
              then 
                 rm $inputfile
@@ -202,7 +201,6 @@ do
          sleep 300
       fi
    else
-      touch ${check_oceregrid}
       if [[ -f $inputfile ]]
       then 
          rm $inputfile
@@ -211,89 +209,7 @@ do
    fi
 done
 # 
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce1
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce2
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce3
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce4
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce5
-{
-read 
-while IFS=, read -r flname C3S lname sname units realm levelin addfact coord cell reflev model fillval
-do
-   model="$model"
-   if [[ $model == "nemo" ]]
-   then
-      varout+=("$C3S")
-   fi
-done } < $C3Stable_oce6
-for v in ${varout[@]}
-do 
-   C3Sfile=$outdirC3S/${ini_term}_ocean_${frq}_${level}_${v}_r${member}i00p00${end_term}
-   if [[ ! -f $C3Sfile ]]
-   then
-      title="${CPSSYS} forecast ERROR"
-      body="C3S ocean file $C3Sfile for variable not produced for case ${caso}. 
-            Script is ${DIR_POST}/nemo/$scriptname"
-      ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -M "$body" -t "$title" -r "$typeofrun" -s $yyyy$st -E 0$member
-      exit 1
-   fi
-done  
-cd $OUTDIR_NEMO
-inputlist=`ls *1*.zip.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
-inputlist=`ls *scalar*.nc`
-for input in $inputlist
-do
-      ncatted -O -a ic,global,a,c,"IC" ${input}
-done
+touch ${check_oceregrid}
    
 exit 0
 

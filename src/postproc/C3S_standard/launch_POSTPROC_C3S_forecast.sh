@@ -11,13 +11,17 @@ set -euvx
 
 st=`date +%m`   #$2  #stdate as input
 yyyy=`date +%Y`  #$1
+
 #BEFORE RUNNING THIS SCRIPT FOR A NEW STARTDATE CLEAN OLD FILES WITH $DIR_C3S/clean4C3S.sh
 #   LOG_FILE=$DIR_LOG/$typeofrun/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
 #   exec 3>&1 1>>${LOG_FILE} 2>&1
-mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/C3S_postproc
 
-st=`date +%m`   #$2  #stdate as input
-yyyy=`date +%Y`  #$1
+mkdir -p $DIR_LOG/$typeofrun/$yyyy$st/C3S_postproc
+if [[ $machine == "leonardo" ]]
+then
+    LOG_FILE=$DIR_LOG/$typeofrun/${yyyy}${st}/C3S_postproc/launch_postproc_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
+    exec 3>&1 1>>${LOG_FILE} 2>&1
+fi
 
 # This to avoid any postproc submit during execution of tar_C3S.sh
 flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3S_${yyyy}${st}_started"
