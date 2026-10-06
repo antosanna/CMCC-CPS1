@@ -94,7 +94,6 @@ rsync -av $DIR_TEMPL/field_def_nemo-oce.xml $DIR_CASES/$caso/Buildconf/nemoconf/
 #----------------------------------------------------------
 # CESM2.1 can use a refdir where to find all the needed restarts
 
-refdirREST=$SCRATCHDIR/restarts4extended/$casoREST/rest
 #if [[ "$USER" == "${operational_user}" ]]
 #then
 restyyyy=$yyyy
@@ -106,6 +105,12 @@ then
 elif [[ $restmon -lt 10 ]]
 then
    restmon=0$restmon
+fi
+if [[ $yyyy -gt $endy_hind ]]
+then
+   refdirREST=$DIR_ARCHIVE/$casoREST/rest/$restyyyy-$restmon-00000/
+else
+   refdirREST=$SCRATCHDIR/restarts4extended/$casoREST/rest
 fi
 if [[ `ls $refdirREST/${casoREST}_????????_restart.nc|wc -l` -eq 0 ]]
 then

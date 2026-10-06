@@ -149,6 +149,7 @@ do
          submittable_cnt=$(( $submittable_cnt + 1 ))
          if [[ -f $script_to_submit ]] ; then
   
+            yyyyp1=$((yyyy + 1))
             restdirext=$DIR_ARCHIVE/${SPSSystem}_${yyyy}${st}_${ens}/rest/$yyyyp1-05-00000
             if [[ ! -d $restdirext ]] 
             then
