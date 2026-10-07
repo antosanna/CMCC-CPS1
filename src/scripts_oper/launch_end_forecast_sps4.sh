@@ -45,7 +45,8 @@ CMCC-SPS Staff
 "
 
    title="CMCC-SPS reservation $st $yyyy - operazioni terminate" 
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $hsmmail -M "$body" -t "$title"
+#   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c $hsmmail -M "$body" -t "$title"
+   echo -e $body|mailx -r "CMCC-SPS <scc-noreply@cmcc.it>" -s "CMCC-SPS4 forecast $st $yyyy - completato positivamente" -b sp1@cmcc.it hsm@cmcc.it
 elif [[ $machine == "leonardo" ]]
 then
 
@@ -53,7 +54,7 @@ then
 \n
 \n
     
-       Con la presente Vi informiamo che il forecast e' andato a buon fine.
+       Con la presente Vi informiamo che le operazioni di forecast del sistema CMCC-SPS4 sono concluse.
 \n
 \n
 
@@ -70,5 +71,6 @@ CMCC-SPS Staff
 
 "
 
-   echo -e $body|mailx -r "CMCC-SPS <scc-noreply@cmcc.it>" -s "CMCC-SPS4 forecast $st $yyyy - completato positivamente" -b a.bocchinfuso@cineca.it -b superc@cineca.it sp1@cmcc.it
+   title="CMCC-SPS4 forecast $st $yyyy - completato positivamente" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c superc@cineca.it -M "$body" -t "$title" 
 fi
