@@ -72,5 +72,5 @@ CMCC-SPS Staff
 "
 
    title="CMCC-SPS4 forecast $st $yyyy - completato positivamente" 
-   ${DIR_UTIL}/sendmail.sh -m $machine -e $mymail -c superc@cineca.it -M "$body" -t "$title" 
+   ${DIR_UTIL}/sendmail.sh -m $machine -b $mymail -e superc@cineca.it -c i.baccarelli@cineca.it -M "$body" -t "$title" 
 fi
