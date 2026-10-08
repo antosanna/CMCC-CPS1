@@ -12,7 +12,7 @@ if [[ $# -eq 1 ]]
 then
    stdate=$1
 fi
-python log_to_report.py $DIR_REP/$stdate/REPORT_leonardo.sps4_${stdate}.txt -o $DIR_REP/$stdate/report_${stdate}.pdf --title "Report $stdate" 
+python log_to_report.py $DIR_REP/$stdate/REPORT_${machine}.sps4_${stdate}.txt -o $DIR_REP/$stdate/report_${stdate}.pdf --title "Report $stdate" 
 
 set +evxu
 conda activate $envcondarclone
