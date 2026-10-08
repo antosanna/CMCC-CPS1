@@ -18,7 +18,7 @@ ARG_EMAIL_SUBJECT="TITLE"
 
 cc="CCmail"
 message="MESSAGE"
-if [[ $cc == "CCmail" ]]
+if [[ $cc != "" ]]
 then
     ARG_EMAIL_CC="$cc"
     (

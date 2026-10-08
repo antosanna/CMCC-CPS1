@@ -153,7 +153,12 @@ then
 
   #https://stackoverflow.com/questions/63319313/sendmail-sending-corrupted-unreadable-pdf-over-mail-sending-with-base64-encodin  - working sendmail example for single attachment
   tag=`date +%s`
-  sed -e "s#CCmail#${cc}#g;s@MESSAGE@$message@g;s@TITLE@$title@g" $DIR_UTIL/send_mail_leonardo_template.sh > $DIR_TEMP/mails/send_mail_leonardo_${tag}.sh
+  if [[ -z $applist ]]
+  then
+     sed -e "s#CCmail#${cc}#g;s@MESSAGE@$message@g;s@TITLE@$title@g" $DIR_UTIL/send_mail_leonardo_template.sh > $DIR_TEMP/mails/send_mail_leonardo_${tag}.sh
+  else
+     sed -e "s#CCmail#${cc}#g;s@MESSAGE@$message@g;s@TITLE@$title@g;s@FILE@$applist@g" $DIR_UTIL/send_mail_leonardo_with_att_template.sh > $DIR_TEMP/mails/send_mail_leonardo_${tag}.sh
+  fi
 
   sbatch $DIR_TEMP/mails/send_mail_leonardo_${tag}.sh
   exit 0 

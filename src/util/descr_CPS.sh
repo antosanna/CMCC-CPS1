@@ -44,12 +44,14 @@ envcondanemo=nemo_rebuild
 envcondarclone=rclone_gdrive
 envcondaclm=postpc_CLM_C3S
 envcondaqachecker=qachecker
+envconda_report_SPS=report_SPS
 DIR_ROOT=$HOME/CPS/CMCC-${CPSSYS}
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Machine dependent vars
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 if [[ "$machine" == "juno" ]] || [[ "$machine" == "zeus" ]] || [[ "$machine" == "cassandra" ]]
 then
+   envconda_report_SPS=/work/cmcc/cp1/miniconda/envs/report_SPS
    envcondac3schecker=/work/cmcc/cp1/miniconda/envs/c3schecker
    envcondanemo=/work/cmcc/cp1/miniconda/envs/nemo_rebuild
    envcondarclone=/work/cmcc/cp1/miniconda/envs/rclone_gdrive
