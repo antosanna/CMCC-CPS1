@@ -58,6 +58,7 @@ def parse_log(path: str) -> list[dict]:
             if not line:
                 continue
             match = TIMESTAMP_RE.match(line)
+            print(f"match {match}")
             if match:
                 entries.append({"ts": match.group("ts"), "msg": match.group("msg").strip()})
             else:
