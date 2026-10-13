@@ -85,10 +85,8 @@ def check_minmax(field, checktype, limit, levn=None, verbose=False, very_verbose
 
 def check_2d_field(field, filling_value, constant_limit):
     """
-    Check if all values in a 2D field are constant, infinite, nan, filling value or zero
+    Check if all values in a field are constant, infinite, nan, filling value or zero
     """
-    if len(field.dims) > 2 :
-        raise FieldError('Field has more than 2 dimensions! Cannot apply check_2d_field()')
     
     difs = np.max(field) - np.min(field)
     if np.all(np.isinf(field)) or np.all(np.isneginf(field)):
@@ -110,6 +108,7 @@ def check_tsd_34dfield(field, tsd_limit, timname, levn=None, verbose=False, very
     """
     Check if all points in field are stationary (std = 0 along time)
     """
+    print(f" entering check_tsd {levn} and dim {len(field.dims)}")
     # TODO improve if with DMO dimension types (i.e. timname,'ncols'; timname,levn,'ncols')
     if (len(field.dims) == 3) and (field.dims == (timname, 'lat', 'lon')):
         field_stationarity = np.std(field.data, axis = 0) == tsd_limit
@@ -118,11 +117,19 @@ def check_tsd_34dfield(field, tsd_limit, timname, levn=None, verbose=False, very
 
     elif (len(field.dims) == 4) and (field.dims == (timname, levn, 'lat', 'lon')):
         field_stationarity =  np.std(field.data, axis = 0) == tsd_limit 
+        print(f" before all_field_stationarity lev coord {levn}")
         all_field_stationarity =  np.all(field_stationarity, axis=(1,2))
+        print(" all_field_stationarity done ")
         if (np.any(field_stationarity)):
+            print(f" before lev_indexes")
             lev_indexes = np.argwhere(all_field_stationarity==True)
-            lev_list = list(lev_indexes[:,0])
-            raise FieldError('Field is stationary')
+            print(f" before lev_list")
+            if lev_indexes.size > 0:
+                lev_list = list(lev_indexes[:,0])
+                print(f" after lev_list {lev_list}")
+                raise FieldError('Field is stationary')
+            else:
+                lev_list=[]
             return(lev_list)
 
     elif (len(field.dims) == 4) and (field.dims == ('realization', timname, 'lat', 'lon')):
@@ -136,7 +143,7 @@ def check_tsd_34dfield(field, tsd_limit, timname, levn=None, verbose=False, very
 
     else:
         raise InputError('[INPUTERROR] Field has unsupported dimensions')
-def check_field(field, varn, shortn, timen, levn, filling_value, constant_limit, check_min, min_limit, check_max, max_limit, check_tsd, tsd_limit, verbose=False, very_verbose=False):
+def check_field(field, varn, shortn, timen, levn, filling_value, constant_limit, check_min, min_limit, check_max, max_limit, check_tsd, tsd_limit, verbose=True, very_verbose=False):
 
 #def check_field(field, filling_value, constant_limit, check_min, min_limit, check_max, max_limit, check_tsd, tsd_limit, verbose=False, very_verbose=False):
     """
@@ -208,7 +215,13 @@ def check_field(field, varn, shortn, timen, levn, filling_value, constant_limit,
                 list = check_tsd_34dfield(field, tsd_limit, timen)
             except FieldError as e:
                 exc_list+=print_error(error_message=e, error_list=exc_list, loc1=[shortn, varn])
-
+        # check for constant field
+        try:
+            if verbose or very_verbose:
+                print('[INFO] Checking for constant field ',varn)
+            check_2d_field(field, filling_value, constant_limit)
+        except FieldError as e:
+            exc_list+=print_error(error_message=e, error_list=exc_list, loc1=[shortn, varn])
         # check empty/constant slab
         if verbose or very_verbose:
             print('[INFO] Checking consistency of 2D-slices of',varn)

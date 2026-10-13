@@ -43,6 +43,10 @@ export wgtFileName=$REPOGRID/CAMFV05_2_${outputgrid}_bilinear_C3S.nc
 export wgtFileNameCons=$REPOGRID/CAMFV05_2_${outputgrid}_conserve_C3S.nc
 export lsmFileName=$REPOGRID/SPS4_C3S_LSM.nc
 export alphaFileName=$REPOSITORY/alpha_100m_wind/mean_alpha_${st}.nc
+if [[ $ext -eq 1 ]]
+then 
+   alphaFileName=$REPOSITORY/alpha_100m_wind/mean_alpha_extended_${st}.nc
+fi
 export version=$versionSPS
 export real="r"${member}"i00p00"
 export C3Satts="$DIR_TEMPL/C3S_globalatt.txt"

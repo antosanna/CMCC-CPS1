@@ -162,7 +162,7 @@ for ns in ${namespace}; do
              atmos_12hr_pressure_zg|atmos_12hr_pressure_ta|atmos_12hr_pressure_hus|atmos_12hr_pressure_ua|atmos_12hr_pressure_va)memlimit="20000M";;
              ocean_6hr)memlimit="50000M";;
              ocean_mon)memlimit="2000M";;
-             land_day)memlimit="5000M";;
+             land_day)memlimit="10000M";;
           esac
        else
           case $ns in

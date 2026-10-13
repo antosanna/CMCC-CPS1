@@ -71,7 +71,7 @@ def sel_field_slice(field, slicetype, index1, index2=None, index3=None):
             field2d = field.isel(realization=index2, leadtime=index1)
         elif timename=='time':
             field2d = field.isel(realization=index2, time=index1)
-    elif slicesype=='timelevreal':
+    elif slicetype=='timelevreal':
         # slice in time, realization and plev
         levname=get_lev_name(field)
         if timename == 'leadtime':

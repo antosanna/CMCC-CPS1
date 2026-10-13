@@ -150,9 +150,13 @@ then
        sed -i "s:INPUT:$inputFV:g;s:OUTDIR:$outdirC3S:g;s:WKDIR:$wkdir/$var:g;s:TYPE:$ftype:g;s:IC:\"$ic\":g;s:NDAYS:$nsimdays:g;s:VAR:$var:g;s:INIT:$init:g;s:END_TERM:$end_term:g;s:CASO:$caso:g;s:CHECKF:$checkfilevar:g;s:EXT:$ext:g;s:TABLE:$C3Stable:g" $script
        chmod u+x $wkdir/$var/regridFV_C3S.$ftype.$var.sh
        req_mem=10000
-       if [[ $var == "tso" ]]
+       if [[ $var == "tso" ]] || [[ $var == "sitemptop" ]] || [[ $var =="tdps" ]] || [[ $var == "tsl" ]]
        then 
           req_mem=15000
+       fi
+       if [[ $ftype == "h3" ]]
+       then
+          req_mem=2000
        fi
        ${DIR_UTIL}/submitcommand.sh -m $machine -q $parallelq_m -S $qos  -M ${req_mem} -j regrid_cam_${ftype}_${var}_${caso} -l $dir_cases/$caso/logs/ -d $wkdir/$var -s regridFV_C3S.$ftype.$var.sh 
        n_counter=$((n_counter + 1))
