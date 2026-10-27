@@ -33,12 +33,12 @@ fi
 
 if [[ $ext -eq 1 ]]
 then
+  st=11      
   nrunC3Sfore=$nrunhindext
   typeofrun=forecast_ext
   if [[ $# -gt 1 ]]
   then
      typeofrun=hindcast_ext
-     st=11       #since it can be submitted any months
   fi
 fi
 if [[ $typeofrun =~ "forecast" ]]
@@ -151,10 +151,10 @@ set -euvx
       fi
 #BEFORE RUNNING THIS SCRIPT FOR A NEW $caso CLEAN OLD FILES WITH $DIR_C3S/clean4C3S_listofcases.sh
       $DIR_C3S/clean4C3S_listofcases.sh $caso 
-      isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
+      isremote=`ls $DIR_ARCHIVE1/$caso.transfer_from_*_DONE |wc -l`
       if [[ ${isremote} -eq 1 ]] 
       then
-           flag=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE`
+           flag=`ls $DIR_ARCHIVE1/$caso.transfer_from_*_DONE`
            mach=`echo $flag |rev |cut -d '_' -f2|rev`
            echo "$caso is a remote case run on $mach"
            dir_cases=$ROOT_CASES_WORK/cases_from_${mach}
