@@ -34,7 +34,6 @@ elif [[ "$machine" == "$bk_machine" ]]
 then
    export SSHPASS="a(nU05wgJk"
    cmd="sshpass -e rsync -auv -e ssh"
-#    cmd="rsync -auv '-e=sshpass -p a(nU05wgJk ssh'"
 fi
 
 leo_dir=/leonardo_work/$account_SLURM/CMCC-CM/archive 
@@ -49,7 +48,7 @@ if [[ -f $checkfile ]]
 then
    exit 0
 fi
-rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir_CASES}/$caso/logs/run_moredays_${caso}_DONE ${outdir}
+eval "$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir_CASES}/$caso/logs/run_moredays_${caso}_DONE ${outdir}"
 #-----------------------------------------------------
 if [[ "$machine" == "$bk_machine" ]]
 then
@@ -75,7 +74,7 @@ then
 fi
 #-----------------------------------------------------
 
-rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
+eval "$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE"
 
 dim=`du -hs $DIR_ARCHIVE/$caso|cut -c 1-3`
 if [[ $dim =~ "G" ]]
@@ -87,7 +86,7 @@ mindim=80
 
 if [[ $dim -lt $mindim ]]
 then
-      rsync -auv -e="sshpass -p a(nU05wgJk ssh" a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE
+      eval "$cmd a07cmc00@data.leonardo.cineca.it:${leo_dir}/$caso $DIR_ARCHIVE"
       if [[ $dim -lt $mindim ]]
       then
          title="[$CPSSYS] WARNING: issue in trasferring $caso from Leonardo to Juno"
@@ -103,7 +102,7 @@ touch $checkfile
 if [[ "$machine" == "$repo_machine" ]]
 then
 #-----------------------------------------------------
-   $cmd $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+   eval "$cmd $checkfile a07cmc00@data.leonardo.cineca.it:${leo_dir}/"
 #-----------------------------------------------------
 fi
 #-----------------------------------------------------
