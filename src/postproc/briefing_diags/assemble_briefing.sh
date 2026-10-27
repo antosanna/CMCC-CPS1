@@ -10,7 +10,7 @@
 ##          images exist, executes the python program that creates the briefing presentation,    ##
 ##          and rclones the presentation to drive with email alerts to sp1.                      ##
 ## Creation Date: ??/??/202?                                                                     ##
-## Revision Date: 25/09/2026                                                                     ##
+## Revision Date: 21/10/2026                                                                     ##
 ## Revised By: BJF                                                                               ##
 ###################################################################################################
 
@@ -77,6 +77,9 @@ POST_DIR=${DIR_POST}/briefing_diags
 ncl 'yyyyfore="'"$yyyy"'"' 'mmfore="'"$mm"'"' 'dirplot="'"$IMG_DNLD_DIR"'"' 'refperiod="'"$refperiod"'"' 'SS="'"$sea"'"' ${POST_DIR}/ncl/forecast_summary.ncl
 ${POST_DIR}/calc_daily_anom_obs_briefing.sh ${yyyy} ${mm}
 
+# Create Nino3.4 and Rel Nino3.4 overlay plot
+${POST_DIR}/calc_nino_relnino_plot.sh ${yyyy} ${mm}
+
 # Modify image files for viewing inside the briefing pptx
 # SST anomalies
 magick ${IMG_DNLD_DIR}/esacci_anom_fore_${yyyy}${mm}.png -crop 100%x30%+0+57 -trim +repage ${IMG_DNLD_DIR}/sst_anomalies_top.png
@@ -128,7 +131,7 @@ EXPECTED_IMAGES=(
     "${IMG_EVAL_DIR}/t2m_ano_verification_europe_${sm1forey}${sm1forem}_l1_seasonal_nobar.png"
     "${IMG_DNLD_DIR}/c3s_mme_nino.png"
     "${IMG_DIAG_DIR}/sst_Nino3.4_strength_prob_${yyyy}_${mm}.png"
-    "${IMG_DIAG_DIR}/sst_Nino3.4_mem_${yyyy}_${mm}.png"
+    "${IMG_DIAG_DIR}/sst_Nino3.4_RONI_${yyyy}_${mm}.png"
     "${IMG_WEB_DIR}/temperature_pac_trop_ensmean_${yyyy}_${mm}.gif"
     "${IMG_DNLD_DIR}/cmcc_sst_fore_global.png"
     "${IMG_DNLD_DIR}/c3s_mm_ssto_fore_glob.png"
@@ -147,11 +150,11 @@ EXPECTED_IMAGES=(
     "${IMG_DNLD_DIR}/Europe_summary_${yyyy}_${mm}_l1.png"
     "${IMG_DNLD_DIR}/U10hPa_cmcc_fore_probs_lt0.png"
     "${IMG_DNLD_DIR}/U10hPa_fore_probs_lt0.png"
-    "${IMG_WEB_DIR}/sst_IOD_mem_${yyyy}_${mm}.png"
-    "${IMG_WEB_DIR}/sst_IOD_prob_${yyyy}_${mm}.png"
 )
 if (( 10#$mm >= 4 && 10#$mm < 10 )); then
     EXPECTED_IMAGES+=(
+        "${IMG_WEB_DIR}/sst_IOD_mem_${yyyy}_${mm}.png"
+        "${IMG_WEB_DIR}/sst_IOD_prob_${yyyy}_${mm}.png"
         "${IMG_WAMI_DIR}/WAMI_forecast_${yyyy}${mm}.png"
         "${IMG_WAMI_DIR}/WAMI_probability_${yyyy}${mm}.png"
     )

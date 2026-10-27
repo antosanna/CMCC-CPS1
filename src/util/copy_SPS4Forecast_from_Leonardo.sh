@@ -33,7 +33,7 @@ then
 elif [[ "$machine" == "$bk_machine" ]]
 then
    export SSHPASS="a(nU05wgJk"
-   cmd="sshpass -e rsync -auv -e ssh"
+   smd="sshpass -e rsync -auv -e ssh"
 #    cmd="rsync -auv '-e=sshpass -p a(nU05wgJk ssh'"
 fi
 
@@ -103,7 +103,8 @@ touch $checkfile
 if [[ "$machine" == "$repo_machine" ]]
 then
 #-----------------------------------------------------
-   $cmd $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+   #$cmd $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
+   rsync -auv -e="sshpass -p a(nU05wgJk ssh" $checkfile a07cmc00@dmover1.leonardo.cineca.it:${leo_dir}/
 #-----------------------------------------------------
 fi
 #-----------------------------------------------------

@@ -7,7 +7,7 @@
 ##          charts and finally downloads the ENSO plume for all models from server73. Seasonal-  ##
 ##          specific (summer/winter) plots are always downloaded regardless of season.           ##
 ## Creation Date: 18/05/2026                                                                     ##
-## Revision Date: 28/09/2026                                                                     ##
+## Revision Date: 16/10/2026                                                                     ##
 ## Revised By: BJF                                                                               ##
 ###################################################################################################
 
@@ -73,7 +73,8 @@ fi
 
 # Use web scraping for image downloads from the Copernicus Bulletin (image names vary by month). Follow the above
 # Scrape download comment to change or add images for download (more info below). The Scrape download expands the
-# image name string using |, similar to a * wildcard.
+# image name string using |, similar to a * wildcard but as a function of the keyword and file_extension. Use .*
+# (dot-star) as a literal wildcard expansion (see steps 3-4 below).
 
 # To modify or add Copernicus Bulletin images for download:
 # 1) Go to the base_url in a web browser
@@ -109,11 +110,20 @@ declare -A web_downloads=(
   ["enso_evolution-status-fcsts-web.pdf"]="https://www.cpc.ncep.noaa.gov/products/analysis_monitoring/lanina/enso_evolution-status-fcsts-web.pdf"
   # Scrape the three below t2m and hydro figures
   # 10 C3S global t2m map
-  ["t2m_c3s_climbull_glo.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies_${eval_month_st_name}_global|.png.jpg"
+  # Default
+  #["t2m_c3s_climbull_glo.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies_${eval_month_st_name}_global|.png.jpg"
+  # Fix going forward for next month (November 2026) - a more relaxed scrape of this directory
+  ["t2m_c3s_climbull_glo.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies.*global|.png.jpg"
   # 11 C3S europe t2m map
-  ["t2m_c3s_climbull_eu.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies_${eval_month_st_name}_europe|.png.jpg"
+  # Default
+  #["t2m_c3s_climbull_eu.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies_${eval_month_st_name}_europe|.png.jpg"
+  # Fix going forward for next month (November 2026) - a more relaxed scrape of this directory
+  ["t2m_c3s_climbull_eu.png"]="SCRAPE:https://climate.copernicus.eu/surface-air-temperature-${eval_month_name}-${eval_month_yyyy}|map_temperature_anomalies.*europe|.png.jpg"
   # 12 C3S europe hydrological parameters map
-  ["hydro_c3s_climbull.png"]="SCRAPE:https://climate.copernicus.eu/precipitation-relative-humidity-soil-moisture-and-river-flow-${eval_month_name}-${eval_month_yyyy}|map_anomalies_${eval_month_st_name}_europe|.png.jpg"
+  # Default
+  #["hydro_c3s_climbull.png"]="SCRAPE:https://climate.copernicus.eu/precipitation-relative-humidity-soil-moisture-and-river-flow-${eval_month_name}-${eval_month_yyyy}|map_anomalies_${eval_month_st_name}_europe|.png.jpg"
+  # Fixed this too for good measure
+  ["hydro_c3s_climbull.png"]="SCRAPE:https://climate.copernicus.eu/precipitation-relative-humidity-soil-moisture-and-river-flow-${eval_month_name}-${eval_month_yyyy}|map_anomalies.*europe|.png.jpg"
   ################################################################################
   # Temporary or non-standard figures to download
   # Scrape the two below t2m time series figures
@@ -417,16 +427,17 @@ echo "U10hPa download failures: $FAILNUM"
 
 # Process C3S MM/CMCC into montages
 # Note: the resulting resolution of these montages yields a final pptx file size ~2x the original size (~25Mb to ~53Mb)
-for f in U10hPa_*.png; do magick "$f" -gravity South -chop 0x250 -trim +repage "$(basename "$f")"; done
-montage -mode concatenate -tile 3x2 U10hPa_{cmcc,ecmf,edzw,rjtd,egrr,lfpw}_*.png U10hPa_fore_probs_lt0.png
+# October 2026 - changed from chop 0x250 to 0x280 and added -geometry +0+0
+for f in U10hPa_*.png; do magick "$f" -gravity South -chop 0x280 -trim +repage "$(basename "$f")"; done
+montage -mode concatenate -tile 3x2 -geometry +0+0 U10hPa_{cmcc,ecmf,edzw,rjtd,egrr,lfpw}_*.png U10hPa_fore_probs_lt0.png
 
-for f in c3s_*.png; do magick "$f" -gravity South -chop 0x250 -trim +repage "$(basename "$f")"; done
+for f in c3s_*.png; do magick "$f" -gravity South -chop 0x280 -trim +repage "$(basename "$f")"; done
 
 declare -a var=("mslp" "2mtm" "rain" "ssto" "z500")
 for v in "${var[@]}"; do
-    montage -mode concatenate -tile 1x2 c3s_cmcc_${v}_fore_glob_*.png c3s_cmcc_${v}_fore_glob.png
-    montage -mode concatenate -tile 1x2 c3s_mm_${v}_fore_glob_*.png c3s_mm_${v}_fore_glob.png
-    montage -mode concatenate -tile 1x2 c3s_cmcc_${v}_fore_euro_*.png c3s_cmcc_${v}_fore_euro.png
+    montage -mode concatenate -tile 1x2 -geometry +0+0 c3s_cmcc_${v}_fore_glob_*.png c3s_cmcc_${v}_fore_glob.png
+    montage -mode concatenate -tile 1x2 -geometry +0+0 c3s_mm_${v}_fore_glob_*.png c3s_mm_${v}_fore_glob.png
+    montage -mode concatenate -tile 1x2 -geometry +0+0 c3s_cmcc_${v}_fore_euro_*.png c3s_cmcc_${v}_fore_euro.png
 done
 
 if [ -f ${tmpdir}/enso_evolution-status-fcsts-web.pdf ] ;then

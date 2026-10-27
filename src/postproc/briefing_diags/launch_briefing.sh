@@ -24,9 +24,9 @@ logdir=${DIR_LOG}/briefing_plots_${yyyy}${mm}/logs
 # Submit download and CMCC contribution diagnostic plot programs first
 # The first downloads primarily web images and the second creates the CMCC contribution diagnostic plots
 ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_push -M 5000 -j download_from_web -l $logdir -d $DIR_POST/briefing_diags -s download_from_web.sh -i "${yyyy} ${mm}"
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 8000 -j launch_diagnostic_briefing -l $logdir -d $DIR_POST/briefing_diags -s launch_diagnostic_briefing.sh -i "${yyyy} ${mm}"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 6000 -j launch_diagnostic_briefing -l $logdir -d $DIR_POST/briefing_diags -s launch_diagnostic_briefing.sh -i "${yyyy} ${mm}"
 
 # Submit the program that creates the remaining plots, the briefing presentation pptx and pushes the pptx to drive
-${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 20000 -j assemble_briefing -p download_from_web -w launch_diagnostic_briefing -l $logdir -d $DIR_POST/briefing_diags -s assemble_briefing.sh -i "${yyyy} ${mm}"
+${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_m -M 10000 -j assemble_briefing -p download_from_web -w launch_diagnostic_briefing -l $logdir -d $DIR_POST/briefing_diags -s assemble_briefing.sh -i "${yyyy} ${mm}"
 
 exit 0
