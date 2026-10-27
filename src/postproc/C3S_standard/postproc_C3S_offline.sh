@@ -26,7 +26,12 @@ HEALED_DIR=$HEALED_DIR_ROOT/$caso
 mkdir -p $HEALED_DIR
 
 # THIS MUST BE KEPT FOR CERISE
-chmod -R u+w $DIR_ARCHIVE/$caso
+if [[ $USER == $operational_user ]]
+then
+   chmod -R u+w $DIR_ARCHIVE/$caso
+else
+   rsync -auv $DIR_ARCHIVE
+fi
 
 # now that you have read ic from the standard C3S possibly redefine stdate for handling extended
 if [[ $caso =~ "ext" ]]; then

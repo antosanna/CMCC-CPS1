@@ -82,7 +82,7 @@ then
    recover=$2 #default recover=0 (do not relaunch cases with missing all_checkers_ok)
 fi
 
-dbg=0 # dbg=1 -> just one member for test
+dbg=1 # dbg=1 -> just one member for test
 if [[ -f ${flag_running} ]]
 then
    echo "${DIR_C3S}/launch_postproc_C3S_forecast.sh already running"
@@ -118,7 +118,7 @@ if [[ ${recover} -eq 0 ]] ; then
    fi
 fi
 
-cd $DIR_ARCHIVE1/
+cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
 for yyyy in $list_of_years
@@ -151,10 +151,10 @@ set -euvx
       fi
 #BEFORE RUNNING THIS SCRIPT FOR A NEW $caso CLEAN OLD FILES WITH $DIR_C3S/clean4C3S_listofcases.sh
       $DIR_C3S/clean4C3S_listofcases.sh $caso 
-      isremote=`ls $DIR_ARCHIVE1/$caso.transfer_from_*_DONE |wc -l`
+      isremote=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE |wc -l`
       if [[ ${isremote} -eq 1 ]] 
       then
-           flag=`ls $DIR_ARCHIVE1/$caso.transfer_from_*_DONE`
+           flag=`ls $DIR_ARCHIVE/$caso.transfer_from_*_DONE`
            mach=`echo $flag |rev |cut -d '_' -f2|rev`
            echo "$caso is a remote case run on $mach"
            dir_cases=$ROOT_CASES_WORK/cases_from_${mach}
