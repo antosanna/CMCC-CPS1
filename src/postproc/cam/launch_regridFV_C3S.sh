@@ -150,7 +150,7 @@ then
        sed -i "s:INPUT:$inputFV:g;s:OUTDIR:$outdirC3S:g;s:WKDIR:$wkdir/$var:g;s:TYPE:$ftype:g;s:IC:\"$ic\":g;s:NDAYS:$nsimdays:g;s:VAR:$var:g;s:INIT:$init:g;s:END_TERM:$end_term:g;s:CASO:$caso:g;s:CHECKF:$checkfilevar:g;s:EXT:$ext:g;s:TABLE:$C3Stable:g" $script
        chmod u+x $wkdir/$var/regridFV_C3S.$ftype.$var.sh
        req_mem=10000
-       if [[ $var == "tso" ]] || [[ $var == "sitemptop" ]] || [[ $var =="tdps" ]] || [[ $var == "tsl" ]]
+       if [[ $var == "tso" ]] || [[ $var == "sitemptop" ]] || [[ $var == "tdps" ]] || [[ $var == "tsl" ]]
        then 
           req_mem=15000
        fi
