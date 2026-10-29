@@ -601,7 +601,7 @@ begin
           end if
     
           sigma_theta=0.d
-          if(varname(i).eq."mlotst0.01".or.varname(i).eq."mlotst")then
+          if(varname(i).eq."mlotst0.01".or.varname(i).eq."mlotst".or.varname(i).eq."mldr10_1")then
              sigma_theta=reflev(i)
              filevardef(ncdf, "sigma_theta", C3S_type, "ncl_scalar")
              filevarattdef(ncdf,"sigma_theta" ,sigma_theta)    

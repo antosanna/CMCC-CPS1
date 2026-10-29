@@ -30,7 +30,9 @@ graph TD
         JobC --> SubNCL[ncl/forecast_summary.ncl <br> NCL Script]
         JobC --> SubShell[calc_daily_anom_obs_briefing.sh]
         SubShell --> SubShellNCL[ncl/make_daily_anom_graph.ncl <br> NCL Script]
-        
+        JobC --> SubShell_2[calc_nino_relnino_plot.sh]
+        SubShell_2 --> SubShellPy[python/nino34_rnino_plume.py <br> Python Script]
+
         JobC --> SubPy[python/modify_template_dev.py <br> Python Script]
         %% Template pptx interaction
         Templates[(pptx/)] -.->|Read/Modify| SubPy
@@ -80,9 +82,10 @@ This program is organized into subdirectories based on script language/templates
 *   **`assemble_briefing.sh` (Job C)** — Submitted to queue with a dependency on both Job A and Job B: `bsub -p -w 'done(JobA) && done(JobB)'`. It will **only** begin execution once both parallel jobs have completed successfully. It executes the following tasks:
     1.  **`ncl/forecast_summary.ncl`** — Generates the forecast summary image.
     2.  **`calc_daily_anom_obs_briefing.sh`** — Launcher for the **`ncl/make_daily_anom_graph.ncl`** to generate the esacci sst image.
-    3.  **`python/modify_template_dev.py`** — Assembles and saves the briefing pptx, replacing image placeholders with the required images created or downloaded earlier in the workflow.
-    4.  **`rclone drive upload`** — Pushes the completed briefing pptx presentation to drive.
-    5.  **`mail complete notification`** — Mail alert for program completion.
+    3.  **`calc_nino_relnino_plot.sh`** — Launcher for the **`python/nino34_rnino_plume.py`** to generate the overlay Nino3.4 and Relative Nino3.4 image.
+    4.  **`python/modify_template_dev.py`** — Assembles and saves the briefing pptx, replacing image placeholders with the required images created or downloaded earlier in the workflow.
+    5.  **`rclone drive upload`** — Pushes the completed briefing pptx presentation to drive.
+    6.  **`mail complete notification`** — Mail alert for program completion.
 
 ### 3. Briefing pptx templates, and utilities (not run by this program)
 *   **`pptx/`** — Houses the briefing presentation templates.

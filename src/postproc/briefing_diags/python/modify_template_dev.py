@@ -7,7 +7,7 @@
 ##          pptx is then created in $SCRATCHDIR. Some of the functions in this script are used   ##
 ##          by create_template_pptx, so revisions may need to be done to both scripts.           ##
 ## Creation Date: 16/09/2026                                                                     ##
-## Revision Date: 25/09/2026                                                                     ##
+## Revision Date: 15/10/2026                                                                     ##
 ## Revised By: BJF                                                                               ##
 ###################################################################################################
 
@@ -208,7 +208,7 @@ def get_named_slide_image_mapping(month):
         17: {'IMG_C3S_MME_NINO': '{IMG_DNLD_DIR}/c3s_mme_nino.png'},
         18: {
             'IMG_SST_NINO_PROB': '{IMG_DIAG_DIR}/sst_Nino3.4_strength_prob_{yyyy}_{mm}.png',
-            'IMG_SST_NINO_MEM': '{IMG_DIAG_DIR}/sst_Nino3.4_mem_{yyyy}_{mm}.png'
+            'IMG_SST_NINO_MEM': '{IMG_DIAG_DIR}/sst_Nino3.4_RONI_{yyyy}_{mm}.png'
         },
         19: {'IMG_TPROF_PAC_TROP': '{IMG_WEB_DIR}/temperature_pac_trop_ensmean_{yyyy}_{mm}.gif'},
         23: {

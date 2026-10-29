@@ -33,16 +33,22 @@ fi
 
 if [[ $ext -eq 1 ]]
 then
+  st=11      
   nrunC3Sfore=$nrunhindext
   typeofrun=forecast_ext
   if [[ $# -gt 1 ]]
   then
      typeofrun=hindcast_ext
-     st=11       #since it can be submitted any months
   fi
 fi
-LOG_FILE=$DIR_LOG/${typeofrun}/launch_postproc_C3S_offline_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
-mkdir -p $DIR_LOG/${typeofrun}
+if [[ $typeofrun =~ "forecast" ]]
+then
+   LOG_FILE=$DIR_LOG/${typeofrun}/$yyyy$st/C3S_postproc/launch_POSTPROC_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
+   mkdir -p $DIR_LOG/${typeofrun}/$yyyy$st/C3S_postproc
+else
+   LOG_FILE=$DIR_LOG/${typeofrun}/C3S_postproc/launch_POSTPROC_C3S_${typeofrun}_${machine}.`date +%Y%m%d%H%M`
+   mkdir -p $DIR_LOG/${typeofrun}/C3S_postproc
+fi
 exec 3>&1 1>>${LOG_FILE} 2>&1
 
 header=$SPSSystem
@@ -52,16 +58,22 @@ then
 fi
 
 # This to avoid any postproc submit during execution of tar_C3S.sh
-if [[ $ext -eq 1 ]]
+if [[ $typeofrun =~ "forecast" ]]
 then
-   flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3SEXT_${yyyy}${st}_started"
+   flag_running=$DIR_LOG/$typeofrun/$yyyy$st/launch_POSTPROC_C3S_${typeofrun}_${yyyy}${st}_${machine}_on #to avoid multiple submission from crontab
+   if [[ $ext -eq 1 ]]
+   then
+      flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3SEXT_${yyyy}${st}_started"
+   else
+      flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3S_${yyyy}${st}_started"
+   fi
+   if [[ -f $flag_tarC3S ]]
+   then
+      echo "tar_C3S.sh already started!"
+      exit 0
+   fi
 else
-   flag_tarC3S="$DIR_LOG/$typeofrun/$yyyy$st/submit_tar_C3S_${yyyy}${st}_started"
-fi
-if [[ -f $flag_tarC3S ]]
-then
-   echo "tar_C3S.sh already started!"
-   exit 0
+   flag_running=$DIR_LOG/$typeofrun/C3S_postproc/launch_POSTPROC_C3S_${typeofrun}_${st}_${machine}_on #to avoid multiple submission from crontab
 fi
 
 recover=0
@@ -70,8 +82,7 @@ then
    recover=$2 #default recover=0 (do not relaunch cases with missing all_checkers_ok)
 fi
 
-dbg=0 # dbg=1 -> just one member for test
-flag_running=$DIR_LOG/$typeofrun/$yyyy$st/launch_postproc_C3S_offline_${typeofrun}_${yyyy}${st}_${machine}_on #to avoid multiple submission from crontab
+dbg=1 # dbg=1 -> just one member for test
 if [[ -f ${flag_running} ]]
 then
    echo "${DIR_C3S}/launch_postproc_C3S_forecast.sh already running"
@@ -110,7 +121,6 @@ fi
 cd $DIR_ARCHIVE/
 
 # to be modified with the list of spiked cases
-#for yyyy in `seq $iniy_hind $endy_hind`
 for yyyy in $list_of_years
 do
    listofcases=`ls -d ${header}_${yyyy}${st}_0?? |head -n $nrunC3Sfore`
@@ -173,8 +183,7 @@ set -euvx
        #touch flag to avoid double resubmission
        touch ${flag_postproc_offline_on}
    
-       mkdir -p $DIR_LOG/${typeofrun}/$yyyy$st/C3S_postproc
-       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $DIR_LOG/${typeofrun}/$yyyy$st/C3S_postproc -i "${yyyy} $caso ${dir_cases}" # $flagpostproc_done"
+       ${DIR_UTIL}/submitcommand.sh -m $machine -q $serialq_l -M 18000 -d ${DIR_C3S} -j postproc_C3S_offline_${caso} -s postproc_C3S_offline.sh -l $logdir -i "${yyyy} $caso ${dir_cases}" # $flagpostproc_done"
    
    
        if [[ $dbg -eq 1 ]]
